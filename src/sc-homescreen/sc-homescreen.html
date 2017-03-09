@@ -1,0 +1,34 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<!--
+`sc-homescreen`
+
+
+@demo demo/index.html 
+-->
+
+<dom-module id="sc-homescreen">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <h2>Hello [[prop1]]</h2>
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'sc-homescreen',
+
+      properties: {
+        prop1: {
+          type: String,
+          value: 'sc-homescreen',
+        },
+      },
+
+    });
+  </script>
+</dom-module>

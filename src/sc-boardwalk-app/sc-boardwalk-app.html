@@ -1,0 +1,30 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<!--
+`sc-boardwalk-app`
+
+-->
+<dom-module id="sc-boardwalk-app">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <h2>Hello [[prop1]]</h2>
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'sc-boardwalk-app',
+
+      properties: {
+        prop1: {
+          type: String,
+          value: 'sc-boardwalk-app',
+        },
+      },
+
+    });
+  </script>
+</dom-module>

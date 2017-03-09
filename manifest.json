@@ -1,0 +1,7 @@
+{
+  "name": "sc-boardwalk",
+  "short_name": "sc-boardwalk",
+  "description": "swarm.city DAPP",
+  "start_url": "/",
+  "display": "standalone"
+}
