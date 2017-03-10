@@ -1,6 +1,14 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
+
+<link rel="import" href="../../bower_components/sc-style/sc-style.html">
+<link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
+
 <!-- note that this will be lazy-loaded -->
 <link rel="import" href="../sc-boardwalk-app/sc-boardwalk-app.html">
+
 <!--
 `sc-homescreen`
 
@@ -10,16 +18,295 @@ This is the homescreen of boardwalk.
 -->
 
 <dom-module id="sc-homescreen">
+<link rel="import" href="../../bower_components/sc-style/sc-style.css"  type="css">
+
   <template>
     <style>
       :host {
         display: block;
       }
+
+
+      a {
+        font-family: montserratlight;
+        -webkit-font-smoothing: antialiased;
+        font-weight: 100;
+
+        font-size: 12px;
+        font-weight: 300;
+        line-height: 14px;
+        -webkit-margin-before:4px;
+        -webkit-margin-after:4px;
+        -webkit-margin-start:0em;
+        -webkit-margin-end:0em;
+        margin:4px 0px 4px 0px;
+
+        text-decoration: none;
+        outline: none;
+      }
+
+      a:visited {
+        text-decoration: none;
+        outline: none;
+      }
+
+      .logotitle {
+        text-align: left;
+        font-size: 78px;
+        line-height: 72px;
+      }
+
+      .welcometo {
+        text-align: left;
+        font-size: 48px;
+        line-height: 50px;
+      }
+
+      .logoalign {
+        box-sizing:border-box;
+        padding-top: 16vh;
+        padding-bottom: 24vh;
+        @apply(--layout-horizontal);
+        @apply(--layout-center-justified);
+        @apply(--layout-end);
+      }
+
+      .inneralign {
+        @apply(--layout-vertical);
+        @apply(--layout-start-justified);
+        @apply(--layout-start);
+        @apply(--layout-flex);
+      }
+
+      .maintxt {
+        font-size: 30px;
+        line-height: 36px;
+      }
+
+      .maxwidthz {
+        max-width:590px;
+      }
+
+      .enterbtn {
+        background-color:rgba(255,255,255,0.1);
+      }
+      
+      .linkblocks {
+        padding-top: 10vh;
+        padding-left: 10vw;
+        padding-right: 10vw;
+        padding-bottom: 8vh;
+      }
+
+      .linkblok_one {
+        @apply(--layout-vertical);
+        @apply(--layout-start-justified);
+        @apply(--layout-start);
+        @apply(--layout-flex);
+        min-width:  300px;
+      }
+
+      .linkblok_two {
+        @apply(--layout-vertical);
+        @apply(--layout-start-justified);
+        @apply(--layout-end);
+        min-width:  300px;
+        max-width:  500px;
+        margin-top: 0px;
+      }
+
+      .linkblok_one a {
+        color: var(--sc-blue);
+        border-bottom: 1px dotted var(--sc-blue);
+      }
+
+      .linkblok_one a:visited {
+        color: var(--sc-blue);
+        border-bottom: 1px dotted var(--sc-blue);
+      }
+
+      .linkblok_two a {
+        color: var(--sc-grey3);
+        border-bottom: 1px dotted var(--sc-grey2);
+      }
+
+      .linkblok_two a:visited {
+        color: var(--sc-grey3);
+        border-bottom: 1px dotted var(--sc-grey2);
+      }
+
+
+
+      .whatitem {
+        width: 230px;
+        margin-top: 20px;
+      }
+
+      .whatitemimg {
+        width: 90px;
+        height: 90px;
+        margin: 25px 0px 25px 0px;
+        border-radius: 50%;
+        overflow: hidden;
+      }
+
+      .whatitemimg img {
+        width: 100%;
+        height: 100%;
+      }
+
+
+
+    @media all and (min-width: 0px) and (max-width: 500px) {
+
+      .logotitle {
+        text-align: center;
+        font-size: 44px;
+        line-height: 42px;
+      }
+
+
+      .welcometo {
+        text-align: center;
+        font-size: 34px;
+        line-height: 36px;
+      }
+
+      .logoalign {
+        @apply(--layout-vertical);
+        @apply(--layout-center-center);
+        padding-top: 15vh;
+        padding-bottom: 15vh;
+      }
+
+      .inneralign {
+        @apply(--layout-vertical);
+        @apply(--layout-center-center);
+        -ms-flex: none;
+        -webkit-flex: none;
+        flex: none;
+      }
+
+      .maintxt {
+        font-size: 30px;
+        line-height: 36px;
+      }
+      
+      .enterbtn {
+        background-color:rgba(255,255,255,0.075);
+        margin-top: 12vh;
+      }
+
+      .linkblocks {
+        padding-top: 8vh;
+        padding-left: 10vw;
+        padding-right: 10vw;
+        padding-bottom: 8vh;
+      }
+
+      .linkblok_one {
+        @apply(--layout-vertical);
+        @apply(--layout-start-justified);
+        @apply(--layout-start);
+       -ms-flex: none;
+        -webkit-flex: none;
+        flex: none;
+      }
+
+      .linkblok_two {
+        @apply(--layout-vertical);
+        @apply(--layout-start-justified);
+        @apply(--layout-start);
+        margin-top: 30px;
+      }
+
+      .whatitem {
+        width: 300px;
+        margin: 20px 0px 20px 0px;
+      }
+
+    }
+
+
     </style>
+
+    <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
+    
     <template is="dom-if" if="{{showStartScreen}}">
-      <h2>Hello [[prop1]]</h2>
-      <a href="#" on-tap="toggleapp">Start Here</a>
+
+      <div class="totalwidth logoalign paddingsides yellowback">
+        <div class="inneralign">
+          <iron-icon icon="sc-icons:logonew" class="giant grey4 logoicon">Swarmcity-logo</iron-icon>
+          <h1 class="welcometo">Welcome to</h1>
+          <h1 class="bold grey4 logotitle">swarm.<template is="dom-if" if="{{!phoneview}}"><br></template>city</h1>
+        </div>
+
+        <paper-button on-tap="toggleapp" class="grey4 shadow enterbtn bigbtn" noink>enter here</paper-button>
+        </div>
+        <div class="totalwidth whiteback vertic centercenter paddingallround">
+          <p class="centertxt ultralight maintxt grey3 maxwidthz">Swarm City is the first truly decentralized peer to peer sharing economy.</p>
+          <div class="whitespace"></div>
+
+          <div class="whatitems horizont start centerjust wrap">
+
+            <div class="whatitem vertic center startjust">
+              <div class="whatitemimg grey1back">
+                <img src="images/site_whatitem.png">
+              </div>
+              <p class="centertxt small reg grey5">Enabled by the SWT token, running<br>on the Ethereum blockchain</p>
+              <div class="minispace"></div>
+              <!-- <a class="morelink" target="_blank" href="https://swt.swarm.city">tell me more</a> -->
+            </div>
+
+            <div class="whatitem vertic center startjust">
+              <div class="whatitemimg grey1back">
+                <img src="images/site_whatitem2.png">
+              </div>
+              <p class="centertxt small reg grey5">Stored locally on your device,<br>no central database</p>
+              <div class="minispace"></div>
+              <!-- <a class="morelink" target="_blank" href="https://thisis.swarm.city">tell me more</a> -->
+            </div>
+
+            <div class="whatitem vertic center startjust">
+              <div class="whatitemimg grey1back">
+                <img src="images/site_whatitem3.png">
+              </div>
+              <p class="centertxt small reg grey5">It's an open source project,<br>so you can jump right in</p>
+              <div class="minispace"></div>
+              <a class="morelink" target="_blank" href="https://getactivein.swarm.city">tell me more</a>
+            </div>
+
+          </div>
+
+        </div>
+        <div class="totalwidth horizont wrap centerjust start linkblocks">
+          <div class="linkblok_one">
+            <!-- <a target="_blank" href="http://thisis.swarm.city">What is Swarm City?</a> -->
+            <a target="_blank" href="https://getactivein.swarm.city">Get active in Swarm City</a>
+            <!-- <a target="_blank" href="http://swt.swarm.city">About the Swarm City Token</a> -->
+            <a target="_blank" href="https://advisors.swarm.city">Swarm City Advisors</a>
+            <!-- <a target="_blank" href="http://dev.swarm.city">Development</a>
+            <a target="_blank" href="http://releaseroadmap.swarm.city">Release Roadmap</a> -->
+            <a target="_blank" href="https://faq.swarm.city">FAQ</a>
+          </div>
+          <div class="linkblok_two">
+            <p class="bold grey3 small">Find Swarm City on</p>
+            <div class="minispace"></div>
+            <a href="https://swarm-slack-invite.herokuapp.com/" target="_blank">Slack</a>
+            <a href="https://medium.com/swarm-city-times" target="_blank">Medium</a>
+            <a href="https://github.com/swarmcity" target="_blank">Github</a>
+            <a href="https://twitter.com/SwarmCityHive" target="_blank">Twitter</a>
+            <a href="https://www.youtube.com/channel/UCsHBWn_ytZ3xdMbTyYe5Ifg" target="_blank">Youtube</a>
+            <a href="https://www.facebook.com/groups/SwarmCity/" target="_blank">Facebook</a>
+
+          </div>
+
+        </div>
+
+
     </template>
+
+
     <template is="dom-if" if="{{showApp}}">
       <template is="dom-if" if="{{boardwalkLoaded}}">
         <sc-boardwalk-app></sc-boardwalk-app>
