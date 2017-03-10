@@ -21,8 +21,15 @@ This is the homescreen of boardwalk.
       <a href="#" on-tap="toggleapp">Start Here</a>
     </template>
     <template is="dom-if" if="{{showApp}}">
-      Ik ben den App
-      <a href="#" on-tap="toggleapp">exit the app</a>
+      <template is="dom-if" if="{{boardwalkLoaded}}">
+        <sc-boardwalk-app></sc-boardwalk-app>
+        Ik ben den App
+        <a href="#" on-tap="toggleapp">exit the app</a>
+      </template>
+      <template is="dom-if" if="{{!boardwalkLoaded}}">
+        LOADING....
+      </template>
+
     </template>
   </template>
 
@@ -52,6 +59,7 @@ This is the homescreen of boardwalk.
       onEnter: function(){
         this.showStartScreen = true;
         this.showApp = !this.showStartScreen;
+        this.boardwalkLoaded = false;
       },
 
       /**
