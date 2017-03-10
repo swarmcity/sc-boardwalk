@@ -1,0 +1,55 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<!--
+`sc-newitem`
+
+This component lets a Swarm Citizen create a new offer under the selected hashtag.
+
+@demo src/sc-newitem/demo/index.html 
+-->
+
+<dom-module id="sc-newitem">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+      <h2>Hello, I'm [[prop1]]</h2>
+
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'sc-newitem',
+
+      properties: {
+        /**
+       * `prop1` this is the first property and what it does is described right here.
+       */
+        prop1: {
+          type: String,
+          value: 'sc-newitem',
+        },
+      },
+
+      ready: function(){
+      },
+
+      /**
+      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
+      * use this to initialize any variables to start the component
+      */
+      onEnter: function(){
+      },
+
+      /**
+      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage 
+      * use this to reset any variables when leaving this component while it remains loaded.
+      */
+      onExit: function(){
+      }
+
+    });
+  </script>
+</dom-module>

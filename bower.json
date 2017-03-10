@@ -8,7 +8,8 @@
     "neon-elements": "PolymerElements/neon-elements#^1.0.0",
     "web3": "^0.18.2",
     "hooked-web3-provider": "https://github.com/ConsenSys/hooked-web3-provider.git",
-    "eth-lightwallet": "https://github.com/BlockTube/eth-lightwallet.git#^2.4.1"
+    "eth-lightwallet": "https://github.com/BlockTube/eth-lightwallet.git#^2.4.1",
+    "sc-style": "https://github.com/swarmcity/sc-style.git"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",

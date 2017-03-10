@@ -1,0 +1,55 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<!--
+`sc-hashtaglist`
+
+This components shows all the hashtags that are available for doing deals on. The component is found in sc-home. 
+
+@demo src/sc-hashtaglist/demo/index.html 
+-->
+
+<dom-module id="sc-hashtaglist">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+      <h2>Hello, I'm [[prop1]]</h2>
+
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'sc-hashtaglist',
+
+      properties: {
+        /**
+       * `prop1` this is the first property and what it does is described right here.
+       */
+        prop1: {
+          type: String,
+          value: 'sc-hashtaglist',
+        },
+      },
+
+      ready: function(){
+      },
+
+      /**
+      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
+      * use this to initialize any variables to start the component
+      */
+      onEnter: function(){
+      },
+
+      /**
+      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage 
+      * use this to reset any variables when leaving this component while it remains loaded.
+      */
+      onExit: function(){
+      }
+
+    });
+  </script>
+</dom-module>
