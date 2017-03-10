@@ -1,6 +1,13 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/neon-animation/neon-animation.html">
+<link rel="import" href="../../bower_components/app-route/app-location.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+
+<!-- <link rel="import" href="../sc-newdeal/sc-newdeal.html"> -->
+
 <!--
 `sc-boardwalk-app`
+
 
 -->
 <dom-module id="sc-boardwalk-app">
@@ -10,7 +17,19 @@
         display: block;
       }
     </style>
-    <h2>Hello [[prop1]]</h2>
+
+    <app-location route="{{route}}" use-hash-as-path></app-location>
+    <app-route route="[[route]]" pattern="/:page" data="{{routedata}}" tail="{{pageTail}}"></app-route>
+    <neon-animated-pages attr-for-selected="data-page" selected="[[routedata.page]]">
+
+    <div
+      data-page="p1"
+      >route 1</div>
+    <div
+      data-page="p2"
+      >route 2</div>
+    </neon-animated-pages>
+
   </template>
 
   <script>
@@ -23,8 +42,25 @@
           type: String,
           value: 'sc-boardwalk-app',
         },
+
+      },
+      
+      observers: [
+        '_onRouteDataChanged(routedata.page)'
+      ],
+
+      ready: function(){
+        this.transitionto('/p1');
       },
 
+      transitionto: function(target){
+        console.log('ac-app -> transitionTo',target);
+        this.set('route.path',target);
+      },
+
+      _onRouteDataChanged: function(page,oldpage) {
+         console.log('ac-app -> _onRouteDataChanged',oldpage,'->',page);
+       }
     });
   </script>
 </dom-module>

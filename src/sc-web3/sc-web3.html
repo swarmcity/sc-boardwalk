@@ -1,0 +1,64 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<script src="../../bower_components/web3/dist/web3.min.js"></script>
+<script src="../../bower_components/hooked-web3-provider/build/hooked-web3-provider.min.js"></script>
+<link rel="import" href="../sc-config/sc-config.html">
+
+<dom-module id="sc-web3">
+  <template>
+    <sc-config web3host="{{host}}"></sc-config>
+  </template>
+  <script>
+
+    var scweb3_web3;
+    var acweb3_customproviderset = false;
+
+    Polymer({
+      is: 'sc-web3',
+      properties: {
+        web3: {
+          type: Object,
+          notify: true
+        },
+        keystore: {
+          type: Object,
+          observer: '_keystore'
+        }
+      },
+
+      observers: [
+        '_host(host)'
+      ],
+
+      _host: function(){
+        this.initweb3();        
+      },
+
+      _keystore: function(){
+        console.log('sc-web3 -> new keystore attached!')
+        this.initweb3();        
+      },
+
+      initweb3: function(){
+        if (!scweb3_web3){
+          if (!this.host){
+            return;
+          }
+          scweb3_web3 = new Web3(new Web3.providers.HttpProvider(this.host));
+          console.log('sc-web3 -> created Web3 (',this.host,')');
+        }
+        if (scweb3_web3 && this.keystore && this.host && !acweb3_customproviderset){
+          console.log('sc-web3 -> Creating new HookedWeb3Provider');
+          this.web3Provider = new HookedWeb3Provider({
+            host: this.host,
+            transaction_signer: this.keystore
+          });
+          acweb3_customproviderset = true;
+          scweb3_web3.setProvider(this.web3Provider);
+        }
+        this.set('web3',scweb3_web3);
+        this.fire('web3-ready');
+      }
+
+    });
+  </script>
+</dom-module>

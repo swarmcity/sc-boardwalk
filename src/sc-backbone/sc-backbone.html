@@ -1,0 +1,56 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../sc-web3/sc-web3.html">
+<link rel="import" href="../sc-config/sc-config.html">
+
+<!--
+`sc-backbone`
+
+This is the component that links the blockchain published config to the app.
+Example:
+    <sc-backbone></sc-backbone>
+
+-->
+
+<dom-module id="sc-backbone">
+  <template>
+    <sc-web3 web3="{{web3}}"></sc-web3>  
+    <sc-config config="{{config}}"></sc-config>
+  </template>
+  <script>
+    Polymer({
+
+      is: 'sc-backbone',
+
+      observers: [
+        '_web3(web3)',
+        '_configchanged(config)'
+      ],    
+
+      ready: function(){
+        this.LLQueue = [];
+      },
+
+      _web3: function(){
+        console.log('Web3 is here...');
+        this.processLLQueue();
+      },
+
+      _configchanged: function(){
+        console.log('config loaded - now I will be reading the contract...',this.config.backbonecontractaddress);
+        this.processLLQueue();
+      },
+
+      lazyload: function(name){
+        this.push('LLQueue',name);
+      },
+
+      processLLQueue: function(){
+        if (this.web3 && this.config && this.LLQueue){
+          console.log('processing Lazy loading...');
+        }
+      }
+
+
+    });
+  </script>
+</dom-module>

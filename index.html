@@ -11,15 +11,21 @@
     <link rel="manifest" href="/manifest.json">
 
     <script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
-
+    
+    <link rel="import" href="/bower_components/neon-animation/neon-animation.html">
     <link rel="import" href="/src/sc-homescreen/sc-homescreen.html">
-    <!-- <link rel="import" href="/src/sc-boardwalk-app/sc-boardwalk-app.html"> -->
+    <link rel="import" href="/src/sc-backbone/sc-backbone.html">
+
+    <link rel="import" href="/src/sc-boardwalk-app/sc-boardwalk-app.html">
   </head>
   <body>
+    <sc-backbone></sc-backbone>
+
+  <!-- hier ne neon animated zetten die switcht tussen sc homescreen en sc boardwalk-app -->
     <sc-homescreen></sc-homescreen>
     <!--
     This will be lazy loaded in some near future...
     -->
-    <sc-boardwalk-app></sc-boardwalk-app>
+    <!-- <sc-boardwalk-app></sc-boardwalk-app> -->
   </body>
 </html>

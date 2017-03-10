@@ -1,10 +1,12 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-
+<!-- note that this will be lazy-loaded -->
+<link rel="import" href="../sc-boardwalk-app/sc-boardwalk-app.html">
 <!--
 `sc-homescreen`
 
+This is the homescreen of boardwalk.
 
-@demo demo/index.html 
+@demo src/sc-homescreen/demo/index.html 
 -->
 
 <dom-module id="sc-homescreen">
@@ -14,7 +16,14 @@
         display: block;
       }
     </style>
-    <h2>Hello [[prop1]]</h2>
+    <template is="dom-if" if="{{showStartScreen}}">
+      <h2>Hello [[prop1]]</h2>
+      <a href="#" on-tap="toggleapp">Start Here</a>
+    </template>
+    <template is="dom-if" if="{{showApp}}">
+      Ik ben den App
+      <a href="#" on-tap="toggleapp">exit the app</a>
+    </template>
   </template>
 
   <script>
@@ -23,11 +32,40 @@
       is: 'sc-homescreen',
 
       properties: {
+        /**
+       * `prop1` this is the first property and what it does is described right here.
+       */
         prop1: {
           type: String,
           value: 'sc-homescreen',
         },
       },
+
+      ready: function(){
+        this.onEnter();
+      },
+
+      /**
+      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
+      * use this to initialize any variables to start the component
+      */
+      onEnter: function(){
+        this.showStartScreen = true;
+        this.showApp = !this.showStartScreen;
+      },
+
+      /**
+      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage 
+      * use this to reset any variables when leaving this component while it remains loaded.
+      */
+      onExit: function(){
+        this.showStartScreen = true;
+      },
+
+      toggleapp: function(){
+        this.showStartScreen = !this.showStartScreen;
+        this.showApp = !this.showStartScreen;
+      }
 
     });
   </script>

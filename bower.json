@@ -3,7 +3,12 @@
   "description": "swarm.city DAPP",
   "main": "index.html",
   "dependencies": {
-    "polymer": "Polymer/polymer#^1.4.0"
+    "polymer": "Polymer/polymer#^1.4.0",
+    "app-route": "https://github.com/PolymerElements/app-route.git#^0.9.3",
+    "neon-elements": "PolymerElements/neon-elements#^1.0.0",
+    "web3": "^0.18.2",
+    "hooked-web3-provider": "https://github.com/ConsenSys/hooked-web3-provider.git",
+    "eth-lightwallet": "https://github.com/BlockTube/eth-lightwallet.git#^2.4.1"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
