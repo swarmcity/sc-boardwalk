@@ -1,0 +1,233 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="../../bower_components/sc-style/sc-style.html">
+<link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
+
+<!--
+`sc-balance`
+
+This component shows the SWT-balance and the reference currency (when in sc-walletview). 
+
+@demo src/sc-balance/demo/index.html 
+-->
+
+<dom-module id="sc-balance">
+<link rel="import" href="../../bower_components/sc-style/sc-style.css"  type="css">
+
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      .normal p {
+        font-size: 22px;
+        line-height: 24px;
+        opacity: 0.75;
+      }
+
+
+      .normal h1 {
+        font-size: 50px;
+        line-height: 56px
+      }
+
+
+      .small h1 {
+        font-size: 30px;
+        line-height: 36px;    
+      }
+
+      .verysmall h1 {
+        font-size: 20px;
+        line-height: 22px;    
+      }
+
+      .SWTletters {
+        font-size: 14px;
+        line-height: 16px;
+        margin-left: 6px;
+      }
+
+
+      .prefcurrletters {
+        margin: 0px 0px 8px 14px;
+        opacity: 0.75;
+      }
+
+
+      .prefcurrletters p {
+        opacity: 0.5;
+      }
+
+    </style>
+
+    <iron-ajax
+      url="https://api.coinmarketcap.com/v1/ticker/arcade-token/"
+      on-response="handleResponse"
+      auto>
+    </iron-ajax>
+
+    <iron-ajax
+      url="https://api.fixer.io/latest?base=USD"
+      on-response="handleResponseUSDEUR"
+      auto>
+    </iron-ajax>
+
+    <!-- <div class$="arc-balance {{align}}"> -->
+      <div class$="horizont end {{viewmode}}">
+        <template is="dom-if" if="{{_is( viewmode, 'small')}}">
+          <h1 class="yellow bold">{{formatpong(swtbalance)}}</h1>
+        </template>
+        <template is="dom-if" if="{{_is( viewmode, 'normal')}}">
+          <h1 class="yellow bold">{{formatpong(swtbalance)}}</h1>
+          <h1 class="yellow bold"><span class="SWTletters"> SWT</span></h1>
+        </template>
+      </div>
+
+
+    <!--     <template is="dom-if" if="{{wereinwallet}}">
+          <template is="dom-if" if="{{!_is(sizeview,'phone')}}">
+          <div class="horizontend prefcurrletters">
+              <p>({{prefcurrency}} {{balanceref}})</p>
+            </div>
+          </template>
+          <template is="dom-if" if="{{_is(sizeview,'phone')}}">
+            <div class="verticcenter prefcurrletters">
+              <p>{{prefcurrency}} {{balanceref}}</p>
+            </div>
+          </template>
+        </template> -->
+
+    <!-- </div> -->
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'sc-balance',
+
+      properties: {
+        /**
+       * `swtbalance` is the actual balance.
+       */
+        swtbalance: {
+          type: Object,
+          observer: '_swtbalance'
+        },
+        /**
+       * `balanceref` is the balance of the reference currency.
+       */        
+        balanceref: {
+          type: Number,
+        },
+        /**
+       * `prefcurrency` ***TBC***.
+       */  
+        prefcurrency: {
+          type: String,
+          value: '$',
+        },
+        /**
+       * `viewmode` determines the size, it's default on 'normal'.
+       */  
+        viewmode: {
+          type: String,
+          value: 'normal',
+        },
+        wereinwallet: {
+          type: Boolean,
+          value: false
+        }
+      },
+
+      ready: function(){
+      },
+
+      /*
+      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
+      * use this to initialize any variables to start the component
+      */
+      onEnter: function(){
+      },
+
+      /**
+      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage 
+      * use this to reset any variables when leaving this component while it remains loaded.
+      */
+      onExit: function(){
+      },
+
+
+      /**
+      * 'formatpong' sets the format of the balance to the right amount of decimals (18). This shows the SWT-balance as pongs.
+      */
+      formatpong: function(val){
+      return val.dividedBy(1e18).toFormat(2);
+
+      },
+
+      /**
+      * 'handleResponse' handles the response of an ajax-call... **TBC**
+      */
+      handleResponse: function(e) {
+        this.priceusd = e.detail.response[0].price_usd;
+        this.convertcurrency(this.swtbalance);
+      },
+
+      /**
+      * 'handleResponseUSDEUR'... **TBC**
+      */
+      handleResponseUSDEUR: function(e) {
+        this.eurusd = e.detail.response.rates.EUR;
+      },
+
+      /**
+      * '_swtbalance'... **TBC**
+      */
+      _swtbalance: function() {
+        var charcount = this.swtbalance.toString().length;
+        this.balancesize = charcount * this.basesize;
+        this.balanceref = this.convertcurrency(this.swtbalance);
+      },
+
+      /**
+      * 'convertcurrency' takes the data from the ajaxcalls and links them to one another to show the actual the SWT-balance in the actual reference curreny (standard USD).
+      */
+      convertcurrency: function(e) {
+        if(this.priceusd && this.swtbalance) {
+          var x = e / this.priceusd;
+          //console.log(x);
+          this.balanceref = this.swtbalance * this.priceusd / 1e18;
+          this.balanceref = this.balanceref.toFixed(2);
+          this.eurref = this.balanceref * this.eurusd;
+          this.eurref = this.eurref.toFixed(2);
+          return x.toFixed(2);
+        }
+      },
+
+      /**
+      * '_is', a function to bind a template to a certain value of a variable.
+      */
+      _is: function(a, b) {
+        if (b === undefined){
+          b = true;
+        }
+        //console.log(a ,'(',typeof a,') is',b,'(',typeof b,') they are equal for ==',a == b,', they are equal for ===',a === b);
+        return a === b;
+      },
+
+
+      /**
+      * 'fireRefresh' fires refresh to parent-element.
+      */
+      fireRefresh: function(){
+        this.fire('refresh');
+      }
+
+
+    });
+  </script>
+</dom-module>

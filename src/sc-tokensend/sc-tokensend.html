@@ -1,0 +1,803 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+
+<link rel="import" href="../../bower_components/sc-style/sc-style.html">
+<link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
+
+<!-- <link rel="import" href="../sc-whisperer/sc-whisperer.html"> -->
+<link rel="import" href="../sc-ipfs/sc-ipfs.html">
+<link rel="import" href="../sc-config/sc-config.html">
+<link rel="import" href="../sc-helpers/sc-helpers.html">
+
+
+<!--
+`sc-tokensend` is the component that contains the flow of sending tokens, both functional and visual.
+
+@demo src/sc-tokensend/demo/index.html 
+-->
+
+<dom-module id="sc-tokensend">
+<link rel="import" href="../../bower_components/sc-style/sc-style.css"  type="css">
+
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      .sendcoiners {
+        width: 100%;
+        box-sizing: border-box;
+        @apply(--layout-vertical);
+        @apply(--layout-start);
+        @apply(--layout-center-justified);
+      }
+
+      .confirmbtns {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 0px;
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        @apply(--layout-start-justified);
+      }
+
+      .confirmbtns paper-icon-button {
+        margin: 2px;
+      }
+
+      .confirmbtns iron-icon {
+        margin-right: 4px;
+      }
+
+      paper-button.sender {
+        margin: 0px 5px 5px 0px;
+        box-sizing: border-box;
+        padding: 20px 30px 20px 30px;
+        font-size: 18px;
+      }
+
+      .sendinputter {
+        width: 80%;
+        max-width: 400px;
+      }
+
+
+
+
+      .receiver {
+        display: inline-block;
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        @apply(--layout-start-just);
+
+        margin: 4vh 0px 4vh 0px;
+        box-sizing:border-box;
+        padding: 15px 20px 15px 20px;
+        max-width: 300px;
+        border-top: 2px dotted rgba(0,0,0,0.05);
+        border-bottom: 2px dotted rgba(0,0,0,0.05);
+      }
+
+      .receiveravatar {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        min-height: 40px;
+        border-radius: 50%;
+        overflow: hidden;
+      }
+
+      .receiveravatar img {
+        width: 100%;
+        height: 100%;
+      }
+
+      .receiverusername {
+        @apply(--layout-vertical);
+        @apply(--layout-start);
+        @apply(--layout-center-justified);
+        max-width: 80%;
+        margin-left: 10px;
+      }
+
+
+      .pubkey {
+        width: 60px;
+        @apply(--sc-font-nowrap);
+      }
+
+      .sendbox {
+        @apply(--layout-horizontal);
+        @apply(--layout-start-justified);  
+        @apply(--layout-center);
+      }
+
+
+      .announce {
+        width: 100%;
+        box-sizing: border-box;
+        @apply(--layout-vertical);
+        @apply(--layout-start);
+        @apply(--layout-center-justified);          
+      }
+
+      .item {
+        width: 100%;
+        box-sizing: border-box;
+        @apply(--layout-vertical);
+        @apply(--layout-start);
+        @apply(--layout-center-justified);      
+      }
+
+      .topmsg {
+        @apply(--montserrat-ultralight);
+        font-size: 28px;
+        line-height: 32px;
+        max-width: 500px;
+      }
+
+      .topmsgz {
+        font-size: 34px;
+        line-height: 38px;        
+      }
+
+      .txhash {
+        word-break: break-all;
+      }
+  
+
+
+      @media all and (min-width: 0) and (max-width: 420px) {
+
+        paper-button.sender {
+          margin: 5px 5px 5px 5px;
+        }
+
+
+
+        .sendcoiners {
+          width: 100%;
+          box-sizing: border-box;
+          @apply(--layout-vertical);
+          @apply(--layout-center-center);
+        }
+
+
+        .confirmbtns {
+          width: 100%;
+          box-sizing: border-box;
+          padding: 0px;
+          @apply(--layout-horizontal);
+          @apply(--layout-center-center);
+        }
+
+        .confirmbtns paper-icon-button {
+          margin: 2px;
+        }
+
+        .confirmbtns iron-icon {
+          margin-right: 4px;
+        }
+
+        .sendinputter {
+          width: 80%;
+        }
+
+        .sendbox {
+            @apply(--layout-horizontal);
+            @apply(--layout-center-center);  
+        }
+
+      
+        .announce {
+          width: 100%;
+          box-sizing: border-box;
+          @apply(--layout-vertical);
+          @apply(--layout-center-center);          
+        }
+        .announce p {
+          text-align: center;
+       
+        }
+
+        .receiver {
+          display: inline-block;
+          @apply(--layout-horizontal);
+          @apply(--layout-center-center);
+          margin: 2vh 0px 2vh 0px;
+
+        }
+
+        .item {
+          width: 100%;
+          box-sizing: border-box;
+          @apply(--layout-vertical);
+          @apply(--layout-center-center);          
+        }
+
+        .item p {
+          text-align: center;
+        }
+    }
+
+    </style>
+    <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
+
+    <sc-ipfs id="ipfs"></sc-ipfs>
+    <sc-helpers id="helpers"></sc-helpers>
+
+    <sc-config
+      config="{{config}}"
+      id="config"
+      ipfs="{{ipfs}}"
+      etherscanroot="{{etherscanroot}}"
+      tokencontractaddress="{{tokencontractaddress}}"></sc-config>
+
+<!--    <sc-whisperer
+      web3="[[web3]]"
+      topic="{{topic}}"
+      progress="{{progress}}"
+      listeninterval="{{listeninterval}}"
+      decimals="5"
+      on-message-received="handlewhispermessage"
+      id="whisper"></sc-whisperer> -->
+
+
+    <div class="total vertic centercenter">
+      <template is="dom-if" if="{{_is(sendcoinstate,'init')}}">
+        <div class="totalwidth sendbox">
+          <paper-button on-tap="tosendform" class="sender bigbtn grey1back grey4">send SWT</paper-button>
+        </div>
+      </template>
+
+      <div class="sendcoiners">
+
+          <template is="dom-if" if="{{_is(sendcoinstate,'sendform')}}">
+            <paper-input class="sendinputter" autofocus type="number" label="Amount" value="{{amount}}">
+              <div suffix>SWT</div>
+            </paper-input>
+            <paper-input class="sendinputter" type="text" label="Shortcode receiver or public key" value="{{pincode}}">
+            </paper-input>              
+            <div class="whitespace"></div>
+            <div class="confirmbtns">
+              <iron-icon icon="sc-icons:decline" class="grey4 medium" on-tap="closetokensendcollapser">decline</iron-icon>
+              <paper-icon-button icon="sc-icons:arrowright" class="blue whiteback shadow big" on-tap="tosearchingforpeer"></paper-icon-button>
+            </div>
+            <div class="whitespace"></div>
+            <div class="whitespace"></div>
+          </template>
+
+          <template is="dom-if" if="{{_is(sendcoinstate,'sendtowallet_confirm')}}">
+            <div class="announce">
+              <div class="item totalwidth">
+                <p class="topmsg grey4 hairline">You're sending <span class="ultralight">{{amount}} SWT</span> to
+                </p>
+                <div class="receiver">
+                  <div class="receiverusername">
+                    <p class="bold">{{sendtowallet_account}}</p>
+                  </div>
+                </div>
+                <div class="confirmbtns">
+                  <iron-icon icon="sc-icons:decline" class="grey4 medium" on-tap="closetokensendcollapser">decline</iron-icon>
+                  <paper-icon-button icon="sc-icons:v" class="blue whiteback shadow big" on-tap="sendtowallet_tosendcoins"></paper-icon-button>
+                </div>
+                <div class="whitespace"></div>    
+              </div>
+            <div class="whitespace"></div>
+            </div>
+          </template>
+
+          <template is="dom-if" if="{{_is(sendcoinstate,'balancelow')}}">
+            <div class="announce">
+              <p class="topmsg grey4 hairline">Your balance is too low for this transaction.</p>
+              <template is="dom-if" if="{{phoneview}}">
+                <div class="whitespace"></div>
+              </template>
+              <div class="minispace"></div>
+              <iron-icon icon="sc-icons:decline" class="grey4 medium" on-tap="closetokensendcollapser">decline</iron-icon>
+            </div>
+          </template>
+
+          <template is="dom-if" if="{{_is(sendcoinstate,'searchingforpeer')}}">
+            <div class="announce">
+              <p class="topmsg grey4 hairline">Searching for your peer</p>
+              <template is="dom-if" if="{{phoneview}}">
+                <div class="whitespace"></div>
+              </template>
+              <div class="minispace"></div>
+              <iron-icon icon="sc-icons:decline" class="grey4 medium" on-tap="cancelsend">decline</iron-icon>
+            </div>
+          </template>
+
+          <template is="dom-if" if="{{_is(sendcoinstate,'nopeer')}}">
+            <div class="announce">
+              <p class="topmsg grey4 hairline">We can not find your peer.</p>
+              <template is="dom-if" if="{{phoneview}}">
+                <div class="whitespace"></div>
+              </template>
+              <div class="minispace"></div>
+              <iron-icon icon="sc-icons:decline" class="grey4 medium" on-tap="closetokensendcollapser">decline</iron-icon>
+            </div>
+          </template>
+
+          <template is="dom-if" if="{{_is(sendcoinstate,'sendcoins')}}">
+            <div class="announce">
+              <div class="item totalwidth">
+                <p class="topmsg grey4 hairline">You're sending <span class="ultralight">{{amount}} SWT</span> to
+                </p>
+                <div class="receiver">
+                  <div class="receiveravatar">
+                    <img src="{{receiver.avatarurl}}">
+                  </div>
+                  <div class="receiverusername">
+                    <p class="bold">{{receiver.username}}</p>
+                    <p class="pubkey small grey3">{{receiver.account}}</p>
+                  </div>
+                </div>
+                <div class="confirmbtns">
+                  <iron-icon icon="sc-icons:decline" class="grey4 medium" on-tap="txdecline">decline</iron-icon>
+                  <paper-icon-button icon="sc-icons:v" class="blue whiteback shadow big" on-tap="tosendcoins"></paper-icon-button>
+                </div>
+                <div class="whitespace"></div>    
+              </div>
+            <div class="whitespace"></div>
+            </div>
+          </template>
+
+          <template is="dom-if" if="{{_is(sendcoinstate,'sending')}}">
+            <div class="announce">
+              <p class="topmsg grey4 hairline">Your transaction is being executed on the blockchain. </p>
+              <div class="minispace"></div>
+              <div class="minispace"></div>
+              <p class="reg">This could take a few moments. Don't close this screen.</p>
+              <div class="minispace"></div>
+              <div class="minispace"></div>
+              <div class="minispace"></div>
+              <p class="small reg grey2 txhash">TxHash: {{currenttxhash}}</p>
+              <template is="dom-if" if="{{phoneview}}">
+                <div class="whitespace"></div>
+              </template>
+              <div class="whitespace"></div>
+              <iron-icon icon="sc-icons:decline" class="grey4 medium" on-tap="closetokensendcollapser">decline</iron-icon>
+            </div>
+          </template>
+
+          <template is="dom-if" if="{{_is(sendcoinstate,'sent')}}">
+            <div class="announce">
+              <div class="item totalwidth">
+                <p class="topmsgz bold blue">Yes!</p>
+                <p class="topmsg grey4 hairline">You have successfully sent <span class="ultralight">{{amount}} SWT </span> to
+                </p>
+                <div class="receiver">
+                  <template is="dom-if" if="{{sendtowallet_account}}">
+                    <div class="receiverusername">
+                      <p class="bold">{{sendtowallet_account}}</p>
+                    </div>                  
+                  </template>
+                  <template is="dom-if" if="{{!sendtowallet_account}}">
+                    <div class="receiveravatar">
+                      <img src="{{receiver.avatarurl}}"></div>
+                    <div class="receiverusername">
+                      <p class="bold">{{receiver.username}}</p>
+                      <p class="pubkey grey3 small">{{receiver.account}}</p>
+                    </div>
+                  </template>
+                </div>
+                <template is="dom-if" if="{{phoneview}}">
+                  <div class="whitespace"></div>
+                </template>
+                <div class="minispace"></div>
+                <iron-icon icon="sc-icons:decline" class="grey4 medium" on-tap="closetokensendcollapser">decline</iron-icon>
+                <div class="whitespace"></div>    
+              </div>
+            </div>
+          </template>
+
+          <template is="dom-if" if="{{_is(sendcoinstate,'transfererror')}}">
+            <div class="announce">
+              <p class="bold red">{{transfererrormessage}}</p>
+              <template is="dom-if" if="{{phoneview}}">
+                <div class="whitespace"></div>
+              </template>
+              <div class="minispace"></div>
+              <iron-icon icon="sc-icons:decline" class="grey4 medium" on-tap="closetokensendcollapser">decline</iron-icon>
+            </div>
+          </template>
+      </div>
+
+      <template is="dom-repeat" items="{{history}}">
+        <div class="avatar" id="avatar">
+          <img src="{{item.avatar}}"></div>
+        <p>
+          <span>{{item.receiver}}</span>
+          &Delta;
+          <span>{{item.amount}}</span>
+        </p>
+      </template>
+    </div>
+
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'sc-tokensend',
+
+      properties: {
+
+        /**
+       * `identity` is the identity of the current Swarm Citizen, it's received from the parent-element.
+       */
+        identity: {
+          type: Object,
+        },
+        /**
+       * `web3` is received from the parent-element.
+       */
+        web3: {
+          type: Object
+        },
+        /**
+       * `account` is received from the parent-element.
+       */
+        account: {
+          type:String,
+        },
+        /**
+       * `sendcoinstate` expresses the different states/views of the send-coin-flow. Options are: sendform | sendtowallet_confirm | balancelow | searchingforpeer | nopeer | sendcoins | sending | sent | transfererror.
+       */
+        sendcoinstate: {
+          type: String,
+        },
+        /**
+       * `topic` is the whisper-topic where the sender is listening to.
+       */
+        topic: {
+          type: Number,
+        },
+
+        /**
+       * `swtbalance` is the current SWT-balance of the Swarm Citizen sending coins.
+       */
+        swtbalance:{
+          type: Object          
+        },
+
+        /**
+       * `history` is a history of transactions.
+       */
+        history: {
+          type: Array,
+          value: []
+        },
+      },
+
+      ready: function(){
+        var self = this;
+        this.sendcoinstate = 'init';
+        this.password = sessionStorage.getItem('ac-password');
+      },
+
+      /**
+      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
+      * use this to initialize any variables to start the component
+      */
+      onEnter: function(){
+      },
+
+      /**
+      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage 
+      * use this to reset any variables when leaving this component while it remains loaded.
+      */
+      onExit: function(){
+      },
+
+
+      /**
+      * '_is', a function to bind a template to a certain value of a variable.
+      */
+      _is: function(a, b) {
+        if (b === undefined){
+          b = true;
+        }
+        return a === b;
+      },
+
+
+      /**
+      * 'reset' clears all variables, and tells sc-whisperer to close the whisperchannels.
+      */
+      reset: function(){
+        this.amount = '';
+        this.pincode = '';
+        this.receiver = null;
+        this.$.whisper.closeallchannels();
+      },
+
+      /**
+      * 'closetokensendcollapser' clears some variables, fires to the parent-element that its being deactivated, and sets the sendcoinstate back to the start-position (=init).
+      */
+      closetokensendcollapser: function() {
+          delete this.receiver;
+          this.amount = '';
+          this.pincode = '';
+          delete this.sendtowallet_account;
+          this.sendcoinstate= 'init';
+          this.fire('deactivated');
+      },
+
+      /**
+      * 'cancelsend' cancels the transaction and fires to parent-element that the component is deactivated.
+      */
+      cancelsend: function(){
+        this.sendcoinstate = 'init';
+        this.fire('deactivated');
+        this.reset();
+      },
+
+      /**
+      * 'transfer' does the actual transfer by calling the SWT-contract and using its sendTransaction-function.
+      */
+      transfer: function(amount, pubkey, cb) {
+        var self = this;
+        this.sendcoinstate = 'sending';
+        this.contracturl = this.resolveUrl('./contracts/ARCToken.json');
+        this.importHref(this.contracturl, function(e) {
+          this.contractjson = JSON.parse(e.target.import.body.innerText);
+          self.web3.eth.getGasPrice(function(err, result) {
+            var gasPrice = result.toNumber(10);
+            // console.log('gasprice: ', gasPrice);
+            var MyContract = self.web3.eth.contract(self.contractjson.abi);
+            var myContractInstance = MyContract.at(self.config.swttokencontractaddress);
+            console.log('doing transfer of ', amount, ' LC to: ', pubkey, 'from: ', self.account);
+            myContractInstance.transfer.sendTransaction(pubkey, amount, {
+              from: self.$.helpers.fixaddress(self.account),
+              gasPrice: gasPrice,
+              gas: 200000
+            }, function(err, result) {
+              if (err){
+                if (cb) {
+                  return cb(err);
+                }
+              }
+              console.log(err, result);
+              console.log('waiting for TX to happen');
+              self.currenttxhash = result;
+
+              // if sending token to a pubkey, no whisper data is found.
+              if (self.receiver && self.receiver.from){
+                self.$.whisper.whisperpost(self.receiver.from, JSON.stringify({
+                  'command': 'waitfortx',
+                  'txhash': result,
+                }));                 
+              }
+              self.waitTx(result, function(success) {
+                console.log('TX mined!');
+                self.fire('tokenssent');
+                self.currenttxhash = '';
+                if (cb) {
+                  cb(err, result);
+                }
+              });
+            });
+          });
+        });
+      },
+
+      /**
+      * 'waitTx' watches for a particular transaction hash and calls the awaiting function when done.
+      */
+      waitTx: function(txHash, callback) {
+        /*
+         * Watch for a particular transaction hash and call the awaiting function when done;
+         * Ether-pudding uses another method, with web3.eth.getTransaction(...) and checking the txHash;
+         * on https://github.com/ConsenSys/ether-pudding/blob/master/index.js
+         */
+        var self = this;
+        var blockCounter = 15;
+        // Wait for tx to be finished
+        var filter = this.web3.eth.filter('latest').watch(function(err, blockHash) {
+          if (blockCounter <= 0) {
+            filter.stopWatching();
+            filter = null;
+            console.warn('!! Tx expired !!');
+            if (callback)
+              return callback(false);
+            else
+              return false;
+          }
+          // Get info about latest Ethereum block
+          var block = self.web3.eth.getBlock(blockHash);
+          --blockCounter;
+          // Found tx hash?
+          if (block.transactions.indexOf(txHash) > -1) {
+            // Tx is finished
+            filter.stopWatching();
+            filter = null;
+            if (callback)
+              return callback(true);
+            else
+              return true;
+            // Tx hash not found yet?
+          } else {
+            // console.log('Waiting tx..', blockCounter);
+          }
+        });
+      },
+
+
+      /**
+      * 'tosendform' checks the SWT-balance, and if the Swarm Citizen has a balance, it changes the sendcoinstate, thus sending the user to the next view/state. The component fires to the parent-element that it is actived.
+      */
+      tosendform: function(){
+        if (this.swtbalance){
+          this.sendcoinstate = 'sendform';
+          this.fire('activated');          
+        }else{
+          console.log('no swt balance available yet.');
+        }
+      },
+
+      /**
+      * 'tosendcoins' is activated when the sender confirms the transaction he's about to make by hitting the button. It calls the transfer-function with the givven data (amount, receiver), and send a msg to the receiving-party that the sender confirmed the transaction. Then it changes the sendcoinstate to the next view = 'sent'.
+      */
+      tosendcoins: function() {
+        var self = this;
+        this.transfer(this.amount * 1e18, this.$.helpers.fixaddress(self.receiver.account), function(err, result) {
+
+          if (err) {
+            console.log('tx in error...');
+            self.$.whisper.whisperpost(self.receiver.from, JSON.stringify({
+              'command': 'transfererror',
+              'error': self.$.helpers.translateEthErrors(err)
+            }));
+            self.sendcoinstate = 'transfererror';
+            self.transfererrormessage = self.$.helpers.translateEthErrors(err);
+
+          } else {
+
+            self.$.whisper.whisperpost(self.receiver.from, JSON.stringify({
+              'command': 'confirmtransfer',
+              'amount': self.amount * 1e18,
+              'avatarhash': self.identity.avatarhash,
+              'username': self.identity.username,
+              'txhash': result
+            }));
+            self.sendcoinstate = 'sent';
+          }
+
+          // clean up channels
+          self.$.whisper.closeallchannels();
+
+        });
+      },
+
+
+      /**
+      * 'sendtowallet_tosendcoins' is in functionality similar to 'tosendcoins' only that the transaction is made to an external wallet instead of another Swarm Citizen.
+      */
+    sendtowallet_tosendcoins: function(){
+      var self = this;
+      this.transfer(this.amount * 1e18, this.$.helpers.fixaddress(self.sendtowallet_account), function(err, result) {
+
+        if (err) {
+          console.log('tx in error...');
+          self.sendcoinstate = 'transfererror';
+          self.transfererrormessage = self.$.helpers.translateEthErrors(err);
+        } else {
+          self.sendcoinstate = 'sent';
+        }
+      });
+    },
+
+      /**
+      * 'handlewhispermessage' gets whisper-msgs from sc-whisperer and processes them.
+      */
+      handlewhispermessage: function(m) {
+        var self = this;
+        var message = JSON.parse(m.detail.message);
+        console.log('incoming tokentransfer msg: ', message);
+        switch (message.command) {
+          case 'userinfo':
+            this.receiver = message;
+            this.set('receiver.avatarurl',this.$.ipfs.geturl(this.receiver.avatarhash));
+            this.set('receiver.from',m.detail.from);
+            // this.receiver.from = m.detail.from;
+            this.sendcoinstate = 'sendcoins';
+            
+            self.$.whisper.whisperpost(self.receiver.from, JSON.stringify({
+              'command': 'waitforconfirmation',
+              //'amount': self.amount,
+              'avatarhash': self.identity.avatarhash,
+              'username': self.identity.username,
+              //'txhash': result
+            }));            
+            break;
+          // case 'confirmtransfer':
+          //   // TODO : show transfer in history...
+          //   console.log('transfer confirmed...', message.amount, 'received');
+          //   break;
+          default:
+            console.log('unknown message', message);
+        }
+      },
+
+
+      /**
+      * 'tosearchingforpeer' checks if the format of the transaction is correct and connects the sending party to the receiving party through the shortcode-system (whisper, etc.).
+      */
+      tosearchingforpeer: function(){
+
+        // Verify amount syntax
+        var amount;
+        try{
+          amount = new this.web3.BigNumber(this.amount).times(1e18);
+        }catch(e){
+          return console.log('amount unreadable',this.amount);
+          amount = new this.web3.BigNumber(0);
+        }
+
+        if (amount.equals(0)){
+          return console.log('amount = 0');
+        }
+
+        // Verify sufficient funds
+        if (amount.greaterThan(this.swtbalance)){
+          this.sendcoinstate = 'balancelow';
+          return;
+        }        
+ 
+        // if the input is a pincode - take another path
+        if (this.web3.isAddress(this.pincode)){
+          this.sendtowallet_account = this.pincode;
+          this.sendcoinstate = 'sendtowallet_confirm';
+          return;
+        }
+
+
+        if (!this.pincode || this.pincode.length !== 5){
+          console.log('pincode too short.');
+          return;
+        }
+
+        try{
+          this.pincode = parseInt(this.pincode);
+        }catch(e){
+          console.log('pincode incorrect.');
+          return;
+        }
+
+
+        console.log(amount.toString(10));
+        console.log(this.swtbalance.toString(10));
+        //debugger;        
+
+        var self = this;
+        this.$.whisper.whisperpost(this.pincode, JSON.stringify({
+                'command': 'requestuserinfo',
+              }));
+        this.sendcoinstate = 'searchingforpeer';
+      },
+
+
+
+ 
+      /**
+      * 'txdecline' declines the transaction, and announces this to the receiving party over whisper. Then it calls the closetokensendcollapser-function.
+      */       
+      txdecline: function() {
+        var self = this;
+        self.$.whisper.whisperpost(self.receiver.from, JSON.stringify({
+          'command': 'txdecline',
+        }));
+        this.closetokensendcollapser();
+      },
+
+    });
+  </script>
+</dom-module>

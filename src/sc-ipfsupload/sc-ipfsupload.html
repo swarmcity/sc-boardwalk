@@ -1,0 +1,137 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
+<link rel="import" href="../sc-ipfs/sc-ipfs.html">
+
+<dom-module id="sc-ipfsupload">
+ <style>
+    :host {
+      display: block;
+      box-sizing: border-box;
+    }
+
+    #fileinput {
+        display:block;
+    }
+
+  </style>
+  <template>
+    <sc-ipfs id="ipfs"></sc-ipfs>
+    <input type="file" id="fileinput" on-change="_fileChange" multiple="{{multi}}" accept="{{accept}}">
+    <content></content>
+  </template>
+  <!-- Creates the element's prototype and registers it -->
+  <script>
+    Polymer({
+      is: 'sc-ipfsupload',
+      listeners: {
+        tap: '_fileinputclicked'
+      },
+      properties: {
+        /**
+         * `multi` indicates whether or not to allow multiple files to be uploaded.
+         */
+        multi: {
+          type: Boolean,
+          value: false
+        },
+
+        /**
+         * include the attribute `hidefileinput` to hide the file browse input field ( if you only want to use the API)
+         */
+        hidefileinput: {
+          type: Boolean,
+          value: false,
+          //observer: "_showfileinputchanged"
+        },
+
+        /**
+         * `accept` is the set of comma separated file extensions or mime types
+         * to filter as accepted.
+         */
+        accept: {
+          type: String
+        },
+
+        /**
+         * `hashes` is an array of hashes of the files that were uploaded. This property is filled in when using the multi attribute.
+         */
+        hash: {
+          type: String,
+          notify: true
+        },
+
+        /**
+         * `hash` is the IPFS hash of the uploaded file that were uploaded when not using the multi attribute.
+         */
+        hashes: {
+          type: Array,
+          notify: true,
+          value: []
+        },
+        url: {
+          type: String,
+          notify: true
+        }
+      },
+
+     ready: function() {
+
+      if (this.hidefileinput) {
+        this.$.fileinput.style.display = "none";
+      }
+
+    },
+
+    _fileChange: function(e) {
+        if (!this.$.ipfs.ipfs){
+          return;
+        }
+        var self = this;
+        var length = e.target.files.length;
+        for (var i = 0; i < length; i++) {
+          var file = e.target.files[i];
+          var reader = new FileReader();
+          // If we use onloadend, we need to check the readyState.
+          reader.onloadend = function(evt) {
+            if (evt.target.readyState == FileReader.DONE) { // DONE == 2
+              self.fire('upload-started',file);
+              toDataUrl(file, function(e) {
+                console.log(e);
+              });
+              self.$.ipfs.ipfs.add([new self.$.ipfs.ipfs.Buffer(evt.target.result)], function(err, res) {
+                if (err || !res){
+                  return self.fire('upload-error',err);
+                }
+
+                res.forEach(function(ipfsfile) {
+                  if (ipfsfile && ipfsfile.hash) {
+                    self.push('hashes', {
+                      hash: ipfsfile.hash
+                    });
+                  }
+                  if (!self.multi){
+                    self.hash = ipfsfile.hash;
+                    self.url = self.$.ipfs.geturl(self.hash);
+                  }
+                  self.fire('ipfs-hash-received', {
+                    file: file,
+                    hash: ipfsfile.hash
+                  });
+                })
+              })
+            }
+          };
+          reader.readAsArrayBuffer(file);
+        }
+      },
+
+      _fileinputclicked: function(){
+        //debugger;
+        if (this.hidefileinput){
+          this.$.fileinput.click();
+        }
+      },
+
+    });
+
+  </script></dom-module>

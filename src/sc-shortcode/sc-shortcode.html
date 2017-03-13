@@ -1,0 +1,211 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-progress/paper-progress.html">
+
+<link rel="import" href="../../bower_components/sc-style/sc-style.html">
+<link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
+
+<!-- <link rel="import" href="../sc-whisperer/sc-whisperer.html"> -->
+<link rel="import" href="../sc-ipfs/sc-ipfs.html">
+<link rel="import" href="../sc-config/sc-config.html">
+<link rel="import" href="../sc-helpers/sc-helpers.html">
+<link rel="import" href="../sc-shortcode/sc-shortcode.html">
+
+<!--
+`sc-shortcode` is the component that generates a temporary shortcode and visualises it.
+
+@demo src/sc-shortcode/demo/index.html 
+-->
+
+<dom-module id="sc-shortcode">
+<link rel="import" href="../../bower_components/sc-style/sc-style.css" type="css">
+
+  <template>
+    <style>
+      :host {
+        display: inline-block;
+      }
+
+      .topic {
+        font-size: 32px;
+        line-height: 32px;
+      }
+
+      .topictotal {
+        box-sizing:border-box;
+        padding: 15px 0px 15px 0px; 
+        margin-top: 1vh;
+        @apply(--layout-vertical);
+        @apply(--layout-center-justified);
+        @apply(--layout-start);
+      }
+
+      .topicintern {
+         @apply(--layout-vertical);
+        @apply(--layout-center-justified);
+        @apply(--layout-start);       
+      }
+
+      paper-button.receiver {
+        margin: 0px 5px 5px 0px;
+        box-sizing: border-box;
+        padding: 20px 30px 20px 30px;
+        font-size: 18px;
+      }
+
+      paper-progress.normal {
+        --paper-progress-active-color: rgba(0,0,0,0.075);
+        --paper-progress-container-color: rgba(0,0,0,0.05);
+        height: 3px;
+      }
+
+      paper-progress.urgent {
+        --paper-progress-active-color: var(--sc-blue);
+        --paper-progress-container-color: rgba(0,0,0,0.05);
+        height: 3px;
+      }
+
+      .countdown {
+        @apply(--layout-vertical);
+        @apply(--layout-center-justified);
+        @apply(--layout-start);
+
+      }
+
+      @media all and (min-width: 0) and (max-width: 500px) { 
+
+          paper-button.receiver {
+            margin: 5px 5px 5px 5px;
+          }
+
+          .countdown {
+            @apply(--layout-vertical);
+            @apply(--layout-center-center);
+          }
+
+          .topictotal {
+            box-sizing:border-box;
+            padding: 15px 30px 15px 30px; 
+            margin-top: 1vh;
+            @apply(--layout-vertical);
+            @apply(--layout-center-center);
+          }
+
+          .topicintern {
+            @apply(--layout-vertical);
+            @apply(--layout-center-center);       
+          }
+        }
+    </style>
+
+  <template is="dom-if" if="{{_is(topic,0)}}">
+      <div class="vertic centercenter">
+        <paper-button on-tap="fireshowshortcode" class="receiver bigbtn grey1back grey4" noink>
+        <content></content>
+        </paper-button>
+      </div>
+  </template>
+
+  <template is="dom-if" if="{{topic}}">
+    <div class="totalwidth topictotal">
+      <div class="totalwidth topicintern">
+          <p class="small grey3 centertxt">Temporary shortcode</p>
+          <div class="minispace"></div>
+        <p class="bold blue topic">{{topic}}</p>
+      </div>
+      <template is="dom-if" if="{{countdownurgent}}">
+        <div class="whitespace"></div>
+        <div class="totalwidth countdown">
+          <paper-progress value="{{progress}}" min="0" max="30" class="urgent"></paper-progress>
+          <div class="whitespace"></div>
+          <p class="blue centertxt bold">This shortcode is active for another {{progress}} seconds.</p>
+        </div>
+      </template>
+      <div class="whitespace"></div>
+      <iron-icon icon="sc-icons:decline" class="grey4 medium" on-tap="cancel">decline</iron-icon>
+      <div class="whitespace"></div>
+    </div>
+  </template>
+
+</template>
+
+<script>
+    Polymer({
+
+      is: 'sc-shortcode',
+
+      properties: {
+
+        topic: {
+          type: Number
+        },
+
+        progress: {
+          type: Number
+        },
+      },
+
+      listeners: {
+        'tap': 'toggleVisibility'
+      },
+
+      observers: [
+        'progressTracker(progress)'
+      ],
+
+
+
+      ready: function(){
+        this.topic = 0;
+        this.showcounter = false;
+        this.countdownurgent = false;
+      },
+
+
+        /**
+       * `cancel` fires 'cancel' to the parent-element (=sc-tokenreceive).
+       */
+      cancel: function(){
+        this.fire('cancel');
+      },
+
+        /**
+       * `fireshowshortcode` fires 'showshortcode' to the parent-element (=sc-tokenreceive).
+       */
+      fireshowshortcode: function(){
+        this.fire('showshortcode');
+      },
+
+      /**
+      * '_is', a function to bind a template to a certain value of a variable.
+      */
+      _is: function(a, b) {
+        if (b === undefined){
+          b = true;
+        }
+        //console.log(a ,'(',typeof a,') is',b,'(',typeof b,') they are equal for ==',a == b,', they are equal for ===',a === b);
+        return a === b;
+      },
+
+
+        /**
+       * `progressTracker` calculates the progress to change the appearance (color, form, typo) of the progressbar when the countdown goes lower then 30 seconds.
+       */
+      progressTracker: function() {
+        if (this.progress < 30){
+          this.countdownurgent = true;
+        } else {
+          this.countdownurgent = false;
+        };
+
+        if (this.progress < 1){
+        this.fire('cancel');
+        }
+
+      },
+
+
+    });
+  </script>
+</dom-module>

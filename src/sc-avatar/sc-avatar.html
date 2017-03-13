@@ -1,0 +1,183 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../sc-ipfs/sc-ipfs.html">
+
+<!--
+`sc-avatar`
+
+This component shows the avatar. The size can be determined with the property `size`. 
+
+@demo src/sc-avatar/demo/index.html 
+-->
+
+<dom-module id="sc-avatar">
+  <template>
+    <style>
+      :host {
+        display: inline-block;
+      }
+
+      .avatar {
+        display: inline-block;
+      }
+
+
+      .verysmall {
+        width: 28px;
+        height: 28px;
+        min-width: 28px;
+        min-height: 28px;
+        overflow: hidden;
+        border-radius: 50%;
+      }
+
+      .verysmall img {
+        width: 100%;
+        height: 100%;
+      }
+
+      .small {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        min-height: 40px;
+        overflow: hidden;
+        border-radius: 50%;
+      }
+
+      .small img {
+        width: 100%;
+        height: 100%;
+      }
+
+
+      .medium {
+        width: 50px;
+        height: 50px;
+        min-width: 50px;
+        min-height: 50px;
+        overflow: hidden;
+        border-radius: 50%;
+      }
+
+      .medium img {
+        width: 100%;
+        height: 100%;
+      }
+
+
+      .normal {
+        width: 100px;
+        height: 100px;
+        min-width: 100px;
+        min-height: 100px;
+        overflow: hidden;
+        border-radius: 50%;
+      }
+
+      .normal img {
+        width: 100%;
+        height: 100%;
+      }
+
+      .big {
+        width: 115px;
+        height: 115px;
+        min-width: 115px;
+        min-height: 115px;
+        overflow: hidden;
+        border-radius: 50%;
+      }
+
+      .big img {
+        width: 100%;
+        height: 100%;
+      }
+
+
+
+    </style>
+      
+      <sc-ipfs id="ipfs"></sc-ipfs>
+
+      <div class$="avatar {{size}}">
+        <img src="{{ipfsurl(identity.avatarhash)}}">
+      </div>
+<!-- 
+    <template is="dom-if" if="{{_is(mode, 'txtonly')}}">
+      <div class="username grey4">
+        <template is="dom-if" if="{{_is(size, 'small')}}">
+          <p class="bold">{{identity.username}}</p>
+        </template>
+        <template is="dom-if" if="{{!_is(size, 'small')}}">
+          <h1 class="bold">{{identity.username}}</h1>
+        </template>
+      </div>
+    </template> -->
+
+
+
+
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'sc-avatar',
+
+      properties: {
+        /**
+       * `size` can be 'verysmall' (28px), 'small' (40px), 'medium' (50px), 'normal' (100px) or 'big' (115px).
+       */
+        size: {
+          type: String,
+          value: 'normal',
+        },
+        /**
+       * `identity` is received from parent-element, as an object containing an IPFS-hash, which is img-source.
+       */
+        identity: {
+          type: Object
+        }
+      },
+
+      ready: function(){
+      },
+
+      /**
+      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
+      * use this to initialize any variables to start the component
+      */
+      onEnter: function(){
+      },
+
+      /**
+      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage 
+      * use this to reset any variables when leaving this component while it remains loaded.
+      */
+      onExit: function(){
+      },
+
+
+      /**
+      * '_is', a function to bind a template to a certain value of a variable.
+      */
+      _is: function(a, b) {
+        if (b === undefined){
+          b = true;
+        }
+        //console.log(a ,'(',typeof a,') is',b,'(',typeof b,') they are equal for ==',a == b,', they are equal for ===',a === b);
+        return a === b;
+      },
+
+
+      /**
+      * 'ipfsurl' gets a hash from the ipfs-component, resolves it and sets it as source for the avatar.
+      */
+      ipfsurl: function(hash){
+        return this.$.ipfs.geturl(hash);
+      },
+
+    });
+  </script>
+</dom-module>

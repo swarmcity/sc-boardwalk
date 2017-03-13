@@ -1,0 +1,434 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+
+<link rel="import" href="../../bower_components/sc-style/sc-style.html">
+<link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
+
+<!-- <link rel="import" href="../sc-whisperer/sc-whisperer.html"> -->
+<link rel="import" href="../sc-ipfs/sc-ipfs.html">
+<link rel="import" href="../sc-config/sc-config.html">
+<link rel="import" href="../sc-helpers/sc-helpers.html">
+<link rel="import" href="../sc-shortcode/sc-shortcode.html">
+
+<!--
+`sc-tokenreceive` is the component that contains the flow of receiving tokens, both functional and visual.
+
+@demo src/sc-tokenreceive/demo/index.html 
+-->
+
+<dom-module id="sc-tokenreceive">
+<link rel="import" href="../../bower_components/sc-style/sc-style.css"  type="css">
+
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      .sender {
+        display: inline-block;
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        @apply(--layout-start-just);
+
+        margin: 4vh 0px 4vh 0px;
+        box-sizing:border-box;
+        padding: 15px 20px 15px 20px;
+        max-width: 300px;
+
+        border-top: 2px dotted rgba(0,0,0,0.05);
+        border-bottom: 2px dotted rgba(0,0,0,0.05);
+      }
+
+      .senderavatar {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        min-height: 40px;
+        border-radius: 50%;
+        overflow: hidden;
+      }
+
+      .senderavatar img {
+        width: 100%;
+        height: 100%;
+      }
+
+      .senderusername {
+        @apply(--layout-vertical);
+        @apply(--layout-start);
+        @apply(--layout-center-justified);
+        max-width: 80%;
+        margin-left: 10px;
+      }
+
+
+     .announce {
+        width: 100%;
+        box-sizing: border-box;
+        @apply(--layout-vertical);
+        @apply(--layout-start);
+        @apply(--layout-center-justified);          
+      }
+
+     .announce p {
+        color: var(--sc-yellow);
+     }
+    
+     .item {
+        width: 100%;
+        box-sizing: border-box;
+        @apply(--layout-vertical);
+        @apply(--layout-start);
+        @apply(--layout-center-justified);      
+      }
+
+      .topmsg {
+        @apply(--montserrat-ultralight);
+        font-size: 28px;
+        line-height: 32px;
+        max-width: 500px;
+      }
+
+      .topmsgz {
+        font-size: 34px;
+        line-height: 38px;        
+      }
+
+      .txhash {
+        word-break: break-all;
+      }
+
+    @media all and (min-width: 0) and (max-width: 420px) {
+
+        .announce {
+          width: 100%;
+          box-sizing: border-box;
+          @apply(--layout-vertical);
+          @apply(--layout-center-center);          
+        }
+
+        .announce p {
+          text-align: center;
+        }
+
+        .sender {
+          display: inline-block;
+          @apply(--layout-horizontal);
+          @apply(--layout-center-center);
+          margin: 2vh 0px 2vh 0px;
+
+        }
+
+        .item {
+          width: 100%;
+          box-sizing: border-box;
+          @apply(--layout-vertical);
+          @apply(--layout-center-center);          
+        }
+
+        .item p {
+          text-align: center;
+        }
+
+    }
+
+    </style>
+    <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
+
+
+    <sc-ipfs id="ipfs"></sc-ipfs>
+    <sc-helpers id="helpers"></sc-helpers>
+
+    <sc-config
+      id="config"
+      ipfs="{{ipfs}}"
+      etherscanroot="{{etherscanroot}}"
+      ></sc-config>
+
+<!--     <sc-whisperer
+      web3="{{web3}}"
+      topic="{{topic}}"
+      progress="{{progress}}"
+      listeninterval="{{listeninterval}}"
+      decimals="5"
+      on-message-received="handlewhispermessage"
+      id="whisper"></sc-whisperer> -->
+
+
+    <div class="totalwidth vertic centercenter">
+        <template is="dom-if" if="{{_is(receivecoinstate,'init')}}">
+          <sc-shortcode class="totalwidth" on-cancel="deactivatereceivecoins" bg="btncolor" txtcolor="red" topic="[[topic]]" progress="[[progress]]" on-showshortcode="activatereceivecoins" btn>shortcode</sc-shortcode>
+        </template>
+
+        <template is="dom-if" if="{{_is(receivecoinstate,'userinfosent')}}">
+          <div class="announce">
+            <p class="topmsg grey4 hairline">Your info is being sent to requesting party</p>
+            <template is="dom-if" if="{{phoneview}}">
+              <div class="whitespace"></div>
+            </template>
+            <div class="minispace"></div>
+            <div class="minispace"></div>
+            <iron-icon icon="sc-icons:decline" class="grey4 medium" on-tap="closetokensendcollapser">decline</iron-icon>
+          </div>
+        </template>
+
+        <template is="dom-if" if="{{_is(receivecoinstate,'waitforconfirmation')}}">
+          <div class="item totalwidth">
+            <p class="topmsg grey4 hairline">Waiting for confirmation from</p>
+            <div class="sender">
+              <div class="senderavatar">
+                <img src="{{sender.avatarurl}}"></div>
+              <div class="senderusername">
+                <p>{{sender.username}}</p>
+              </div>
+            </div>
+        </template>
+
+       <template is="dom-if" if="{{_is(receivecoinstate,'txdeclined')}}">
+          <div class="announce">
+            <div class="item totalwidth">
+              <p class="topmsg grey4 hairline">Transaction aborted by other party</p>
+              <template is="dom-if" if="{{phoneview}}">
+                <div class="minispace"></div>
+              </template>
+              <iron-icon icon="sc-icons:decline" class="grey3 medium" on-tap="deactivatereceivecoins">decline</iron-icon>
+            </div>
+          </div>
+        </template>
+
+        <!-- nieuwe state : waiting for TX -->
+        <template is="dom-if" if="{{_is(receivecoinstate,'waitfortx')}}">
+          <div class="item totalwidth">
+            <p class="topmsg grey4 hairline">Waiting for the transaction to be executed.</p>
+            <div class="minispace"></div>
+            <div class="minispace"></div>
+            <p class="reg">This could take a few moments. Don't close your browser.</p>
+            <div class="whitespace"></div>
+            <div class="whitespace"></div>
+            <p class="small reg grey2 txhash">TxHash: {{currenttxhash}}</p>
+        </template>
+
+        <template is="dom-if" if="{{_is(receivecoinstate,'txconfirmed')}}">
+          <div class="announce">
+            <div class="item totalwidth">
+              <p class="topmsg grey4 hairline">You received {{formatpong(receivedamount)}} SWT.</p>
+              <template is="dom-if" if="{{phoneview}}">
+                <div class="minispace"></div>
+              </template>
+              <iron-icon icon="sc-icons:decline" class="grey3 medium" on-tap="deactivatereceivecoins">decline</iron-icon>
+          </div>
+        </div>
+        </template>
+
+        <template is="dom-if" if="{{_is(receivecoinstate,'transfererror')}}">
+          <div class="announce">
+          <div class="item totalwidth">
+              <p class="topmsg grey4 hairline">
+            {{receivecoinstateerror}}</p>
+              <template is="dom-if" if="{{phoneview}}">
+                <div class="minispace"></div>
+              </template>
+              <iron-icon icon="sc-icons:decline" class="grey3 medium" on-tap="deactivatereceivecoins">decline</iron-icon>
+          </div>
+          </div>
+        </template>
+  </div>
+
+
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'sc-tokenreceive',
+
+      properties: {
+
+        /**
+       * `identity` is the identity of the current Swarm Citizen, it's received from the parent-element.
+       */
+        identity: {
+          type: Object,
+        },
+
+        /**
+       * `account` is received from the parent-element.
+       */
+        account: {
+          type:String,
+        },
+        /**
+       * `receivecoinstate` expresses the different states/views of the receive-coin-flow. Options are: init | userinfosent | waitforconfirmation | txdeclined | waitfortx | txconfirmed | transfererror.
+       */
+        receivecoinstate: {
+          type: String,
+        },
+        /**
+       * `topic` is the whisper-topic where the sender is listening to.
+       */
+        topic: {
+          type: Number,
+        },
+
+        /**
+       * `swtbalance` is the current SWT-balance of the Swarm Citizen sending coins.
+       */
+        swtbalance:{
+          type: Object          
+        },
+
+        /**
+       * `history` is a history of transactions.
+       */
+        history: {
+          type: Array,
+          value: []
+        },
+      },
+
+      ready: function(){
+        var self = this;
+        this.receivecoinstate = 'init';
+      },
+
+      /**
+      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
+      * use this to initialize any variables to start the component
+      */
+      onEnter: function(){
+      },
+
+      /**
+      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage 
+      * use this to reset any variables when leaving this component while it remains loaded.
+      */
+      onExit: function(){
+      },
+
+
+      /**
+      * '_is', a function to bind a template to a certain value of a variable.
+      */
+      _is: function(a, b) {
+        if (b === undefined){
+          b = true;
+        }
+        return a === b;
+      },
+
+
+      /**
+      * 'reset' clears all variables, and tells sc-whisperer to close the whisperchannels.
+      */
+      reset: function(){
+      },
+
+
+      /**
+      * 'activatereceivecoins' starts the countdown, and fires to the parent-element that this component is activated (=btn is tapped).
+      */
+     activatereceivecoins: function(){
+        this.fire('activated');
+        this.listeninterval = 60;
+      },
+
+      /**
+      * 'deactivatereceivecoins' stops the countdown, and fires to the parent-element that this component is deactivated. It also resets the receivecoinstate.
+      */
+      deactivatereceivecoins: function(){
+        this.fire('deactivated');
+        this.receivecoinstate = 'init';
+        this.listeninterval = 0;
+      },
+
+
+      /**
+      * 'formatpong' sets the format of the balance to the right amount of decimals (18). This shows the SWT-balance as pongs.
+      */
+      formatpong: function(val){
+        return (0 + (val / 1e18)).toFixed(2);
+      },
+
+      /**
+      * 'handlewhispermessage' gets whisper-msgs from sc-whisperer and processes them.
+      */
+     handlewhispermessage: function(m) {
+        var self = this;
+        var message = JSON.parse(m.detail.message);
+        console.log('incoming tokentransfer msg: ', message);
+        switch (message.command) {
+          case 'requestuserinfo':
+            // topic listening on the main channel
+            this.listeninterval = 0;
+            self.$.whisper.whisperpost(m.detail.from, JSON.stringify({
+              'command': 'userinfo',
+              'account': self.account,
+              'avatarhash': self.identity.avatarhash,
+              'username': self.identity.username,
+            }));
+            this.receivecoinstate = 'userinfosent';
+            break;
+          case 'waitforconfirmation':
+            // peer is deciding to send your tokens or not
+            this.receivecoinstate = 'waitforconfirmation';
+            this.sender = {
+              avatarurl: this.$.ipfs.geturl(message.avatarhash),
+              username: message.username
+            };
+            break;
+          case 'txdecline':
+            this.receivecoinstate = 'txdeclined';
+            this.$.whisper.closeallchannels();
+            break;
+          case 'waitfortx':
+            this.receivecoinstate = 'waitfortx';
+            this.currenttxhash = message.txhash;
+            break;
+          case 'confirmtransfer':
+            // TODO : show transfer in history...
+            console.log('transfer confirmed...', message.amount, 'received');
+            this.transactiondetails = message;
+            this.transactiondetails.avatarurl = this.$.ipfs.geturl(this.transactiondetails.avatarhash);
+            this.receivecoinstate = 'txconfirmed';
+            this.receivedamount = self.transactiondetails.amount;
+
+            this.fire('tokensreceived');
+
+            this.fire('addlog',
+              {
+                avatarhash:self.transactiondetails.avatarhash,
+                fromusername:self.transactiondetails.username,
+                amount:self.transactiondetails.amount,
+                txhash:self.transactiondetails.txhash,
+                status:'pending'
+              });
+            // clean up channels
+            self.$.whisper.closeallchannels();
+
+            // TODO : wait for the transactionID... now we just fake this , allemaal voor dat den BAN voortkan he. achteraf vervangen we dit door een transaction monitor.
+
+            // setTimeout(function() {
+            //     this.receivecoinstate = 'init';
+            //     this.listeninterval = 0;
+            //   }.bind(this), 50 * 1000);
+
+            break;
+          case 'transfererror':
+         
+            this.receivecoinstate = 'transfererror';
+            this.receivecoinstateerror = message.error;
+
+
+            break;
+
+          default:
+            console.log('unknown message', message);
+        }
+      },
+
+
+    });
+  </script>
+</dom-module>
