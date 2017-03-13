@@ -1,0 +1,92 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="sc-helpers">
+  <script>
+    Polymer({
+      is: 'sc-helpers',
+      properties: {},
+
+      ready: function() {
+        this.filecache = {};
+
+        // add prototype/polyfill for startsWith
+        if (!String.prototype.startsWith) {
+          String.prototype.startsWith = function(searchString, position) {
+            position = position || 0;
+            return this.substr(position, searchString.length) === searchString;
+          };
+        }
+
+      },
+
+
+      fixaddress: function(address) {
+        if (!address) {
+          return;
+        }
+
+        function strStartsWith(str, prefix) {
+          return str.indexOf(prefix) === 0;
+        }
+        if (!strStartsWith(address, '0x')) {
+          return ('0x' + address);
+        }
+        return address;
+      },
+
+      getjson: function(fileurl, cb) {
+        this.getfile(fileurl, true, cb);
+      },
+
+      unixtime: function() {
+        return Math.floor(Date.now() / 1000);
+      },
+
+      // loads and caches files loaded from URLS
+      getfile: function(fileurl, asJSON, cb) {
+        // if asJSON is not given, asJSON is assumed to be true
+        if (!cb) {
+          cb = asJSON;
+          asJSON = true;
+        }
+        if (!fileurl) {
+          cb('no fileurl supplied');
+        }
+        var key = fileurl.split(/[\\/]/).pop();
+        if (this.filecache[key]) {
+          return cb(null, this.filecache[key]);
+        }
+        var fileurl = this.resolveUrl(fileurl);
+        var self = this;
+        this.importHref(fileurl, function(e) {
+          var result = e.target.import.body.innerText;
+          if (asJSON) {
+            try {
+              result = JSON.parse(result);
+            } catch (e) {
+              return cb(e);
+            }
+          }
+          self.filecache[key] = result;
+          cb(null, result);
+        });
+      },
+
+      translateEthErrors: function(err){
+        if (!err){
+          return;
+        }
+        if (err.toString().startsWith('Error: Insufficient')){
+          return('Something went wrong, try again.');
+        }
+        if (err.message){
+          return err.message; 
+        }
+        return err;
+      },
+
+
+
+    });
+  </script>
+</dom-module>

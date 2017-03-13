@@ -18,13 +18,16 @@
       }
     </style>
 
-    <app-location route="{{route}}" use-hash-as-path></app-location>
+   <!--  <app-location route="{{route}}" use-hash-as-path></app-location> -->
     <app-route route="[[route]]" pattern="/:page" data="{{routedata}}" tail="{{pageTail}}"></app-route>
     <neon-animated-pages attr-for-selected="data-page" selected="[[routedata.page]]">
 
     <div
       data-page="p1"
-      >route 1</div>
+      >
+        Ik ben den App
+        <a on-tap="exit">exit the app</a>
+      </div>
     <div
       data-page="p2"
       >route 2</div>
@@ -38,11 +41,9 @@
       is: 'sc-boardwalk-app',
 
       properties: {
-        prop1: {
-          type: String,
-          value: 'sc-boardwalk-app',
+        route: {
+          type: Object
         },
-
       },
       
       observers: [
@@ -50,7 +51,25 @@
       ],
 
       ready: function(){
-        this.transitionto('/p1');
+        //this.transitionto('/p1');
+      },
+
+      attached: function(){
+        setTimeout(function(){
+          this.fire('loaded');
+        }.bind(this),2*1000);
+      },
+      onEnter: function(){
+        console.log('sc-boardwalk -> onEnter');
+        this.transitionto('/p1');        
+      },
+      onExit: function(){
+        console.log('sc-boardwalk -> onExit');
+        this.transitionto('/');
+      },
+
+      exit: function() {
+        this.fire('exit');
       },
 
       transitionto: function(target){

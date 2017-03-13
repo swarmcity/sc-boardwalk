@@ -5,6 +5,7 @@
 
 <link rel="import" href="../../bower_components/sc-style/sc-style.html">
 <link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
+<link rel="import" href="../../bower_components/app-route/app-location.html">
 
 <!-- note that this will be lazy-loaded -->
 <link rel="import" href="../sc-boardwalk-app/sc-boardwalk-app.html">
@@ -21,6 +22,7 @@ This is the homescreen of boardwalk.
 <link rel="import" href="../../bower_components/sc-style/sc-style.css"  type="css">
 
   <template>
+    <app-location route="{{route}}" use-hash-as-path></app-location>  
     <style>
       :host {
         display: block;
@@ -308,11 +310,12 @@ This is the homescreen of boardwalk.
 
 
     <template is="dom-if" if="{{showApp}}">
-      <template is="dom-if" if="{{boardwalkLoaded}}">
-        <sc-boardwalk-app></sc-boardwalk-app>
-        Ik ben den App
-        <a href="#" on-tap="toggleapp">exit the app</a>
-      </template>
+      <sc-boardwalk-app
+        id="boardwalk"
+        route="{{route}}"
+        on-loaded="boardwalkReady"
+        on-exit="onExit"
+        ></sc-boardwalk-app>      
       <template is="dom-if" if="{{!boardwalkLoaded}}">
         LOADING....
       </template>
@@ -355,6 +358,12 @@ This is the homescreen of boardwalk.
       */
       onExit: function(){
         this.showStartScreen = true;
+      },
+
+      boardwalkReady: function(){
+        //debugger;
+        this.boardwalkLoaded = true;
+        //this.$.boardwalk.onEnter();
       },
 
       toggleapp: function(){

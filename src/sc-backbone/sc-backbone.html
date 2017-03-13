@@ -1,6 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../sc-web3/sc-web3.html">
 <link rel="import" href="../sc-config/sc-config.html">
+<link rel="import" href="../sc-helpers/sc-helpers.html">
 
 <!--
 `sc-backbone`
@@ -15,6 +16,7 @@ Example:
   <template>
     <sc-web3 web3="{{web3}}"></sc-web3>  
     <sc-config config="{{config}}"></sc-config>
+    <sc-helpers id="helpers"></sc-helpers>
   </template>
   <script>
     Polymer({
@@ -37,7 +39,26 @@ Example:
 
       _configchanged: function(){
         console.log('config loaded - now I will be reading the contract...',this.config.backbonecontractaddress);
-        this.processLLQueue();
+        var self=this;
+        this.loadbackbonecontract(function(){
+          self.ParametersInstance.getParameter.call('dapp.root',function(a,b){
+            //console.log('resturned',a,b);
+            self.processLLQueue();
+          });  
+        });
+        
+      },
+
+      loadbackbonecontract: function(cb){
+        var self=this;
+        if (!this.web3 || !this.config){
+          return;
+        }
+        this.$.helpers.getjson('../contracts/Parameters.json', function(err, contractjson) {
+          var MyContract = self.web3.eth.contract(contractjson.abi);
+          self.ParametersInstance = MyContract.at(self.config.backbonecontractaddress);
+          cb();
+        });      
       },
 
       lazyload: function(name){
