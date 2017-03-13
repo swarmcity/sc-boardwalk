@@ -64,7 +64,7 @@ This component shows the SWT-balance and the reference currency (when in sc-wall
 
     </style>
 
-    <iron-ajax
+<!--     <iron-ajax
       url="https://api.coinmarketcap.com/v1/ticker/arcade-token/"
       on-response="handleResponse"
       auto>
@@ -74,7 +74,7 @@ This component shows the SWT-balance and the reference currency (when in sc-wall
       url="https://api.fixer.io/latest?base=USD"
       on-response="handleResponseUSDEUR"
       auto>
-    </iron-ajax>
+    </iron-ajax> -->
 
     <!-- <div class$="arc-balance {{align}}"> -->
       <div class$="horizont end {{viewmode}}">
@@ -169,20 +169,20 @@ This component shows the SWT-balance and the reference currency (when in sc-wall
 
       },
 
-      /**
-      * 'handleResponse' handles the response of an ajax-call... **TBC**
-      */
-      handleResponse: function(e) {
-        this.priceusd = e.detail.response[0].price_usd;
-        this.convertcurrency(this.swtbalance);
-      },
+      // /**
+      // * 'handleResponse' handles the response of an ajax-call... **TBC**
+      // */
+      // handleResponse: function(e) {
+      //   this.priceusd = e.detail.response[0].price_usd;
+      //   this.convertcurrency(this.swtbalance);
+      // },
 
-      /**
-      * 'handleResponseUSDEUR'... **TBC**
-      */
-      handleResponseUSDEUR: function(e) {
-        this.eurusd = e.detail.response.rates.EUR;
-      },
+      // /**
+      // * 'handleResponseUSDEUR'... **TBC**
+      // */
+      // handleResponseUSDEUR: function(e) {
+      //   this.eurusd = e.detail.response.rates.EUR;
+      // },
 
       /**
       * '_swtbalance'... **TBC**
