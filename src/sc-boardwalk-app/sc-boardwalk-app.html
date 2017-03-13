@@ -2,7 +2,8 @@
 <link rel="import" href="../../bower_components/neon-animation/neon-animation.html">
 <link rel="import" href="../../bower_components/app-route/app-location.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
-
+<link rel="import" href="../sc-web3/sc-web3.html">
+<link rel="import" href="../sc-wallet/sc-wallet.html">
 <!-- <link rel="import" href="../sc-newdeal/sc-newdeal.html"> -->
 
 <!--
@@ -20,18 +21,123 @@
 
    <!--  <app-location route="{{route}}" use-hash-as-path></app-location> -->
     <app-route route="[[route]]" pattern="/:page" data="{{routedata}}" tail="{{pageTail}}"></app-route>
-    <neon-animated-pages attr-for-selected="data-page" selected="[[routedata.page]]">
+   
 
-    <div
-      data-page="p1"
+ <!-- <app-route route="[[route]]" pattern="/:page" data="{{routedata}}" tail="{{pageTail}}"></app-route> -->
+    <sc-web3 id="web3" web3="{{web3}}" keystore="[[keystore]]"></sc-web3>
+    <sc-wallet
+        id="wallet"
+        web3="[[web3]]"
+        pubkey="[[account]]"
+        updating="{{balanceupdating}}"
+        arcbalance="{{arcbalance}}"
+        swtbalance="{{swtbalance}}"
+        ethbalance="{{ethbalance}}"
+        status="{{walletstatus}}"
+        lowgas="{{lowgas}}"
+        emptygas="{{emptygas}}"
+        on-ready="checkready"
+        >
+    </sc-wallet>
+
+  <neon-animated-pages attr-for-selected="data-page" selected="[[routedata.page]]">
+
+   <!--  <sc-loadview
+        data-page="loading"
+        msg="">
+    </sc-loadview> -->
+<!-- 
+    <sc-swtconversion
+      data-page="swt"
+      id="swt"
+      route="[[pageTail]]"
+      keystore="[[keystore]]"
+      web3="[[web3]]"
+      account="[[account]]"
+      on-exit="logout"
+      on-success="toHome"
+      on-converted="converted"
       >
-        Ik ben den App
-        <a on-tap="exit">exit the app</a>
-      </div>
-    <div
-      data-page="p2"
-      >route 2</div>
-    </neon-animated-pages>
+    </sc-swtconversion> -->
+<!-- 
+    <sc-intro
+      id="intro"
+      data-page="intro"
+      on-newvault="createNewVault"
+      on-importfile="toimportfile"
+      on-importethwallet="toimportethwallet"
+      on-importpk="toimportpk"
+      on-externalpk="toexternalpk"
+      on-vaultlocked="toUnlockVault"
+      on-enter="enter"
+      on-exit="toAppStart"
+      on-restoreipfs="torestoreipfs"
+      route="[[pageTail]]"
+      vaultstatus="[[vaultstatus]]"
+      >
+    </sc-intro> -->
+<!-- 
+    <sc-vault
+      id="vault"
+      data-page="vault"
+      route="[[pageTail]]"
+      currentkeystore="{{keystore}}"
+      currentidentity="{{identity}}"
+      currentaccount="{{account}}"
+      lastbackup="{{lastbackup}}"
+      on-ready="checkready"
+      status="{{vaultstatus}}"
+      on-backupexit="toProfile"
+      on-exit="toAppStart"
+      >
+    </sc-vault> -->
+<!-- 
+    <sc-home
+      id="home"
+      data-page="home"
+      keystore="[[keystore]]"
+      identity="[[identity]]"
+      lastbackup=[[lastbackup]]
+      web3="[[web3]]"
+      pubkey="[[account]]"
+      swtbalance="[[swtbalance]]"
+      ethbalance="[[ethbalance]]"
+      balanceupdating="[[balanceupdating]]"
+      on-to-profile="toProfile"
+      on-to-walletview="toWalletview"
+      >
+    </sc-home> -->
+
+<!-- 
+    <sc-profile
+      data-page="profile"
+      id="profile"
+      identity="[[identity]]"
+      lastbackup=[[lastbackup]]
+      pubkey="[[account]]"
+      on-exit="toHome"
+      on-identity-update="saveIdentity"
+      on-backup="toBackup"
+      on-logout="logout"
+      on-deletevault="deletevault"
+      >
+    </sc-profile> -->
+<!-- 
+    <sc-walletview
+      data-page="walletview"
+      id="walletview"
+      web3="[[web3]]"
+      keystore="[[keystore]]"
+      identity="[[identity]]"
+      account="[[account]]"
+      lowgas="[[lowgas]]"
+      emptygas="[[emptygas]]"
+      on-exit="toHome"
+      on-refreshneeded="refreshwallet"
+      updating="[[balanceupdating]]"
+      swtbalance="[[swtbalance]]">
+    </sc-walletview> -->
+ </neon-animated-pages>
 
   </template>
 
@@ -55,9 +161,10 @@
       },
 
       attached: function(){
-        setTimeout(function(){
+        //setTimeout(function(){
+          console.log('sc-boardwalk-app -> loaded');
           this.fire('loaded');
-        }.bind(this),2*1000);
+        //}.bind(this),2*1000);
       },
       onEnter: function(){
         console.log('sc-boardwalk -> onEnter');
@@ -73,12 +180,12 @@
       },
 
       transitionto: function(target){
-        console.log('ac-app -> transitionTo',target);
+        console.log('sc-app -> transitionTo',target);
         this.set('route.path',target);
       },
 
       _onRouteDataChanged: function(page,oldpage) {
-         console.log('ac-app -> _onRouteDataChanged',oldpage,'->',page);
+         console.log('sc-app -> _onRouteDataChanged',oldpage,'->',page);
        }
     });
   </script>

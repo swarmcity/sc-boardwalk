@@ -1,0 +1,1275 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
+
+<link rel="import" href="../sc-helpers/sc-helpers.html">
+<link rel="import" href="../sc-password/sc-password.html">
+<link rel="import" href="../sc-ipfs/sc-ipfs.html">
+
+<script src="./lightwallet.min.js"></script>
+<link rel="import" href="../../bower_components/neon-animation/neon-animation.html">
+<link rel="import" href="../../bower_components/sc-style/sc-style.html">
+<link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
+<link rel="import" href="../../bower_components/polymer-detect-js/detect-js.html">
+
+<dom-module id="sc-vault">
+<link rel="import" href="../../bower_components/sc-style/sc-style.css"  type="css">
+
+  <style>
+      :host {
+        display: block;
+        width: 100%;
+        height: 100%;
+        @apply(--base-structure);
+
+      }
+
+   
+      neon-animated-pages {
+        width: 100%;
+        height: 100%;
+      }
+
+     .pascanvasunderexit {
+       width: 100%;
+       height: 92%;
+       box-sizing:border-box;
+     }
+
+
+
+     .verticcenter {
+       @apply(--layout-vertical);
+       @apply(--layout-center-center);
+
+     }
+
+     .enterpass {
+     /*width: 80%;
+     max-width: 500px;*/
+    }
+
+
+    sc-password {
+    width: 100%;
+/*    max-width: 500px;*/
+   }
+
+   .height {
+/*        height: 40vh;*/
+
+   }
+
+
+   .maxwidth {
+      max-width: 500px;
+   }
+
+
+    .smallio {
+      width: 80%;
+      max-width: 500px;
+    }
+
+   paper-input {
+      width: 100%;
+    }
+
+
+    .hidden {
+      display: none;
+    }
+
+    .error {
+      width: 100%;
+    }
+
+
+      .smaller {
+        font-size: 14px;
+        line-height: 20px;
+      }
+
+      .notundone ac-button {
+        @apply(--base-shadow-and-inset);
+      }
+
+      .notundone {
+        width: 100%;
+        @apply(--layout-vertical);
+        @apply(--layout-center-center);
+        box-sizing: border-box;
+        padding: 30px 30px 40px 30px;
+        border-top: 1px dashed rgba(249,85,85,0.25);
+        border-bottom: 1px dashed rgba(249,85,85,0.25);
+        margin:5vh 0px 4vh 0px;
+      }
+      .yesnobtns {
+        width: 100%;
+      }
+
+      .yesno {
+        width: 80%;
+        max-width: 280px;
+        margin: 5px;
+      }
+
+      .pubk {
+            word-break: break-all;
+      }
+
+  iron-icon:hover {
+    cursor: pointer;
+  }
+  .saveyourwidth {
+    width: 35px;
+    height: 35px;
+    min-width: 35px;
+    min-height: 35px;
+
+  }
+
+  .blueborder {
+    border: 2px dotted rgba(36,177,255,0.5);
+    box-sizing:border-box;
+    padding: 20px 25px 20px 30px;
+  }
+
+  .btmmargin {
+    padding-bottom: 15vh;
+  }
+
+  .backupbtn {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .ipfshash {
+      width: 80%;
+    word-break: break-all;
+  }
+
+  h1 {
+        word-wrap: break-word;
+  }
+
+  .hrefpadding {
+    box-sizing:border-box;
+    padding: 15px;
+  }
+
+
+    </style>
+
+<iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
+
+  <template>
+    <sc-ipfs id="ipfs"></sc-ipfs>
+    <ac-helpers id="helpers"></ac-helpers>
+    <detect-js device="{{device}}" os="{{os}}" browser="{{browser}}"></detect-js>
+    <app-route route="{{route}}" pattern="/:page" data="{{data}}"></app-route>
+
+    <neon-animated-pages attr-for-selected="data-page" selected="[[data.page]]" entry-animation="{{entryAnimation}}" exit-animation="{{exitAnimation}}">
+
+
+      <!-- first stage in importing PK -->
+      <neon-animatable data-page="importpk">
+        <div class="total vertic centercenter">
+          <div class="topbar">
+            <span class="flex"></span>
+              <iron-icon class="grey4" icon="sc-icons:decline" on-tap="deleteVault">back</iron-icon>
+          </div>
+
+          <div class="pascanvasunderexit vertic start paddingsides">
+            <div class="whitespace"></div>
+          <template is="dom-if" if="{{!phoneview}}">
+              <div class="whitespace"></div>
+            </template>
+            <div class="maxwidth">
+              <h1 class="bold blue">ARC-wallet<br>as a print / pdf</h1>
+              <div class="whitespace"></div>
+              <p class="reg grey4">Enter the private key you'll find on your ARC-wallet.</p>
+            </div>
+            <div class="flex"></div>
+            <div class="totalwidth horizont end startjust maxwidth">
+              <paper-input id="privatekeyinput" label="Private key" type="password" bind-value="{{privatekey::input}}"></paper-input>
+              <paper-icon-button icon="sc-icons:looky" class="grey1back grey4 saveyourwidth" on-tap="pktoggle" noink>show</paper-icon-button>
+            </div>
+            <div class="whitespace"></div>
+            <template is="dom-if" if="{{invalidpk}}">
+              <p class="red bold"><span class="oops">You didn't enter a valid key.</span></p>
+            </template>  
+            <div class="totalwidth horizont center endjust">
+            <paper-icon-button icon="sc-icons:arrowright" class="big whiteback shadow blue" on-tap="pkreceived" noink>next</paper-icon-button>
+            </div>
+          </div>
+          <div class="tenspace"></div>
+          <div class="tenspace"></div>
+
+      </div>
+      </neon-animatable>
+
+
+
+
+      <neon-animatable data-page="importethwallet">
+        <div class="total vertic centercenter">
+          <div class="topbar">
+            <span class="flex"></span>
+              <iron-icon class="grey4" icon="sc-icons:decline" on-tap="deleteVault">back</iron-icon>
+          </div>
+
+          <div class="pascanvasunderexit vertic start paddingsides">
+            <div class="whitespace"></div>
+            <template is="dom-if" if="{{!phoneview}}">
+              <div class="whitespace"></div>
+            </template>
+            <div class="maxwidth">
+              <h1 class="bold blue">ARC-tokens<br>in an external wallet</h1>
+              <div class="whitespace"></div>
+              <p class="reg grey4">Enter the private key you'll find on your wallet.</p>
+            </div>
+            <div class="flex"></div>
+            <div class="totalwidth horizont end startjust maxwidth">
+              <paper-input id="privatekeyethinput" label="Private key" type="password" bind-value="{{privatekey::input}}"></paper-input>
+              <paper-icon-button icon="sc-icons:looky" class="grey1back grey4 saveyourwidth" on-tap="pkethtoggle" noink>show</paper-icon-button>
+            </div>
+            <div class="whitespace"></div>
+            <template is="dom-if" if="{{invalidpk}}">
+              <p class="red bold"><span class="oops">You didn't enter a valid key.</span></p>
+            </template>  
+            <div class="totalwidth horizont center endjust">
+            <paper-icon-button icon="sc-icons:arrowright" class="big whiteback shadow blue" on-tap="pkreceived" noink>next</paper-icon-button>
+            </div>
+          </div>
+          <div class="tenspace"></div>
+          <div class="tenspace"></div>
+      </div>
+      </neon-animatable>
+
+
+
+      <!-- second stage in importing PK -->
+      <neon-animatable data-page="importpkmakewallet">
+        <div class="total vertic centercenter">
+          <div class="topbar">
+            <span class="flex"></span>
+              <iron-icon class="grey4" icon="sc-icons:decline" on-tap="exit">back</iron-icon>
+          </div>
+          <div class="pascanvasunderexit vertic start paddingsides">
+
+
+             <template is="dom-if" if="{{!creatingvault}}">
+
+          <div class="whitespace"></div>
+          <template is="dom-if" if="{{!phoneview}}">
+              <div class="whitespace"></div>
+            </template>
+
+          <div class="maxwidth">
+            <h1 class="bold blue">Alright!</h1>
+            <div class="whitespace"></div>
+            <p>A profile will be created with the private key you provided. You just need a password and you're all set.</p>
+          </div>
+          <div class="flex"></div>
+           <sc-password double sessionname="vaultpassword" on-password-received="createvaultfrompk"></sc-password>
+
+          </template>
+
+
+          <template is="dom-if" if="{{creatingvault}}">
+                <sc-loader color="blue" small>Creating wallet</sc-loader>
+            </template>
+          </div>
+          <div class="tenspace"></div>
+          <div class="tenspace"></div>
+        </div>
+      </neon-animatable>
+
+      <neon-animatable data-page="importipfs">
+        <div class="total vertic centercenter">
+          <div class="topbar">
+            <span class="flex"></span>
+              <iron-icon class="grey4" icon="sc-icons:decline" on-tap="exit">back</iron-icon>
+          </div>
+
+          <div class="pascanvasunderexit vertic start paddingsides">
+            <div class="whitespace"></div>
+            <div class="whitespace"></div>
+            <div class="maxwidth">
+              <h1 class="bold yellow">Restore a backup from IPFS</h1>
+              <div class="whitespace"></div>
+            </div>
+            <div class="flex"></div>
+
+        <template is="dom-if" if="{{_is(importipfsstatus,'init')}}">
+
+          <p class="reg grey4 maxwidth">Enter your IPFS-hash</p>
+          <paper-input class="" id="importipfshash" label="Your ipfs-hash" type="text" value="{{importipfshash}}"></paper-input>
+            <div class="whitespace"></div>
+
+          <paper-button on-tap="importipfshashuploadclick" class="blue lighter bigbtn shadow centertxt" noink>restore</paper-button>
+        </template>
+        <template is="dom-if" if="{{_is(importipfsstatus,'downloading')}}">
+        <sc-loader small color="blue">Downloading from IPFS</sc-loader>
+        </template>
+        <template is="dom-if" if="{{_is(importipfsstatus,'error')}}">
+        <p class="red bold">Something went wrong. {{importipfserrormessage}}</p>
+        </template>
+
+          </div>
+          <div class="tenspace"></div>
+          <div class="tenspace"></div>
+          </div>
+
+      </neon-animatable>
+
+      <!-- import a keyfile -->
+      <neon-animatable data-page="importfile">
+        <div class="total vertic centercenter">
+          <div class="topbar">
+            <span class="flex"></span>
+              <iron-icon class="grey4" icon="sc-icons:decline" on-tap="exit">back</iron-icon>
+          </div>
+
+          <div class="pascanvasunderexit vertic start paddingsides">
+            <div class="whitespace"></div>
+          <template is="dom-if" if="{{!phoneview}}">
+              <div class="whitespace"></div>
+            </template>
+            <div class="maxwidth">
+              <h1 class="bold blue">ARC-wallet as a json-file</h1>
+              <div class="whitespace"></div>
+              <template is="dom-if" if="{{!pkshowpassw}}">
+                <p class="reg grey4">Locate your ARC-wallet json-file.</p>
+              </template>
+ 
+              <template is="dom-if" if="{{pkshowpassw}}">
+
+               <p class="reg grey4">Unlock your ARC-wallet with its password.</p>
+             </template>
+
+            </div>
+            <div class="whitespace"></div>
+            <div class="whitespace"></div>
+
+            <template is="dom-if" if="{{vaulterror}}">
+              <div class="error red"><p><span class="bold">Oops!</span><br>{{vaulterror}}<p>
+                 <div class="whitespace"></div>
+              </div>
+            </template>
+
+          <template is="dom-if" if="{{!uploadingwallet}}">
+
+            <template is="dom-if" if="{{!pkshowpassw}}">
+              <input type="file"  class="hidden" id="uploaditem"  on-change="readSingleFile">
+              <paper-button on-tap="uploadclick" class="blue lighter bigbtn shadow centertxt" noink>Choose file</paper-button>
+            </template>
+          </template>
+
+
+<!--             <template is="dom-if" if="{{pkshowpassw}}">
+              <p class="grey4 semibold blueborder">{{walletfilename}}</p>
+              <div class="whitespace"></div>
+              <div class="totalwidth horizont end startjust maxwidth">
+                <paper-input id="acwalletpassw" label="Password ARC-Wallet" type="password" bind-value="{{wallletpassword}}"></paper-input>
+
+                <paper-icon-button icon="sc-icons:looky" class="grey1back grey4 saveyourwidth" on-tap="psswrdtoggle" noink>show</paper-icon-button>
+              </div>
+              <div class="whitespace"></div> 
+              <div class="totalwidth horizont center endjust">
+              <paper-icon-button icon="sc-icons:arrowright" class="big whiteback shadow blue" on-tap="pkreceived" noink>next</paper-icon-button>
+              </div>
+
+            </template> -->
+
+
+          <template is="dom-if" if="{{uploadingwallet}}">
+              <sc-loader small color="blue">Uploading wallet</sc-loader>
+          </template>
+
+        </div>
+
+          <div class="tenspace"></div>
+          <div class="tenspace"></div>
+
+
+      </div>
+
+      </neon-animatable>
+
+      <neon-animatable data-page="backup">
+        <div class="total vertic centercenter">
+          <div class="topbar">
+            <span class="flex"></span>
+              <iron-icon class="grey4" icon="sc-icons:decline" on-tap="backupexit">back</iron-icon>
+          </div>
+          <div class="pascanvasunderexit vertic centercenter paddingsides">        
+            <a id="downloadAnchorElem" style="display:none"></a>
+            <template is="dom-if" if="{{!backup_unavailable}}">
+
+<!--             <template is="dom-if" if="{{backup_download}}"> -->
+              <paper-button on-tap="downloadvault" class="blue bigbtn lighter centertxt backupbtn" noink>Download your backup-file</paper-button>
+<!--             </template> -->
+              <!-- <p class="bold">Oops!</p>
+              <div class="whitespace"></div>
+              <p class="centertxt">You can not download your backup on this device/operating system.</p>
+              <div class="whitespace"></div>
+              <div class="whitespace"></div> -->
+<!--               <paper-button on-tap="backupexit" class="grey4 grey1back small shadow" noink>back to profile</paper-button> -->
+            </template>
+            <div class="whitespace"></div>
+            <paper-button on-tap="vaulttoipfsroute" class="blue bigbtn lighter centertxt backupbtn" noink>Backup to IPFS</paper-button>            
+          </div>
+        </div>
+      </div>
+      </neon-animatable>
+
+      <neon-animatable data-page="backupipfs">
+        <div class="total vertic centercenter">
+          <div class="topbar">
+            <span class="flex"></span>
+            <iron-icon class="grey4" icon="sc-icons:decline" on-tap="backupexit">back</iron-icon>
+          </div>
+          <div class="pascanvasunderexit vertic centercenter paddingsides">        
+<!--               <p class="centertxt">Warning make sure you have a strong password set on your vault before uploading it to IPFS.</p>
+              <div class="whitespace"></div>
+              <div class="whitespace"></div>        -->   
+            <template is="dom-if" if="{{_is(vaulttoipfsstatus,'init')}}">
+
+              <p class="bold centertxt">IPFS is the Distributed Web</p><br>
+            <p class="centertxt">A peer-to-peer hypermedia protocol to make the web faster, safer, and more open.</p><br>   
+            <a href="https://ipfs.io/" target="_blank" class="centertxt blue">learn more</a>   
+            <div class="whitespace"></div>
+            <div class="whitespace"></div>
+            <div class="whitespace"></div>
+
+              <paper-button on-tap="vaulttoipfs" class="blue bigbtn lighter centertxt">Backup to IPFS</paper-button>
+            </template>    
+
+            <template is="dom-if" if="{{_is(vaulttoipfsstatus,'uploading')}}">
+              <sc-loader small color="blue">Creating your ipfs-backup</sc-loader>
+            </template>   
+
+            <template is="dom-if" if="{{_is(vaulttoipfsstatus,'success')}}">
+              <p class="centertxt">Your IPFS-hash <br><span class="bold ipfshash">{{vaulttoipfshash}}</span></p>
+              <div class="whitespace"></div>
+              <div class="whitespace"></div>
+<!--               <paper-input label="Your e-mailadres" value="{{emailadress}}"></paper-input>
+              <div class="whitespace"></div>
+              <div class="whitespace"></div> -->
+              <a href="mailto:?subject=Your%20Swarm%20City%20IPFS%20Backup&body=Your%20backup%20is%20at%20{{vaulttoipfshash}}" class="blue centertxt">Mail this hash to me</paper-button>
+            </template>   
+
+            <template is="dom-if" if="{{_is(vaulttoipfsstatus,'error')}}">
+              <p class="red">Something went wrong. Please try again later.</p>
+            </template>   
+          </div>
+        </div>
+      </div>
+
+      </neon-animatable>
+
+
+        <neon-animatable data-page="clearvault">
+        <div class="total vertic centercenter">
+          <div class="totalwidth vertic centercenter">
+            <p class="centertxt smallio red bold caution">Hold up!</p>
+            <div class="whitespace"></div>
+            <p class="centertxt smallio">Do you want to cancel all the progress you've made so far and start over?</p>
+          </div>
+            <div class="whitespace"></div>
+            <div class="whitespace"></div>
+            <div class="whitespace"></div>
+
+            <div class="vertic yesnobtns center">
+              <paper-button class="yesno bigbtn centertxt lighter" on-tap="deleteVault">Yes</paper-button>
+              <paper-button class="yesno bigbtn centertxt lighter" on-tap="toimportpk" >No</paper-button>
+            </div>
+          </div>
+        </neon-animatable>
+
+
+        <neon-animatable data-page="completeclearvault">
+        <div class="total vertic centercenter">
+          <div class="totalwidth vertic centercenter">
+            <p class="centertxt smallio grey5 bold caution">Forgot your password?</p>
+            <div class="whitespace"></div>
+            <p class="centertxt smallio">The only thing you can do, is completely remove the user from this device and start over. <br><span class="bold">This can not be undone.</span></p>
+          </div>
+            <div class="whitespace"></div>
+            <div class="whitespace"></div>
+            <div class="whitespace"></div>
+
+            <div class="vertic yesnobtns center">
+              <paper-button class="yesno bigbtn centertxt redback white shadow" on-tap="removevault">Remove the user from this device</paper-button>
+            <div class="minispace"></div>
+
+              <paper-button class="yesno bigbtn centertxt lighter shadow" on-tap="cancel">Cancel</paper-button>
+            </div>
+          </div>
+        </neon-animatable>
+
+      <neon-animatable data-page="createnew">
+        <div class="total vertic centercenter">
+          <div class="topbar">
+            <span class="flex"></span>
+              <iron-icon class="grey4" icon="sc-icons:decline" on-tap="exit">back</iron-icon>
+          </div>
+
+          <div class="pascanvasunderexit vertic start paddingsides">
+          <div class="whitespace"></div>
+          <template is="dom-if" if="{{!phoneview}}">
+            <div class="whitespace"></div>
+          </template>
+
+            <div class="maxwidth">
+              <h1 class="bold blue">Alright!</h1>
+              <div class="whitespace"></div>
+              <p>We just need a password to create your profile.</p>
+            </div>
+ 
+          <template is="dom-if" if="{{!creatingvault}}">
+            <div class="flex"></div>
+
+            <sc-password double sessionname="vaultpassword" on-password-received="createvault"></sc-password>
+          </template>
+
+
+          <template is="dom-if" if="{{creatingvault}}">
+            <div class="whitespace"></div>
+            <div class="whitespace"></div>
+
+                <sc-loader color="blue" small>Creating wallet</sc-loader>
+            </template>
+          </div> 
+          <div class="tenspace"></div>
+          <div class="tenspace"></div>
+        </div>
+    </neon-animatable>
+
+    <neon-animatable data-page="unlock">
+      <div class="total vertic centercenter">
+        <div class="topbar">
+          <span class="flex"></span>
+            <iron-icon class="grey4" icon="sc-icons:decline" on-tap="vaultAway">back</iron-icon>
+        </div>
+        <template is="dom-if" if="{{!tappedunlockbtn}}">
+        <div class="pascanvasunderexit vertic centercenter paddingsides">
+          <sc-password passwordlabel="Enter your password" class="height" id="newuser" sessionname="vaultpassword" on-btn-tapped="unlockBtnbool" on-password-received="unlockvault" wrongpass="[[unlockpasswordwrong]]"></sc-password> 
+        </div>
+
+        </template>
+        <template is="dom-if" if="{{tappedunlockbtn}}">
+        <div class="pascanvasunderexit vertic centercenter paddingwithouttop">
+          <sc-loader small color="blue" class="blue">Unlocking</sc-loader>
+        </div>
+        </template>
+
+      </div>    
+    </neon-animatable>
+
+    <neon-animatable data-page="unlockipfs">
+        <div class="total vertic centercenter">
+          <div class="topbar">
+            <span class="flex"></span>
+              <iron-icon class="grey4" icon="sc-icons:decline" on-tap="exit">back</iron-icon>
+          </div>
+          <div class="pascanvasunderexit vertic start paddingsides">
+            <div class="whitespace"></div>
+            <template is="dom-if" if="{{!phoneview}}">
+              <div class="whitespace"></div>
+            </template>
+
+            <div class="maxwidth">
+              <h1 class="bold blue">Great!</h1>
+              <div class="whitespace"></div>
+              <p>Found your user on IPFS. You need to unlock it with its password.</p>
+            </div>
+            <div class="flex"></div>
+            <sc-password id="newuser" passwordlabel="Password of your user" sessionname="vaultpassword" on-password-received="unlockvault" wrongpass="[[unlockpasswordwrong]]"></sc-password>
+          </div>
+          <div class="tenspace"></div>
+          <div class="tenspace"></div>
+        </div>         
+    </neon-animatable>
+
+
+    <neon-animatable data-page="uploadunlock">
+        <div class="total vertic centercenter">
+          <div class="topbar">
+            <span class="flex"></span>
+              <iron-icon class="grey4" icon="sc-icons:decline" on-tap="exit">back</iron-icon>
+          </div>
+          <div class="pascanvasunderexit vertic start paddingsides">
+            <div class="whitespace"></div>
+            <template is="dom-if" if="{{!phoneview}}">
+              <div class="whitespace"></div>
+            </template>
+
+            <div class="maxwidth">
+              <h1 class="bold blue">Great!</h1>
+              <div class="whitespace"></div>
+              <p>Almost there. You need to unlock your wallet to do the conversion.</p>
+            </div>
+            <div class="flex"></div>
+            <sc-password id="newuser" passwordlabel="Password of your ARC-wallet" sessionname="vaultpassword" on-password-received="unlockvault" wrongpass="[[unlockpasswordwrong]]"></sc-password>
+          </div>
+          <div class="tenspace"></div>
+          <div class="tenspace"></div>
+        </div>         
+    </neon-animatable>
+
+  </neon-animated-pages>
+
+</template>
+
+<script>
+    Polymer({
+
+      is: 'sc-vault',
+
+      properties: {
+        route: {
+          type: Object,
+          notify: true,
+        },
+        password: {
+          type: String,
+          observer: '_password'
+        },
+        keystore: {
+          type: Object,
+          notify: true,
+        },
+        // the exposed lightwallet.keystore object
+        currentkeystore: {
+          type: Object,
+          notify: true,
+        },
+        // the ethereum account assiciated with the current identity
+        currentaccount: {
+          type: String,
+          notify: true,
+        },
+        // an object containing a set of fields with identity data.
+        currentidentity: {
+          type: Object,
+          notify: true
+        },
+        lastbackup: {
+          type: Number,
+          notify: true          
+        },
+        status: {
+          type: String,
+          notify: true
+        }
+      },
+
+      observers: [
+          '_onRoutePathChanged(data.page,data)',
+          '_logThis(creatingvault)'
+      ],
+
+      _onRoutePathChanged: function(page,d) {
+        console.log('sc-vault _onRoutePathChanged',d,page);
+        switch (page) {
+          case 'importpk':
+          case 'importpkmakewallet':
+          case 'importfile':
+          case 'createnew':
+            if (this.hasVault()) {
+              console.log('You already have a vault');
+            }
+            break;
+          case 'unlock':
+          case 'removeall':
+          case 'unlockipfs':
+          case 'importipfs':
+          case 'newuser':
+
+            break;
+          default:
+            console.log('unknown path ', page);
+            break;
+        }
+      },
+
+      backupexit: function(){
+        this.fire('backupexit')
+      },
+
+      goBack: function(){
+        window.history.back();
+      },
+
+
+      exit: function(){
+        this.fire('exit');
+      },
+
+      vaulttoipfsroute: function(){
+        this.set('route.path', '/backupipfs');
+      },
+
+      removeall: function(){
+        this.set('route.path', '/removeall');
+      },
+
+      toimportpk: function() {
+        this.set('route.path', '/importpk');
+      },
+
+      pktoggle: function(){
+        if (this.$.privatekeyinput.getAttribute('type') == 'text'){
+          this.$.privatekeyinput.setAttribute('type','password');
+        }else{
+          this.$.privatekeyinput.setAttribute('type','text');
+        }
+      },
+
+      pkethtoggle: function(){
+        if (this.$.privatekeyethinput.getAttribute('type') == 'text'){
+          this.$.privatekeyethinput.setAttribute('type','password');
+        }else{
+          this.$.privatekeyethinput.setAttribute('type','text');
+        }
+      },
+
+
+      psswrdtoggle: function(){
+        var acwalletpassw = document.querySelector('#acwalletpassw');
+        if (acwalletpassw.getAttribute('type') == 'text'){
+          acwalletpassw.setAttribute('type','password');
+        }else{
+          acwalletpassw.setAttribute('type','text');
+        }
+      },
+
+      toClearvault: function(){
+        this.exitAnimation = "slide-down-animation";
+        this.entryAnimation = "slide-from-top-animation";
+        this.set('route.path', '/clearvault');
+        this.exitAnimation = "slide-up-animation";
+        this.entryAnimation = "slide-from-bottom-animation";
+      },
+
+
+      cancel: function(){
+        this.exitAnimation = "slide-right-animation";
+        this.entryAnimation = "slide-from-left-animation";
+        this.set('route.path', '/unlock');
+        this.exitAnimation = "slide-left-animation";
+        this.entryAnimation = "slide-from-right-animation";
+      },
+
+      uploadclick: function() {
+        document.querySelector('#uploaditem').click();
+      },
+
+
+      importipfshashuploadclick: function() {
+        console.log('download IPFS hash', this.importipfshash);
+        var self= this;
+        this.importipfsstatus = 'downloading';
+        this.$.ipfs.cat(this.importipfshash, function(err, data) {
+          try{
+            data = JSON.parse(data);
+          }catch(e){
+            err= e;
+          }
+
+          if (err) {
+            self.importipfsstatus = 'error';
+            self.importipfserrormessage = 'Error downloading IPFS hash: ' + err;
+            return;
+          }
+          if (self._parseVault(data)) {
+            self.saveVault();
+            self.status = 'locked';
+            self.set('route.path', '/unlock');
+          }
+        });
+      },
+
+      readSingleFile: function(e) {
+        var self = this;
+        var file = e.target.files[0];
+        if (!file) {
+          return;
+        }
+    
+        this.walletfilename = file.name;
+
+        self.uploadingwallet = true;
+        var reader = new FileReader();
+        reader.onload = function(readere) {
+          var contents = readere.target.result;
+          //self.readwallet = contents;
+          //window.setTimeout(function(){
+            self.uploadingwallet = false;
+            if (self._parseVault(contents)){
+              self.saveVault();
+              self.uploadingwallet = false;
+              self.pkshowpassw = true;
+              self.status = 'locked';
+              // reset file
+              e.target.value = null;
+              self.set('route.path', '/uploadunlock');
+            }
+          //},100);
+          // so we've read the vault file. It's locked.
+
+        };
+        reader.readAsText(file);
+      },
+
+      pkreceived: function(){
+        this.invalidpk = false;
+        var patt = new RegExp(/^[a-f0-9]{64}$/i);
+        var res = patt.test(this.privatekey);
+        if (!res){
+          console.log('foute key');
+          this.invalidpk = true;
+        }else{
+          this.set('route.path', '/importpkmakewallet');
+        }
+      },
+
+      createvaultfrompk: function(e) {
+        this.creatingvault = true;
+        this.password = e.detail.password;
+        this.createVault(0, function() {
+          this._getpwDerivedKey(function(err, pwDerivedKey) {
+            this.keystore.importPrivateKey(this.privatekey, pwDerivedKey);
+            this.privatekey = null;
+            this.$.privatekeyinput.value = null;
+            this.$.privatekeyinput.inputvalue = null;
+            this.$.privatekeyethinput.value = null;
+            this.$.privatekeyethinput.inputvalue = null;
+            this.saveVault();
+            this.loadVault();
+            sessionStorage.setItem('vaultpassword', this.password);
+            this.status = 'unlocked';
+            this.fire('ready');
+          }.bind(this));
+        }.bind(this));
+      },
+
+      ready: function(){
+     
+      },
+
+      reset: function() {
+        
+        var self=this;
+
+        this.vaulterror = null;
+        this.invalidpk = false;
+        this.pkshowpassw = false;
+        this.importipfsstatus = 'init';
+        this.tappedunlockbtn = false;
+
+        this.creatingvault = false;
+        this.uploadingwallet = false;
+        this.vaulttoipfsstatus = 'init';
+        
+        this.backup_download = true;
+        this.backup_unavailable = true;
+
+        this.password = sessionStorage.getItem('vaultpassword');
+        
+        if (!this.hasVault()) {
+          this.status = 'novault';
+          console.log('sc-vault: status=',this.status,'fires READY');
+          return this.fire('ready');
+        };
+        if (!this.password) {
+          this.status = 'locked';
+          console.log('sc-vault: status=',this.status,'fires READY');
+          return this.fire('ready');
+        }
+        // so we have a vault and a password... try to open it.
+        this.loadVault();
+        this.checkpassword(function(err, pwdcorrect) {
+          if (pwdcorrect) {
+            self.status = 'unlocked';
+            console.log('sc-vault: status=',self.status,'fires READY');
+            return self.fire('ready');
+          } else {
+            self.status = 'locked';
+            console.log('sc-vault: status=',self.status,'fires READY');
+            return self.fire('ready');
+          }
+        });
+
+      },
+
+
+      attached: function(){
+        console.log('sc-vault attached');
+
+        this.reset();
+
+        if (this.browser.family == 'Safari'){
+          this.backup_download = false;
+        }
+        if (this.browser.family != 'Safari'){
+          this.backup_unavailable = false;
+        }
+
+        this.exitAnimation = "slide-left-animation";
+        this.entryAnimation = "slide-from-right-animation";
+      
+        
+       this.getvaultDownloaded();
+       
+      },
+
+      _currentidentity: function(){
+        console.log('sc-vault ->','currentidentity updated',this.currentidentity);
+      },
+
+      unlockvault: function(e) {
+
+
+        var self=this;
+        self.unlockpasswordwrong = false;
+        if (!this.hasVault()) {
+          //return page.redirect('/');
+          console.log("there is no vault!");
+        }
+        this.password = e.detail.password;
+
+        if (!this.password){
+          return;
+        }
+        this.loadVault();
+        this.checkpassword(function(err, pwdcorrect) {
+          if (pwdcorrect) {
+            this.tappedunlockbtn =! this.tappedunlockbtn;
+
+            sessionStorage.setItem('vaultpassword',self.password);
+            self.status = 'unlocked';
+            self.fire('ready');
+          } else {
+            self.unlockpasswordwrong = true;
+          }
+        });
+      },
+
+      // checks the password. If it's correct call cb(null,true)
+      checkpassword: function(cb){
+        var self= this;
+        if (!this.keystore){
+          return cb(new Error('no keystore set'));
+        }
+        this._getpwDerivedKey(function(err, pwDerivedKey) {
+          if (!self.keystore.isDerivedKeyCorrect(pwDerivedKey)){
+            return cb(null,false);
+          }else{
+            return cb(null,true);
+          }
+        });
+
+      },
+
+      downloadvault: function(){
+        var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(window.localStorage.getItem('sc-vault'));;
+        var dlAnchorElem = document.getElementById('downloadAnchorElem');
+        dlAnchorElem.setAttribute("href", dataStr);
+        dlAnchorElem.setAttribute("download", 'swarmCityVault-' + Date.now() + '.json');
+        dlAnchorElem.click();
+        this.setvaultDownloaded();
+      },
+
+      setvaultDownloaded: function(){
+        var timestamp =  Date.now();
+        window.localStorage.setItem('sc-vault-downloaded',timestamp);
+        this.getvaultDownloaded();
+      },
+
+      getvaultDownloaded: function(){
+        this.lastbackup = window.localStorage.getItem('sc-vault-downloaded');
+        if (this.lastbackup === undefined){
+          debugger;
+          this.lastbackup = null;
+        }
+      },
+
+      vaulttoipfs: function(){
+          this.vaulttoipfsstatus='uploading';
+          var vaultdata = window.localStorage.getItem('sc-vault');
+          var vaultbuffer = this.$.ipfs.ipfs.Buffer(vaultdata);
+
+
+        this.$.ipfs.add(vaultbuffer, function(err, result) {
+          if (err || !result || !result[0]){
+            console.log('cannot upload avatar',err);
+            this.vaulttoipfsstatus = 'error';
+          }else{
+            console.log(err, result[0].hash);
+            this.vaulttoipfshash = result[0].hash;
+            this.vaulttoipfsstatus='success';
+            this.setvaultDownloaded();
+          }
+        }.bind(this));
+
+      },
+
+      // Load vault from local storage
+      loadVault: function(){
+        var tmpvault = JSON.parse(window.localStorage.getItem('sc-vault'));
+        this._parseVault(tmpvault);
+      },
+
+      _convertWalletToVault: function(content){
+        var self = this;
+
+        var keystore = JSON.parse(content);
+        var identity = self._creatBlankIdentity();        //self.saveVault();
+        return ({
+          type: 'sc-vault',
+          version: 1,
+          keystore: keystore,
+          identity: identity
+        });
+
+
+      },
+
+      // parse vault data and unpack it
+      _parseVault: function(vaultdata) {
+        this.vaulterror = null;
+        if (!vaultdata) return;
+        try {
+          // if the vaultdata is a string - it's probably an old wallet file
+          if (typeof vaultdata === 'string') {
+            vaultdata = this._convertWalletToVault(vaultdata);
+          }
+
+          if (!vaultdata) {
+            throw new Error('sc-vault: loadVault: vault is not defined.');
+          }
+
+          if (!vaultdata.type === 'sc-vault') {
+            throw new Error('sc-vault: loadVault: JSON format not recognized.');
+          }
+
+          switch (vaultdata.version) {
+
+            case 1:
+              this.keystore = lightwallet.keystore.deserialize(vaultdata.keystore);
+              this._setpasswordProvider();
+              this.set('currentkeystore',this.keystore);
+              this.currentaccount = this.$.helpers.fixaddress(this.keystore.getAddresses()[0]);
+              this.set('currentidentity',vaultdata.identity);
+              console.log('sc-vault -> Vault loaded. Account=', this.currentaccount);
+              return true;
+              break;
+
+            default:
+              throw new Error('Vault version unknown', vaultdata.version);
+              break;
+          }
+        } catch (e) {
+//          throw new Error('Vault could not be loaded', e);
+            this.vaulterror = "This file could not be loaded, it's not an ARC-wallet json-file.";
+            return false;
+        }
+      },
+
+      closeVault: function(){
+        this.password = null;
+        this.keystore = null;
+        this.set('currentkeystore',null);
+        this.set('currentidentity',null);
+        sessionStorage.removeItem('vaultpassword');
+        this.set('status','locked');
+      },
+
+      removevault: function(){
+        this.deleteVault();
+        this.set('status','novault');
+      },
+
+      deleteVault: function(){
+        //debugger;
+        this.privatekey = null;
+        this.$.privatekeyinput.inputvalue = null;
+        this.$.privatekeyethinput.inputvalue = null;
+        this.closeVault();
+        window.localStorage.removeItem('sc-vault');
+        window.localStorage.removeItem('sc-vault-downloaded');
+        this.reset();
+        return this.fire('novault');
+
+      },
+
+      importPrivateKey: function(pk) {
+        var self = this;
+        this._getpwDerivedKey(function(err, pwDerivedKey) {
+          self.keystore.importPrivateKey(pk, pwDerivedKey);
+        });
+      },
+
+      saveVault: function(){
+
+          var serializedKeystore = this.keystore.serialize();
+          var serializedIdentity = this.currentidentity || {};
+
+          var vault = {
+            type: 'sc-vault',
+            version:1,
+            keystore: serializedKeystore,
+            identity: serializedIdentity
+          };
+
+          //encryption.multiEncryptString(keystore, pwDerivedKey, msg, myPubKey, theirPubKeyArray [, hdPathString])
+
+          window.localStorage.setItem('sc-vault', JSON.stringify(vault));
+
+      },
+
+      hasVault: function(){
+        var vault = window.localStorage.getItem('sc-vault');
+        return (vault);
+      },
+
+      createvault: function(e){
+        this.password = e.detail.password;
+        var self = this;
+        this.createVault(1,function(){
+          // self.creatingvault = false;
+          self.status = 'unlocked';
+          self.fire('ready');
+        });
+        this.creatingvault = true;
+      },
+
+      _is: function(a, b) {
+        //debugger;
+        if (b === undefined){
+          b = true;
+        }
+        return a === b;
+      },
+
+      createVault: function(amountofaccounts, fn) {
+        if (!this.password) {
+          throw new Error('no password set for creating Vault');
+        }
+
+        var self = this;
+        lightwallet.keystore.createVault({
+          password: this.password,
+        }, function(err, ks) {
+          if (err) {
+            throw new Error(err);
+          }
+          self.keystore = ks;
+          self._setpasswordProvider();
+          
+          if (amountofaccounts==0){
+            self.currentidentity = self._creatBlankIdentity();
+            self.saveVault();
+            self.loadVault();
+            if (fn) {
+              fn();
+            }
+            return;
+
+          }else{
+            self.generateNewAddress(1,function() {
+              self.currentidentity = self._creatBlankIdentity();
+              self.saveVault();
+              self.loadVault();
+              if (fn) {
+                fn();
+              }
+              return;
+            });
+          }
+
+        });
+      },
+
+      _creatBlankIdentity: function() {
+        return({
+          version: 1,
+          username: 'nickname',
+          avatarhash: 'Qme5k7WUAoo5JwySiYGfhm4umvhUCTqVKPw2yfP7jhiqPT'
+        });
+      },
+
+      _password: function(){
+        this.pwDerivedKey = null;
+        this._setpasswordProvider();
+        console.log('sc-vault -> new password assigned.');
+      },
+
+      _setpasswordProvider: function() {
+        if (!this.password || !this.keystore){
+          return;
+        }
+        var self=this;
+        this.set('keystore.passwordProvider', function(callback) {
+          console.log('sc-vault -> passwordProvider : signing tx');
+          callback(null, self.password);
+        });
+        console.log('sc-vault -> new passwordProvider set.');
+      },
+
+      _getpwDerivedKey: function(cb){
+        if (this.pwDerivedKey){
+          return cb(null,this.pwDerivedKey);
+        }
+        if (!this.password){
+          throw new Error('no password set');
+        }
+        console.log('sc-vault -> generating new pwDerivedKey');
+        var self=this;
+        self.keystore.keyFromPassword(self.password, function(err, pwDerivedKey) {
+            if (err){
+              return cb(err);
+            }
+            console.log('sc-vault -> new pwDerivedKey set. Ready to sign transactions');
+            self.pwDerivedKey = pwDerivedKey;
+            cb(null,pwDerivedKey);
+          });
+      },
+
+      generateNewAddress: function(amount,cb) {
+        if (!this.keystore) {
+          throw new Error('no keystore available');
+        }
+        var self = this;
+        this._getpwDerivedKey(function(err,pwDerivedKey ) {
+          self.keystore.generateNewAddress(pwDerivedKey, amount || 1);
+          cb();
+        });
+      },
+
+      vaultAway: function(){
+        this.set('route.path', '/completeclearvault');
+      },
+
+      _currentAccount: function(){
+        var addr = this.keystore.getAddresses();
+        if (addr.length>0){
+          this.currentaccount = self.fixaddress(addr[0]);
+        }
+      },
+
+
+      // unlockBtnbool: function(){
+      // },
+
+      _logThis: function(){
+        // console.log("is die vault nu eig creating????",this.creatingvault);
+      }
+
+    });
+  </script>
+</dom-module>
