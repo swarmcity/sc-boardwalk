@@ -238,9 +238,10 @@
       etherscanroot="{{etherscanroot}}"
       tokencontractaddress="{{tokencontractaddress}}"></sc-config>
 
-<!--    <sc-whisperer
+<!--
+  TODO: solve this comment
+      <sc-whisperer
       web3="[[web3]]"
-      topic="{{topic}}"
       progress="{{progress}}"
       listeninterval="{{listeninterval}}"
       decimals="5"
@@ -410,7 +411,7 @@
           </template>
       </div>
 
-      <template is="dom-repeat" items="{{history}}">
+<!--       <template is="dom-repeat" items="{{history}}">
         <div class="avatar" id="avatar">
           <img src="{{item.avatar}}"></div>
         <p>
@@ -418,7 +419,7 @@
           &Delta;
           <span>{{item.amount}}</span>
         </p>
-      </template>
+      </template> -->
     </div>
 
   </template>
@@ -443,7 +444,7 @@
           type: Object
         },
         /**
-       * `account` is received from the parent-element.
+       * `account` is the public key from the identity.
        */
         account: {
           type:String,
@@ -454,12 +455,6 @@
         sendcoinstate: {
           type: String,
         },
-        /**
-       * `topic` is the whisper-topic where the sender is listening to.
-       */
-        topic: {
-          type: Number,
-        },
 
         /**
        * `swtbalance` is the current SWT-balance of the Swarm Citizen sending coins.
@@ -468,19 +463,16 @@
           type: Object          
         },
 
-        /**
-       * `history` is a history of transactions.
-       */
-        history: {
-          type: Array,
-          value: []
-        },
+       //  /**
+       // * `history` is a history of transactions.
+       // */
+       //  history: {
+       //    type: Array,
+       //    value: []
+       //  },
       },
 
       ready: function(){
-        var self = this;
-        this.sendcoinstate = 'init';
-        this.password = sessionStorage.getItem('ac-password');
       },
 
       /**
@@ -488,6 +480,9 @@
       * use this to initialize any variables to start the component
       */
       onEnter: function(){
+        var self = this;
+        this.sendcoinstate = 'init';
+        this.password = sessionStorage.getItem('sc-password');
       },
 
       /**
