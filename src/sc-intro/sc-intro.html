@@ -1,0 +1,314 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/neon-animation/neon-animation.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+
+<link rel="import" href="../../bower_components/sc-style/sc-style.html">
+<link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
+
+<!--
+`sc-intro` is the first component a Swarm Citizen encouters on entering the city. It gives you the option of creating a new user OR sync with a backupfile. On creating a new user, it asks if the new user has ARC he/she wants to convert, and from where these ARC will be converted (paperwallet, Arcade City-walletfile, external wallet). 
+
+@demo src/sc-intro/demo/index.html 
+-->
+
+<dom-module id="sc-intro">
+<link rel="import" href="../../bower_components/sc-style/sc-style.css"  type="css">
+
+  <template>
+    <style>
+      :host {
+        display: block;
+        margin: 0px;
+        padding: 0px;
+        width: 100vw;
+        height: 100vh;
+        @apply(--base-structure);
+      }
+
+      .fullheight {
+        height: 100%;
+      }
+
+      .topbar {
+        transition: all 0.25s linear;
+      }
+
+      neon-animated-pages {
+        height: 92%;
+      }
+
+
+      .yesno {
+        margin: 5px 5px 5px 0px;
+        width: 100%;
+        max-width: 250px;
+        text-align: left;
+      }
+
+      iron-icon:hover {
+        cursor: pointer;
+      }
+    
+      @media all and (min-width: 0) and (max-width: 420px) {
+
+      }
+
+    </style>
+
+    <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
+    <app-route route="{{route}}" pattern="/:page" data="{{data}}"></app-route>
+
+    <div class$="topbar {{topbarbg}}">
+      <span class="flex"></span>
+      <template is="dom-if" if="{{!_is(data.page,'welcome')}}">
+      <iron-icon class="grey3" icon="sc-icons:decline" on-tap="exit">back</iron-icon>
+      </template>
+    </div>
+
+    <neon-animated-pages id="createwalletpgs" attr-for-selected="data-page" selected="[[data.page]]" entry-animation="{{entryAnimationintro}}" exit-animation="{{exitAnimationintro}}">
+
+      <neon-animatable data-page="newuser">
+        <div class="totalwidth vertic start paddingsides basestructure fullheight">
+          <div class="whitespace"></div>
+          <template is="dom-if" if="{{!phoneview}}">
+            <div class="whitespace"></div>
+          </template>
+          <h1 class="bold yellow">You must bee
+          <template is="dom-if" if="{{!phoneview}}">
+            <br>
+          </template>
+            new here</h1>
+          <div class="whitespace"></div>
+          <p class="reg maxwidth">There’s no user found on this device. When creating a new user, it is stored locally on your device.
+          <div class="flex"></div>
+          <template is="dom-if" if="{{phoneview}}">
+          <paper-button on-tap="totokenquestion" class="grey4 lighter shadow" noink>Create new user</paper-button>
+          </template>
+          <template is="dom-if" if="{{!phoneview}}">
+          <paper-button on-tap="totokenquestion" class="grey4 lighter bigbtn shadow" noink>Create new user</paper-button>
+          </template>
+          <div class="whitespace"></div>
+          <p on-tap="torestore" class="reg grey3 small underliner">restore a backup-file</p>
+          <div class="tenspace"></div>
+          <div class="fivespace"></div>
+          <div class="fivespace"></div>
+        </div>
+      </neon-animatable>
+
+      <neon-animatable data-page="first">
+        <div class="totalwidth vertic start paddingsides blueback fullheight">
+          <div class="whitespace"></div>
+          <template is="dom-if" if="{{!phoneview}}">
+            <div class="whitespace"></div>
+          </template>
+          <div class="maxwidth">
+          <h1 class="bold white">Let's talk tokens first...</h1>
+          <div class="whitespace"></div>
+          <p class="reg white">Do you own Arcade-tokens (ARC) you want to convert to Swarm City-tokens (SWT)?</p>
+        </div>
+          <template is="dom-if" if="{{!phoneview}}">
+            <div class="flex"></div>
+          </template>
+          <div class="vertic yesnobtns start startjust">
+            <paper-button class="white lighter yesno shadow centertxt" on-tap="toimportwallet" noink>Yes, convert my tokens!</paper-button>
+            <paper-button class="white lighter yesno shadow centertxt" on-tap="tocreatewallet" noink>Nope, don't have any.</paper-button>
+          </div>
+          <div class="tenspace"></div>
+          <div class="fivespace"></div>
+          <div class="fivespace"></div>
+        </div>
+      </neon-animatable>
+
+
+      <neon-animatable data-page="importwallet">
+        <div class="totalwidth vertic start paddingsides basestructure fullheight">
+          <div class="whitespace"></div>
+          <template is="dom-if" if="{{!phoneview}}">
+            <div class="whitespace"></div>
+          </template>
+          <div class="maxwidth">
+          <h1 class="bold blue">We bee converting!</h1>
+          <div class="whitespace"></div>
+          <p class="reg grey4">How did you save your ARC-wallet?</p>
+          </div>
+          <div class="flex"></div>
+          <div class="vertic yesnobtns">
+            <paper-button class="blue darker shadow yesno" on-tap="touploadjson" noink>as a json-file</paper-button>
+            <paper-button class="blue darker shadow yesno" on-tap="toprivatekey" noink>as a print / pdf</paper-button>
+          <div class="whitespace"></div>
+
+            <p on-tap="tomyethwallet" class="semibold grey3 small underliner">I have Arcade-tokens in an external wallet</p>
+          </div>
+          <div class="tenspace"></div>
+          <div class="fivespace"></div>
+          <div class="fivespace"></div>
+
+        </div>
+      </neon-animatable>
+
+
+
+
+    </neon-animated-pages>
+
+
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'sc-intro',
+
+      properties: {
+
+        /**
+       * `route` ...
+       */
+        route: {
+          type: Object,
+        },
+        /**
+       * `route` ...
+       */
+        vaultstatus: {
+          type: String,
+          observer: '_vaultstatus'
+        }     
+      },
+      observers: [
+          '_onRoutePathChanged(data.page)'
+        ],
+
+      /**
+      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
+      * use this to initialize any variables to start the component
+      */
+      onEnter: function(){
+        this.exitAnimationintro = "slide-left-animation";
+        this.entryAnimationintro = "slide-from-right-animation";
+      },
+
+      /**
+      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage 
+      * use this to reset any variables when leaving this component while it remains loaded.
+      */
+      onExit: function(){
+      },
+
+
+
+      /**
+      * 'exit' is fired when the x is tapped in sc-intro.
+      */
+      exit: function(){
+        this.exitAnimationintro = "slide-left-animation";
+        this.entryAnimationintro = "slide-from-right-animation";
+        this.fire('exit');
+      },
+
+
+      /**
+      * '_onRoutePathChanged' looks at the current route to changes the topbar-background.
+      */
+      _onRoutePathChanged: function(page) {
+        switch (page) {
+          case 'welcome':
+            this.topbarbg = "yellowback";
+            break;
+          case 'first':
+            this.topbarbg = "blueback";
+            break;
+          case 'newuser':
+            this.topbarbg = ""; 
+            if(this.vaultstatus=="locked"){
+              this.fire('vaultlocked');
+            }
+            break;
+          default:
+            this.topbarbg = "";
+            break;
+        }
+      },
+
+      _vaultstatus: function(newval,oldval){
+        // if(this.vaultstatus=="locked"){
+        //   this.fire('vaultlocked');
+        // }
+      },
+      
+
+      /**
+      * '_is', a function to bind a template to a certain value of a variable.
+      */
+      _is: function(a, b) {
+        if (b === undefined){
+          b = true;
+        }
+        //console.log(a ,'(',typeof a,') is',b,'(',typeof b,') they are equal for ==',a == b,', they are equal for ===',a === b);
+        return a === b;
+      },
+
+      /**
+      * 'totokenquestion', changes interal path to '/first', to show new view inside sc-intro.
+      */
+      totokenquestion: function() {
+        this.set('route.path', '/first');
+      },
+
+      /**
+      * 'toimportwallet', changes interal path to '/importwallet', to show new view inside sc-intro.
+      */
+      toimportwallet: function() {
+        this.set('route.path', '/importwallet');
+      },
+
+
+      /**
+      * 'torestore', fires to parent-element (sc-boardwalkapp) 'restoreipfs' so sc-boardwalk can change his route.
+      */
+      torestore: function() {
+        this.fire('restoreipfs');
+      },
+
+      /**
+      * 'toprivatekey', fires to parent-element (sc-boardwalkapp) 'importpk' so sc-boardwalk can change his route.
+      */
+      toprivatekey: function() {
+        this.fire('importpk');
+      },
+      
+      /**
+      * 'tomyethwallet', fires to parent-element (sc-boardwalkapp) 'importethwallet' so sc-boardwalk can change his route.
+      */
+      tomyethwallet: function() {
+        this.fire('importethwallet');
+      },
+      
+      /**
+      * 'toexternalkey', fires to parent-element (sc-boardwalkapp) 'externalpk' so sc-boardwalk can change his route.
+      */
+      toexternalkey: function() {
+        this.fire('externalpk');
+      },
+      
+      /**
+      * 'touploadjson', fires to parent-element (sc-boardwalkapp) 'importfile' so sc-boardwalk can change his route.
+      */
+      touploadjson: function() {
+        this.fire('importfile');
+      },
+      
+      /**
+      * 'tocreatewallet', fires to parent-element (sc-boardwalkapp) 'newvault' so sc-boardwalk can change his route.
+      */
+      tocreatewallet: function() {
+        this.fire('newvault');
+      },
+
+    });
+  </script>
+</dom-module>
