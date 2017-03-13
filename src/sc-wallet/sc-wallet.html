@@ -1,0 +1,185 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../sc-helpers/sc-helpers.html">
+<link rel="import" href="../sc-config/sc-config.html">
+
+<dom-module id="sc-wallet">
+
+  <template>
+    <sc-config config="{{config}}"></sc-config>  
+    <sc-helpers id="helpers"></sc-helpers>
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'sc-wallet',
+
+      properties: {
+        web3: {
+          type: Object,
+          observer: '_web3'
+        },
+        ethbalance: {
+          type: Number,
+          notify: true
+        },        
+        arcbalance: {
+          type: Object,
+          notify: true,
+          observer: '_arc'
+        },
+        swtbalance: {
+          type: Number,
+          notify: true,
+        },
+        pubkey: {
+          type: String,
+          observer: '_pubkey'
+        },
+        updating: {
+          type: Boolean,
+          value: false,
+          notify: true
+        },
+        status: {
+          type: String,
+          notify: true
+        },
+        lowgas: {
+          type: Boolean,
+          notify: true
+        },
+        emptygas: {
+          type: Boolean,
+          notify: true
+        },
+      },
+
+      _arc: function(){
+      },
+
+      attached: function() {
+        console.log('sc-wallet attached');
+      },
+
+      checkreadystate: function(){
+
+        if (!this.status && this.arcbalance != undefined && this.swtbalance != undefined && this.ethbalance != undefined){
+          console.log('vals:',this.swtbalance,this.ethbalance,this.arcbalance);
+          this.status = 'ready';
+          this.fire('ready');
+        }
+      },
+
+      _web3: function(){
+         this.setup();
+
+      },
+
+      _pubkey: function(){
+         this.setup();
+      },
+
+      setup: function() {
+        if (!this.web3 || !this.pubkey) {
+          return;
+        }
+        var self = this;
+        this.$.helpers.getjson('./contracts/ARCToken.json', function(err, tokendata) {
+          var contract = self.web3.eth.contract(tokendata.abi);
+          self.ARCTokeninstance = contract.at(self.config.tokencontractaddress);
+          self._readARCBalance(function() {
+            self.checkreadystate();
+          });
+        });
+        this.$.helpers.getjson('./contracts/MiniMeToken.json', function(err, tokendata) {
+          var contract = self.web3.eth.contract(tokendata.abi);
+          self.SWTTokeninstance = contract.at(self.config.swttokencontractaddress);
+          self._readSWTBalance(function() {
+            self.checkreadystate();
+          });
+        });
+      },
+
+      monitorBalance: function(){
+        if (!this.monitorcount || this.monitorcount == 0){
+          this.monitorcount = 6;
+          this.monitorInterval = setInterval(this.updateBalanceIntervalHandler.bind(this), 5000);          
+        }
+        this.updateBalanceIntervalHandler();
+      },
+
+      updateBalanceIntervalHandler: function(){
+        this.updateBalance();
+        this.monitorcount--;
+        console.log('monitorcount',this.monitorcount)
+        if (this.monitorcount < 1){
+            clearInterval(this.monitorInterval);
+            console.log('clearing interval');
+        }
+      },
+
+      updatebalances: function(){
+        this.updateBalance();
+      },
+
+      updateBalance: function(e) {
+        var self = this;
+        if (!this.pubkey || !self.web3 || !self.web3.eth || !this.ARCTokeninstance || !this.SWTTokeninstance) {
+          return;
+        }
+        self._readARCBalance();
+        self._readSWTBalance();
+      },
+
+      _readARCBalance: function(cb) {
+        if (!this.ARCTokeninstance || !this.pubkey) {
+          return;
+        }
+        var self = this;
+        this.debounce('_readARCBalance', function() {
+          self.updating = true;
+          self.ethbalance = self.web3.eth.getBalance(self.$.helpers.fixaddress(self.pubkey));
+          if (self.ethbalance.equals(0)){
+            self.emptygas = true;
+            self.lowgas = false;
+          }else{
+            self.emptygas = false;
+            if (self.ethbalance.lessThanOrEqualTo(100000)){
+                self.lowgas = true;
+            }else{
+                self.lowgas = false;
+            }
+          }
+          self.arcbalance = self.ARCTokeninstance.balanceOf(self.$.helpers.fixaddress(self.pubkey));
+          self.updating = false;
+          console.log('ETH balance is', self.ethbalance.toFormat(2));
+          console.log('ARC balance is', self.arcbalance.toFormat(2));
+          if (cb){
+            cb.bind(self)();
+          }
+        }, 500);
+      },
+
+      _readSWTBalance: function(cb) {
+        if (!this.SWTTokeninstance || !this.pubkey) {
+          if (cb){
+            cb();
+          }
+          return;
+        }
+        var self = this;
+        this.debounce('_readSWTBalance', function() {
+          this.updating = true;
+          self.swtbalance = self.SWTTokeninstance.balanceOf(self.$.helpers.fixaddress(self.pubkey));
+          self.updating = false;
+          console.log('SWT balance is', self.swtbalance.toFormat(2));
+          if (cb){
+            cb();
+          }
+        }, 500);
+      }
+
+    });
+  </script>
+</dom-module>
