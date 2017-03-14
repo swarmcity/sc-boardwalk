@@ -4,6 +4,9 @@
 <link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
 
 <link rel="import" href="../sc-avatar/sc-avatar.html">
+<link rel="import" href="../sc-username/sc-username.html">
+<link rel="import" href="../sc-balance/sc-balance.html">
+<link rel="import" href="../sc-hashtaglist/sc-hashtaglist.html">
 
 <!--
 `sc-home` is homeview of the Swarm City app. It shows your avatar/username/pubkey ( > to go to profile-view), your balance ( > to go to sc-wallet-view) and the hashtaglist ( > to go to a specific hashtag).
@@ -18,20 +21,74 @@
     <style>
       :host {
         display: block;
+/*        background: var(--sc-grey1);*/
+      }
+
+      .avatar_username_balance {
+        @apply(--base-structure);
+        width: 100%;
+        max-width: 420px;
+        box-sizing:border-box;
+        padding: 17vh 0px 18vh 0px;
+        height: 100%;
+      }
+
+      .avatar_username_box {
+
+      }
+
+      .homebalance_box {
+      }
+
+      sc-hashtaglist {
+        @apply(--base-structure);
       }
     
       @media all and (min-width: 0) and (max-width: 420px) {
+        .avatar_username_balance {
+          height: 50vh;
+        }
 
+        sc-hashtaglist {
+          background-color: var(--sc-white);
+        }
       }
+
 
     </style>
 
+    <div class="horizont start startjust wrap">
+      <div class="avatar_username_balance vertic centercenter">
+        <div class="avatar_username_box vertic centercenter">
+          <sc-avatar
+          identity="[[identity]]"
+          pubkey="[[pubkey]]"
+          id="homeavatar"
+          ></sc-avatar>
+          <div class="horizont centercenter">
+            <sc-username
+            identity="[[identity]]"
+            pubkey="[[pubkey]]"
+            id="homeusername"
+            size="small"
+            ></sc-username>
+            <template is="dom-if" if="{{!lastbackup}}">
+              <div class="warningbackup blue vertic centercenter"><p class="bold blue">!</p></div>
+            </template>
+          </div>
+        </div>
+        <div id="homebalance" class="homebalance_box">
+          <sc-balance
+            refcur="EUR"
+            swtbalance="[[swtbalance]]"
+            ethbalance="{{ethbalance}}"
+            ></sc-balance>
+        </div>
+      </div>
+      <sc-hashtaglist></sc-hashtaglist>
+    </div>
 
-    <sc-avatar
-    identity="[[identity]]"
-    pubkey="[[pubkey]]"
-    id="homeavatar"
-    ></sc-avatar>
+
 
   </template>
 
@@ -49,12 +106,11 @@
           type: Object,
         },
         /**
-       * `route` ...
+       * `lastbackup` ...
        */
-        vaultstatus: {
-          type: String,
-          observer: '_vaultstatus'
-        }     
+        lastbackup: {
+          type: Number,
+        }    
       },
       observers: [
           '_onRoutePathChanged(data.page)'
