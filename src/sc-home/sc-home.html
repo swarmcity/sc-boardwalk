@@ -1,4 +1,5 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
 
 <link rel="import" href="../../bower_components/sc-style/sc-style.html">
 <link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
@@ -21,7 +22,6 @@
     <style>
       :host {
         display: block;
-/*        background: var(--sc-grey1);*/
         @apply(--base-structure);
       }
 
@@ -34,7 +34,6 @@
       }
 
       .avatar_username_box {
-
       }
 
       .homebalance_box {
@@ -49,8 +48,18 @@
         box-sizing:border-box;
         padding: 15vh 0px 15vh 0px;
       }
+
+      .warningbackup {
+        margin-left: 10px;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        border: 2px solid var(--sc-blue);
+      }
+
     
       @media all and (min-width: 0) and (max-width: 420px) {
+
         .avatar_username_balance {
           height: 50vh;
           width: 100%;
@@ -69,9 +78,11 @@
 
     </style>
 
+    <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
+
     <div class="horizont start startjust wrap">
       <div class="avatar_username_balance vertic centercenter">
-        <div class="avatar_username_box vertic centercenter">
+        <div class="avatar_username_box vertic centercenter" on-tap="toProfile">
           <sc-avatar
           identity="[[identity]]"
           pubkey="[[pubkey]]"
@@ -89,7 +100,7 @@
             </template>
           </div>
         </div>
-        <div id="homebalance" class="homebalance_box">
+        <div id="homebalance" class="homebalance_box" on-tap="toProfile">
           <sc-balance
             refcur="EUR"
             swtbalance="[[swtbalance]]"
@@ -97,7 +108,7 @@
             ></sc-balance>
         </div>
       </div>
-      <sc-hashtaglist></sc-hashtaglist>
+      <sc-hashtaglist on-hashtag="toHashtag" id="bottomhalf"></sc-hashtaglist>
     </div>
 
 
@@ -135,11 +146,13 @@
            observer: '_keystore',
         },
 
-
-        datachanged: {
-          type: Boolean,
-          value: false
-        },
+       //  /**
+       // * `datachanged` .
+       // */
+       //  datachanged: {
+       //    type: Boolean,
+       //    value: false
+       //  },
 
         /**
        * `sharedElements` is used to share elements between components for doing animations.
@@ -160,6 +173,14 @@
         },
 
 
+        /**
+       * `pubkey` is the Swarm Citizen's pubkey.
+       */        
+        pubkey: {
+          type: String,
+          observer: '_pubkey'
+        },
+
       },
 
       behaviors: [
@@ -171,8 +192,6 @@
       * use this to initialize any variables to start the component
       */
       onEnter: function(){
-        this.exitAnimationintro = "slide-left-animation";
-        this.entryAnimationintro = "slide-from-right-animation";
       },
 
       /**
@@ -188,109 +207,254 @@
       * 'exit' is fired when the x is tapped in sc-home.
       */
       exit: function(){
-        this.exitAnimationintro = "slide-left-animation";
-        this.entryAnimationintro = "slide-from-right-animation";
-        this.fire('exit');
       },
 
-
       /**
-      * '_onRoutePathChanged' looks at the current route to changes the topbar-background.
+      * '_pubkey' monitors is the pubkey changes to update the balance.
       */
-      _onRoutePathChanged: function(page) {
-        switch (page) {
-          case 'welcome':
-            this.topbarbg = "yellowback";
-            break;
-          case 'first':
-            this.topbarbg = "blueback";
-            break;
-          case 'newuser':
-            this.topbarbg = ""; 
-            if(this.vaultstatus=="locked"){
-              this.fire('vaultlocked');
-            }
-            break;
-          default:
-            this.topbarbg = "";
-            break;
+      _pubkey: function(){
+        if (this.pubkey){
+          this.$.wallet.updateBalance();
         }
       },
 
-      _vaultstatus: function(newval,oldval){
-        // if(this.vaultstatus=="locked"){
-        //   this.fire('vaultlocked');
-        // }
-      },
-      
-
       /**
-      * '_is', a function to bind a template to a certain value of a variable.
+      * '_identity' monitors is the identity changes.
       */
-      _is: function(a, b) {
-        if (b === undefined){
-          b = true;
+      _identity: function() {
+        if (this.identity){
+          this.currentavatar = this.identity.avatarurl;
         }
-        //console.log(a ,'(',typeof a,') is',b,'(',typeof b,') they are equal for ==',a == b,', they are equal for ===',a === b);
-        return a === b;
-      },
-
-      /**
-      * 'totokenquestion', changes interal path to '/first', to show new view inside sc-home.
-      */
-      totokenquestion: function() {
-        this.set('route.path', '/first');
-      },
-
-      /**
-      * 'toimportwallet', changes interal path to '/importwallet', to show new view inside sc-home.
-      */
-      toimportwallet: function() {
-        this.set('route.path', '/importwallet');
       },
 
 
       /**
-      * 'torestore', fires to parent-element (sc-boardwalkapp) 'restoreipfs' so sc-boardwalk can change his route.
+      * 'toHashtag' makes the app go to a new view/route (in this case sc-hashtag). The function sets the animationConfig and sharedElements, then fires 'to-hashtag' to the parent-element to change the route.
       */
-      torestore: function() {
-        this.fire('restoreipfs');
+      toHashtag: function(e) {
+        if (this.phoneview) {
+
+          this.sharedElements = {
+              'hero': this.$.homeavatar,
+              'balance': this.$.homebalance
+            };
+
+          this.animationConfig = {
+              'entry': [{
+                  name: 'fade-in-animation',
+                  node:this.$.homebalance,
+                  toPage: this,
+                  timing: {
+                    delay: 200,
+                    duration: 125
+                  }
+                },{
+                  name: 'fade-in-animation',
+                  node:this.$.homeusername,
+                  toPage: this,
+                  timing: {
+                    delay: 475,
+                    duration: 125
+                  }
+                }, {
+                  name: 'slide-from-bottom-animation',
+                  node:this.$.bottomhalf,
+                  toPage: this,
+                  timing: {
+                    duration: 700
+                  }
+                },{
+                  name: 'hero-animation',
+                  id: 'hero',
+                  toPage: this,
+                  timing: {
+                      duration: 500
+                  }
+                },{
+                  name: 'hero-animation',
+                  id: 'balance',
+                  toPage: this,
+                  timing: {
+                      duration: 500
+                  }
+                }],
+
+                'exit': [
+                  {
+                    name: 'fade-out-animation',
+                    node:this.$.homeusername,
+                    fromPage: this,
+                    timing: {
+                        duration: 200
+                    }
+                  }, {
+                    name: 'fade-out-animation',
+                    node:this.$.bottomhalf,
+                    fromPage: this,
+                    timing: {
+                        duration: 200
+                    }
+                  },{
+                    name: 'hero-animation',
+                    id: 'hero',
+                    fromPage: this,
+                    timing: {
+                        duration: 500
+                    }
+                  },{
+                    name: 'hero-animation',
+                    id: 'balance',
+                    fromPage: this,
+                    timing: {
+                        duration: 500
+                    }
+                }]
+              };
+            this.fire('to-hashtag',e.detail);
+          } else {
+            this.fire('to-hashtag',e.detail);
+          }
       },
 
       /**
-      * 'toprivatekey', fires to parent-element (sc-boardwalkapp) 'importpk' so sc-boardwalk can change his route.
+      * 'toProfile' makes the app go to a new view/route (in this case sc-profile). The function sets the animationConfig and sharedElements, then fires 'to-profile' to the parent-element to change the route.
       */
-      toprivatekey: function() {
-        this.fire('importpk');
+      toProfile: function() {
+        if (this.phoneview) {
+          this.sharedElements = {
+              'hero': this.$.homeavatar,
+              'hero2': this.$.homeusername
+            };
+
+          this.animationConfig = {
+                'entry': [{
+                  name: 'fade-in-animation',
+                  node:this.$.homebalance,
+                  toPage: this,
+                  timing: {
+                    delay: 200,
+                    duration: 125
+                  },
+
+                }, {
+                  name: 'slide-from-bottom-animation',
+                  node:this.$.bottomhalf,
+                  toPage: this,
+                  timing: {
+                    duration: 700
+                  }
+                },{
+                  name: 'hero-animation',
+                  id: 'hero',
+                  toPage: this,
+                  timing: {
+                      duration: 600
+                    }
+                }],
+
+                'exit': [{
+                  name: 'fade-out-animation',
+                  node:this.$.homebalance,
+                  fromPage: this,
+                  timing: {
+                      duration: 125
+                  }
+                },{
+                  name: 'fade-out-animation',
+                  node:this.$.homeusername,
+                  fromPage: this,
+                  timing: {
+                      duration: 125
+                  }
+                }, {
+                  name: 'slide-down-animation',
+                  node:this.$.bottomhalf,
+                  fromPage: this,
+                  timing: {
+                      duration: 700
+                  }
+                },{
+                  name: 'hero-animation',
+                  id: 'hero',
+                  fromPage: this,
+                  timing: {
+                      duration: 600
+                    }
+                }]
+            };
+          this.fire('to-profile'); 
+        } else {
+          this.fire('to-profile'); 
+        }
       },
-      
+
+
       /**
-      * 'tomyethwallet', fires to parent-element (sc-boardwalkapp) 'importethwallet' so sc-boardwalk can change his route.
+      * 'toWalletview' makes the app go to a new view/route (in this case sc-walletview). The function sets the animationConfig and sharedElements, then fires 'to-walletview' to the parent-element to change the route.
       */
-      tomyethwallet: function() {
-        this.fire('importethwallet');
+      toWalletview: function() {
+        if (this.phoneview) {
+        // TODO : remove this
+        return;
+        this.sharedElements = {
+          'hero': this.$.homebalance,
+          };
+        this.animationConfig = {
+              'entry': [{
+                name: 'fade-in-animation',
+                node:this.$.homebalance,
+                toPage: this,
+                timing: {
+                  duration: 200
+                }
+              }, {
+                name: 'fade-in-animation',
+                node:this.$.homeusername,
+                toPage: this,
+                timing: {
+                  duration: 200
+                }
+              },{
+                name: 'hero-animation',
+                id: 'hero',
+                toPage: this,
+                timing: {
+                    duration: 600
+                }
+              }],
+
+              'exit': [{
+                name: 'fade-out-animation',
+                node:this.$.homebalance,
+                fromPage: this,
+                timing: {
+                    duration: 200
+                }
+              }, {
+                name: 'fade-out-animation',
+                node:this.$.homeusername,
+                fromPage: this,
+                timing: {
+                    duration: 200
+                }
+              },{
+                name: 'hero-animation',
+                id: 'hero',
+                fromPage: this,
+                timing: {
+                    duration: 600
+                }
+              }]
+          };
+        this.fire('to-walletview');
+
+        } else {
+        this.fire('to-walletview');
+        }
       },
-      
-      /**
-      * 'toexternalkey', fires to parent-element (sc-boardwalkapp) 'externalpk' so sc-boardwalk can change his route.
-      */
-      toexternalkey: function() {
-        this.fire('externalpk');
-      },
-      
-      /**
-      * 'touploadjson', fires to parent-element (sc-boardwalkapp) 'importfile' so sc-boardwalk can change his route.
-      */
-      touploadjson: function() {
-        this.fire('importfile');
-      },
-      
-      /**
-      * 'tocreatewallet', fires to parent-element (sc-boardwalkapp) 'newvault' so sc-boardwalk can change his route.
-      */
-      tocreatewallet: function() {
-        this.fire('newvault');
-      },
+
+
+
 
     });
   </script>

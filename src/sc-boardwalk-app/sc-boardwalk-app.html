@@ -110,8 +110,9 @@
       swtbalance="[[swtbalance]]"
       ethbalance="[[ethbalance]]"
       balanceupdating="[[balanceupdating]]"
-      on-to-profile="toProfile"
-      on-to-walletview="toWalletview"
+      on-to-profile="home_toprofile"
+      on-to-walletview="home_towalletview"
+      on-to-hashtag="home_tohashtag"
       >
     </sc-home>
 
@@ -260,6 +261,23 @@
       intro_torestoreipfs: function(){
         this.transitionto('/vault/importipfs');
       },
+
+      home_toprofile: function(){
+        console.log("yes, home_toprofile");
+        // this.transitionto('/profile');
+      },
+
+      home_towalletview: function(){
+        console.log("yes, home_towalletview");
+        // this.transitionto('/walletview');
+      },
+
+      home_tohashtag: function(){
+        console.log("yes, home_tohashtag");
+        // this.transitionto('/walletview');
+      },
+
+
     });
   </script>
 </dom-module>
