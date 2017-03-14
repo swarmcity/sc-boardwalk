@@ -1,7 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-localstorage/iron-localstorage.html">
-<!-- TODO : store this locally ? -->
-<script src="https://npmcdn.com/ipfs-api/dist/index.js"></script>
+<script src="./js-ipfs-api.js"></script>
 <link rel="import" href="../sc-config/sc-config.html">
 
 <dom-module id="sc-ipfs">
@@ -21,9 +20,6 @@
           type: Object,
           observer: 'initipfs'
         },
-        // ipfscache: {
-        //   type: Object
-        // }
       },
 
       ready: function(){
@@ -33,17 +29,11 @@
       initipfs: function() {
         if (this.config && !this.ipfs) {
           this.ipfs = window.IpfsApi(this.config);
-          // if (this.config.gatewayport === undefined){
-          //   this.config.gatewayport = 8080;
-          // }
-          //this.baseurl = this.config.protocol + '://' + this.config.host + ':' + this.config.gatewayport + '/ipfs/';
         }
       },
 
-      ready: function() {
-        //debugger;
-      },
-
+      // add data to IPFS
+      //
       // usage : <sc-ipfs id="ipfs"></sc-ipfs>
       //         this.$.ipfs.add(new this.$.ipfs.ipfs.Buffer(JSON.stringify(myJSONdata)), function(err, result) { console.log(result[0].hash); });
       add: function(data, cb) {
@@ -53,8 +43,13 @@
         });
       },
 
+      // reads data from IPFS and return it as a Buffer
+      //
       // usage : <sc-ipfs id="ipfs"></sc-ipfs>
-      //         self.$.ipfs.cat(ipfshash, function(err, data) { ... });
+      //         this.$.ipfs.cat(ipfshash, function(err, data) { ... });
+      // Returns a Buffer with the IPFS data at that hash.
+      // throws on error.
+      //
       cat: function(hash, cb) {
         var self = this;
         this.ipfs.cat(hash, function(err, res) {
@@ -75,11 +70,16 @@
         });
       },
 
+      // calculates the IPFS url from a hash to link in a webapp
+      // 
+      // Based on your IPFS server configuration, this function returns a
+      // absolute URL to the content. 
+      // example var myLink = this.$.ipfs.geturl('<IPFSHASH>');
+      //
       geturl: function(hash) {
         return this.baseurl + hash;
-      },
-
-      detached: function() {},
+      }
 
     });
-  </script></dom-module>
+  </script>
+</dom-module>

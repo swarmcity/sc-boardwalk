@@ -7,8 +7,12 @@
 <link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
 <link rel="import" href="../../bower_components/app-route/app-location.html">
 
+<!-- bundle my-first -->
+<link rel="import" href="../sc-backbone/sc-backbone.html">
+<!-- endbundle -->
+
 <!-- note that this will be lazy-loaded -->
-<link rel="import" href="../sc-boardwalk-app/sc-boardwalk-app.html">
+<!-- <link rel="import" href="../sc-boardwalk-app/sc-boardwalk-app.html"> -->
 
 <!--
 `sc-homescreen`
@@ -23,6 +27,7 @@ This is the homescreen of boardwalk.
 
   <template>
     <app-location route="{{route}}" use-hash-as-path></app-location>  
+    <sc-backbone id="backbone"></sc-backbone>
     <style>
       :host {
         display: block;
@@ -340,6 +345,10 @@ This is the homescreen of boardwalk.
 
       ready: function(){
         this.onEnter();
+      },
+
+      attached: function(){
+        this.$.backbone.lazyload('sc-boardwalk-app');
       },
 
       /**

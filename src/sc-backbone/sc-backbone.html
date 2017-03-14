@@ -63,13 +63,44 @@ Example:
 
       lazyload: function(name){
         this.push('LLQueue',name);
+        //debugger;
+        this._lazyLoad(name,'../' + name + '/' + name + '.html');
       },
 
       processLLQueue: function(){
         if (this.web3 && this.config && this.LLQueue){
           console.log('processing Lazy loading...');
         }
-      }
+      },
+
+      _lazyLoad: function(elementid, filename, cb) {
+        var t0 = performance.now();
+        
+        if (Polymer.isInstance(this.$[elementid])) {
+          if (cb) {
+            cb(null,this.$[elementid]);
+            //} && this.$[elementid][method]) {
+            //this.$[elementid][method]();
+          }
+          return;
+        }
+        var url = this.resolveUrl(filename);
+
+        Polymer.Base.importHref(
+          url,
+          function(e) {
+            console.log('LAZYLOADER --> ', elementid, 'loaded & added to DOM');
+            if (cb) {
+              cb(null,this.$[elementid]);
+            }
+            var t1 = performance.now();
+            console.log('Lazy loading',elementid,'took',(t1 - t0),'milliseconds.');
+          }.bind(this),
+          function() {
+            console.log('Something failed!');
+          }, true
+        );
+      },      
 
 
     });

@@ -71,7 +71,7 @@
 
     <neon-animated-pages id="createwalletpgs" attr-for-selected="data-page" selected="[[data.page]]" entry-animation="{{entryAnimationintro}}" exit-animation="{{exitAnimationintro}}">
 
-      <neon-animatable data-page="newuser">
+      <neon-animatable data-page="welcome">
         <div class="totalwidth vertic start paddingsides basestructure fullheight">
           <div class="whitespace"></div>
           <template is="dom-if" if="{{!phoneview}}">
@@ -216,13 +216,13 @@
       */
       _onRoutePathChanged: function(page) {
         switch (page) {
-          case 'welcome':
-            this.topbarbg = "yellowback";
-            break;
+          // case 'welcome':
+          //   this.topbarbg = "yellowback";
+          //   break;
           case 'first':
             this.topbarbg = "blueback";
             break;
-          case 'newuser':
+          case 'welcome':
             this.topbarbg = ""; 
             if(this.vaultstatus=="locked"){
               this.fire('vaultlocked');

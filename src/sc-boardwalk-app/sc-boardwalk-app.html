@@ -5,6 +5,7 @@
 <link rel="import" href="../sc-web3/sc-web3.html">
 <link rel="import" href="../sc-wallet/sc-wallet.html">
 <link rel="import" href="../sc-vault/sc-vault.html">
+<link rel="import" href="../sc-intro/sc-intro.html">
 <!-- <link rel="import" href="../sc-newdeal/sc-newdeal.html"> -->
 
 <!--
@@ -60,23 +61,23 @@
       on-converted="converted"
       >
     </sc-swtconversion> -->
-<!-- 
+
     <sc-intro
       id="intro"
       data-page="intro"
-      on-newvault="createNewVault"
-      on-importfile="toimportfile"
-      on-importethwallet="toimportethwallet"
-      on-importpk="toimportpk"
-      on-externalpk="toexternalpk"
-      on-vaultlocked="toUnlockVault"
+      on-newvault="intro_createNewVault"
+      on-importfile="intro_toimportfile"
+      on-importethwallet="intro_toimportethwallet"
+      on-importpk="intro_toimportpk"
+      on-externalpk="intro_toexternalpk"
+      on-vaultlocked="intro_toUnlockVault"
       on-enter="enter"
-      on-exit="toAppStart"
-      on-restoreipfs="torestoreipfs"
+      on-exit="intro_toAppStart"
+      on-restoreipfs="intro_torestoreipfs"
       route="[[pageTail]]"
       vaultstatus="[[vaultstatus]]"
       >
-    </sc-intro> -->
+    </sc-intro>
 
     <sc-vault
       id="vault"
@@ -89,7 +90,7 @@
       on-ready="checkready"
       status="{{vaultstatus}}"
       on-backupexit="toProfile"
-      on-exit="toAppStart"
+      on-exit="intro_toAppStart"
       >
     </sc-vault>
 <!-- 
@@ -180,6 +181,13 @@
         this.fire('exit');
       },
 
+      checkready: function(){
+         return  this.transitionto('/intro/welcome');
+      },
+
+      intro_toAppStart: function(){
+        this.transitionto('/intro/welcome');
+      },
       transitionto: function(target){
         console.log('sc-app -> transitionTo',target);
         this.set('route.path',target);
@@ -187,7 +195,36 @@
 
       _onRouteDataChanged: function(page,oldpage) {
          console.log('sc-app -> _onRouteDataChanged',oldpage,'->',page);
-       }
+       },
+
+      // intro routing
+      intro_createNewVault: function(){
+        this.transitionto('/vault/createnew');
+      },    
+
+      intro_toimportfile: function(){
+        this.transitionto('/vault/importfile');
+      },   
+
+      intro_toimportethwallet: function(){
+        this.transitionto('/vault/importethwallet');
+      },   
+
+      intro_toimportpk: function(){
+        this.transitionto('/vault/importpk');
+      },
+
+      intro_toexternalpk: function(){
+        this.transitionto('/vault/externalpk');
+      }, 
+
+      intro_toUnlockVault: function(){
+        this.transitionto('/vault/unlock');
+      },    
+
+      intro_torestoreipfs: function(){
+        this.transitionto('/vault/importipfs');
+      },
     });
   </script>
 </dom-module>
