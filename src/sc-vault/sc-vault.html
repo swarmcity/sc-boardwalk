@@ -1182,6 +1182,7 @@
 
           }else{
             self.generateNewAddress(1,function() {
+              self.currentaccount = self.keystore.getAddresses()[0];
               self.currentidentity = self._creatBlankIdentity();
               self.saveVault();
               self.loadVault();
