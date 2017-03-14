@@ -1,4 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../bower_components/sc-style/sc-style.html">
+<link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
 <!--
 `sc-hashtaglist`
 
@@ -8,13 +11,92 @@ This components shows all the hashtags that are available for doing deals on. Th
 -->
 
 <dom-module id="sc-hashtaglist">
+<link rel="import" href="../../bower_components/sc-style/sc-style.css" type="css">
+
   <template>
     <style>
       :host {
         display: block;
       }
+
+      .totalcontainer {
+        box-sizing:border-box;
+        padding: 0px 0px 0px 50px;
+      }
+
+      .hashtag p {
+        width: 70%;
+        word-break:break-all;
+      }
+
+      .hashtag:hover p {
+        color:var(--sc-blue);
+        cursor: pointer;
+      }
+
+      .big {
+        margin: 0px 0px 12px 0px;
+      }
+
+      .big p {
+        font-size: 26px;
+        line-height: 34px;
+        margin: 0px 0px 2px 0px;
+      }
+
+      .symbol p {
+        font-size: 24px;
+        line-height: 38px;  
+        margin: 0px 0px 0px 0px;
+      }
+
+      .symbol {
+        min-width: 24px;
+      }
+
+      .filtering {
+        margin: 0px 0px 22px 0px;       
+      }
+
+      @media all and (min-width: 0) and (max-width: 420px) { 
+        .totalcontainer {
+          box-sizing:border-box;
+          padding: 8vh 8vw 8vh 8vw;
+        }
+
+        .big {
+          margin: 0px 0px 15px 0px;
+        }
+
+        .hashtag:hover p {
+        }
+
+      }
+
     </style>
-      <h2>Hello, I'm [[prop1]]</h2>
+   <div class="totalwidth totalcontainer">
+    <div class="total vertic start" id="hashtaglistcontent">
+      <div class="filtering totalwidth">
+        <p class="grey2">Trending in Swarm City</p>
+      </div>
+      <template is="dom-repeat" items="{{hashtagzzz}}">
+        <div on-tap="toHashtag" id="{{item}}" class="hashtag big totalwidth horizont start startjust ">
+            <div class="symbol">
+              <p class="semibold grey4">#</p>
+            </div>
+            <p on-tap="toHashtag" class="grey4 bold flex">
+             {{item}}
+            </p>
+        </div>
+      </template>
+    </div>
+
+  </div>
+
+
+
+
+
 
   </template>
 
@@ -34,6 +116,16 @@ This components shows all the hashtags that are available for doing deals on. Th
       },
 
       ready: function(){
+        // THIS IS DUMMY CONTENT
+        this.hashtagzzz = [
+            'ridesharing',
+            'dev-ops',
+            'testingSC',
+            'dogwalking',
+            'food-delivery',
+            'it-hive'
+        ];
+
       },
 
       /**
@@ -48,6 +140,15 @@ This components shows all the hashtags that are available for doing deals on. Th
       * use this to reset any variables when leaving this component while it remains loaded.
       */
       onExit: function(){
+      },
+
+
+      /**
+      * 'toHashtag' is the tap-function: when a hashtag is tapped, the app goes to a new view/route where the requests on this hashtag are presented (= component sc-hashtag).
+      */
+      toHashtag: function(e) {
+        var selectedhasht = e.detail.sourceEvent.target.parentElement.id;
+        this.fire('hashtag',selectedhasht);
       }
 
     });

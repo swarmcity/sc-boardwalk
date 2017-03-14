@@ -22,14 +22,14 @@
       :host {
         display: block;
 /*        background: var(--sc-grey1);*/
+        @apply(--base-structure);
       }
 
       .avatar_username_balance {
         @apply(--base-structure);
-        width: 100%;
-        max-width: 420px;
+        width: 300px;
         box-sizing:border-box;
-        padding: 17vh 0px 18vh 0px;
+        padding: 15vh 0px 18vh 50px;
         height: 100%;
       }
 
@@ -40,17 +40,29 @@
       .homebalance_box {
       }
 
+      sc-avatar {
+        margin: 0px 0px 20px 0px;
+      }
+
       sc-hashtaglist {
-        @apply(--base-structure);
+        background-color: none;
+        box-sizing:border-box;
+        padding: 15vh 0px 15vh 0px;
       }
     
       @media all and (min-width: 0) and (max-width: 420px) {
         .avatar_username_balance {
           height: 50vh;
+          width: 100%;
+          box-sizing:border-box;
+          padding: 0px;
         }
 
         sc-hashtaglist {
           background-color: var(--sc-white);
+          width: 100%;
+          box-sizing:border-box;
+          padding: 0px;
         }
       }
 
@@ -100,21 +112,59 @@
       properties: {
 
         /**
-       * `route` ...
+       * `identity` is received from parent-element, as an object containing an IPFS-hash, which is img-source.
        */
-        route: {
-          type: Object,
+        identity: {
+          type: String,
+          observer: '_identity',
+          notify: true
         },
+
         /**
-       * `lastbackup` ...
+       * `web3` is received from parent-element.
        */
-        lastbackup: {
-          type: Number,
-        }    
+        web3: {
+          type: Object
+        },
+
+        /**
+       * `keystore` is received from parent-element.
+       */
+        keystore: {
+          type: Object,
+           observer: '_keystore',
+        },
+
+
+        datachanged: {
+          type: Boolean,
+          value: false
+        },
+
+        /**
+       * `sharedElements` is used to share elements between components for doing animations.
+       */
+        sharedElements: {
+          type: Object,
+          value: function() {
+            return {
+              'hero': '',
+            }
+          }
+        },  
+
+        /**
+       * `animationConfig` is used to configure animations.
+       */
+        animationConfig: {
+        },
+
+
       },
-      observers: [
-          '_onRoutePathChanged(data.page)'
-        ],
+
+      behaviors: [
+        Polymer.NeonSharedElementAnimatableBehavior
+      ],
 
       /**
       * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
