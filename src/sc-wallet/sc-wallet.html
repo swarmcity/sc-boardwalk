@@ -77,6 +77,7 @@
       },
 
       _pubkey: function(){
+        debugger;
          this.setup();
       },
 
@@ -85,14 +86,14 @@
           return;
         }
         var self = this;
-        this.$.helpers.getjson('./contracts/ARCToken.json', function(err, tokendata) {
+        this.$.helpers.getjson('../contracts/ARCToken.json', function(err, tokendata) {
           var contract = self.web3.eth.contract(tokendata.abi);
           self.ARCTokeninstance = contract.at(self.config.tokencontractaddress);
           self._readARCBalance(function() {
             self.checkreadystate();
           });
         });
-        this.$.helpers.getjson('./contracts/MiniMeToken.json', function(err, tokendata) {
+        this.$.helpers.getjson('../contracts/MiniMeToken.json', function(err, tokendata) {
           var contract = self.web3.eth.contract(tokendata.abi);
           self.SWTTokeninstance = contract.at(self.config.swttokencontractaddress);
           self._readSWTBalance(function() {
