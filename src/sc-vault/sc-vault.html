@@ -896,6 +896,7 @@
           if (pwdcorrect) {
             self.status = 'unlocked';
             console.log('sc-vault: status=',self.status,'fires READY');
+            self.currentaccount = self.keystore.getAddresses()[0];
             return self.fire('ready');
           } else {
             self.status = 'locked';
@@ -903,9 +904,7 @@
             return self.fire('ready');
           }
         });
-
       },
-
 
       attached: function(){
         console.log('sc-vault attached');
@@ -993,7 +992,6 @@
       getvaultDownloaded: function(){
         this.lastbackup = window.localStorage.getItem('sc-vault-downloaded');
         if (this.lastbackup === undefined){
-          debugger;
           this.lastbackup = null;
         }
       },
