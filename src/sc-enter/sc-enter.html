@@ -7,22 +7,27 @@
 <link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
 <link rel="import" href="../../bower_components/app-route/app-location.html">
 
+<!-- bundle my-first -->
+<link rel="import" href="../sc-backbone/sc-backbone.html">
+<!-- endbundle -->
+
 <!-- note that this will be lazy-loaded -->
-<link rel="import" href="../sc-boardwalk-app/sc-boardwalk-app.html">
+<!-- <link rel="import" href="../sc-boardwalk-app/sc-boardwalk-app.html"> -->
 
 <!--
-`sc-homescreen`
+`sc-enter`
 
 This is the homescreen of boardwalk.
 
-@demo src/sc-homescreen/demo/index.html 
+@demo src/sc-enter/demo/index.html 
 -->
 
-<dom-module id="sc-homescreen">
+<dom-module id="sc-enter">
 <link rel="import" href="../../bower_components/sc-style/sc-style.css"  type="css">
 
   <template>
     <app-location route="{{route}}" use-hash-as-path></app-location>  
+    <sc-backbone id="backbone"></sc-backbone>
     <style>
       :host {
         display: block;
@@ -326,7 +331,7 @@ This is the homescreen of boardwalk.
   <script>
     Polymer({
 
-      is: 'sc-homescreen',
+      is: 'sc-enter',
 
       properties: {
         /**
@@ -334,12 +339,16 @@ This is the homescreen of boardwalk.
        */
         prop1: {
           type: String,
-          value: 'sc-homescreen',
+          value: 'sc-enter',
         },
       },
 
       ready: function(){
         this.onEnter();
+      },
+
+      attached: function(){
+        this.$.backbone.lazyload('sc-boardwalk-app');
       },
 
       /**

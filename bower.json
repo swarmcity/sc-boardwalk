@@ -16,7 +16,8 @@
     "paper-input": "^1.1.23",
     "iron-a11y-keys": "^1.0.7",
     "iron-localstorage": "^1.0.6",
-    "paper-progress": "^1.0.11"
+    "paper-progress": "^1.0.11",
+    "polymer-detect-js": "^1.0.3"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",

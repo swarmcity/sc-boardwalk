@@ -5,26 +5,21 @@
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
     <title>sc-boardwalk</title>
-    <meta name="description" content="sc-boardwalk description">
+    <meta name="description" content="Swarm.City Boardwalk">
 
     <!-- See https://goo.gl/OOhYW5 -->
     <link rel="manifest" href="/manifest.json">
 
     <script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
     
-    <link rel="import" href="/bower_components/neon-animation/neon-animation.html">
-    <link rel="import" href="/src/sc-homescreen/sc-homescreen.html">
-    <link rel="import" href="/src/sc-backbone/sc-backbone.html">
+    <link rel="import" href="/src/sc-enter/sc-enter.html">
 
     <style>
       body {
         margin: 0px;
         padding: 0px;
         background-color: #F4F4F4;
-/*        background-image: url(./images/AC.png);
-        background-repeat: no-repeat;
-        background-position: 50% -100%;
-*/        min-height: 100vh;
+        min-height: 100vh;
       }
       ::-webkit-scrollbar {
           display: none;
@@ -33,13 +28,6 @@
     
   </head>
   <body>
-    <sc-backbone></sc-backbone>
-
-  <!-- hier ne neon animated zetten die switcht tussen sc homescreen en sc boardwalk-app -->
-    <sc-homescreen></sc-homescreen>
-    <!--
-    This will be lazy loaded in some near future...
-    -->
-    <!-- <sc-boardwalk-app></sc-boardwalk-app> -->
+    <sc-enter></sc-enter>
   </body>
 </html>
