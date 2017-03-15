@@ -1,124 +1,166 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
+<link rel="import" href="../../bower_components/neon-animation/neon-animation.html">
 
 <link rel="import" href="../../bower_components/sc-style/sc-style.html">
 <link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
 
+<link rel="import" href="../sc-ipfs/sc-ipfs.html">
 <link rel="import" href="../sc-avatar/sc-avatar.html">
-<link rel="import" href="../sc-username/sc-username.html">
-<link rel="import" href="../sc-balance/sc-balance.html">
-<link rel="import" href="../sc-hashtaglist/sc-hashtaglist.html">
+
 
 <!--
-`sc-home` is homeview of the Swarm City app. It shows your avatar/username/pubkey ( > to go to profile-view), your balance ( > to go to sc-wallet-view) and the hashtaglist ( > to go to a specific hashtag).
+`sc-profile` is profile-view where a Swarm Citizen can do his profile-things. Here the user has the possibility of changing his avatar/username, he can view his complete pubkey, or creating a backup of his profile via IPFS. The user can also logout here, or delete his complete user-data from the device.
 
-@demo src/sc-home/demo/index.html 
+@demo src/sc-profile/demo/index.html 
 -->
 
-<dom-module id="sc-home">
+<dom-module id="sc-profile">
 <link rel="import" href="../../bower_components/sc-style/sc-style.css"  type="css">
 
   <template>
     <style>
       :host {
         display: block;
-        @apply(--base-structure);
-      }
-
-      .avatar_username_balance {
-        @apply(--base-structure);
-        width: 300px;
-        box-sizing:border-box;
-        padding: 15vh 0px 18vh 50px;
+        width: 100%;
         height: 100%;
       }
 
-      .avatar_username_box {
+      neon-animated-pages {
+        height: 90vh;
       }
 
-      .homebalance_box {
+
+      .profilepic {
+        box-sizing: border-box;
+        padding: 0px 4vw 0px 10vw;
+
       }
 
-      sc-avatar {
-        margin: 0px 0px 20px 0px;
+      .profilepicinner {
+        @apply(--layout-vertical);
+        @apply(--layout-start-justified);
+        @apply(--layout-end);
       }
 
-      sc-hashtaglist {
-        background-color: none;
-        box-sizing:border-box;
-        padding: 15vh 0px 15vh 0px;
+      .uploadicon {
+        z-index: 12;
+        margin-top: -20px;
+    /*    @apply(--base-structure-and-inset);*/
       }
 
-      .warningbackup {
-        margin-left: 10px;
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        border: 2px solid var(--sc-blue);
+      .croppiecontrols {
+        z-index: 12;
+        margin: -70px 0px 20px 0px;
+        box-sizing:border-box;    
+        padding-left: 10px;
       }
+
+      .croppiecontrols paper-icon-button {
+        width: 50px;
+        height: 50px;
+        margin-bottom: 5px;
+      }
+      .croppiecontrols p {
+        @apply(--montserrat-semibold);
+
+      }
+
+    .warning {
+      width: 90%;
+      background-color: var(--sc-blue);
+      box-sizing:border-box;
+      padding: 38px;
+      @apply(--layout-vertical);
+      @apply(--layout-start);
+      @apply(--layout-start-justified);
+      margin-bottom: 10vh;
+    }
+
+    .warningsign {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 3px solid var(--sc-white);
+      opacity: 0.5;
+      margin-bottom: 20px;
+    }
+
+    .warningsign p {
+            font-size: 24px;
+
+    }
+
 
     
       @media all and (min-width: 0) and (max-width: 420px) {
 
-        .avatar_username_balance {
-          height: 50vh;
-          width: 100%;
-          box-sizing:border-box;
-          padding: 0px;
-        }
-
-        sc-hashtaglist {
-          background-color: var(--sc-white);
-          width: 100%;
-          box-sizing:border-box;
-          padding: 0px;
-        }
       }
 
 
     </style>
 
-    <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
+    <sc-ipfs id="ipfs"></sc-ipfs>
 
-    <div class="horizont start startjust wrap">
-      <div class="avatar_username_balance vertic centercenter">
-        <div class="avatar_username_box vertic centercenter" on-tap="toProfile">
-          <sc-avatar
-          identity="[[identity]]"
-          pubkey="[[pubkey]]"
-          id="homeavatar"
-          ></sc-avatar>
-          <div class="horizont centercenter">
-            <sc-username
-            identity="[[identity]]"
-            pubkey="[[pubkey]]"
-            id="homeusername"
-            size="small"
-            ></sc-username>
-            <template is="dom-if" if="{{!lastbackup}}">
-              <div class="warningbackup blue vertic centercenter"><p class="bold blue">!</p></div>
-            </template>
-          </div>
-        </div>
-        <div id="homebalance" class="homebalance_box" on-tap="toWalletview">
-          <sc-balance
-            refcur="EUR"
-            swtbalance="[[swtbalance]]"
-            ethbalance="{{ethbalance}}"
-            ></sc-balance>
-        </div>
+    <div class="total darkerer" id="totalbox">
+
+      <div class="topbar">
+        <span class="flex"></span>
+        <iron-icon class="grey3" icon="sc-icons:decline" on-tap="exit">back</iron-icon>
       </div>
-      <sc-hashtaglist on-hashtag="toHashtag" id="bottomhalf"></sc-hashtaglist>
+
+      <neon-animated-pages selected="{{datastate}}" attr-for-selected="data-state" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
+        <neon-animatable data-state="view">
+        <div class="totalwidth vertic centercenter view">
+
+          <template is="dom-if" if="{{!lastbackup}}">
+            <div class="whitespace"></div>
+            <div class="warning">
+              <div class="warningsign vertic centercenter"><p class="bold white">!</p></div>
+              <p class="white bold youneedto">Did you backup your profile yet?</p>
+              <div class="minispace"></div>
+              <div class="minispace"></div>
+              <p class="white reg">This app is fully decentralized, so there is no central party that keeps your account information. This means that when you remove the user from this device, the only way to recover it is with a backup you have to create. The <span class="bold">backup</span> together with <span class="bold">your password</span> will give you permanent control of your tokens.</p>
+              <div class="whitespace"></div>
+              <paper-button class="bold shadow white lighter" on-tap="backupvault">Create a backup</paper-button>
+              <div class="whitespace"></div>
+              <p class="small bold white disapp">This message will disappear when you create your backup.</p>
+            </div>
+          </template>
+
+
+
+            <div class="profilepic vertic centercenter">
+              <div class="profilepicinner" on-tap="uploadfile">
+
+              <template is="dom-if" if="{{avatarloading}}">
+              <div class="avatarloading">
+                <sc-spinner color="blue" small></sc-spinner>
+              </div>
+              </template>
+
+                <sc-avatar
+              id="currentavatar"
+              identity="{{identity}}"
+              pubkey="{{account}}"
+              mode="imgonly"
+              size="big"
+              ></sc-avatar>
+                <input type="file" accept="image/*" class="hidden" id="avatarupload" on-change="avatarChange"/>
+                <paper-icon-button icon="sc-icons:upload" class="blueback white uploadicon" id="uploadbtn"></paper-icon-button>
+              </div>
+            </div>
+
+          </div>
+        </neon-animatable>
+      </neon-animated-pages>
     </div>
 
-
-
   </template>
-
   <script>
     Polymer({
 
-      is: 'sc-home',
+      is: 'sc-profile',
 
       properties: {
 
@@ -187,6 +229,11 @@
         Polymer.NeonSharedElementAnimatableBehavior
       ],
 
+
+      ready: function(){
+                this.datastate = 'view';
+
+              },
       /**
       * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
       * use this to initialize any variables to start the component
@@ -204,7 +251,7 @@
 
 
       /**
-      * 'exit' is fired when the x is tapped in sc-home.
+      * 'exit' is fired when the x is tapped in sc-profile.
       */
       exit: function(){
       },
@@ -394,59 +441,62 @@
       */
       toWalletview: function() {
         if (this.phoneview) {
-          this.sharedElements = {
-            'hero': this.$.homebalance,
-            };
-          this.animationConfig = {
-                'entry': [{
-                  name: 'fade-in-animation',
-                  node:this.$.homebalance,
-                  toPage: this,
-                  timing: {
-                    duration: 200
-                  }
-                }, {
-                  name: 'fade-in-animation',
-                  node:this.$.homeusername,
-                  toPage: this,
-                  timing: {
-                    duration: 200
-                  }
-                },{
-                  name: 'hero-animation',
-                  id: 'hero',
-                  toPage: this,
-                  timing: {
-                      duration: 600
-                  }
-                }],
+        // TODO : remove this
+        return;
+        this.sharedElements = {
+          'hero': this.$.homebalance,
+          };
+        this.animationConfig = {
+              'entry': [{
+                name: 'fade-in-animation',
+                node:this.$.homebalance,
+                toPage: this,
+                timing: {
+                  duration: 200
+                }
+              }, {
+                name: 'fade-in-animation',
+                node:this.$.homeusername,
+                toPage: this,
+                timing: {
+                  duration: 200
+                }
+              },{
+                name: 'hero-animation',
+                id: 'hero',
+                toPage: this,
+                timing: {
+                    duration: 600
+                }
+              }],
 
-                'exit': [{
-                  name: 'fade-out-animation',
-                  node:this.$.homebalance,
-                  fromPage: this,
-                  timing: {
-                      duration: 200
-                  }
-                }, {
-                  name: 'fade-out-animation',
-                  node:this.$.homeusername,
-                  fromPage: this,
-                  timing: {
-                      duration: 200
-                  }
-                },{
-                  name: 'hero-animation',
-                  id: 'hero',
-                  fromPage: this,
-                  timing: {
-                      duration: 600
-                  }
-                }]
-            };
-          this.fire('to-walletview');
+              'exit': [{
+                name: 'fade-out-animation',
+                node:this.$.homebalance,
+                fromPage: this,
+                timing: {
+                    duration: 200
+                }
+              }, {
+                name: 'fade-out-animation',
+                node:this.$.homeusername,
+                fromPage: this,
+                timing: {
+                    duration: 200
+                }
+              },{
+                name: 'hero-animation',
+                id: 'hero',
+                fromPage: this,
+                timing: {
+                    duration: 600
+                }
+              }]
+          };
+        this.fire('to-walletview');
+
         } else {
-          this.fire('to-walletview');
+        this.fire('to-walletview');
         }
       },
 
