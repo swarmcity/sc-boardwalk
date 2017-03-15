@@ -1,0 +1,17 @@
+{
+  "entrypoint": "index.html",
+  "fragments": [
+    "src/sc-enter/sc-enter.html",
+    "src/sc-boardwalk-app/sc-boardwalk-app.html"
+  ],
+  "sources": [
+    "bower.json"
+  ],
+  "includeDependencies": [
+    "manifest.json",
+    "src/contracts/*",
+    "bower_components/webcomponentsjs/webcomponents-lite.min.js",
+    "bower_components/sc-style/sc-fonts/*",
+    "src/sc-enter/images/*"
+  ]
+}
