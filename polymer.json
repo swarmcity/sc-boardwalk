@@ -8,8 +8,10 @@
     "bower.json"
   ],
   "includeDependencies": [
+    "manifest.json",
     "src/contracts/*",
     "bower_components/webcomponentsjs/webcomponents-lite.min.js",
-    "bower_components/sc-style/sc-fonts/*"
+    "bower_components/sc-style/sc-fonts/*",
+    "src/sc-enter/images/*"
   ]
 }
