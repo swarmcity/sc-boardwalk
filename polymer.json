@@ -2,7 +2,8 @@
   "entrypoint": "index.html",
   "fragments": [
     "src/sc-enter/sc-enter.html",
-    "src/sc-boardwalk-app/sc-boardwalk-app.html"
+    "src/sc-boardwalk-app/sc-boardwalk-app.html",
+    "src/sc-newitem/sc-newitem.html"
   ],
   "sources": [
     "bower.json"

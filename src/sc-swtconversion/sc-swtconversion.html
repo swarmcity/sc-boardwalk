@@ -1,0 +1,805 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+
+<link rel="import" href="../bower_components/sc-style/sc-style.html">
+<link rel="import" href="../bower_components/sc-iconset/sc-iconset.html">
+<link rel="import" href="sc-loader.html">
+<link rel="import" href="ac-helpers.html">
+<link rel="import" href="ac-password.html">
+<link rel="import" href="ac-statusitem.html">
+<link rel="import" href="sc-spinner.html">
+<link rel="import" href="ac-wallet.html">
+<link rel="import" href="ac-config.html">
+<link rel="import" href="sc-ethereumtx.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animation.html">
+
+<dom-module id="ac-swtconversion">
+<link rel="import" href="../bower_components/sc-style/sc-style.css" type="css">
+
+<style>
+:host {
+  display: block;
+  width: 100%;
+}
+
+/*  .total {
+    height: 100%;
+  }*/
+
+  neon-animated-pages {
+    height: 92%;
+  }
+
+  .bigp {
+    font-size: 20px;
+    line-height: 22px;
+  }
+
+  .bigh {
+     font-size: 62px;
+    line-height: 68px;   
+  }
+
+  .balancesbox {
+    border: 2px dotted rgba(0,0,0,0.05);
+    box-sizing:border-box;
+    padding: 20px 25px 20px 30px;
+    @apply(--layout-horizontal);
+    @apply(--layout-start-justified);
+    @apply(--layout-end);
+    @apply(--layout-wrap);
+  }
+
+  .dotline {
+    width: 100%;
+    height: 1px;
+    border-bottom: 2px dotted rgba(0,0,0,0.085);
+  }
+
+
+  .item {
+   /* max-width: 730px;*/
+    margin: 0px;
+  }
+
+  .steptime {
+    font-size: 14px;
+    line-height: 15px;    
+  }
+
+  .stepnr {
+    width: 20px;
+  }
+
+  .lightgrey {
+    color: rgba(0,0,0,0.10);
+
+  }
+  .maxwidth {
+    max-width: 530px;
+  }
+
+  .stateicon {
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+    min-height: 40px;
+  }
+
+  .errorsymbol {
+    width: 30px;
+    min-width: 30px;
+    height: 30px;
+    min-height: 30px;
+
+  }
+
+  .gotgaz {
+/*    box-sizing:border-box;
+    padding-top: 20px;
+    border-top: 2px dotted rgba(0,0,0,0.10);*/
+  }
+
+
+  .noflex {
+        -ms-flex: none;
+        -webkit-flex: none;
+        flex: none;    
+  }
+
+  .nextarrow {
+     width: 40px;
+    min-width: 40px;
+    height: 40px;
+    min-height: 40px;   
+    margin: 0px 10px 5px 10px;
+    -ms-transform: rotate(0deg); /* IE 9 */
+    -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+    transform: rotate(0deg);
+  }
+
+  .accountpub {
+    word-break: break-all;
+  }
+
+  .margleft {
+    margin-left: 6px;
+  }
+
+    .itemz {
+      box-sizing:border-box;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    border-top: 2px dotted rgba(245,88,88,0.75);
+    border-bottom: 2px dotted rgba(245,88,88,0.75);
+
+    }
+
+    .account {
+      word-break:break-all;
+    }
+
+    .congrats {
+      box-sizing:border-box;
+      padding-top: 4vh;
+      border-top: 2px dotted var(--sc-blue);
+    }
+
+    .congratswish {
+      font-size: 22px;
+      line-height: 22px;
+    }
+
+  @media all and (min-width: 0) and (max-width: 620px) { 
+    .item {
+      margin: 2vh 0px 2vh 0px;
+    }
+
+    .swtbalance {
+      margin: 0px 0px 10px 0px;
+    }
+    .balancesbox {
+      border: 2px dotted rgba(0,0,0,0.075);
+      box-sizing:border-box;
+      padding: 30px 25px 30px 30px;
+      @apply(--layout-vertical);
+      @apply(--layout-center-center);
+      -ms-flex-wrap: nowrap;
+      -webkit-flex-wrap: nowrap;
+      flex-wrap: nowrap;
+      width: 100%;
+    }
+  .nextarrow {
+     width: 40px;
+    min-width: 40px;
+    height: 40px;
+    min-height: 40px;   
+    margin: 0px 10px 5px 10px;
+    -ms-transform: rotate(90deg); /* IE 9 */
+    -webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
+    transform: rotate(90deg);
+  }
+
+
+  }
+
+</style>
+<template>
+
+  <ac-config config="{{config}}"></ac-config>
+  <sc-ethereumtx id="etx"></sc-ethereumtx>
+  <ac-helpers id="helpers"></ac-helpers>
+  <app-route route="{{route}}" pattern="/:page" data="{{data}}"></app-route>
+
+    <div class="topbar basestructure">
+      <span class="flex"></span>
+      <iron-icon class="grey3" icon="sc-icons:decline" on-tap="exit">back</iron-icon>
+    </div>
+
+  <neon-animated-pages attr-for-selected="data-page" selected="[[data.page]]" entry-animation="{{entryAnimation}}" exit-animation="{{exitAnimation}}">
+
+<!--     <neon-animatable data-page="intro">
+        <div class="total vertic start paddingsides basestructure">
+            <div class="whitespace"></div>
+            <div class="whitespace"></div>
+            <div class=""> 
+              <p class="grey4"><span class="reg">Almost done.</span> You seem to hold ARC tokens on this wallet. Swarm City needs to convert your ARC tokens to SWT tokens before you can continue.</p>
+            </div>
+             <div class="whitespace"></div>
+              <div class="whitespace"></div>
+              <div class="horizontal center startjust yesnobtns">
+              <paper-button class="blueback white shadow yesno bigbtn centertxt" on-tap="tostart" noink>OK - let's get started</paper-button>
+            </div>
+            </div>
+    </neon-animatable>   -->
+
+    <neon-animatable data-page="intro">
+
+      <div class="totalwidth vertic start paddingsides basestructure">
+          <div class="whitespace"></div>
+          <div class="whitespace"></div>
+          <template is="dom-if" if="{{arcbalance}}">
+            <template is="dom-if" if="{{!needstoconvert}}">
+              <div class="total vertic start startjust ">
+              <h1 class="maxwidth white bold">Oops!</h1>
+              <div class="whitespace"></div>
+              <p class="reg maxwidth">No ARC-balance was found on <span class="bold account">{{account}}</span>. Make sure you are trying to import the right wallet and try again.</p>
+              <div class="tenspace"></div>
+              <paper-icon-button noink icon="sc-icons:arrowleft" class="shadow big grey1back" on-tap="back">Back</paper-icon-button>   
+              <div class="whitespace"></div>
+              <div class="whitespace"></div>
+              <div class="whitespace"></div>
+              <div class="whitespace"></div>
+              <div class="whitespace"></div>
+              <div class="whitespace"></div>        
+            </template>
+          </template>
+        <template is="dom-if" if="{{needstoconvert}}">
+
+          <div class="balancesbox noflex">
+            <div class="vertic start noflex">
+              <p class="blue small bold">Your current ARC-balance</p>
+              <h1 class="bold centertxt blue bigh">{{formatpong(arcbalance)}}</h1>
+            </div>
+            <iron-icon class="big nextarrow" icon="sc-icons:arrowright"></iron-icon>
+            <div class="vertic noflex">
+              <p class="yellow small bold">Your current SWT-balance</p>
+              <h1 class="bold centertxt yellow bigh">{{formatpong(swtbalance)}}</h1>
+            </div>
+          </div>
+          <div class="whitespace"></div>
+
+          <div class=""> 
+            <p class="grey4"><span class="reg">At conversion rate 1:1, you will receive <span class="bold">{{formatpong(arcbalance)}} SWT</span>.<br>Converting the tokens might take a couple of minutes. Don't close your browser.
+            </p>
+          </div>
+
+          <div class="whitespace"></div>
+          <div class="whitespace"></div>
+          <div class="totalwidth vertic">
+            <div class="totalwidth horizont startjust start item">
+              <template is="dom-if" if="{{_is(ethcheckstate,'init')}}">
+                <div class="flex">
+                  <p class="bold lightgrey">Check ETH balance before converting</p>
+                </div>
+                <div class="stateicon">
+                  <iron-icon icon="sc-icons:v" class="lightgrey big"></iron-icon>
+                </div>
+              </template>
+              <template is="dom-if" if="{{_is(ethcheckstate,'doing')}}">
+                <div class="flex" on-tap="succestest">
+                  <p class="bold">Checking ETH balance</p>
+                </div>
+                <div class="stateicon">
+                  <sc-loader color="blue"></sc-loader>
+                </div>
+              </template>
+              <template is="dom-if" if="{{_is(ethcheckstate,'succes')}}">
+                <div class="flex">
+                  <p class="bold green">Checked ETH balance</p>
+                </div>
+                <div class="stateicon">
+                  <iron-icon icon="sc-icons:v" class="green big"></iron-icon>
+                </div>
+              </template>
+              <template is="dom-if" if="{{_is(ethcheckstate,'error')}}">
+                <div class="flex">
+                  <div class="minispace"></div>          
+
+                  <p class="bold red">You don't have enough ETH.</p>
+                        <div class="minispace"></div>          
+
+                  <div class="totalwidth itemz">
+                  <p class="grey3">To convert your tokens, you need a small amount of Ether to pay the gas of this transaction. Send 0.01 ETH to your wallet address <span class="accountpub grey4 reg">{{account}}</span> and try again.</p>  
+<!--                   <div class="whitespace"></div>
+                    <paper-button class="blue whiteback shadow yesno centertxt" on-tap="checketheragain" noink>Refresh ETH balance <iron-icon icon="sc-icons:refresh1" class=" margleft blue"></iron-icon></paper-button> -->
+                  <!-- <div class="dotline"></div> -->
+                        <div class="whitespace"></div>          
+
+                  </div>
+                </div>
+                <div class="stateicon horizont centercenter">
+                  <div class="errorsymbol horizont centercenter redback">
+                    <p class="white bold">!</p>
+                  </div>
+                </div>
+              </template>
+            </div>          
+
+            <div class="totalwidth horizont centercenter item">
+              <template is="dom-if" if="{{_is(firststate,'init')}}">
+                <div class="flex">
+                  <p class="bold lightgrey">Allowing the SWT-contract to receive your ARC</p>
+                </div>
+                <div class="stateicon">
+                  <iron-icon icon="sc-icons:v" class="lightgrey big"></iron-icon>
+                </div>
+              </template>
+              <template is="dom-if" if="{{_is(firststate,'doing')}}">
+                <div class="flex" on-tap="succestest">
+                  <p class="bold">Allowing the SWT-contract to receive your ARC</p>
+                </div>
+                <div class="stateicon">
+                  <sc-loader color="blue"></sc-loader>
+                </div>
+              </template>
+              <template is="dom-if" if="{{_is(firststate,'succes')}}">
+                <div class="flex">
+                  <p class="bold green">Allowed the SWT-contract to receive your ARC</p>
+                </div>
+                <div class="stateicon">
+                  <iron-icon icon="sc-icons:v" class="green big"></iron-icon>
+                </div>
+              </template>
+              <template is="dom-if" if="{{_is(firststate,'error')}}">
+                <div class="totalwidth vertic start startjust">
+
+                <div class="totalwidth horizont start startjust">
+                  <div class="flex">
+                    <p class="bold red">{{firststateerrormsg}}</p>
+                  </div>
+                  <div class="stateicon">
+                    <div class="errorsymbol horizont centercenter redback">
+                      <p class="white bold">!</p>
+                    </div>
+                  </div>
+                </div>
+
+                <paper-button class="blue whiteback shadow yesno centertxt" on-tap="checketheragain" noink>Restart the process</paper-button>
+
+              </div>
+              </template>
+            </div>
+
+            <div class="totalwidth horizont centercenter item">
+              <template is="dom-if" if="{{_is(secondstate,'init')}}">
+                <div class="flex">
+                  <p class="bold lightgrey">Create your new SWT and sending them to you</p>
+                </div>
+                <div class="stateicon">
+                  <iron-icon icon="sc-icons:v" class="lightgrey big"></iron-icon>
+                </div>
+              </template>
+              <template is="dom-if" if="{{_is(secondstate,'doing')}}">
+                <div class="flex" on-tap="errortest">
+                  <p class="bold">Creating your new SWT and sending them to you</p>
+                </div>
+                <div class="stateicon">
+                  <sc-loader color="blue"></sc-loader>
+                </div>
+              </template>
+              <template is="dom-if" if="{{_is(secondstate,'succes')}}">
+                <div class="flex">
+                  <p class="bold green">Created your new SWT and sent them to you</p>
+                </div>
+                <div class="stateicon">
+                  <iron-icon icon="sc-icons:v" class="green big"></iron-icon>
+                </div>
+              </template>
+              <template is="dom-if" if="{{_is(secondstate,'error')}}">
+                <div class="flex">
+                  <p class="bold red">{{secondstateerrormsg}}</p>
+                </div>
+                <div class="stateicon">
+                  <div class="errorsymbol horizont centercenter redback">
+                    <p class="white bold">!</p>
+                  </div>
+                </div>
+              </template>
+            </div>
+
+          </div>
+
+          <div class="whitespace"></div>
+
+          <template is="dom-if" if="{{!conversiondone}}">
+            <template is="dom-if" if="{{!convertingstarted}}">
+            <div class="whitespace"></div>
+
+          <p><span class="light mobileverysmall grey3">You are using the token swap functionality at your own risk. Read this </span><a href="https://legal.swarm.city" target="_blank" class="reg blue mobileverysmall">important information</a><span class="light mobileverysmall grey3"> to fully understand the risks involved.</span></p>
+            <div class="whitespace"></div>
+            <div class="horizontal center startjust yesnobtns">
+
+<!--             <template is="dom-if" if="{{!hasenoughgas}}"> -->
+              <paper-button class="blueback white shadow yesno bigbtn centertxt" on-tap="startconvert" noink>Convert my ARC to SWT</paper-button>
+<!--             </template> -->
+
+            </div>
+            </template>
+          </template>
+
+          <template is="dom-if" if="{{conversiondone}}">
+            <div class="totalwidth congrats vertic start startjust totalwidth">
+              <p class="semibold congratswish blue">Congratulations!</p>
+              <div class="minispace"></div>
+              <p>You successfully converted your ARC-tokens in SWT-tokens. Welcome to Swarm City!</p>
+              <div class="whitespace"></div>
+              <paper-button class="blueback white shadow yesno getstartedbtn centertxt" on-tap="toExit" noink>Get started</paper-button>
+            </div>
+          </template>
+        
+          <div class="whitespace"></div>
+          <div class="whitespace"></div>
+          <div class="whitespace"></div>
+
+
+        </template>
+      </div>
+
+    </neon-animatable>
+
+    <neon-animatable data-page="confirm">
+    </neon-animatable>
+
+
+  </neon-animated-pages>
+</template>
+
+<script>
+Polymer({
+
+  is: 'ac-swtconversion',
+
+  properties: {
+    route: {
+      type: Object,
+    },
+    web3: {
+      type: Object,
+     observer: 'update'
+    },
+    account: {
+      type: String,
+      observer: 'update'
+    },
+    convertingstarted: {
+      type: Boolean,
+      observer: '_convertingstarted'
+    },
+  },
+
+  ready: function() {
+  },
+
+  reset: function() {
+    this.hasenoughgas = false;
+    this.needstoconvert = false;
+    this.conversiondone = false;
+
+    this.firststate = 'init';
+    this.secondstate = 'init';
+    this.ethcheckstate = 'init';
+    this.convertingstarted = false;
+
+  },
+
+  attached: function() {
+    console.log('ac-swtconversion attached');
+
+    this.exitAnimation = "slide-left-animation";
+    this.entryAnimation = "slide-from-right-animation";
+    
+    this.reset();
+    this.update();
+
+  },
+
+  tostart: function(){
+    this.set('route.path', '/start');
+  },
+
+  checketheragain: function() {
+    this.startconvert();
+  },
+
+  update: function() {
+    if (!this.account || !this.web3 || !this.config) {
+      console.log('ac-swtconversion -> not READY',this.account,this.web3);
+      return;
+    }
+    console.log('ac-swtconversion -> WE ARE READY');
+    var self = this;
+    if (!self.SWTTokenInstance) {
+      this.$.helpers.getjson('./contracts/ARCToken.json', function(err, tokendata) {
+        var MyContract = self.web3.eth.contract(tokendata.abi);
+        self.ARCTokenInstance = MyContract.at(self.config.tokencontractaddress);
+        self.getARCBalance(function() {
+          self.checkarc();
+        });
+      });
+    } else {
+      self.getARCBalance(function() {
+        self.checkarc();
+      });
+    }
+    if (!self.SWTConverterInstance){
+       this.$.helpers.getjson('./contracts/SWTConverter.json', function(err, tokendata) {
+        var MyContract = self.web3.eth.contract(tokendata.abi);
+        self.SWTConverterInstance = MyContract.at(self.config.swtconversioncontractaddress);
+      });      
+    }
+    if (!self.SWTTokenInstance){
+      this.$.helpers.getjson('./contracts/MiniMeToken.json', function(err, tokendata) {
+        var MyContract = self.web3.eth.contract(tokendata.abi);
+        self.SWTTokenInstance = MyContract.at(self.config.swttokencontractaddress);
+        self.getSWTBalance();
+      });      
+    }else{
+      self.getSWTBalance();
+    }
+    
+  },
+
+  formatpong: function(val) {
+    var f = (0 + (val / 1e18)).toFixed(2);
+    return f;
+  },
+
+  exit: function(){
+    this.fire('exit');
+  },
+
+  checkarc: function(err, ARCbalance) {
+    if (this.arcbalance && this.arcbalance > 0) {
+      this.needstoconvert = true;
+    } else {
+      this.needstoconvert = false;
+    }
+  },
+
+  checkgas: function(err, ETHbalance) {
+
+    var ethrequired = this.gasPrice * 200000;
+
+    if (this.ETHbalance !== undefined && this.ETHbalance > ethrequired) {
+      this.hasenoughgas = true;
+      console.log('ac-swtconversion -> You have enough ETH to perform a conversion');
+    } else {
+      this.hasenoughgas = false;
+      console.log('ac-swtconversion -> You don\'t have enough ETH to perform a conversion');
+      this.ethshort = (ethrequired || 0) - this.ETHbalance;
+    }
+    return this.hasenoughgas;
+  },
+
+  tostepone: function() {
+    this.set('route.path', '/stepone');
+  },
+
+  startconvert: function() {
+
+    this.ethcheckstate = 'doing'
+
+    this.web3.eth.getGasPrice(function(err, result) {
+      this.gasPrice = result.toNumber(10) * 1.105;
+
+      this.getETHBalance(function() {
+
+        if (this.checkgas()) {
+          this.ethcheckstate = 'succes';
+
+          this.convertingstarted = true;
+          this.firststate = 'doing';
+
+          this.createAllowance(function(err) {
+            if (err) {
+              this.firststateerrormsg = err;
+              return this.firststate = 'error';
+            }
+            this.firststate = 'succes';
+            this.secondstate = 'doing';
+            this.convertTokens(function(err) {
+              if (err) {
+                this.secondstateerrormsg = this.$.helpers.translateEthErrors(err);
+                this.convertingstarted = false;
+                return this.secondstate = 'error';
+              }
+              this.secondstate = 'succes';
+              this.getARCBalance();
+              this.getSWTBalance(function(err) {
+                this.verify();
+              }.bind(this));
+            }.bind(this));
+          }.bind(this));
+        } else {
+          this.ethcheckstate = 'error';
+        }
+      }.bind(this));
+    }.bind(this));
+  },
+
+  // fetches coinbalance
+  getARCBalance: function(cb) {
+    var self = this;
+    var coinbalance = this.ARCTokenInstance.balanceOf(this.$.helpers.fixaddress(this.account), function(err, balance) {
+      self.arcbalance = balance;
+      if (cb) {
+        cb(null, self.arcbalance);
+      }
+    });
+  },
+
+  getETHBalance: function(cb) {
+    var self = this;
+    this.web3.eth.getBalance(this.$.helpers.fixaddress(this.account), function(err, balance) {
+      if (cb) {
+        if (err) {
+          return cb(err);
+        }
+        self.ETHbalance = balance;
+        cb(null, self.ETHbalance);
+      }
+    });
+  },
+  
+  getSWTBalance: function(cb) {
+    var self = this;
+    var coinbalance = this.SWTTokenInstance.balanceOf(this.$.helpers.fixaddress(this.account), function(err, balance) {
+      self.swtbalance = balance;
+      if (cb) {
+        cb(null, self.swtbalance);
+      }      
+    });
+  },
+
+  // returns the current allowance for the configured account
+  getAllowance: function(cb) {
+    this.ARCTokenInstance.allowance(this.$.helpers.fixaddress(this.account), this.config.swtconversioncontractaddress, function(err, remaining) {
+      cb(null, remaining);
+    });
+  },
+
+
+  createAllowance: function(callback) {
+    var self = this;
+    if (!self.ARCTokenInstance) {
+      cb('ARC contract not initialized yet');
+    }
+
+    this.getAllowance(function(err, allowance) {
+      console.log('allowance=', allowance.toString(10), ' ARC balance=', self.arcbalance.toString(10), ')');
+      if (allowance >= self.arcbalance) {
+        console.log('allowance is OK');
+        return callback();
+      }
+      console.log('need to get allowance');
+
+      var requiredallowance = self.arcbalance;
+
+      self.gasforapprove = self.ARCTokenInstance.approve.estimateGas(self.config.swtconversioncontractaddress, requiredallowance, {
+        from: self.$.helpers.fixaddress(self.account),
+      });
+      console.log('gas needed for approval=',self.gasforapprove);
+
+      self.ARCTokenInstance.approve.sendTransaction(self.config.swtconversioncontractaddress, requiredallowance, {
+        from: self.$.helpers.fixaddress(self.account),
+        gasPrice: self.gasPrice,
+        gas: self.gasforapprove
+      }, function(err, result) {
+        console.log(err, result);
+        if (err) {
+          return callback(err);
+        }
+        console.log('approval started. txhash=', result);
+        self.waitTx(result, function(success) {
+          if (success) {
+            self.getAllowance(function(err, allowance) {
+              console.log('allowance given (Allowance = ', allowance, ' balance=', self.arcbalance, ')');
+              return callback();
+            });
+          } else {
+            return callback(new Error('tx failed'));
+          }
+        });
+      });
+    });
+    // });
+  },
+
+  convertTokens: function(callback) {
+    var self = this;
+
+    this.gasforconvert = this.SWTConverterInstance.convert.estimateGas(this.arcbalance, {
+      from: this.$.helpers.fixaddress(this.account),
+    });
+    console.log('gas needed for convert=',self.gasforconvert);
+
+    self.SWTConverterInstance.convert.sendTransaction(self.arcbalance, {
+      from: self.$.helpers.fixaddress(self.account),
+      gasPrice: self.gasPrice,
+      gas: self.gasforconvert
+    }, function(err, result) {
+      console.log(err, result);
+      if (err) {
+        return callback(err);
+      }
+      console.log('convert started. txhash=', result);
+      self.waitTx(result, function(success) {
+        if (success) {
+          return callback();
+        } else {
+          return callback(new Error('tx failed'));
+        }
+      });
+    });
+  },
+
+  // the token balances have been 
+  verify: function(){
+
+      console.log('your ARC balance=',this.arcbalance);
+      console.log('your SWT balance=',this.swtbalance);
+
+    if (this.swtbalance > 0){
+      this.conversiondone = true;
+    }
+
+    this.fire('converted');
+  },
+
+  toExit: function(){
+    this.fire('success');
+  },
+
+   waitTx : function(txHash, callback) {
+    /*
+    * Watch for a particular transaction hash and call the awaiting function when done;
+    * Ether-pudding uses another method, with web3.eth.getTransaction(...) and checking the txHash;
+    * on https://github.com/ConsenSys/ether-pudding/blob/master/index.js
+    */
+    var self=this;
+    var blockCounter = 15;
+    // Wait for tx to be finished
+    var filter = this.web3.eth.filter('latest').watch(function(err, blockHash) {
+      if (blockCounter<=0) {
+        filter.stopWatching();
+        filter = null;
+        console.warn('!! Tx expired !!');
+        if (callback)
+          return callback(false);
+        else
+          return false;
+      }
+      // Get info about latest Ethereum block
+      var block = self.web3.eth.getBlock(blockHash);
+      --blockCounter;
+      // Found tx hash?
+      if (block.transactions.indexOf(txHash) > -1) {
+        // Tx is finished
+        filter.stopWatching();
+        filter = null;
+        if (callback)
+          return callback(true);
+        else
+          return true;
+      // Tx hash not found yet?
+      } else {
+        // console.log('Waiting tx..', blockCounter);
+      }
+    });
+  },
+
+
+  _is: function(a, b) {
+    if (b === undefined) {
+      b = true;
+    }
+    return a === b;
+  },
+
+  back: function(){
+    this.fire('exit');
+//    console.log("Kunde gij efkes MAKE DA GE TERUGGA?");
+  },
+
+
+  _convertingstarted: function(){
+    console.log("yaaaatochhh, ", this.convertingstarted);
+  }
+
+});
+</script>
+</dom-module>
