@@ -8,6 +8,7 @@
 <link rel="import" href="../sc-username/sc-username.html">
 <link rel="import" href="../sc-balance/sc-balance.html">
 <link rel="import" href="../sc-hashtaglist/sc-hashtaglist.html">
+<link rel="import" href="../sc-backbone/sc-backbone.html">
 
 <!--
 `sc-home` is homeview of the Swarm City app. It shows your avatar/username/pubkey ( > to go to profile-view), your balance ( > to go to sc-wallet-view) and the hashtaglist ( > to go to a specific hashtag).
@@ -77,7 +78,7 @@
 
 
     </style>
-
+    <sc-backbone id="helpers"></sc-backbone>
     <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
 
     <div class="horizont start startjust wrap">
@@ -187,11 +188,17 @@
         Polymer.NeonSharedElementAnimatableBehavior
       ],
 
+      attached: function(){
+        // TODO : remove this
+        this.onEnter();
+      },
+
       /**
       * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
       * use this to initialize any variables to start the component
       */
       onEnter: function(){
+         this.$.helpers.lazyload('bundle-boardwalk');
       },
 
       /**
