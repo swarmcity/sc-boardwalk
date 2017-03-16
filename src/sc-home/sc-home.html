@@ -23,17 +23,32 @@
       :host {
         display: block;
         @apply(--base-structure);
+/*        height: 100vh;
+        overflow-y: scroll;*/
       }
 
-      .avatar_username_balance {
-        @apply(--base-structure);
-        width: 300px;
+      .totalcontainer {
         box-sizing:border-box;
-        padding: 15vh 0px 18vh 50px;
+        padding: 0px 10vw 0px 10vw;
         height: 100%;
       }
 
+      .avatar_username_balance {
+        height: 100%;
+        box-sizing:border-box;
+        padding: 15vh 0px 18vh 0px;
+        margin-right: 7vw;
+        @apply(--base-structure);
+        @apply(--layout-vertical);
+        @apply(--layout-center);
+        @apply(--layout-start-justified);
+      }
+
       .avatar_username_box {
+      }
+      
+      .avatar_username_box:hover {
+        cursor: pointer;
       }
 
       .homebalance_box {
@@ -44,9 +59,10 @@
       }
 
       sc-hashtaglist {
-        background-color: none;
+        background-color: transparent;
         box-sizing:border-box;
         padding: 15vh 0px 15vh 0px;
+        border: green;
       }
 
       .warningbackup {
@@ -59,19 +75,27 @@
 
     
       @media all and (min-width: 0) and (max-width: 420px) {
+  
+        .totalcontainer {
+          box-sizing:border-box;
+          padding: 0px 0px 0px 0px;
+        }
 
         .avatar_username_balance {
-          height: 50vh;
+          height: 65vh;
           width: 100%;
           box-sizing:border-box;
           padding: 0px;
+          margin-right: 0vw;
+          @apply(--layout-vertical);
+          @apply(--layout-center-center);
         }
 
         sc-hashtaglist {
-          background-color: var(--sc-white);
           width: 100%;
           box-sizing:border-box;
           padding: 0px;
+          background-color: var(--sc-white);
         }
       }
 
@@ -80,8 +104,8 @@
 
     <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
 
-    <div class="horizont start startjust wrap">
-      <div class="avatar_username_balance vertic centercenter">
+    <div class="totalcontainer horizont start startjust wrap">
+      <div class="avatar_username_balance">
         <div class="avatar_username_box vertic centercenter" on-tap="toProfile">
           <sc-avatar
           identity="[[identity]]"
@@ -100,6 +124,8 @@
             </template>
           </div>
         </div>
+        <div class="whitespace"></div>
+        <div class="minispace"></div>
         <div id="homebalance" class="homebalance_box" on-tap="toWalletview">
           <sc-balance
             refcur="EUR"
@@ -143,7 +169,7 @@
        */
         keystore: {
           type: Object,
-           observer: '_keystore',
+           // observer: '_keystore',
         },
 
        //  /**
@@ -320,7 +346,7 @@
       * 'toProfile' makes the app go to a new view/route (in this case sc-profile). The function sets the animationConfig and sharedElements, then fires 'to-profile' to the parent-element to change the route.
       */
       toProfile: function() {
-        if (this.phoneview) {
+        // if (this.phoneview) {
           this.sharedElements = {
               'hero': this.$.homeavatar,
               'hero2': this.$.homeusername
@@ -383,9 +409,9 @@
                 }]
             };
           this.fire('to-profile'); 
-        } else {
-          this.fire('to-profile'); 
-        }
+        // } else {
+        //   this.fire('to-profile'); 
+        // }
       },
 
 

@@ -26,6 +26,20 @@
         width: 100%;
         height: 100vh;
       }
+
+      neon-animated-pages {
+        height: 100%;
+      }
+      
+      sc-vault {
+        width: 100vw;
+        height: 100vh;
+      }
+    
+      sc-profile {
+        width: 100vw;
+        height: 100vh;
+      }
     </style>
 
    <!--  <app-location route="{{route}}" use-hash-as-path></app-location> -->
@@ -125,7 +139,7 @@
       identity="[[identity]]"
       lastbackup=[[lastbackup]]
       pubkey="[[account]]"
-      on-exit="toHome"
+      on-leave="profile_tohome"
       on-identity-update="saveIdentity"
       on-backup="toBackup"
       on-logout="logout"
@@ -266,7 +280,7 @@
 
       home_toprofile: function(){
         console.log("yes, home_toprofile");
-        // this.transitionto('/profile');
+        this.transitionto('/profile');
       },
 
       home_towalletview: function(){
@@ -278,6 +292,18 @@
         console.log("yes, home_tohashtag");
         // this.transitionto('/walletview');
       },
+
+
+      profile_tohome: function(){
+        this.transitionto('/home');
+        // Is this right?
+      },
+
+      saveIdentity: function(e) {
+        this.identity = e.detail;
+        this.$.vault.saveVault();
+      },
+
 
 
     });

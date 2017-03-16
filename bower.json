@@ -17,7 +17,8 @@
     "iron-a11y-keys": "^1.0.7",
     "iron-localstorage": "^1.0.6",
     "paper-progress": "^1.0.11",
-    "polymer-detect-js": "^1.0.3"
+    "polymer-detect-js": "^1.0.3",
+    "Croppie": "https://github.com/Foliotek/Croppie.git#^2.4.1"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
