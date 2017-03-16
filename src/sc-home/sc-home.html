@@ -8,6 +8,7 @@
 <link rel="import" href="../sc-username/sc-username.html">
 <link rel="import" href="../sc-balance/sc-balance.html">
 <link rel="import" href="../sc-hashtaglist/sc-hashtaglist.html">
+<link rel="import" href="../sc-backbone/sc-backbone.html">
 
 <!--
 `sc-home` is homeview of the Swarm City app. It shows your avatar/username/pubkey ( > to go to profile-view), your balance ( > to go to sc-wallet-view) and the hashtaglist ( > to go to a specific hashtag).
@@ -101,7 +102,7 @@
 
 
     </style>
-
+    <sc-backbone id="helpers"></sc-backbone>
     <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
 
     <div class="totalcontainer horizont start startjust wrap">
@@ -213,11 +214,17 @@
         Polymer.NeonSharedElementAnimatableBehavior
       ],
 
+      attached: function(){
+        // TODO : remove this
+        this.onEnter();
+      },
+
       /**
       * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
       * use this to initialize any variables to start the component
       */
       onEnter: function(){
+         this.$.helpers.lazyload('bundle-boardwalk');
       },
 
       /**
@@ -420,62 +427,59 @@
       */
       toWalletview: function() {
         if (this.phoneview) {
-        // TODO : remove this
-        return;
-        this.sharedElements = {
-          'hero': this.$.homebalance,
-          };
-        this.animationConfig = {
-              'entry': [{
-                name: 'fade-in-animation',
-                node:this.$.homebalance,
-                toPage: this,
-                timing: {
-                  duration: 200
-                }
-              }, {
-                name: 'fade-in-animation',
-                node:this.$.homeusername,
-                toPage: this,
-                timing: {
-                  duration: 200
-                }
-              },{
-                name: 'hero-animation',
-                id: 'hero',
-                toPage: this,
-                timing: {
-                    duration: 600
-                }
-              }],
-
-              'exit': [{
-                name: 'fade-out-animation',
-                node:this.$.homebalance,
-                fromPage: this,
-                timing: {
+          this.sharedElements = {
+            'hero': this.$.homebalance,
+            };
+          this.animationConfig = {
+                'entry': [{
+                  name: 'fade-in-animation',
+                  node:this.$.homebalance,
+                  toPage: this,
+                  timing: {
                     duration: 200
-                }
-              }, {
-                name: 'fade-out-animation',
-                node:this.$.homeusername,
-                fromPage: this,
-                timing: {
+                  }
+                }, {
+                  name: 'fade-in-animation',
+                  node:this.$.homeusername,
+                  toPage: this,
+                  timing: {
                     duration: 200
-                }
-              },{
-                name: 'hero-animation',
-                id: 'hero',
-                fromPage: this,
-                timing: {
-                    duration: 600
-                }
-              }]
-          };
-        this.fire('to-walletview');
+                  }
+                },{
+                  name: 'hero-animation',
+                  id: 'hero',
+                  toPage: this,
+                  timing: {
+                      duration: 600
+                  }
+                }],
 
+                'exit': [{
+                  name: 'fade-out-animation',
+                  node:this.$.homebalance,
+                  fromPage: this,
+                  timing: {
+                      duration: 200
+                  }
+                }, {
+                  name: 'fade-out-animation',
+                  node:this.$.homeusername,
+                  fromPage: this,
+                  timing: {
+                      duration: 200
+                  }
+                },{
+                  name: 'hero-animation',
+                  id: 'hero',
+                  fromPage: this,
+                  timing: {
+                      duration: 600
+                  }
+                }]
+            };
+          this.fire('to-walletview');
         } else {
-        this.fire('to-walletview');
+          this.fire('to-walletview');
         }
       },
 

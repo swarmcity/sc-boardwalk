@@ -7,6 +7,7 @@
 <link rel="import" href="../sc-vault/sc-vault.html">
 <link rel="import" href="../sc-intro/sc-intro.html">
 <link rel="import" href="../sc-home/sc-home.html">
+<link rel="import" href="../sc-walletview/sc-walletview.html">
 <link rel="import" href="../sc-profile/sc-profile.html">
 
 <!-- <link rel="import" href="../sc-newdeal/sc-newdeal.html"> -->
@@ -145,8 +146,10 @@
       on-logout="logout"
       on-deletevault="deletevault"
       >
+
     </sc-profile>
-<!-- 
+
+
     <sc-walletview
       data-page="walletview"
       id="walletview"
@@ -160,7 +163,7 @@
       on-refreshneeded="refreshwallet"
       updating="[[balanceupdating]]"
       swtbalance="[[swtbalance]]">
-    </sc-walletview> -->
+    </sc-walletview>
  </neon-animated-pages>
 
   </template>
@@ -241,12 +244,12 @@
         this.transitionto('/intro/welcome');
       },
       transitionto: function(target){
-        console.log('sc-app -> transitionTo',target);
+        console.log('sc-boardwalk-app -> transitionTo',target);
         this.set('route.path',target);
       },
 
       _onRouteDataChanged: function(page,oldpage) {
-         console.log('sc-app -> _onRouteDataChanged',oldpage,'->',page);
+         console.log('sc-boardwalk-app -> _onRouteDataChanged',oldpage,'->',page);
        },
 
       // intro routing
@@ -279,13 +282,12 @@
       },
 
       home_toprofile: function(){
-        console.log("yes, home_toprofile");
         this.transitionto('/profile');
       },
 
       home_towalletview: function(){
         console.log("yes, home_towalletview");
-        // this.transitionto('/walletview');
+        this.transitionto('/walletview');
       },
 
       home_tohashtag: function(){

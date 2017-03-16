@@ -7,9 +7,7 @@
 <link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
 <link rel="import" href="../../bower_components/app-route/app-location.html">
 
-<!-- bundle my-first -->
 <link rel="import" href="../sc-backbone/sc-backbone.html">
-<!-- endbundle -->
 
 <!-- note that this will be lazy-loaded -->
 <!-- <link rel="import" href="../sc-boardwalk-app/sc-boardwalk-app.html"> -->
@@ -361,7 +359,7 @@ This is the homescreen of boardwalk.
           // Redirect to https: if we're currently using http: and we're not on localhost.
           window.location.href = 'https:' + window.location.href.substring(window.location.protocol.length);
         }else{
-          this.$.backbone.lazyload('sc-boardwalk-app');
+          this.$.backbone.lazyload('bundle-terminal');
         }        
       },
 

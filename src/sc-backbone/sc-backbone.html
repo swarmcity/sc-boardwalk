@@ -63,8 +63,7 @@ Example:
 
       lazyload: function(name){
         this.push('LLQueue',name);
-        //debugger;
-        this._lazyLoad(name,'../' + name + '/' + name + '.html');
+        this._lazyLoad(name,'../' + name + '.html');
       },
 
       processLLQueue: function(){

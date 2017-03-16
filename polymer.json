@@ -1,8 +1,9 @@
 {
   "entrypoint": "index.html",
+  "shell": "src/sc-enter/sc-enter.html",
   "fragments": [
-    "src/sc-enter/sc-enter.html",
-    "src/sc-boardwalk-app/sc-boardwalk-app.html"
+    "src/bundle-terminal.html",
+    "src/bundle-boardwalk.html"
   ],
   "sources": [
     "bower.json"
