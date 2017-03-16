@@ -9,6 +9,8 @@
 <link rel="import" href="../sc-avatar/sc-avatar.html">
 
 
+<link rel="stylesheet" href="../../bower_components/Croppie/croppie.css" />
+<script src="../../bower_components/Croppie/croppie.js"></script>
 <!--
 `sc-profile` is profile-view where a Swarm Citizen can do his profile-things. Here the user has the possibility of changing his avatar/username, he can view his complete pubkey, or creating a backup of his profile via IPFS. The user can also logout here, or delete his complete user-data from the device.
 
@@ -24,16 +26,37 @@
         display: block;
         width: 100%;
         height: 100%;
+        @apply(--base-structure);     
+      }
+
+      .fullheight {
+        height: 100%;
+      }
+
+      .topbar {
+        height: 10vh;
       }
 
       neon-animated-pages {
         height: 90vh;
       }
 
+      .toppart {
+        @apply(--layout-horizontal);
+        @apply(--layout-start);
+        @apply(--layout-start-justified);
+        box-sizing:border-box;
+        padding-bottom: 12vh;
+        border-bottom: 2px dotted rgba(0,0,0,0.05);
+        box-sizing:border-box;
+        padding: 5vh 15vw 0px 15vw;
+      }
+
+
 
       .profilepic {
         box-sizing: border-box;
-        padding: 0px 4vw 0px 10vw;
+        padding: 0px 4vw 0px 0px;
 
       }
 
@@ -61,39 +84,159 @@
         height: 50px;
         margin-bottom: 5px;
       }
+
       .croppiecontrols p {
         @apply(--montserrat-semibold);
-
       }
 
-    .warning {
-      width: 90%;
-      background-color: var(--sc-blue);
-      box-sizing:border-box;
-      padding: 38px;
-      @apply(--layout-vertical);
-      @apply(--layout-start);
-      @apply(--layout-start-justified);
-      margin-bottom: 10vh;
-    }
+      .warning {
+        width: 90%;
+        background-color: var(--sc-blue);
+        box-sizing:border-box;
+        padding: 38px;
+        @apply(--layout-vertical);
+        @apply(--layout-start);
+        @apply(--layout-start-justified);
+        margin-bottom: 10vh;
+      }
 
-    .warningsign {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      border: 3px solid var(--sc-white);
-      opacity: 0.5;
-      margin-bottom: 20px;
-    }
+      .warningsign {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        border: 3px solid var(--sc-white);
+        opacity: 0.5;
+        margin-bottom: 20px;
+      }
 
-    .warningsign p {
-            font-size: 24px;
+      .warningsign p {
+        font-size: 24px;
+      }
 
-    }
+      .confirmbtns {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 0px;
+        @apply(--layout-horizontal);
+        @apply(--layout-center-center);
+      }
+
+      .confirmbtns paper-icon-button {
+        margin: 2px;
+      }
+
+      .confirmbtns iron-icon {
+        margin-right: 4px;
+      }
+
+      .collapserz {
+        width: 100%;
+        margin: 20px 0px 20px 0px;
+      }
+
+      .pubkey {
+        margin-top: 6px;
+      }
+      .pubkey p {
+        font-size: 13px;
+        line-height: 15px;
+        @apply(--montserrat-reg);
+        text-align: center;
+      } 
+
+      .pubhidden {
+        width: 60px;
+      }
+      .pubhidden p {
+        color: var(--sc-grey2);
+
+        @apply(--sc-font-nowrap);
+      }
+      .pubshown {
+        width: 70%;
+      }
+      .pubshown p {
+        word-break: break-all;
+        color: var(--sc-grey3);
+      }
+
+      paper-button.logoutbtn {
+        min-width: 120px;
+        box-sizing:border-box;
+        margin: 0px 10vw 0px 4vw;
+        /*@apply(--base-shadow);*/
+      }
+
+      .hidden {
+        display:none;
+      }
+
+      .avatarloading {
+        width: 115px;
+        height: 115px;
+        min-width: 115px;
+        min-height: 115px;
+        overflow: hidden;
+        border-radius: 50%;
+        background-color: rgba(0,0,0,0.75);
+        position: fixed;
+        z-index: 10;
+        @apply(--layout-vertical);
+        @apply(--layout-center-center);
+      }
+
+      .usernameinput {
+        width: 80%;
+        max-width: 500px;
+      }
+
+      .vaultdeleter {
+        width: 100%;
+        max-width: 600px;
+        box-sizing:border-box;
+        padding: 20px 0px 20px 0px;
+        border-top: 2px dotted var(--sc-red);
+        border-bottom: 2px dotted var(--sc-red);
+      }
+
+      .downbtns {
+        width: 200px;
+        margin: 4px;
+      }
+
+      .youneedto {
+        font-size: 22px;
+        line-height: 24px;
+      }
+
+      .disapp {
+        opacity: 0.5;
+      }
+
+      #croppie {
+        width: 250px;
+        height: 250px;
+      }
 
 
-    
+        
       @media all and (min-width: 0) and (max-width: 420px) {
+
+      .toppart {
+        @apply(--layout-vertical);
+        @apply(--layout-center);
+        @apply(--layout-start-justified);
+        box-sizing:border-box;
+        padding-bottom: 12vh;
+        border-bottom: 2px dotted rgba(0,0,0,0.05);
+      }
+
+      .username_pubkey {
+        @apply(--layout-vertical);
+        @apply(--layout-center-center);        
+      }
+
+
 
       }
 
@@ -102,16 +245,16 @@
 
     <sc-ipfs id="ipfs"></sc-ipfs>
 
-    <div class="total darkerer" id="totalbox">
+    <div class="total" id="totalbox">
 
       <div class="topbar">
         <span class="flex"></span>
-        <iron-icon class="grey3" icon="sc-icons:decline" on-tap="exit">back</iron-icon>
+        <iron-icon class="grey3" icon="sc-icons:decline" on-tap="leave">back</iron-icon>
       </div>
 
       <neon-animated-pages selected="{{datastate}}" attr-for-selected="data-state" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
         <neon-animatable data-state="view">
-        <div class="totalwidth vertic centercenter view">
+        <div class="totalwidth vertic center startjust fullheight">
 
           <template is="dom-if" if="{{!lastbackup}}">
             <div class="whitespace"></div>
@@ -129,6 +272,7 @@
           </template>
 
 
+          <div class="totalwidth toppart">
 
             <div class="profilepic vertic centercenter">
               <div class="profilepicinner" on-tap="uploadfile">
@@ -151,8 +295,79 @@
               </div>
             </div>
 
+            <div class="username_pubkey">
+              <paper-input label="username" value="{{newusername}}" on-change="usernameChange" class="usernameinput" id="usernameinput">{{newusername}}</paper-input>
+              <iron-collapse id="collapse" opened="{{datachanged}}">
+                <div class="whitespace"></div>
+
+                <div class="confirmbtns">
+                  <iron-icon icon="sc-icons:decline" class="blue" on-tap="close">decline</iron-icon>
+                  <paper-icon-button icon="sc-icons:v" class="blue whiteback" on-tap="confirm">confirm</paper-icon-button>
+                </div>
+
+                <div class="whitespace"></div>
+              </iron-collapse>
+
+              <div class$="pubkey {{pubwhat}}" on-tap="togglePub">
+                <p>{{pubkey}}</p>
+              </div>
+            </div>
           </div>
+
+          <div class="profilecontent" id="profilecontent">
+            <div class="whitespace"></div>
+            <div class="whitespace"></div>
+            <paper-button class="whiteback bold downbtns" on-tap="backupvault" noink>Create backup</paper-button>
+            <template is="dom-if" if="{{itemshow}}">
+              <paper-button class="whiteback bold downbtns" on-tap="collapseMe" id="deletemyvault" noink>Delete this user</paper-button>
+            </template>
+           <iron-collapse class="collapserz vertic centercenter" id="deletemyvaultcollapser">
+           <div class="vertic centercenter vaultdeleter">
+              <div class="totalwidth horizont centercenter">
+                <div class="flex"></div>
+                <iron-icon icon="sc-icons:decline" class="grey4" on-tap="closeMe">decline</iron-icon>
+              </div>
+              <div class="vertic centercenter">
+                <p class="bold red centertxt">You're about to remove the complete useraccount of this device. <br><br>This can not be undone.</p>
+                <div class="whitespace"></div>
+                <paper-button class="redback white bold" on-tap="deletevault">continue</paper-button>
+                <div class="whitespace"></div>
+              </div>
+            </div>
+            </iron-collapse>
+          </div>
+
+          <div class="fivespace"></div>
+          <paper-button class="darkerer blue bold logoutbtn" on-tap="logout" noink>Log out</paper-button>
+          <div class="fivespace"></div>
+
+        </div>
+
         </neon-animatable>
+
+
+      <neon-animatable data-state="edit">
+        <div class="profilepic vertic centercenter">
+          <div class="profilepicinner edit">
+            <div id="croppie"></div>
+            <div class="croppiecontrols totalwidth horizont centercenter">
+              <p class="blue small bold txtshadow">Scroll to zoom</p>
+              <div class="flex"></div>
+              <paper-icon-button icon="sc-icons:imgrotate" class="blue" on-tap="rotate" noink>decline</paper-icon-button>
+            </div>
+            <div class="whitespace"></div>
+              <div class="confirmbtns">
+                <iron-icon icon="sc-icons:decline" class="blue big" on-tap="setcurrentavatar_cancel">decline</iron-icon>
+                <paper-icon-button icon="sc-icons:v" class="blue whiteback shadow big" on-tap="setcurrentavatar"></paper-icon-button>
+              </div>
+          </div>
+        </div>
+
+
+      </neon-animatable>
+
+
+
       </neon-animated-pages>
     </div>
 
@@ -174,27 +389,51 @@
         },
 
         /**
-       * `web3` is received from parent-element.
+       * `pubkey` is received from parent-element.
        */
-        web3: {
-          type: Object
+        pubkey: {
+          type: String
         },
 
         /**
-       * `keystore` is received from parent-element.
+       * `lastbackup` is received from parent-element.
        */
-        keystore: {
-          type: Object,
-           observer: '_keystore',
+        lastbackup: {
+          type: Number,
         },
 
-       //  /**
-       // * `datachanged` .
-       // */
-       //  datachanged: {
-       //    type: Boolean,
-       //    value: false
-       //  },
+        /**
+       * `pubwhat` is a variable that determines the css-class (.pubhidden/pubshown) of the pubkey.
+       */
+        pubwhat: {
+          type: String,
+          value: 'pubhidden'
+        },
+
+        /**
+       * `datachanged` is a boolean to show the data is changed.
+       */
+        datachanged: {
+          type: Boolean,
+          value: false
+        },
+
+        /**
+       * `datachanged` is a boolean to show the the avatar loading.
+       */
+        avatarloading: {
+          type: Boolean,
+          value: false
+        },
+
+        username: {
+          type: String,
+          //observer: '_username'
+        },
+
+        newusername: {
+          type: String
+        },
 
         /**
        * `sharedElements` is used to share elements between components for doing animations.
@@ -203,7 +442,7 @@
           type: Object,
           value: function() {
             return {
-              'hero': '',
+              'hero': this.$.currentavatar
             }
           }
         },  
@@ -212,15 +451,70 @@
        * `animationConfig` is used to configure animations.
        */
         animationConfig: {
-        },
+          type: Object,
+          value: function() {
+            return {
+              'entry': [{
+                name: 'fade-in-animation',
+                node:this.$.profilecontent,
+                toPage: this,
+                timing: {
+                  duration: 200
+                }
+              },{
+                name: 'fade-in-animation',
+                node:this.$.uploadbtn,
+                toPage: this,
+                timing: {
+                  duration: 200
+                }
+              }, {
+                name: 'hero-animation',
+                id: 'hero',
+                toPage: this,
+                timing: {
+                    duration: 200
+                }
+              }],
 
+              'exit': [{
+                name: 'fade-out-animation',
+                node:this.$.profilecontent,
+                fromPage: this,
+                timing: {
+                  duration: 200
+                }
+              },{
+                name: 'fade-out-animation',
+                node:this.$.uploadbtn,
+                toPage: this,
+                timing: {
+                  duration: 200
+                }
+              },{
+                name: 'fade-out-animation',
+                node:this.$.totalbox,
+                toPage: this,
+                timing: {
+                  duration: 200
+                }
+              }, {
+                name: 'hero-animation',
+                id: 'hero',
+                fromPage: this,
+                timing: {
+                    duration: 200
+                }
+                }]
+              }
+            },
+          },
 
         /**
        * `pubkey` is the Swarm Citizen's pubkey.
        */        
         pubkey: {
-          type: String,
-          observer: '_pubkey'
+          type: String
         },
 
       },
@@ -229,16 +523,22 @@
         Polymer.NeonSharedElementAnimatableBehavior
       ],
 
-
       ready: function(){
-                this.datastate = 'view';
+        this.onEnter();
+      },
 
-              },
       /**
       * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
       * use this to initialize any variables to start the component
       */
       onEnter: function(){
+        // copied from ready
+        this.datastate = 'view';
+        // copied from attached
+        this.init();
+        this.itemshow = true;
+        // var colly = document.getElementById('deletemyvaultcollapser');
+        // colly.closed = true;
       },
 
       /**
@@ -249,258 +549,276 @@
       },
 
 
+      /**
+      * '_is', a function to bind a template to a certain value of a variable.
+      */
+      _is: function(a, b) {
+        if (b === undefined){
+          b = true;
+        }
+        return a === b;
+      },
 
       /**
       * 'exit' is fired when the x is tapped in sc-profile.
       */
-      exit: function(){
+      leave: function(){
+        this.datastate = 'view';
+        this.datachanged = false;
+        this.fire('leave');
       },
 
-      /**
-      * '_pubkey' monitors is the pubkey changes to update the balance.
-      */
-      _pubkey: function(){
-        // if (this.pubkey){
-        //   this.$.wallet.updateBalance();
-        // }
-      },
 
       /**
       * '_identity' monitors is the identity changes.
       */
+
+      // receive identity from data binder
       _identity: function() {
-        if (this.identity){
-          this.currentavatar = this.identity.avatarurl;
+      //  this.currentavatar = this.identity.avatarurl;
+      },
+
+      /**
+      * 'init'...
+      */
+      init: function(cb){
+        try{
+          this.username = this.identity.username;
+          this.newusername = this.username;
+          this.avatarhash = this.identity.avatarhash;
+        }catch(e){
+          console.log(e);
+          //
         }
+        if (cb) cb();
       },
 
 
       /**
-      * 'toHashtag' makes the app go to a new view/route (in this case sc-hashtag). The function sets the animationConfig and sharedElements, then fires 'to-hashtag' to the parent-element to change the route.
+      * 'toCropper' sets the cropper-element when the user uploads a new avatar-image.
       */
-      toHashtag: function(e) {
-        if (this.phoneview) {
+      toCropper: function(image) {
+        this.datastate = 'edit';
+        this.currentavatar = image;
+        if (this.croppie && this.croppie.destroy) {
+          this.croppie.destroy();
+          delete self.croppie;
+        }
+        this.croppie = new Croppie(this.$.croppie, {
+          viewport: {
+            width: 120,
+            height: 120,
+            type: 'circle'
+          },
+          boundary: {
+            width: 250,
+            height: 250
+          },
+          showZoomer: false,
+          enableOrientation: true
+        });
+        this.croppie.bind({
+          url: image,
+          orientation: 1
+        });
+      },
 
-          this.sharedElements = {
-              'hero': this.$.homeavatar,
-              'balance': this.$.homebalance
-            };
 
-          this.animationConfig = {
-              'entry': [{
-                  name: 'fade-in-animation',
-                  node:this.$.homebalance,
-                  toPage: this,
-                  timing: {
-                    delay: 200,
-                    duration: 125
-                  }
-                },{
-                  name: 'fade-in-animation',
-                  node:this.$.homeusername,
-                  toPage: this,
-                  timing: {
-                    delay: 475,
-                    duration: 125
-                  }
-                }, {
-                  name: 'slide-from-bottom-animation',
-                  node:this.$.bottomhalf,
-                  toPage: this,
-                  timing: {
-                    duration: 700
-                  }
-                },{
-                  name: 'hero-animation',
-                  id: 'hero',
-                  toPage: this,
-                  timing: {
-                      duration: 500
-                  }
-                },{
-                  name: 'hero-animation',
-                  id: 'balance',
-                  toPage: this,
-                  timing: {
-                      duration: 500
-                  }
-                }],
+      /**
+      * 'rotate' rotates the images when in the Croppie-element.
+      */
+      rotate: function(){
+        if (!this.croppie){
+          return;
+        }
+        this.croppie.rotate(270);
+      },
 
-                'exit': [
-                  {
-                    name: 'fade-out-animation',
-                    node:this.$.homeusername,
-                    fromPage: this,
-                    timing: {
-                        duration: 200
-                    }
-                  }, {
-                    name: 'fade-out-animation',
-                    node:this.$.bottomhalf,
-                    fromPage: this,
-                    timing: {
-                        duration: 200
-                    }
-                  },{
-                    name: 'hero-animation',
-                    id: 'hero',
-                    fromPage: this,
-                    timing: {
-                        duration: 500
-                    }
-                  },{
-                    name: 'hero-animation',
-                    id: 'balance',
-                    fromPage: this,
-                    timing: {
-                        duration: 500
-                    }
-                }]
-              };
-            this.fire('to-hashtag',e.detail);
+
+      /**
+      * 'setcurrentavatar_cancel' cancels the flow of setting a new avatr image.
+      */
+      setcurrentavatar_cancel: function() {
+        this.datastate = 'view';
+        self.croppie.destroy();
+        delete self.croppie;
+      },
+
+      /**
+      * 'setcurrentavatar' is activated when the user confirms the picture cropped by the Croppie-component. It then is saved to IPFS and set as the new avatar. 
+      */
+      setcurrentavatar: function() {
+        this.avatarloading = true;
+        var self = this;
+        this.croppie.result({
+          type: 'base64',
+          format: 'jpeg',
+          quality: 0.9
+        }).then(function(base64) {
+
+          // set the avatar to the dataURL.
+          this.currentavatar = base64;
+          this.datastate = 'view';
+
+          // now convert and save to IPFS in the background.
+          var base64data = base64.replace(/^data:image\/(png|jpg|jpeg);base64,/, '');
+          var imgbuffer = this.$.ipfs.ipfs.Buffer(base64data, 'base64');
+
+          this.$.ipfs.add(imgbuffer, function(err, result) {
+            if (err || !result || !result[0]){
+              console.log('cannot upload avatar',err);
+              this.avatarloading = false;
+            }else{
+              console.log(err, result[0].hash);
+              //var hashurl = this.$.ipfs.geturl(result[0].hash);
+              self.avatarhash = result[0].hash;
+              self.avatarurl = this.$.ipfs.geturl(result[0].hash);
+              // self.datachanged = true;
+
+              self.fire('identity-update',{
+                username: self.username,
+                avatarhash: self.avatarhash
+              });
+              this.avatarloading = false;
+            }
+          }.bind(this));
+
+          // remove cropper
+          self.croppie.destroy();
+          delete self.croppie;
+          // self.datachanged = true;
+
+        }.bind(this));
+
+      },
+
+      /**
+      * 'logout' fires 'logout' to parent-element. 
+      */
+      logout: function() {
+        this.fire('logout');
+      },
+
+
+      /**
+      * 'uploadfile' masks the click on the inputfield: when clicked on avatar, the upload is active. 
+      */
+      uploadfile: function() {
+        document.querySelector('#avatarupload').click();
+      },
+
+
+      /**
+      * 'avatarChange' reloads to show the new avatar when it's changed by a new upload. 
+      */
+      avatarChange: function(e) {
+        var input = e.target;
+        if (input.files && input.files[0]) {
+          var reader = new FileReader();
+          reader.onload = function(e) {
+            this.toCropper(e.target.result);
+          }.bind(this);
+          reader.readAsDataURL(input.files[0]);
+        }
+      },
+
+      /**
+      * 'collapseMe' opens the collapse-menu of deleting the user, after tapping btn 'Delete this user'. 
+      */
+      collapseMe: function(e)  {
+        var item = e.target.parentNode.id;
+
+        var itemp = e.target.id;
+        var collapsid = itemp + 'collapser';
+        var collapsdis = document.getElementById(collapsid);
+        collapsdis.toggle();
+
+        this.itemshow =! this.itemshow;
+        console.log("*******",this.itemshow);
+
+        var itemtotal = document.getElementById(item);
+        if (itemtotal){
+          if (collapsdis.opened){
+           itemtotal.classList.add("openedcoll");
           } else {
-            this.fire('to-hashtag',e.detail);
+           itemtotal.classList.remove("openedcoll");
           }
-      },
-
-      /**
-      * 'toProfile' makes the app go to a new view/route (in this case sc-profile). The function sets the animationConfig and sharedElements, then fires 'to-profile' to the parent-element to change the route.
-      */
-      toProfile: function() {
-        if (this.phoneview) {
-          this.sharedElements = {
-              'hero': this.$.homeavatar,
-              'hero2': this.$.homeusername
-            };
-
-          this.animationConfig = {
-                'entry': [{
-                  name: 'fade-in-animation',
-                  node:this.$.homebalance,
-                  toPage: this,
-                  timing: {
-                    delay: 200,
-                    duration: 125
-                  },
-
-                }, {
-                  name: 'slide-from-bottom-animation',
-                  node:this.$.bottomhalf,
-                  toPage: this,
-                  timing: {
-                    duration: 700
-                  }
-                },{
-                  name: 'hero-animation',
-                  id: 'hero',
-                  toPage: this,
-                  timing: {
-                      duration: 600
-                    }
-                }],
-
-                'exit': [{
-                  name: 'fade-out-animation',
-                  node:this.$.homebalance,
-                  fromPage: this,
-                  timing: {
-                      duration: 125
-                  }
-                },{
-                  name: 'fade-out-animation',
-                  node:this.$.homeusername,
-                  fromPage: this,
-                  timing: {
-                      duration: 125
-                  }
-                }, {
-                  name: 'slide-down-animation',
-                  node:this.$.bottomhalf,
-                  fromPage: this,
-                  timing: {
-                      duration: 700
-                  }
-                },{
-                  name: 'hero-animation',
-                  id: 'hero',
-                  fromPage: this,
-                  timing: {
-                      duration: 600
-                    }
-                }]
-            };
-          this.fire('to-profile'); 
-        } else {
-          this.fire('to-profile'); 
         }
       },
 
 
       /**
-      * 'toWalletview' makes the app go to a new view/route (in this case sc-walletview). The function sets the animationConfig and sharedElements, then fires 'to-walletview' to the parent-element to change the route.
+      * 'confirm' closes the collapse-menu in which the buttons are to change username, and saves the new username. 
       */
-      toWalletview: function() {
-        if (this.phoneview) {
-        // TODO : remove this
-        return;
-        this.sharedElements = {
-          'hero': this.$.homebalance,
-          };
-        this.animationConfig = {
-              'entry': [{
-                name: 'fade-in-animation',
-                node:this.$.homebalance,
-                toPage: this,
-                timing: {
-                  duration: 200
-                }
-              }, {
-                name: 'fade-in-animation',
-                node:this.$.homeusername,
-                toPage: this,
-                timing: {
-                  duration: 200
-                }
-              },{
-                name: 'hero-animation',
-                id: 'hero',
-                toPage: this,
-                timing: {
-                    duration: 600
-                }
-              }],
+      confirm: function() {
+        this.username = this.newusername;
+        this.set('identity.username', this.newusername);
+        this.datachanged = false;
 
-              'exit': [{
-                name: 'fade-out-animation',
-                node:this.$.homebalance,
-                fromPage: this,
-                timing: {
-                    duration: 200
-                }
-              }, {
-                name: 'fade-out-animation',
-                node:this.$.homeusername,
-                fromPage: this,
-                timing: {
-                    duration: 200
-                }
-              },{
-                name: 'hero-animation',
-                id: 'hero',
-                fromPage: this,
-                timing: {
-                    duration: 600
-                }
-              }]
-          };
-        this.fire('to-walletview');
+        this.fire('identity-update',{
+          username: this.username,
+          avatarhash: this.avatarhash
+        });
+        //this.fire('exit');
 
+      },
+
+      /**
+      * 'close' closes the collapse-menu in which the buttons are to change username, without saving it (so it cancels this action). 
+      */
+      close: function() {
+        this.$.usernameinput.value = this.username;
+        this.datachanged = false;
+      },
+
+
+
+      /**
+      * 'closeMe' closes the collapse-menu of deleting the user. 
+      */
+      closeMe: function()  {
+        var collapsdis = document.getElementById('deletemyvaultcollapser');
+        // console.log("*******",collapsdis);
+        collapsdis.toggle();
+        this.itemshow =! this.itemshow;
+      },
+
+
+      /**
+      * 'togglePub' toggles between the different css-classes (.pubhidden/.pubshown)  of pubkey. 
+      */
+      togglePub: function()  {
+        if (this.pubwhat == "pubhidden"){
+          this.pubwhat = "pubshown";
         } else {
-        this.fire('to-walletview');
+          this.pubwhat = "pubhidden";
         }
       },
 
 
+      /**
+      * 'backupvault' fires 'backup' to parent-element. 
+      */
+      backupvault: function(){
+        this.fire('backup');
+      },
+
+      /**
+      * 'deletevault' fires 'deletevault' to parent-element, and also closes the collapse-menu.
+      */
+      deletevault: function(){
+        this.$.deletemyvaultcollapser.toggle();
+        this.itemshow =! this.itemshow;
+        this.fire('deletevault');
+      },
+
+
+      _username: function(newVal,oldVal) {
+        if (oldVal){
+          this.datachanged = true;
+        // console.log('dit komt van username', newVal, oldVal);
+        }
+      },
 
 
     });
