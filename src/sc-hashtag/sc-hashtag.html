@@ -1,5 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 
@@ -27,12 +28,23 @@ This is the component showing all requests of a certain hashtag. It contains a r
         min-height: 100%;
       }
 
-
-      .topbar {
-        height: 14%;
-        min-height: 82px;
+      .avatar_username_balance_hashtaglist {
+        @apply(--layout-horizontal);
+        @apply(--layout-start);
+        @apply(--layout-start-justified); 
         box-sizing:border-box;
-        padding: 30px 30px 20px 50px;
+        padding: 0px 14vw 0px 14vw;       
+      }
+
+      .avatar_username_balance {
+        height: 100%;
+        box-sizing:border-box;
+        padding: 18vh 0px 18vh 0px;
+        margin-right: 5vw;
+        @apply(--base-structure);
+        @apply(--layout-vertical);
+        @apply(--layout-center);
+        @apply(--layout-start-justified);
       }
 
 
@@ -73,6 +85,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
       }
 
       sc-hashtagitem {
+        width: 100%;
+        max-width: 600px;
         margin: 2vh 0px;
       }
       paper-icon-button.addbtn {
@@ -91,6 +105,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
         box-sizing:border-box;
         color: var(--sc-blue);
       }
+
+
 
     @media all and (min-width: 0) and (max-width: 420px) { 
 
@@ -168,64 +184,103 @@ This is the component showing all requests of a certain hashtag. It contains a r
         margin: 0px 0px 6px 14px;
       }
 
+      .avatar_username_balance_hashtaglist {
+        @apply(--layout-vertical);
+        @apply(--layout-center-center);        
+      }
+
+      .avatar_username_balance {
+        width: 100%;
+        height: 14%;
+        min-height: 82px;
+        box-sizing:border-box;
+        padding: 30px 30px 20px 50px;
+      }
+
     }
 
     </style>
+    
+    <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
 
     <paper-icon-button id="addbtn" icon="sc-icons:plus" class="left whiteback shadow medium addbtn" on-tap="tonewItem" noink>+ new offer</paper-icon-button>
 
-    <div class="totalwidth vertic centercenter">
-      <div class="topbar">
-      <div class="flex"></div>
-      <div class="balance-box" id="balancebox">
-        <sc-balance
-          class=""
-          refcur="EUR"
-          arcbalance="{{arcbalance}}"
-          ethbalance="{{ethbalance}}"
-          showswt="false"
-          viewmode="small">
-        </sc-balance>
-      </div>
+    <div class="avatar_username_balance_hashtaglist totalwidth">
+        <div class="avatar_username_balance">
 
-        <div class="avatar-box">
-        <sc-avatar
-          id="currentavatar"
-          identity="{{identity}}"
-          pubkey="{{account}}"
-          mode="imgonly"
-          size="small"
-          on-tap="exit">
-        </sc-avatar>
-      </div>
-
-      </div>
-
-        <div id="hashtagcontent" class="totalwidth paddingsides">
-          <div id="{{item}}" class="hashtagtotal totalwidth horizont centercenter">
-            <div class="hashtagtitle horizont start startjust">
-              <div class="symbol">
-                <p class="semibold">#</p>
-              </div>
-              <p class="bold wordbreak">{{currenthasht}}</p>
-              <iron-icon on-tap="leave" icon="sc-icons:decline" class="small backhash grey4">back</iron-icon>
-            </div>
-            <div class="flex"></div>
-          </div>
-          <template is="dom-repeat" items="{{testitemzzz}}">
-            <sc-hashtagitem
-              offereravatar="{{item.offereravatar}}"
-              offerer="{{item.offerer}}"
-              offererrep="{{item.offererrep}}"
-              offer="{{item.offer}}"
-              offerhashtag="{{item.offerhashtag}}"
-              offertime="{{item.offertime}}"
-              offeramount="{{item.offeramount}}"
-              nrofreplies="{{item.nrofreplies}}"
-              on-tap="toItemdetail">
-            </sc-hashtagitem>
-          </template>
+      <template is="dom-if" if="{{phoneview}}">
+        <div class="flex"></div>
+        <div class="balance-box" id="mobile_balancebox">
+          <sc-balance
+            refcur="EUR"
+            swtbalance="[[swtbalance]]"
+            ethbalance="{{ethbalance}}"
+            viewmode="small"
+            ></sc-balance>
         </div>
+        <div class="avatar-box">
+          <sc-avatar
+            id="mobile_currentavatar"
+            identity="{{identity}}"
+            pubkey="{{account}}"
+            mode="imgonly"
+            size="small"
+            on-tap="exit">
+          </sc-avatar>
+        </div>
+      </template>
+
+      <template is="dom-if" if="{{!phoneview}}">
+          <div class="avatar_username_box vertic centercenter" on-tap="toProfile">
+            <sc-avatar
+            identity="[[identity]]"
+            pubkey="[[pubkey]]"
+            id="currentavatar"
+            ></sc-avatar>
+            <sc-username
+            identity="[[identity]]"
+            pubkey="[[pubkey]]"
+            id="homeusername"
+            size="small"
+            ></sc-username>
+          </div>
+          <div class="whitespace"></div>
+          <div class="minispace"></div>
+          <div id="balancebox" class="homebalance_box" on-tap="toWalletview">
+            <sc-balance
+              refcur="EUR"
+              swtbalance="[[swtbalance]]"
+              ethbalance="{{ethbalance}}"
+              ></sc-balance>
+          </div>
+      </template>
+      </div>
+
+      <div id="hashtagcontent" class="totalwidth paddingsides">
+        <div id="{{item}}" class="hashtagtotal totalwidth horizont centercenter">
+          <div class="hashtagtitle horizont start startjust">
+            <div class="symbol">
+              <p class="semibold">#</p>
+            </div>
+            <p class="bold wordbreak">{{currenthasht}}</p>
+            <iron-icon on-tap="leave" icon="sc-icons:decline" class="small backhash grey4">back</iron-icon>
+          </div>
+          <div class="flex"></div>
+        </div>
+        <template is="dom-repeat" items="{{testitemzzz}}">
+          <sc-hashtagitem
+            offereravatar="{{item.offereravatar}}"
+            offerer="{{item.offerer}}"
+            offererrep="{{item.offererrep}}"
+            offer="{{item.offer}}"
+            offerhashtag="{{item.offerhashtag}}"
+            offertime="{{item.offertime}}"
+            offeramount="{{item.offeramount}}"
+            nrofreplies="{{item.nrofreplies}}"
+            on-tap="toItemdetail">
+          </sc-hashtagitem>
+        </template>
+      </div>
     </div>
 
   </template>
@@ -247,89 +302,25 @@ This is the component showing all requests of a certain hashtag. It contains a r
           type: Object,
           value: function() {
             return {
-              'hero': this.$.currentavatar,
-              'balance': this.$.balancebox
+              'hero': '',
+              'balance': '',
             }
           }
-        },
+        }, 
 
 
         /**
        * `animationConfig` is used to configure animations.
        */
         animationConfig: {
-          type: Object,
-          value: function() {
-            return {
-              'entry': [{
-                name: 'slide-from-bottom-animation',
-                node:this.$.hashtagcontent,
-                toPage: this,
-                timing: {
-                  duration: 700
-                }
-              },{
-                name: 'fade-in-animation',
-                node:this.$.backbtn,
-                fromPage: this,
-                timing: {
-                  duration: 125
-                }
-
-              }, {
-                name: 'hero-animation',
-                id: 'hero',
-                toPage: this,
-                timing: {
-                    duration: 600
-                }
-              }, {
-                name: 'hero-animation',
-                id: 'balance',
-                toPage: this,
-                timing: {
-                    duration: 600
-                }
-              }],
-
-              'exit': [{
-                name: 'slide-down-animation',
-                node:this.$.hashtagcontent,
-                fromPage: this,
-                timing: {
-                  duration: 700
-                }
-
-              },{
-                name: 'fade-out-animation',
-                node:this.$.backbtn,
-                fromPage: this,
-                timing: {
-                  duration: 125
-                }
-
-              }, {
-                name: 'hero-animation',
-                id: 'hero',
-                fromPage: this,
-                timing: {
-                    duration: 600
-                }
-              }, {
-                name: 'hero-animation',
-                id: 'balance',
-                fromPage: this,
-                timing: {
-                    duration: 600
-                }
-                }]
-              }
-            },
+          type: Object
           }
 
         },
 
       ready: function() {
+
+          this._setAnimconfig();
 
           this.testitemzzz = [
            {
@@ -389,16 +380,120 @@ This is the component showing all requests of a certain hashtag. It contains a r
       onExit: function(){
       },
 
+      /**
+      * '_setAnimconfig' sets the Animationconfig on the onEnter-event.
+      */      
+      _setAnimconfig: function(){
+
+        if (this.phoneview) {
+          var hero = document.getElementById('mobile_currentavatar');
+          var balance = document.getElementById('mobile_currentavatar');
+
+          this.sharedElements = {
+            'hero': hero,
+            'balance': balance
+          };
+
+          console.log("Jooooooo kennem, tis Phone", hero, balance);
+
+        } else {
+          var hero = document.getElementById('currentavatar');
+          var balance = document.getElementById('currentavatar');
+
+          this.sharedElements = {
+            'hero': hero,
+            'balance': balance
+          };
+          console.log("Jooooooo kennem, tis NIET Phone dus é", hero, balance);
+
+        };
+
+
+        this.animationConfig = {
+             'entry': [{
+                name: 'slide-from-bottom-animation',
+                node:this.$.hashtagcontent,
+                toPage: this,
+                timing: {
+                  duration: 700
+                }
+              },{
+                name: 'fade-in-animation',
+                node:this.$.backbtn,
+                fromPage: this,
+                timing: {
+                  duration: 125
+                }
+
+              }, {
+                name: 'hero-animation',
+                id: 'hero',
+                toPage: this,
+                timing: {
+                    duration: 600
+                }
+              }, {
+                name: 'hero-animation',
+                id: 'balance',
+                toPage: this,
+                timing: {
+                    duration: 600
+                }
+              }],
+
+
+              'exit': [{
+                name: 'slide-down-animation',
+                node:this.$.hashtagcontent,
+                fromPage: this,
+                timing: {
+                  duration: 700
+                }
+
+              },{
+                name: 'fade-out-animation',
+                node:this.$.backbtn,
+                fromPage: this,
+                timing: {
+                  duration: 125
+                }
+
+              }, {
+                name: 'hero-animation',
+                id: 'hero',
+                fromPage: this,
+                timing: {
+                    duration: 600
+                }
+              }, {
+                name: 'hero-animation',
+                id: 'balance',
+                fromPage: this,
+                timing: {
+                    duration: 600
+                }
+                }]
+          };
+
+      },
 
       /**
       * 'leave' fires the 'leave' to the parent-element. (This also contains animation-config for going back to sc-home.)
       */
       leave: function(){
 
-        this.sharedElements = {
-              'hero': this.$.currentavatar,
-              'balance': this.$.balancebox
+        if (this.phoneview) {
+          this.sharedElements = {
+            'hero': this.$.mobile_currentavatar,
+            'balance': this.$.mobile_balancebox
           };
+        } else {
+          this.sharedElements = {
+            'hero': this.$.currentavatar,
+            'balance': this.$.balancebox
+          };
+        }
+
 
         this.animationConfig = {
              'entry': [{
@@ -465,7 +560,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
                 }]
           };
 
-        this.fire('exit');
+        this.fire('leave');
       },
 
       tonewItem: function(){
@@ -474,11 +569,18 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       toItemdetail: function(e){
 
-
-        this.sharedElements = {
+        if (this.phoneview) {
+          this.sharedElements = {
+            'hero': this.$.mobile_currentavatar,
+            'balance': this.$.mobile_balancebox
+          };
+        } else {
+          this.sharedElements = {
             'hero': this.$.currentavatar,
             'balance': this.$.balancebox
           };
+        }
+
 
         this.animationConfig = {
               'entry': [{
