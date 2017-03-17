@@ -1,21 +1,16 @@
-<link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
-<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 
-<link rel="import" href="../bower_components/sc-style/sc-style.html">
-<link rel="import" href="../bower_components/sc-iconset/sc-iconset.html">
-<link rel="import" href="sc-loader.html">
-<link rel="import" href="ac-helpers.html">
-<link rel="import" href="ac-password.html">
-<link rel="import" href="ac-statusitem.html">
-<link rel="import" href="sc-spinner.html">
-<link rel="import" href="ac-wallet.html">
-<link rel="import" href="ac-config.html">
-<link rel="import" href="sc-ethereumtx.html">
-<link rel="import" href="../bower_components/neon-animation/neon-animation.html">
+<link rel="import" href="../../bower_components/sc-style/sc-style.html">
+<link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
+<link rel="import" href="../sc-loader/sc-loader.html">
+<link rel="import" href="../sc-loader/sc-helpers.html">
+<link rel="import" href="../sc-config/sc-config.html">
+<link rel="import" href="../../bower_components/neon-animation/neon-animation.html">
 
-<dom-module id="ac-swtconversion">
-<link rel="import" href="../bower_components/sc-style/sc-style.css" type="css">
+<dom-module id="sc-swtconversion">
+<link rel="import" href="../../bower_components/sc-style/sc-style.css" type="css">
 
 <style>
 :host {
@@ -189,9 +184,8 @@
 </style>
 <template>
 
-  <ac-config config="{{config}}"></ac-config>
-  <sc-ethereumtx id="etx"></sc-ethereumtx>
-  <ac-helpers id="helpers"></ac-helpers>
+  <sc-config config="{{config}}"></sc-config>
+  <sc-helpers id="helpers"></sc-helpers>
   <app-route route="{{route}}" pattern="/:page" data="{{data}}"></app-route>
 
     <div class="topbar basestructure">
@@ -200,21 +194,6 @@
     </div>
 
   <neon-animated-pages attr-for-selected="data-page" selected="[[data.page]]" entry-animation="{{entryAnimation}}" exit-animation="{{exitAnimation}}">
-
-<!--     <neon-animatable data-page="intro">
-        <div class="total vertic start paddingsides basestructure">
-            <div class="whitespace"></div>
-            <div class="whitespace"></div>
-            <div class=""> 
-              <p class="grey4"><span class="reg">Almost done.</span> You seem to hold ARC tokens on this wallet. Swarm City needs to convert your ARC tokens to SWT tokens before you can continue.</p>
-            </div>
-             <div class="whitespace"></div>
-              <div class="whitespace"></div>
-              <div class="horizontal center startjust yesnobtns">
-              <paper-button class="blueback white shadow yesno bigbtn centertxt" on-tap="tostart" noink>OK - let's get started</paper-button>
-            </div>
-            </div>
-    </neon-animatable>   -->
 
     <neon-animatable data-page="intro">
 
@@ -441,7 +420,7 @@
 <script>
 Polymer({
 
-  is: 'ac-swtconversion',
+  is: 'sc-swtconversion',
 
   properties: {
     route: {
@@ -477,7 +456,7 @@ Polymer({
   },
 
   attached: function() {
-    console.log('ac-swtconversion attached');
+    console.log('sc-swtconversion attached');
 
     this.exitAnimation = "slide-left-animation";
     this.entryAnimation = "slide-from-right-animation";
@@ -497,10 +476,10 @@ Polymer({
 
   update: function() {
     if (!this.account || !this.web3 || !this.config) {
-      console.log('ac-swtconversion -> not READY',this.account,this.web3);
+      console.log('sc-swtconversion -> not READY',this.account,this.web3);
       return;
     }
-    console.log('ac-swtconversion -> WE ARE READY');
+    console.log('sc-swtconversion -> WE ARE READY');
     var self = this;
     if (!self.SWTTokenInstance) {
       this.$.helpers.getjson('./contracts/ARCToken.json', function(err, tokendata) {
@@ -556,10 +535,10 @@ Polymer({
 
     if (this.ETHbalance !== undefined && this.ETHbalance > ethrequired) {
       this.hasenoughgas = true;
-      console.log('ac-swtconversion -> You have enough ETH to perform a conversion');
+      console.log('sc-swtconversion -> You have enough ETH to perform a conversion');
     } else {
       this.hasenoughgas = false;
-      console.log('ac-swtconversion -> You don\'t have enough ETH to perform a conversion');
+      console.log('sc-swtconversion -> You don\'t have enough ETH to perform a conversion');
       this.ethshort = (ethrequired || 0) - this.ETHbalance;
     }
     return this.hasenoughgas;

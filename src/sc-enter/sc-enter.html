@@ -2,6 +2,7 @@
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
+<link rel="import" href="../../bower_components/iron-localstorage/iron-localstorage.html">
 
 <link rel="import" href="../../bower_components/sc-style/sc-style.html">
 <link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
@@ -26,6 +27,10 @@ This is the homescreen of boardwalk.
 <link rel="import" href="../../bower_components/sc-style/sc-style.css"  type="css">
 
   <template>
+    <iron-localstorage name="sc-lastversionstarted"
+      value="{{lastversionstarted}}"
+      on-iron-localstorage-load-empty="initializeSC"
+    ></iron-localstorage>  
     <app-location route="{{route}}" use-hash-as-path></app-location>  
     <sc-backbone id="backbone"></sc-backbone>
     <style>
@@ -248,6 +253,10 @@ This is the homescreen of boardwalk.
     </style>
 
     <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
+
+    <template is="dom-if" if="{{showLoader}}">
+      This is the initial LOADER
+    </template>
     
     <template is="dom-if" if="{{showStartScreen}}">
 
@@ -315,14 +324,9 @@ This is the homescreen of boardwalk.
             <a href="https://twitter.com/SwarmCityHive" target="_blank">Twitter</a>
             <a href="https://www.youtube.com/channel/UCsHBWn_ytZ3xdMbTyYe5Ifg" target="_blank">Youtube</a>
             <a href="https://www.facebook.com/groups/SwarmCity/" target="_blank">Facebook</a>
-
           </div>
-
         </div>
-
-
     </template>
-
 
     <template is="dom-if" if="{{showApp}}">
       <sc-boardwalk-app
@@ -336,8 +340,8 @@ This is the homescreen of boardwalk.
           <sc-loader color="yellow"></sc-loader>
         </div>
       </template>
-
     </template>
+
   </template>
 
   <script>
@@ -346,17 +350,27 @@ This is the homescreen of boardwalk.
       is: 'sc-enter',
 
       properties: {
-        /**
-       * `prop1` this is the first property and what it does is described right here.
-       */
-        prop1: {
+
+        route: {
+          type: Object,
+          observer: '_onRouteDataChanged',
+        },
+
+        lastversionstarted: {
           type: String,
-          value: 'sc-enter',
+          observer: '_lastversionstarted'
         },
       },
 
       ready: function(){
         this.onEnter();
+      },
+
+      _onRouteDataChanged: function(page,oldpage) {
+        if (!page){
+          return;
+        }
+        console.log('sc-enter -> _onRouteDataChanged',oldpage,'->',page);
       },
 
       _isLocalhost: function(hostname) {
@@ -382,8 +396,10 @@ This is the homescreen of boardwalk.
       * use this to initialize any variables to start the component
       */
       onEnter: function(){
-        this.showStartScreen = true;
-        this.showApp = !this.showStartScreen;
+        this.showStartScreen = false;
+        this.showApp = false;
+        this.showLoader = true;
+        //this.showApp = !this.showStartScreen;
         this.boardwalkLoaded = false;
       },
 
@@ -404,7 +420,19 @@ This is the homescreen of boardwalk.
       toggleapp: function(){
         this.showStartScreen = !this.showStartScreen;
         this.showApp = !this.showStartScreen;
+      },
+
+      // nothing has been loaded..
+      initializeSC: function(){
+        this.showStartScreen = true;
+      },
+
+      _lastversionstarted: function(){
+        this.showApp = true;
+        this.showLoader = false;
       }
+
+
 
     });
   </script>

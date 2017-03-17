@@ -71,7 +71,7 @@
         data-page="loading"
         msg="">
     </sc-loadview> -->
-<!-- 
+
     <sc-swtconversion
       data-page="swt"
       id="swt"
@@ -80,10 +80,10 @@
       web3="[[web3]]"
       account="[[account]]"
       on-exit="logout"
-      on-success="toHome"
+      on-success="profile_tohome"
       on-converted="converted"
       >
-    </sc-swtconversion> -->
+    </sc-swtconversion>
 
     <sc-intro
       id="intro"
@@ -160,7 +160,11 @@
       account="[[account]]"
       lowgas="[[lowgas]]"
       emptygas="[[emptygas]]"
+<<<<<<< HEAD
       on-leave="walletview_tohome"
+=======
+      on-exit="profile_tohome"
+>>>>>>> 977bb1b7e8c48a4e03f825b9f51256ecb89ccdd6
       on-refreshneeded="refreshwallet"
       updating="[[balanceupdating]]"
       swtbalance="[[swtbalance]]">
@@ -191,6 +195,10 @@
         route: {
           type: Object
         },
+        version: {
+          type: String,
+          value: '0.1'
+        }
       },
       
       observers: [
@@ -263,7 +271,10 @@
       },
 
       _onRouteDataChanged: function(page,oldpage) {
-         console.log('sc-boardwalk-app -> _onRouteDataChanged',oldpage,'->',page);
+        if (!page){
+          return;
+        }
+        console.log('sc-boardwalk-app -> _onRouteDataChanged',oldpage,'->',page);
        },
 
       // intro routing
@@ -323,6 +334,14 @@
       saveIdentity: function(e) {
         this.identity = e.detail;
         this.$.vault.saveVault();
+      },
+
+      logout: function(){
+        this.transitionto('/');
+      },
+
+      converted: function(){
+        this.transitionto('/home');
       },
 
 
