@@ -27,9 +27,9 @@ This is the homescreen of boardwalk.
 <link rel="import" href="../../bower_components/sc-style/sc-style.css"  type="css">
 
   <template>
-    <iron-localstorage name="sc-lastversionstarted"
-      value="{{lastversionstarted}}"
-      on-iron-localstorage-load-empty="initializeSC"
+    <iron-localstorage name="sc-vault"
+      value="{{vault}}"
+      on-iron-localstorage-load-empty="novault"
     ></iron-localstorage>  
     <app-location route="{{route}}" use-hash-as-path></app-location>  
     <sc-backbone id="backbone"></sc-backbone>
@@ -255,8 +255,10 @@ This is the homescreen of boardwalk.
     <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
 
     <template is="dom-if" if="{{showLoader}}">
-      This is the initial LOADER
-    </template>
+       <div class="loadingscreen grey4back horizont centercenter">
+        <sc-loader color="yellow"></sc-loader>
+      </div>
+     </template>
     
     <template is="dom-if" if="{{showStartScreen}}">
 
@@ -335,11 +337,11 @@ This is the homescreen of boardwalk.
         on-loaded="boardwalkReady"
         on-exit="onExit"
         ></sc-boardwalk-app>      
-      <template is="dom-if" if="{{!boardwalkLoaded}}">
+     <!--  <template is="dom-if" if="{{!boardwalkLoaded}}">
         <div class="loadingscreen grey4back horizont centercenter">
           <sc-loader color="yellow"></sc-loader>
         </div>
-      </template>
+      </template> -->
     </template>
 
   </template>
@@ -356,14 +358,23 @@ This is the homescreen of boardwalk.
           observer: '_onRouteDataChanged',
         },
 
-        lastversionstarted: {
-          type: String,
-          observer: '_lastversionstarted'
+        vault: {
+          type: Object,
+          observer: '_vault'
         },
+        showLoader: {
+          type: Boolean,
+        },
+        showshowStartScreen: {
+          type: Boolean
+        },
+        showApp: {
+          type: Boolean
+        }        
       },
 
       ready: function(){
-        this.onEnter();
+        
       },
 
       _onRouteDataChanged: function(page,oldpage) {
@@ -387,6 +398,7 @@ This is the homescreen of boardwalk.
           // Redirect to https: if we're currently using http: and we're not on localhost.
           window.location.href = 'https:' + window.location.href.substring(window.location.protocol.length);
         }else{
+          //this.onEnter();
           this.$.backbone.lazyload('bundle-terminal');
         }        
       },
@@ -396,11 +408,10 @@ This is the homescreen of boardwalk.
       * use this to initialize any variables to start the component
       */
       onEnter: function(){
-        this.showStartScreen = false;
-        this.showApp = false;
-        this.showLoader = true;
-        //this.showApp = !this.showStartScreen;
-        this.boardwalkLoaded = false;
+        // this.showStartScreen = false;
+        // this.showApp = false;
+        // this.showLoader = true;
+        // this.boardwalkLoaded = false;
       },
 
       /**
@@ -408,28 +419,38 @@ This is the homescreen of boardwalk.
       * use this to reset any variables when leaving this component while it remains loaded.
       */
       onExit: function(){
-        this.showStartScreen = true;
+        //this.showStartScreen = true;
       },
 
       boardwalkReady: function(){
-        //debugger;
-        this.boardwalkLoaded = true;
+        this.showApp = true;
+        this.showLoader = false;
         //this.$.boardwalk.onEnter();
       },
 
       toggleapp: function(){
         this.showStartScreen = !this.showStartScreen;
         this.showApp = !this.showStartScreen;
+        if (this.showApp){
+          this.lastversionstarted = "1.0";
+        }
       },
 
       // nothing has been loaded..
-      initializeSC: function(){
+      novault: function(){
         this.showStartScreen = true;
-      },
+        this.showLoader = false;      },
 
-      _lastversionstarted: function(){
+      _vault: function(){
+        if (!this.vault){
+          return;
+        }
         this.showApp = true;
-        this.showLoader = false;
+        this.showLoader = true;
+        this.showStartScreen = false;        
+      },
+      debug: function(){
+        debugger;
       }
 
 
