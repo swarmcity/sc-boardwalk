@@ -70,7 +70,7 @@
         data-page="loading"
         msg="">
     </sc-loadview> -->
-<!-- 
+
     <sc-swtconversion
       data-page="swt"
       id="swt"
@@ -79,10 +79,10 @@
       web3="[[web3]]"
       account="[[account]]"
       on-exit="logout"
-      on-success="toHome"
+      on-success="profile_tohome"
       on-converted="converted"
       >
-    </sc-swtconversion> -->
+    </sc-swtconversion>
 
     <sc-intro
       id="intro"
@@ -159,7 +159,7 @@
       account="[[account]]"
       lowgas="[[lowgas]]"
       emptygas="[[emptygas]]"
-      on-exit="toHome"
+      on-exit="profile_tohome"
       on-refreshneeded="refreshwallet"
       updating="[[balanceupdating]]"
       swtbalance="[[swtbalance]]">
@@ -177,6 +177,10 @@
         route: {
           type: Object
         },
+        version: {
+          type: String,
+          value: '0.1'
+        }
       },
       
       observers: [
@@ -307,6 +311,14 @@
       saveIdentity: function(e) {
         this.identity = e.detail;
         this.$.vault.saveVault();
+      },
+
+      logout: function(){
+        this.transitionto('/');
+      },
+
+      converted: function(){
+        this.transitionto('/home');
       },
 
 
