@@ -22,16 +22,21 @@ This component shows the SWT-balance and the reference currency (when in sc-wall
         display: block;
       }
 
-      .normal p {
-        font-size: 22px;
-        line-height: 24px;
-        opacity: 0.75;
-      }
 
+      .big h1 {
+        font-size: 70px;
+        line-height: 78px
+      }
 
       .normal h1 {
         font-size: 50px;
         line-height: 56px
+      }
+
+      .SWTletters {
+        font-size: 14px;
+        line-height: 16px;
+        margin-left: 6px;
       }
 
 
@@ -45,22 +50,22 @@ This component shows the SWT-balance and the reference currency (when in sc-wall
         line-height: 22px;    
       }
 
-      .SWTletters {
-        font-size: 14px;
-        line-height: 16px;
-        margin-left: 6px;
+
+      @media all and (min-width: 0) and (max-width: 420px) {
+
+        .normal h1 {
+          font-size: 50px;
+          line-height: 56px
+        }
+
+        .normal.SWTletters h1 {
+          font-size: 14px;
+          line-height: 16px;
+          margin-left: 6px;
+        }
+
       }
 
-
-      .prefcurrletters {
-        margin: 0px 0px 8px 14px;
-        opacity: 0.75;
-      }
-
-
-      .prefcurrletters p {
-        opacity: 0.5;
-      }
 
     </style>
 
@@ -77,12 +82,16 @@ This component shows the SWT-balance and the reference currency (when in sc-wall
     </iron-ajax> -->
 
     <!-- <div class$="arc-balance {{align}}"> -->
-      <div class$="horizont end {{viewmode}}">
+      <div class$="horizont end centerjust {{viewmode}}">
         <template is="dom-if" if="{{_is( viewmode, 'small')}}">
           <h1 class="yellow bold">{{formatpong(swtbalance)}}</h1>
         </template>
         <template is="dom-if" if="{{_is( viewmode, 'normal')}}">
           <h1 class="yellow bold">{{formatpong(swtbalance)}}</h1>
+          <h1 class="yellow bold"><span class="SWTletters"> SWT</span></h1>
+        </template>
+        <template is="dom-if" if="{{_is( viewmode, 'big')}}">
+          <h1 class="yellow bold big">{{formatpong(swtbalance)}}</h1>
           <h1 class="yellow bold"><span class="SWTletters"> SWT</span></h1>
         </template>
       </div>

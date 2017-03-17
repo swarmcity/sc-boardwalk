@@ -7,7 +7,9 @@
 <link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
 <link rel="import" href="../../bower_components/app-route/app-location.html">
 
+
 <link rel="import" href="../sc-backbone/sc-backbone.html">
+<link rel="import" href="../sc-loader/sc-loader.html">
 
 <!-- note that this will be lazy-loaded -->
 <!-- <link rel="import" href="../sc-boardwalk-app/sc-boardwalk-app.html"> -->
@@ -158,6 +160,16 @@ This is the homescreen of boardwalk.
       .whatitemimg img {
         width: 100%;
         height: 100%;
+      }
+
+      .loadingscreen {
+        width: 100vw;
+        height: 100vh;
+
+      }
+
+      .semiopacity {
+        opacity: 0.15;
       }
 
 
@@ -320,7 +332,9 @@ This is the homescreen of boardwalk.
         on-exit="onExit"
         ></sc-boardwalk-app>      
       <template is="dom-if" if="{{!boardwalkLoaded}}">
-        LOADING....
+        <div class="loadingscreen grey4back horizont centercenter">
+          <sc-loader color="yellow"></sc-loader>
+        </div>
       </template>
 
     </template>

@@ -1,4 +1,14 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+
+<link rel="import" href="../../bower_components/sc-style/sc-style.html">
+<link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
+
+<link rel="import" href="../sc-avatar/sc-avatar.html">
+<link rel="import" href="../sc-balance/sc-balance.html">
+<link rel="import" href="../sc-hashtagitem/sc-hashtagitem.html">
 <!--
 `sc-hashtag`
 
@@ -8,32 +18,361 @@ This is the component showing all requests of a certain hashtag. It contains a r
 -->
 
 <dom-module id="sc-hashtag">
+<link rel="import" href="../../bower_components/sc-style/sc-style.css" type="css">
   <template>
     <style>
       :host {
         display: block;
+        width: 100%;
+        min-height: 100%;
       }
+
+
+      .topbar {
+        height: 14%;
+        min-height: 82px;
+        box-sizing:border-box;
+        padding: 30px 30px 20px 50px;
+      }
+
+
+      .paddingsides {
+        padding-left: 4vw;
+        padding-right: 4vw;
+      }
+
+
+      .hashtagtitle p {
+        font-size: 42px;
+        line-height: 42px;
+        margin: 0px 0px 2px 0px;
+      }
+
+      .symbol p {
+        font-size: 38px;
+        line-height: 38px;  
+        margin: 0px 0px 0px 0px;
+
+      }
+
+      .symbol {
+        margin-top: 6px;
+      }
+
+
+      .margright {
+        margin:0px 6px 0px 0px;
+      }
+
+      .wordbreak {
+        word-break: keep-all;
+      }
+
+      .backhash {
+        margin:0px 0px 3px 8px;    
+      }
+
+      sc-hashtagitem {
+        margin: 2vh 0px;
+      }
+      paper-icon-button.addbtn {
+        position: fixed;
+        top: 80vh;
+        right: 9vw;
+        font-size: 45px;
+        padding: 3px;
+        z-index: 99;
+        box-shadow: 0px 1px 15px -1px rgba(0,0,0,0.1), 0px 1px 3px -1px rgba(0,0,0,0.75);
+        -webkit-box-shadow: 0px 1px 15px -1px rgba(0,0,0,0.1), 0px 1px 3px -1px rgba(0,0,0,0.75);
+        -moz-box-shadow: 0px 1px 15px -1px rgba(0,0,0,0.1), 0px 1px 3px -1px rgba(0,0,0,0.75);
+        -o-box-shadow: 0px 1px 15px -1px rgba(0,0,0,0.1), 0px 1px 3px -1px rgba(0,0,0,0.75);
+        width: 75px;
+        height: 75px;
+        box-sizing:border-box;
+        color: var(--sc-blue);
+      }
+
+    @media all and (min-width: 0) and (max-width: 420px) { 
+
+      .hashtagtotal {
+        @apply(--layout-horizontal);
+        @apply(--layout-end);
+        @apply(--layout-start-justified);
+        box-sizing:border-box;
+        padding: 5px 15px 0px 15px;
+      }
+
+      .hashtagtitle {
+        margin: 0px 0px 10px 0px;
+      }
+
+      .hashtagtitle p {
+        font-size: 20px;
+        line-height: 24px;
+        color: var(--sc-grey4);
+      }
+
+      .symbol p {
+        font-size: 19px;
+        line-height: 28px;
+        margin: 0px 0px 0px 0px;
+      }
+
+      .symbol {
+        margin: 0px 3px 0px 6px;
+      }
+
+      .decliner {
+        margin:0px 0px 0px 8px;
+      }
+
+      .decliner iron-icon {
+        width: 32px;
+        height: 36px;
+      }
+
+
+      .avatar-box {
+        box-sizing:border-box;
+        padding: 0px 0px 0px 15px;
+      }
+
+
+      paper-icon-button.addbtn {
+        position: fixed;
+        top: 80vh;
+        right: 9vw;
+        font-size: 45px;
+        padding: 3px;
+        z-index: 99;
+        box-shadow: 0px 1px 15px -1px rgba(0,0,0,0.1), 0px 1px 3px -1px rgba(0,0,0,0.75);
+        -webkit-box-shadow: 0px 1px 15px -1px rgba(0,0,0,0.1), 0px 1px 3px -1px rgba(0,0,0,0.75);
+        -moz-box-shadow: 0px 1px 15px -1px rgba(0,0,0,0.1), 0px 1px 3px -1px rgba(0,0,0,0.75);
+        -o-box-shadow: 0px 1px 15px -1px rgba(0,0,0,0.1), 0px 1px 3px -1px rgba(0,0,0,0.75);
+        width: 75px;
+        height: 75px;
+        box-sizing:border-box;
+        color: var(--sc-blue);
+      }
+
+      .addspace {
+        box-sizing:border-box;
+        padding: 18px;
+        border-radius: 5px;
+        margin: 20px 0px 20px 0px; 
+      }
+
+
+      .addspace p {
+        font-size: 22px;
+        margin: 0px 0px 6px 14px;
+      }
+
+    }
+
     </style>
-      <h2>Hello, I'm [[prop1]]</h2>
+
+    <paper-icon-button id="addbtn" icon="sc-icons:plus" class="left whiteback shadow medium addbtn" on-tap="tonewItem" noink>+ new offer</paper-icon-button>
+
+    <div class="totalwidth vertic centercenter">
+      <div class="topbar">
+      <div class="flex"></div>
+      <div class="balance-box" id="balancebox">
+        <sc-balance
+          class=""
+          refcur="EUR"
+          arcbalance="{{arcbalance}}"
+          ethbalance="{{ethbalance}}"
+          showswt="false"
+          viewmode="small">
+        </sc-balance>
+      </div>
+
+        <div class="avatar-box">
+        <sc-avatar
+          id="currentavatar"
+          identity="{{identity}}"
+          pubkey="{{account}}"
+          mode="imgonly"
+          size="small"
+          on-tap="exit">
+        </sc-avatar>
+      </div>
+
+      </div>
+
+        <div id="hashtagcontent" class="totalwidth paddingsides">
+          <div id="{{item}}" class="hashtagtotal totalwidth horizont centercenter">
+            <div class="hashtagtitle horizont start startjust">
+              <div class="symbol">
+                <p class="semibold">#</p>
+              </div>
+              <p class="bold wordbreak">{{currenthasht}}</p>
+              <iron-icon on-tap="leave" icon="sc-icons:decline" class="small backhash grey4">back</iron-icon>
+            </div>
+            <div class="flex"></div>
+          </div>
+          <template is="dom-repeat" items="{{testitemzzz}}">
+            <sc-hashtagitem
+              offereravatar="{{item.offereravatar}}"
+              offerer="{{item.offerer}}"
+              offererrep="{{item.offererrep}}"
+              offer="{{item.offer}}"
+              offerhashtag="{{item.offerhashtag}}"
+              offertime="{{item.offertime}}"
+              offeramount="{{item.offeramount}}"
+              nrofreplies="{{item.nrofreplies}}"
+              on-tap="toItemdetail">
+            </sc-hashtagitem>
+          </template>
+        </div>
+    </div>
 
   </template>
 
   <script>
     Polymer({
-
       is: 'sc-hashtag',
 
-      properties: {
-        /**
-       * `prop1` this is the first property and what it does is described right here.
-       */
-        prop1: {
-          type: String,
-          value: 'sc-hashtag',
-        },
-      },
+      behaviors: [
+        Polymer.NeonSharedElementAnimatableBehavior
+      ],
 
-      ready: function(){
+      properties: {
+
+        /**
+       * `sharedElements` is used to share elements between components for doing animations.
+       */ 
+        sharedElements: {
+          type: Object,
+          value: function() {
+            return {
+              'hero': this.$.currentavatar,
+              'balance': this.$.balancebox
+            }
+          }
+        },
+
+
+        /**
+       * `animationConfig` is used to configure animations.
+       */
+        animationConfig: {
+          type: Object,
+          value: function() {
+            return {
+              'entry': [{
+                name: 'slide-from-bottom-animation',
+                node:this.$.hashtagcontent,
+                toPage: this,
+                timing: {
+                  duration: 700
+                }
+              },{
+                name: 'fade-in-animation',
+                node:this.$.backbtn,
+                fromPage: this,
+                timing: {
+                  duration: 125
+                }
+
+              }, {
+                name: 'hero-animation',
+                id: 'hero',
+                toPage: this,
+                timing: {
+                    duration: 600
+                }
+              }, {
+                name: 'hero-animation',
+                id: 'balance',
+                toPage: this,
+                timing: {
+                    duration: 600
+                }
+              }],
+
+              'exit': [{
+                name: 'slide-down-animation',
+                node:this.$.hashtagcontent,
+                fromPage: this,
+                timing: {
+                  duration: 700
+                }
+
+              },{
+                name: 'fade-out-animation',
+                node:this.$.backbtn,
+                fromPage: this,
+                timing: {
+                  duration: 125
+                }
+
+              }, {
+                name: 'hero-animation',
+                id: 'hero',
+                fromPage: this,
+                timing: {
+                    duration: 600
+                }
+              }, {
+                name: 'hero-animation',
+                id: 'balance',
+                fromPage: this,
+                timing: {
+                    duration: 600
+                }
+                }]
+              }
+            },
+          }
+
+        },
+
+      ready: function() {
+
+          this.testitemzzz = [
+           {
+              offereravatar: 'http://www.american.edu/uploads/profiles/large/chris_palmer_profile_11.jpg',
+              offerer: 'Dick Richards',
+              offer: 'Need a ride to 5711 meadow crest and picked up at 404 6th street. Jackalope',
+              offerhashtag: '#ridesharing',
+              offererrep: '6',
+              offertime: 'a few minutes ago',
+              offeramount: '1233.50',
+              nrofreplies: '2'
+            },
+           {
+              offereravatar: 'http://jcket.com/stoneyroads/files/2014/10/600x/Mr-Oizo.jpg',
+              offerer: 'Mr Oizo',
+              offer: 'Need a ride from 5905 hidden valley trl to 2408 wolf run',
+              offerhashtag: '#ridesharing',
+              offererrep: '22',
+              offertime: 'today at 21:25',
+              offeramount: '330.00',
+              nrofreplies: '0'
+            },
+           {
+              offereravatar: 'http://vignette3.wikia.nocookie.net/southpark/images/c/c2/Butters_(Facebook).jpg/revision/latest?cb=20101010032409',
+              offerer: 'Leopold Butters',
+              offer: 'I need a pick up from 2795 pleasant vally',
+              offerhashtag: '#ridesharing',
+              offererrep: '398',
+              offertime: 'yesterday at 19:45',
+              offeramount: '330.00',
+              nrofreplies: '4'
+            },          
+           {
+              offereravatar: 'http://jcket.com/stoneyroads/files/2014/10/600x/Mr-Oizo.jpg',
+              offerer: 'Mr Oizo',
+              offer: 'Need a ride pick up at walmart on ben white and dropped off at 5711 meadow crest',
+              offerhashtag: '#ridesharing',
+              offererrep: '22',
+              offertime: '2 days ago',
+              offeramount: '330.00',
+              nrofreplies: '0'
+            },
+          ];
       },
 
       /**
@@ -48,7 +387,184 @@ This is the component showing all requests of a certain hashtag. It contains a r
       * use this to reset any variables when leaving this component while it remains loaded.
       */
       onExit: function(){
+      },
+
+
+      /**
+      * 'leave' fires the 'leave' to the parent-element. (This also contains animation-config for going back to sc-home.)
+      */
+      leave: function(){
+
+        this.sharedElements = {
+              'hero': this.$.currentavatar,
+              'balance': this.$.balancebox
+          };
+
+        this.animationConfig = {
+             'entry': [{
+                name: 'slide-from-bottom-animation',
+                node:this.$.hashtagcontent,
+                toPage: this,
+                timing: {
+                  duration: 700
+                }
+              },{
+                name: 'fade-in-animation',
+                node:this.$.backbtn,
+                fromPage: this,
+                timing: {
+                  duration: 125
+                }
+
+              }, {
+                name: 'hero-animation',
+                id: 'hero',
+                toPage: this,
+                timing: {
+                    duration: 600
+                }
+              }, {
+                name: 'hero-animation',
+                id: 'balance',
+                toPage: this,
+                timing: {
+                    duration: 600
+                }
+              }],
+
+              'exit': [{
+                name: 'fade-out-animation',
+                node:this.$.hashtagcontent,
+                fromPage: this,
+                timing: {
+                  duration: 125
+                }
+
+              },{
+                name: 'fade-out-animation',
+                node:this.$.backbtn,
+                fromPage: this,
+                timing: {
+                  duration: 125
+                }
+
+              }, {
+                name: 'hero-animation',
+                id: 'hero',
+                fromPage: this,
+                timing: {
+                    duration: 600
+                }
+              }, {
+                name: 'hero-animation',
+                id: 'balance',
+                fromPage: this,
+                timing: {
+                    duration: 600
+                }
+                }]
+          };
+
+        this.fire('exit');
+      },
+
+      tonewItem: function(){
+        this.fire('to-newitem');
+      },
+
+      toItemdetail: function(e){
+
+
+        this.sharedElements = {
+            'hero': this.$.currentavatar,
+            'balance': this.$.balancebox
+          };
+
+        this.animationConfig = {
+              'entry': [{
+                name: 'slide-from-left-animation',
+                node:this.$.hashtagcontent,
+                toPage: this,
+                timing: {
+                  duration: 600
+                }
+              },{
+                name: 'fade-in-animation',
+                node:this.$.backbtn,
+                toPage: this,
+                timing: {
+                  duration: 200
+                }
+              },{
+                name: 'fade-in-animation',
+                node:this.$.addbtn,
+                toPage: this,
+                timing: {
+                  duration: 200
+                }
+
+              }, {
+                name: 'hero-animation',
+                id: 'hero',
+                toPage: this,
+                timing: {
+                    duration: 200
+                }
+              }, {
+                name: 'hero-animation',
+                id: 'balance',
+                toPage: this,
+                timing: {
+                    duration: 200
+                }
+
+              }],
+
+              'exit': [{
+                name: 'slide-left-animation',
+                node:this.$.hashtagcontent,
+                fromPage: this,
+                timing: {
+                  duration: 600
+                }
+
+              },{
+                name: 'fade-out-animation',
+                node:this.$.backbtn,
+                fromPage: this,
+                timing: {
+                  duration: 200
+                }
+              },{
+                name: 'fade-out-animation',
+                node:this.$.addbtn,
+                fromPage: this,
+                timing: {
+                  duration: 200
+                }
+              }, {
+                name: 'hero-animation',
+                id: 'hero',
+                fromPage: this,
+                timing: {
+                    duration: 200
+                }
+
+                }, {
+                  name: 'hero-animation',
+                  id: 'balance',
+                  fromPage: this,
+                  timing: {
+                      duration: 200
+                  }
+                }]
+          };
+        this.fire('to-itemdetail');
       }
+
+
+
+
 
     });
   </script>

@@ -49,9 +49,6 @@
 
       paper-button.receiver {
         margin: 0px 5px 5px 0px;
-        box-sizing: border-box;
-        padding: 20px 30px 20px 30px;
-        font-size: 18px;
       }
 
       paper-progress.normal {
@@ -71,6 +68,14 @@
         @apply(--layout-center-justified);
         @apply(--layout-start);
 
+      }
+
+
+      .frontbtn {
+        width: 230px;
+        margin: 4px;
+        box-sizing: border-box;
+        padding: 28px 34px 28px 34px;
       }
 
       @media all and (min-width: 0) and (max-width: 500px) { 
@@ -96,12 +101,22 @@
             @apply(--layout-vertical);
             @apply(--layout-center-center);       
           }
+
+
+          .frontbtn {
+            width: 200px;
+            margin: 4px;
+            box-sizing: border-box;
+            padding: 18px 24px 18px 24px;
+          }
+  
         }
+
     </style>
 
   <template is="dom-if" if="{{_is(topic,0)}}">
       <div class="vertic centercenter">
-        <paper-button on-tap="fireshowshortcode" class="receiver bigbtn grey1back grey4" noink>
+        <paper-button on-tap="fireshowshortcode" class="receiver frontbtn lighterer grey4 shadow" noink>
         <content></content>
         </paper-button>
       </div>

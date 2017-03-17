@@ -30,15 +30,15 @@
 
       .totalcontainer {
         box-sizing:border-box;
-        padding: 0px 10vw 0px 10vw;
+        padding: 0px 14vw 0px 14vw;
         height: 100%;
       }
 
       .avatar_username_balance {
         height: 100%;
         box-sizing:border-box;
-        padding: 15vh 0px 18vh 0px;
-        margin-right: 7vw;
+        padding: 18vh 0px 18vh 0px;
+        margin-right: 5vw;
         @apply(--base-structure);
         @apply(--layout-vertical);
         @apply(--layout-center);
@@ -53,16 +53,21 @@
       }
 
       .homebalance_box {
+        min-width: 180px;
       }
 
       sc-avatar {
         margin: 0px 0px 20px 0px;
       }
+      
+      sc-balance:hover {
+        cursor: pointer;
+      }
 
       sc-hashtaglist {
         background-color: transparent;
         box-sizing:border-box;
-        padding: 15vh 0px 15vh 0px;
+        padding: 18vh 0px 15vh 0px;
         border: green;
       }
 
@@ -426,7 +431,7 @@
       * 'toWalletview' makes the app go to a new view/route (in this case sc-walletview). The function sets the animationConfig and sharedElements, then fires 'to-walletview' to the parent-element to change the route.
       */
       toWalletview: function() {
-        if (this.phoneview) {
+        // if (this.phoneview) {
           this.sharedElements = {
             'hero': this.$.homebalance,
             };
@@ -478,9 +483,9 @@
                 }]
             };
           this.fire('to-walletview');
-        } else {
-          this.fire('to-walletview');
-        }
+        // } else {
+        //   this.fire('to-walletview');
+        // }
       },
 
 

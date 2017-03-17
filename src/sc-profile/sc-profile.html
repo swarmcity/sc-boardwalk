@@ -41,18 +41,32 @@
         height: 90vh;
       }
 
+      .dottedline {
+        border-bottom: 2px dotted rgba(0,0,0,0.075);
+        height: 2px;
+        width: 100%;
+      }
+
       .toppart {
         @apply(--layout-horizontal);
         @apply(--layout-start);
         @apply(--layout-start-justified);
         box-sizing:border-box;
-        padding-bottom: 12vh;
-        border-bottom: 2px dotted rgba(0,0,0,0.05);
-        box-sizing:border-box;
-        padding: 5vh 15vw 0px 15vw;
+        padding: 5vh 10vw 2vh 10vw;
       }
 
 
+      .username_pubkey {
+        @apply(--layout-flex);
+      }
+
+      .profilecontent {
+        @apply(--layout-vertical);
+        @apply(--layout-start);
+        @apply(--layout-start-justified);
+        box-sizing:border-box;
+        padding: 0px 10vw 80px 10vw;
+      }
 
       .profilepic {
         box-sizing: border-box;
@@ -90,19 +104,21 @@
       }
 
       .warning {
-        width: 90%;
+        width: 90vw;
         background-color: var(--sc-blue);
         box-sizing:border-box;
         padding: 38px;
         @apply(--layout-vertical);
         @apply(--layout-start);
         @apply(--layout-start-justified);
-        margin-bottom: 10vh;
+        margin-bottom: 2vh;
       }
 
       .warningsign {
         width: 30px;
         height: 30px;
+        min-width: 30px;
+        min-height: 30px;
         border-radius: 50%;
         border: 3px solid var(--sc-white);
         opacity: 0.5;
@@ -114,7 +130,6 @@
       }
 
       .confirmbtns {
-        width: 100%;
         box-sizing: border-box;
         padding: 0px;
         @apply(--layout-horizontal);
@@ -163,7 +178,7 @@
       paper-button.logoutbtn {
         min-width: 120px;
         box-sizing:border-box;
-        margin: 0px 10vw 0px 4vw;
+        margin-bottom: 0px
         /*@apply(--base-shadow);*/
       }
 
@@ -191,17 +206,21 @@
       }
 
       .vaultdeleter {
+        @apply(--layout-vertical);
+        @apply(--layout-start);
+        @apply(--layout-start-justified);
         width: 100%;
-        max-width: 600px;
         box-sizing:border-box;
         padding: 20px 0px 20px 0px;
         border-top: 2px dotted var(--sc-red);
         border-bottom: 2px dotted var(--sc-red);
       }
 
-      .downbtns {
-        width: 200px;
+      .downbtn {
+        width: 230px;
         margin: 4px;
+        box-sizing: border-box;
+        padding: 28px 34px 28px 34px;
       }
 
       .youneedto {
@@ -218,30 +237,80 @@
         height: 250px;
       }
 
+      .dottedline {
+        border-bottom: 2px dotted rgba(0,0,0,0.075);
+        height: 2px;
+        width: 100%;
+        margin-top: 5vh;
+        margin-bottom: 5vh;
+      }
 
         
       @media all and (min-width: 0) and (max-width: 420px) {
 
-      .toppart {
-        @apply(--layout-vertical);
-        @apply(--layout-center);
-        @apply(--layout-start-justified);
-        box-sizing:border-box;
-        padding-bottom: 12vh;
-        border-bottom: 2px dotted rgba(0,0,0,0.05);
-      }
+        .toppart {
+          @apply(--layout-vertical);
+          @apply(--layout-center);
+          @apply(--layout-start-justified);
+          box-sizing:border-box;
+          padding: 5vh 15vw 0vh 15vw;
+        }
 
-      .username_pubkey {
-        @apply(--layout-vertical);
-        @apply(--layout-center-center);        
-      }
+        .username_pubkey {
+          @apply(--layout-vertical);
+          @apply(--layout-center-center);
+          -ms-flex: none;
+          -webkit-flex: none;
+          flex: none;        
+        }
 
+        .warning {
+          width: 90%;
+          background-color: var(--sc-blue);
+          box-sizing:border-box;
+          padding: 38px;
+          @apply(--layout-vertical);
+          @apply(--layout-start);
+          @apply(--layout-start-justified);
+          margin-bottom: 6vh;
+        }
 
+        .profilecontent {
+          @apply(--layout-vertical);
+          @apply(--layout-center-center);
+          box-sizing:border-box;
+          padding: 0px 15vw 0px 15vw;        
+        }
 
+        .vaultdeleter {
+          @apply(--layout-vertical);
+          @apply(--layout-center-center);
+        }
+
+        .downbtn {
+          width: 200px;
+          margin: 4px;
+          box-sizing: border-box;
+          padding: 18px 24px 18px 24px;
+        }
+
+        .dottedline {
+          border-bottom: 2px dotted rgba(0,0,0,0.075);
+          height: 2px;
+          width: 100%;
+          margin-top: 0vh;
+          margin-bottom: 0vh;
+        }
+        paper-button.logoutbtn {
+          min-width: 120px;
+          box-sizing:border-box;
+          margin-bottom: 10vh;
+        }
       }
 
 
     </style>
+    <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
 
     <sc-ipfs id="ipfs"></sc-ipfs>
 
@@ -254,7 +323,7 @@
 
       <neon-animated-pages selected="{{datastate}}" attr-for-selected="data-state" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
         <neon-animatable data-state="view">
-        <div class="totalwidth vertic center startjust fullheight">
+        <div class="totalcontainer totalwidth vertic center startjust">
 
           <template is="dom-if" if="{{!lastbackup}}">
             <div class="whitespace"></div>
@@ -312,34 +381,62 @@
                 <p>{{pubkey}}</p>
               </div>
             </div>
+
+            <template is="dom-if" if="{{!phoneview}}">
+              <paper-button class="darkerer blue bold logoutbtn" on-tap="logout" noink>Log out</paper-button>
+            </template>
+
           </div>
 
-          <div class="profilecontent" id="profilecontent">
-            <div class="whitespace"></div>
-            <div class="whitespace"></div>
-            <paper-button class="whiteback bold downbtns" on-tap="backupvault" noink>Create backup</paper-button>
+
+      <div class="fivespace"></div>
+      <div class="dottedline"></div>
+      <div class="fivespace"></div>
+
+          <div class="profilecontent totalwidth" id="profilecontent">
+            <paper-button class="whiteback bold downbtn shadow" on-tap="backupvault" noink>Create backup</paper-button>
             <template is="dom-if" if="{{itemshow}}">
-              <paper-button class="whiteback bold downbtns" on-tap="collapseMe" id="deletemyvault" noink>Delete this user</paper-button>
+              <paper-button class="whiteback bold downbtn shadow" on-tap="collapseMe" id="deletemyvault" noink>Delete this user</paper-button>
             </template>
-           <iron-collapse class="collapserz vertic centercenter" id="deletemyvaultcollapser">
-           <div class="vertic centercenter vaultdeleter">
-              <div class="totalwidth horizont centercenter">
-                <div class="flex"></div>
-                <iron-icon icon="sc-icons:decline" class="grey4" on-tap="closeMe">decline</iron-icon>
-              </div>
-              <div class="vertic centercenter">
-                <p class="bold red centertxt">You're about to remove the complete useraccount of this device. <br><br>This can not be undone.</p>
-                <div class="whitespace"></div>
-                <paper-button class="redback white bold" on-tap="deletevault">continue</paper-button>
-                <div class="whitespace"></div>
-              </div>
+
+           <iron-collapse class="collapserz" id="deletemyvaultcollapser">
+           <div class="vaultdeleter">
+              <template is="dom-if" if="{{phoneview}}">
+                <div class="totalwidth horizont centercenter">
+                  <div class="flex"></div>
+                  <iron-icon icon="sc-icons:decline" class="grey4" on-tap="closeMe">decline</iron-icon>
+                </div>
+                <div class="vertic centercenter">
+                  <p class="bold red centertxt">You're about to remove the complete useraccount of this device. This can not be undone.</p>
+                  <div class="whitespace"></div>
+                  <paper-button class="redback white bold" on-tap="deletevault">delete user</paper-button>
+                  <div class="whitespace"></div>
+                </div>
+              </template>
+              <template is="dom-if" if="{{!phoneview}}">
+                <div class="totalwidth horizont centercenter">
+                  <div class="flex"></div>
+                  <iron-icon icon="sc-icons:decline" class="grey4" on-tap="closeMe">decline</iron-icon>
+                </div>
+                <div class="totalwidth vertic start startjust">
+                  <p class="bold red">You're about to remove the complete useraccount of this device. This can not be undone.</p>
+                  <div class="whitespace"></div>
+                    <paper-button class="redback white bold" on-tap="deletevault">delete user</paper-button>
+                  <div class="whitespace"></div>
+                </div>
+              </template>
             </div>
             </iron-collapse>
+
           </div>
 
-          <div class="fivespace"></div>
-          <paper-button class="darkerer blue bold logoutbtn" on-tap="logout" noink>Log out</paper-button>
-          <div class="fivespace"></div>
+          <template is="dom-if" if="{{phoneview}}">
+            <div class="fivespace"></div>
+            <div class="dottedline"></div>
+            <div class="fivespace"></div>
+            <paper-button class="darkerer blue bold logoutbtn" on-tap="logout" noink>Log out</paper-button>
+            <div class="fivespace"></div>
+          </template>
 
         </div>
 
@@ -428,7 +525,7 @@
 
         username: {
           type: String,
-          //observer: '_username'
+          observer: '_username'
         },
 
         newusername: {
@@ -723,6 +820,14 @@
       },
 
       /**
+      * 'usernameChange' sets the new username from the inputfield as the current username. 
+      */
+      usernameChange: function() {
+        this.datachanged = true;
+        this.identity.username = this.username;
+      },
+
+      /**
       * 'collapseMe' opens the collapse-menu of deleting the user, after tapping btn 'Delete this user'. 
       */
       collapseMe: function(e)  {
@@ -816,7 +921,7 @@
       _username: function(newVal,oldVal) {
         if (oldVal){
           this.datachanged = true;
-        // console.log('dit komt van username', newVal, oldVal);
+          console.log('dit komt van username', newVal, oldVal);
         }
       },
 

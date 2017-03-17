@@ -9,6 +9,7 @@
 <link rel="import" href="../sc-home/sc-home.html">
 <link rel="import" href="../sc-walletview/sc-walletview.html">
 <link rel="import" href="../sc-profile/sc-profile.html">
+<link rel="import" href="../sc-hashtag/sc-hashtag.html">
 
 <!-- <link rel="import" href="../sc-newdeal/sc-newdeal.html"> -->
 
@@ -159,11 +160,24 @@
       account="[[account]]"
       lowgas="[[lowgas]]"
       emptygas="[[emptygas]]"
-      on-exit="toHome"
+      on-leave="walletview_tohome"
       on-refreshneeded="refreshwallet"
       updating="[[balanceupdating]]"
       swtbalance="[[swtbalance]]">
     </sc-walletview>
+
+    <sc-hashtag
+      data-page="hashtag"
+      id="hashtag"
+      keystore="[[keystore]]"
+      identity="[[identity]]"
+      pubkey="[[account]]"
+      on-leave="hashtag_tohome"
+      on-to-itemdetail="toItemdetail"
+      on-to-newitem="toNewitem"
+      currenthasht="{{currenthasht}}">
+    </sc-hashtag>
+
  </neon-animated-pages>
 
   </template>
@@ -297,6 +311,11 @@
 
 
       profile_tohome: function(){
+        this.transitionto('/home');
+        // Is this right?
+      },
+
+      walletview_tohome: function(){
         this.transitionto('/home');
         // Is this right?
       },

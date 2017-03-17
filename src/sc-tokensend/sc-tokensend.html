@@ -56,9 +56,6 @@
 
       paper-button.sender {
         margin: 0px 5px 5px 0px;
-        box-sizing: border-box;
-        padding: 20px 30px 20px 30px;
-        font-size: 18px;
       }
 
       .sendinputter {
@@ -149,6 +146,13 @@
       .txhash {
         word-break: break-all;
       }
+
+      .frontbtn {
+        width: 230px;
+        margin: 4px;
+        box-sizing: border-box;
+        padding: 28px 34px 28px 34px;
+      }
   
 
 
@@ -223,6 +227,14 @@
         .item p {
           text-align: center;
         }
+
+        .frontbtn {
+          width: 200px;
+          margin: 4px;
+          box-sizing: border-box;
+          padding: 18px 24px 18px 24px;
+        }
+  
     }
 
     </style>
@@ -252,7 +264,7 @@
     <div class="total vertic centercenter">
       <template is="dom-if" if="{{_is(sendcoinstate,'init')}}">
         <div class="totalwidth sendbox">
-          <paper-button on-tap="tosendform" class="sender bigbtn grey1back grey4">send SWT</paper-button>
+          <paper-button on-tap="tosendform" class="sender frontbtn grey1back lighterer grey4 shadow">send SWT</paper-button>
         </div>
       </template>
 
@@ -473,6 +485,7 @@
       },
 
       ready: function(){
+        this.onEnter();
       },
 
       /**

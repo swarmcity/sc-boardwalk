@@ -1,0 +1,192 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../bower_components/sc-style/sc-style.html">
+<link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
+
+<!--
+`sc-loader`
+
+This is the visual loader-component: content + "3 blinking dots".
+
+@demo src/sc-loader/demo/index.html 
+-->
+
+<dom-module id="sc-loader">
+<link rel="import" href="../../bower_components/sc-style/sc-style.css" type="css">
+
+  <template>
+    <style>
+      :host {
+        display: inline-block;
+        position: relative;
+        box-sizing: border-box;
+        --main-color: var(--sc-red);
+        @apply(--layout-vertical);
+        @apply(--layout-center);
+      }
+      :host([small]) {
+        @apply(--layout-horizontal);
+        @apply(--layout-end);
+      }
+
+     .wide {
+        width:100%;
+      }
+     .whitespace {
+      height: 20px;
+     }
+      h1 {
+        color:var(--main-color);
+      }
+  
+      small {
+       @apply(--sc-font-small);
+       color: rgba(0,0,0,0.75);
+      }
+      @-webkit-keyframes loadanimation {
+        0% {
+          -webkit-transform: scale(1);
+          opacity: 0.2;
+          }
+        25% {
+          -webkit-transform: scale(1.5);
+          opacity: 1;
+        }
+        50% {
+          -webkit-transform: scale(1);
+          opacity: 0.2;
+        }
+        100% {
+          -webkit-transform: scale(1);
+          opacity: 0;
+        }
+      }
+      @-moz-keyframes loadanimation {
+        0% {
+          -moz-transform: scale(1);
+          opacity: 0.2;
+          }
+        25% {
+          -moz-transform: scale(1.5);
+          opacity: 1;
+        }
+        50% {
+          -moz-transform: scale(1);
+          opacity: 0.2;
+        }
+        100% {
+          -moz-transform: scale(1);
+          opacity: 0;
+        }
+      }
+      @keyframes loadanimation {
+        0% {
+          transform: scale(1);
+          opacity: 0.2;
+          }
+        25% {
+          transform: scale(1.5);
+          opacity: 1;
+        }
+        50% {
+          transform: scale(1);
+          opacity: 0.2;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 0;
+        } 
+      }
+    #bigpoints {
+      margin: 10px 0px 7px 0px;
+      box-sizing: border-box;
+      padding: 12px;
+      @apply(--layout-horizontal);
+      @apply(--layout-end);
+      }
+    .bigpoint {
+      margin: 0px 4px 0px 4px;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background-color: var(--main-color);
+    }
+    #smallpoints {
+      @apply(--layout-horizontal);
+      margin: 2px 0px 2px 0px;
+      box-sizing: border-box;
+      padding: 4px;
+      @apply(--layout-horizontal);
+      @apply(--layout-end);     
+      }
+    .smallpoint {
+      margin: 0px 3px 0px 3px;
+      width: 2px;
+      height: 2px;
+      border-radius: 50%;
+      background-color: var(--main-color);
+    }
+    #point1 {
+      -webkit-animation: loadanimation 1.5s linear 0s infinite;
+      -moz-animation: loadanimation 1.5s linear 0s infinite;
+      animation: loadanimation 1.5s linear 0s infinite;
+      }
+    #point2 {
+      -webkit-animation: loadanimation 1.5s linear 0.3s infinite;
+      -moz-animation: loadanimation 1.5s linear 0.3s infinite;
+      animation: loadanimation 1.5s linear 0.3s infinite;
+      }
+    #point3 {
+      -webkit-animation: loadanimation 1.5s linear 0.6s infinite;
+      -moz-animation: loadanimation 1.5s linear 0.6s infinite;
+      animation: loadanimation 1.5s linear 0.6s infinite;
+      }
+    </style>
+    <template is="dom-if" if="{{!small}}">
+          <h1><content></content>
+          <div id="bigpoints">
+          <div class="bigpoint" id="point1"></div>
+          <div class="bigpoint" id="point2"></div>
+          <div class="bigpoint" id="point3"></div>
+          </div>
+          </h1>
+    </template>
+    <template is="dom-if" if="{{small}}">
+          <p class="bold"><content></content>
+          <div id="smallpoints">
+          <div class="smallpoint" id="point1"></div>
+          <div class="smallpoint" id="point2"></div>
+          <div class="smallpoint" id="point3"></div>
+          </div>
+          </p>
+    </template>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'sc-loader',
+      properties: {
+        /**
+         * `fancy` indicates that the element should don a monocle and tophat,
+         * while checking its pocket watch.
+         */
+        small: {
+          type: Boolean,
+          value: false,
+          observer: '_small'
+        }, 
+        color: {
+          type: String,
+          observer: '_color'
+        } 
+      },
+      // Element Lifecycle
+      _color: function(){
+        var colorz = 'var(--sc-' + this.color + ')';
+        this.customStyle['--main-color'] = colorz;
+        this.updateStyles();        
+      }
+    });
+  </script>
+</dom-module>
