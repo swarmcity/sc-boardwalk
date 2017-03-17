@@ -332,17 +332,22 @@ This is the homescreen of boardwalk.
       is: 'sc-enter',
 
       properties: {
-        /**
-       * `prop1` this is the first property and what it does is described right here.
-       */
-        prop1: {
-          type: String,
-          value: 'sc-enter',
+
+        route: {
+          type: Object,
+          observer: '_onRouteDataChanged',
         },
       },
 
       ready: function(){
         this.onEnter();
+      },
+
+      _onRouteDataChanged: function(page,oldpage) {
+        if (!page){
+          return;
+        }
+        console.log('sc-enter -> _onRouteDataChanged',oldpage,'->',page);
       },
 
       _isLocalhost: function(hostname) {

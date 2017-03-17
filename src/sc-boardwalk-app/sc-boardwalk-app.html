@@ -249,7 +249,10 @@
       },
 
       _onRouteDataChanged: function(page,oldpage) {
-         console.log('sc-boardwalk-app -> _onRouteDataChanged',oldpage,'->',page);
+        if (!page){
+          return;
+        }
+        console.log('sc-boardwalk-app -> _onRouteDataChanged',oldpage,'->',page);
        },
 
       // intro routing
