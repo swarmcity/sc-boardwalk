@@ -160,11 +160,7 @@
       account="[[account]]"
       lowgas="[[lowgas]]"
       emptygas="[[emptygas]]"
-<<<<<<< HEAD
       on-leave="walletview_tohome"
-=======
-      on-exit="profile_tohome"
->>>>>>> 977bb1b7e8c48a4e03f825b9f51256ecb89ccdd6
       on-refreshneeded="refreshwallet"
       updating="[[balanceupdating]]"
       swtbalance="[[swtbalance]]">
@@ -315,9 +311,10 @@
         this.transitionto('/walletview');
       },
 
-      home_tohashtag: function(){
-        console.log("yes, home_tohashtag");
-        // this.transitionto('/walletview');
+      home_tohashtag: function(e){
+        // console.log("yes, home_tohashtag");
+        this.currenthasht = e.detail;
+        this.transitionto('/hashtag');
       },
 
 
@@ -330,6 +327,15 @@
         this.transitionto('/home');
         // Is this right?
       },
+
+
+
+      hashtag_tohome: function(){
+        this.transitionto('/home');
+        // Is this right?
+      },
+
+
 
       saveIdentity: function(e) {
         this.identity = e.detail;

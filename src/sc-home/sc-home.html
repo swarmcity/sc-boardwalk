@@ -111,6 +111,7 @@
     <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
 
     <div class="totalcontainer horizont start startjust wrap">
+      
       <div class="avatar_username_balance">
         <div class="avatar_username_box vertic centercenter" on-tap="toProfile">
           <sc-avatar
@@ -270,7 +271,7 @@
       * 'toHashtag' makes the app go to a new view/route (in this case sc-hashtag). The function sets the animationConfig and sharedElements, then fires 'to-hashtag' to the parent-element to change the route.
       */
       toHashtag: function(e) {
-        if (this.phoneview) {
+        // if (this.phoneview) {
 
           this.sharedElements = {
               'hero': this.$.homeavatar,
@@ -349,9 +350,9 @@
                 }]
               };
             this.fire('to-hashtag',e.detail);
-          } else {
-            this.fire('to-hashtag',e.detail);
-          }
+          // } else {
+          //   this.fire('to-hashtag',e.detail);
+          // }
       },
 
       /**

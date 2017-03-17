@@ -88,7 +88,7 @@ This components is the representation of a request in the requests-list on sc-ha
       .offer {
           font-size: 16px;
           line-height: 22px;
-          margin: 15px 0px 5px 0px;
+          margin: 5px 0px 15px 0px;
       }
 
 
@@ -112,7 +112,7 @@ This components is the representation of a request in the requests-list on sc-ha
         height: 13px;
         margin-bottom: 2px;
       }
-      
+
       @media all and (min-width: 0) and (max-width: 420px) { 
       
         .smalltxt {
@@ -126,7 +126,24 @@ This components is the representation of a request in the requests-list on sc-ha
  
 
       <div class="totalwidth vertic start startjust">
-
+        <p class="totalwidth offer grey4"> 
+          <small class="small grey3">{{offertime}}</small><br>
+          {{offer}} 
+          <span class="semibold"> 
+            {{offerhashtag}}</span>
+        </p>
+        <template is="dom-if" if="{{showreplies}}">
+          <div class="nrofreplies horizont start startjust">
+            <p class="small reg grey3">{{nrofreplies}}</p>
+            <iron-icon icon="sc-icons:babble" class="grey3">replies</iron-icon>
+          </div>
+        </template>
+        <template is="dom-if" if="{{!showreplies}}">
+          <div class="nrofreplies noneyet horizont start startjust">
+            <p class="small reg grey2">0</p>
+            <iron-icon icon="sc-icons:babble" class="grey2">replies</iron-icon>
+          </div>
+        </template>
         <div class="totalwidth horizont start startjust">
           <div class="offereravatar">
             <img src="{{offereravatar}}">
@@ -146,28 +163,6 @@ This components is the representation of a request in the requests-list on sc-ha
 
 
         </div>
-
-        <p class="totalwidth offer grey4"> 
-          <small class="small grey3">{{offertime}}</small><br>
-          {{offer}} 
-          <span class="semibold"> 
-            {{offerhashtag}}</span>
-        </p>
-
-
-          <template is="dom-if" if="{{showreplies}}">
-            <div class="nrofreplies horizont start startjust">
-              <p class="small reg grey3">{{nrofreplies}}</p>
-              <iron-icon icon="sc-icons:babble" class="grey3">replies</iron-icon>
-            </div>
-          </template>
-          <template is="dom-if" if="{{!showreplies}}">
-            <div class="nrofreplies noneyet horizont start startjust">
-              <p class="small reg grey2">0</p>
-              <iron-icon icon="sc-icons:babble" class="grey2">replies</iron-icon>
-            </div>
-          </template>
-
       </div>
 
 
