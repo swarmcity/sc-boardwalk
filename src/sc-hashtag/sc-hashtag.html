@@ -348,16 +348,13 @@ This is the component showing all requests of a certain hashtag. It contains a r
       deals = state.deals.slice(0);
       switch (action.type) {
         case 'ADD_ITEM':
-          deals.push(action.friend);
+          deals.push(action.deal);
           break;
         case 'REMOVE_ITEM':
-          const idx = deals.indexOf(action.friend)
+          const idx = deals.indexOf(action.deal)
           if (idx !== -1) {
             deals.splice(idx, 1)
           }
-          break;
-        case 'SORT_ITEMS':
-          deals.sort()
           break;
       }
       state.deals = deals;
@@ -374,25 +371,21 @@ This is the component showing all requests of a certain hashtag. It contains a r
         ReduxBehavior
       ],
 
- actions: {
-                add: function(name) {
-                  return {
-                    type: 'ADD_ITEM',
-                    friend: name
-                  };
-                },
-                remove: function(name) {
-                  return {
-                    type: 'REMOVE_ITEM',
-                    friend: name
-                  };
-                },
-                sort: function() {
-                  return {
-                    type: 'SORT_ITEMS'
-                  };
-                },
-              },  
+      actions: {
+        add: function(dealdata) {
+          return {
+            type: 'ADD_ITEM',
+            deal: dealdata
+          };
+        },
+        remove: function(dealdata) {
+          return {
+            type: 'REMOVE_ITEM',
+            deal: dealdata
+          };
+        }
+      },
+
       properties: {
 
         route: {
