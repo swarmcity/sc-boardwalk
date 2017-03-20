@@ -1,0 +1,44 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<script src="../../bower_components/web3/dist/web3.min.js"></script>
+<link rel="import" href="../sc-config/sc-config.html">
+
+<dom-module id="sc-shh">
+  <template>
+    <sc-config shhhost="{{host}}"></sc-config>
+  </template>
+  <script>
+
+    var acshh;
+
+    Polymer({
+      is: 'sc-shh',
+      properties: {
+        web3: {
+          type: Object,
+          notify: true
+        },
+      },
+
+      observers: [
+        '_host(host)'
+      ],
+
+      _host: function(){
+        this.initweb3();        
+      },
+
+      initweb3: function(){
+        if (!acshh){
+          if (!this.host){
+            return;
+          }
+          acshh = new Web3(new Web3.providers.HttpProvider(this.host));
+          console.log('sc-shh -> created Web3');
+        }
+        this.set('web3',acshh);
+        this.fire('web3-ready');
+      }
+
+    });
+  </script>
+</dom-module>

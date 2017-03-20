@@ -7,6 +7,8 @@
     "app-route": "https://github.com/PolymerElements/app-route.git#^0.9.3",
     "neon-elements": "PolymerElements/neon-elements#^1.0.0",
     "web3": "^0.18.2",
+    "jsencrypt": "^2.3.0", 
+    "cryptojslib": "^3.1.2",   
     "hooked-web3-provider": "https://github.com/ConsenSys/hooked-web3-provider.git",
     "eth-lightwallet": "https://github.com/BlockTube/eth-lightwallet.git#^2.4.1",
     "sc-style": "https://github.com/swarmcity/sc-style.git",
@@ -18,7 +20,8 @@
     "iron-localstorage": "^1.0.6",
     "paper-progress": "^1.0.11",
     "polymer-detect-js": "^1.0.3",
-    "Croppie": "https://github.com/Foliotek/Croppie.git#^2.4.1"
+    "Croppie": "https://github.com/Foliotek/Croppie.git#^2.4.1",
+    "polymer-redux": "^0.4.1"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
