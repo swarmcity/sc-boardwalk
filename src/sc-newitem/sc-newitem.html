@@ -1,6 +1,8 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-input/paper-textarea.html">
 
 <link rel="import" href="../../bower_components/sc-style/sc-style.html">
 <link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
@@ -19,7 +21,77 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
     <style>
       :host {
         display: block;
+        width: 100%;
+        min-height: 100%;
       }
+
+      .topbar {
+        height: 14%;
+        min-height: 82px;
+        box-sizing:border-box;
+        padding: 40px 50px 0px 50px;
+      }
+
+      .paddingsides {
+        padding-left: 12vw;
+        padding-right: 12vw;
+      }
+
+
+      .avatar-box {
+        z-index: 2;
+        box-sizing:border-box;
+        margin-right: 14px;     
+      }
+
+      .rep {
+        font-size: 14px;
+      }
+
+      .amount {
+        font-size: 36px;
+      }
+
+      .swt {
+        font-size: 18px;
+      }
+
+
+      paper-input.swtamount {
+        --paper-input-container-input: {
+          @apply(--montserrat-bold);
+          font-size: 24px;
+          line-height: 24px;
+          color: var(--sc-yellow);
+        };
+        --paper-input-container-focus-color: var(--sc-yellow);
+      }
+
+      .padder {
+        box-sizing:border-box;
+        padding: 20px;    
+      }
+
+      .amountinput {
+        width: 100px;
+      }
+
+
+      .yourname {
+        margin-bottom: 4px;
+      }
+
+      .offeramount {
+        width: 50%;
+      }
+
+      .swtwithoffer {
+        font-size: 12px;
+        line-height: 12px;
+      }
+
+
+
     </style>
   <div class="totalwidth vertic centercenter">
 
@@ -100,10 +172,108 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         /**
        * `prop1` this is the first property and what it does is described right here.
        */
-        prop1: {
-          type: String,
-          value: 'sc-newitem',
+        sharedElements: {
+          type: Object,
+          value: function() {
+            return {
+              'hero': this.$.avatarimg,
+              'balance': this.$.balancebox
+            }
+          }
         },
+        
+      animationConfig: {
+        type: Object,
+        value: function() {
+          return {
+            'entry': [{
+              name: 'slide-from-right-animation',
+              node:this.$.detailcontent,
+              toPage: this,
+              timing: {
+                duration: 600
+              }
+            },{
+              name: 'slide-from-right-animation',
+              node:this.$.topbar,
+              fromPage: this,
+              timing: {
+                duration: 600
+              }
+            },{
+              name: 'fade-in-animation',
+              node:this.$.backbtn,
+              fromPage: this,
+              timing: {
+                duration: 200
+              }
+            },{
+              name: 'fade-in-animation',
+              node:this.$.username,
+              fromPage: this,
+              timing: {
+                duration: 200
+              }
+            }, {
+              name: 'hero-animation',
+              id: 'hero',
+              toPage: this,
+              timing: {
+                  duration: 200
+              }
+            }, {
+              name: 'hero-animation',
+              id: 'balance',
+              toPage: this,
+              timing: {
+                  duration: 200
+              }
+            }],
+
+            'exit': [{
+              name: 'fade-out-animation',
+              node:this.$.detailcontent,
+              fromPage: this,
+              timing: {
+                duration: 125
+              }
+
+            },{
+              name: 'fade-out-animation',
+              node:this.$.backbtn,
+              fromPage: this,
+              timing: {
+                duration: 125
+              }
+
+            },{
+              name: 'fade-out-animation',
+              node:this.$.topbar,
+              fromPage: this,
+              timing: {
+                duration: 125
+              }
+            }, {
+              name: 'hero-animation',
+              id: 'hero',
+              fromPage: this,
+              timing: {
+                  duration: 600
+              }
+
+            }, {
+              name: 'hero-animation',
+              id: 'balance',
+              fromPage: this,
+              timing: {
+                  duration: 600
+              }
+              }]
+            }
+          },
+        }
+
+
       },
 
       ready: function(){
@@ -137,6 +307,8 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       toHashtag: function(){
         this.fire('to-hashtag');
       },
+
+
 
 
 
