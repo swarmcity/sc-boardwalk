@@ -1,0 +1,26 @@
+{
+  "name": "sc-boardwalk",
+  "version": "1.0.0",
+  "description": "swarm.city DAPP",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/swarmcity/sc-boardwalk.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/swarmcity/sc-boardwalk/issues"
+  },
+  "homepage": "https://github.com/swarmcity/sc-boardwalk#readme",
+  "dependencies": {
+    "redux": "^3.6.0"
+  }
+}

@@ -1,0 +1,409 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<script type="text/javascript" src="../../bower_components/jsencrypt/bin/jsencrypt.min.js"></script>
+<script type="text/javascript" src="../../bower_components/cryptojslib/rollups/aes.js"></script>
+<link rel="import" href="../sc-shh/sc-shh.html">
+
+<!--
+Whisper listener component
+
+Example:
+
+    <sc-whisperer></sc-whisperer>
+
+@element sc-whisperer
+@demo demo/index.html
+-->
+<dom-module id="sc-whisperer">
+  <template>
+      <ac-shh web3="{{web3}}"></ac-shh>
+  </template>
+</dom-module>
+
+<script>
+Polymer({
+
+  is: 'sc-whisperer',
+
+  properties: {
+
+    // web3: {
+    //   type: Object,
+    //   observer: '_web3'
+    // },
+
+    listeninterval: {
+      type: Number,
+      observer: '_listeninterval',
+      notify: true,  
+      value: 0    
+    },
+
+    // the current topic we're listening to
+    topic: {
+      type: Number,
+      observer: '_topic',
+      notify: true,
+      value: 0
+    },
+    // progress is a value between 0 and 100 denoting how much time until next topic will be generated
+    // 0 = period start ; 100 = period is over
+    progress: {
+      type: Number,
+      notify: true
+    },
+
+    // How many decimals should the topic have ( min 2 )
+    decimals: {
+      type: Number,
+      value: 5
+    },
+
+    debug: {
+      type: Boolean,
+    },
+    
+    observers: [
+      '_web3(web3)'
+    ],
+
+  },
+
+  ready: function() {
+    this.localchannels = {};
+    this.remotechannels = {};
+    if (this.debug) setInterval(this.showchannels.bind(this), 5000);
+  },
+
+  showchannels: function(){
+    console.log('---channels---');
+    if (this.localchannels){
+      console.log('local channels');
+      for (var key in this.localchannels) {
+        console.log(key,'=>',this.localchannels[key]);
+      }
+    }
+    if (this.remotechannels){
+     console.log('remote channels');
+      for (var key in this.remotechannels) {
+        console.log(key,'=>',this.remotechannels[key]);
+      }
+    }
+    console.log('---/channels---');
+  },
+
+  closeallchannels: function(){
+    if (this.localchannels){
+      console.log('closing local channels');
+      for (var key in this.localchannels) {
+        this.closelocalchannel(key);
+      }
+    }
+    if (this.remotechannels){
+     console.log('closing remote channels');
+      for (var key in this.remotechannels) {
+        this.closeremotechannel(key);
+      }
+    }    
+  },
+
+  // creates a random pincode with decimals numbers
+  _getpincode: function(decimals) {
+
+    if (decimals < 2) {
+      decimals = 2;
+    }
+
+    var chars = "0123456789";
+    var randomstring = '';
+
+    for (var i = 0; i < decimals; i++) {
+      var rnum = Math.floor(Math.random() * chars.length);
+      randomstring += chars.substring(rnum, rnum + 1);
+    }
+    return randomstring;
+  },
+
+  _listeninterval: function(newval,oldval){
+    // console.log('sc-whisperer -> listeninterval value changed from',oldval,'to',newval);
+    
+    if (oldval == 0 && newval > 0){
+      // activate request
+      this.listenintervalInitialValue = newval;
+      this.progress = 100;
+      this.listenintervalTimerInterval = setInterval(this.listenintervalTimer.bind(this), 1000)
+      this.topic = this._getpincode(this.decimals);
+    }
+    if (newval == 0){
+      // stop request
+      this.stoplisteninterval();
+      this._stopTopicFilter();
+      this.topic=0;
+    }
+  },
+
+  stoplisteninterval: function(){
+    if (this.listenintervalTimerInterval){
+      clearInterval(this.listenintervalTimerInterval);
+      delete this.listenintervalTimerInterval;
+    }
+  },
+
+  listenintervalTimer: function() {
+    if (this.listeninterval > 0){
+      this.listeninterval--;
+    }
+    if (this.listeninterval == 0) {
+      this.progress = 0;
+      this.stoplisteninterval();
+    } else {
+      this.progress = Math.floor(this.listeninterval / this.listenintervalInitialValue * 100);
+    }
+  },
+
+  // close and clean up a remote channel ( with a listener )
+  closelocalchannel: function(_pin,fromTimer){
+    if (fromTimer){
+      console.log('timeout on localchannel ',_pin);
+    }
+    if (this.localchannels[_pin]){
+       this.localchannels[_pin].filter.stopWatching();
+    }
+  },
+
+  // close and clean up a remote channel
+  closeremotechannel: function(_pin,fromTimer){
+    if (fromTimer){
+      console.log('timeout on remotechannel ',_pin);
+    }
+    if (this.remotechannels[_pin] && this.remotechannels[_pin].filter){
+       this.remotechannels[_pin].filter.stopWatching();
+    }
+  },
+
+  detached: function() {
+    this._stopTopicFilter();
+  },
+
+  // stops the topic filter immediately
+  _stopTopicFilter: function() {
+    if (this.filter) {
+      console.log('sc-whisperer: stop watching channel',this.topic);
+      try{
+        this.filter.stopWatching();
+      }catch(e){
+        console.log(e);
+      }
+    }
+  },
+
+  // Element Behavior
+
+  _is: function(a, b) {
+    if (b === undefined) {
+      b = true;
+    }
+    return a === b;
+  },
+
+  _web3: function() {
+    var self = this;
+    console.log('whisperer web3 started');
+  },
+
+  _topic: function(newval,oldval) {
+    var self = this;
+    if (!newval){
+      return;
+    }
+
+    if (!this.web3){
+      throw new Error('web3 not set while requesting whisper listener');
+    }
+
+    if (self.web3 && this.topic) {
+
+      this._stopTopicFilter();
+
+      var topic = this.topic.toString();
+      this.filter = self.web3.shh.filter({
+        "topics": [self.web3.fromAscii(topic)],
+      });
+
+      console.log("sc-whisperer: channelswitch, start listening to", this.topic, ' knows web3 ', this.web3);
+      this.filter.watch(this._processmessage.bind(this));
+    }
+  },
+
+  // processinging of channel setup messages.
+  _processmessage: function(error, result) {
+      console.log('incoming in whisperer: web3 ', this.web3);
+      var self = this;
+        if (!error) {
+          var payload = JSON.parse(self.web3.toAscii(result.payload));
+
+          switch (payload.command) {
+
+            case 'requestaes':
+
+              // Create and encrypt an AES key
+              var crypt = new JSEncrypt({
+                default_key_size: 512
+              });
+              crypt.setPublicKey(payload.pubkey);
+
+              var aeskey = self._generateKey(50);
+              console.log('myAES=',aeskey);
+
+              var encryptedkey = crypt.encrypt(aeskey);
+              console.log('myAES encrypted=',encryptedkey);
+
+              // create a new channel
+              var datatopic = this._getpincode(20);
+              this.localchannels[datatopic] = {
+                aes: aeskey
+              };
+
+              this.localchannels[datatopic].filter = self.web3.shh.filter({
+                "topics": [self.web3.fromAscii(datatopic)],
+              });
+
+              // timeout timer to cleanup local channel.
+              this.localchannels[datatopic].timer = setTimeout(function() {
+                this.closelocalchannel(datatopic,true);
+              }.bind(this), 2 * 60 * 1000);
+
+              //debugger;
+              self.localchannels[datatopic].filter.watch(this._processmessage.bind(this));
+
+              this.remotechannels[payload.from] = {
+                aes: aeskey
+              };
+              
+              // timeout timer to cleanup remote channel list
+              this.remotechannels[payload.from].timer = setTimeout(function() {
+                this.closeremotechannel(payload.from,true);
+              }.bind(this), 2 * 60 * 1000);
+
+              self.raw_whisperpost(payload.from, {
+                command: 'aes',
+                encryptedaes: encryptedkey,
+                from: datatopic,
+                to : payload.from
+              });
+
+              break;
+
+           case 'aes':
+              console.log('encrypted AES recieved',payload.encryptedaes);
+              var hisAES = self.localchannels[payload.to].crypt.decrypt(payload.encryptedaes);
+              console.log('decrypted AES',hisAES);
+              self.remotechannels[payload.from]= {
+                aes : hisAES
+              };
+              self.localchannels[payload.to].aes = hisAES;
+              // self.localchannels[payload.to].from = payload.from;
+              this.encryptandsend(payload.to,payload.from,self.localchannels[payload.to].messagequeue[0]);
+              // now send the queue
+              break;
+
+            case 'message':
+              console.log('encrypted message recieved from ',payload.from,payload.msg);
+              easKey = this.remotechannels[payload.from].aes;
+              var decryptedmsg = CryptoJS.AES.decrypt(payload.msg,easKey).toString(CryptoJS.enc.Utf8);
+              console.log('decrypted message:',decryptedmsg);
+
+              // save recepient
+              this.remotechannels[payload.from].to = payload.to;
+              self.fire('message-received', {
+                from: payload.from,
+                message: decryptedmsg
+              });
+          }
+
+        }
+      },
+
+  _generateKey: function(keyLength) {
+    var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz*&-%/!?*+=()";
+    var randomstring = '';
+
+    for (var i = 0; i < keyLength; i++) {
+      var rnum = Math.floor(Math.random() * chars.length);
+      randomstring += chars.substring(rnum, rnum + 1);
+    }
+    return randomstring;
+  },
+
+  whisperpost: function(topic, input) {
+
+    console.log('whisperpost: ', topic, ' - ', input, ' web3: ', this.web3);
+
+    topic = topic.toString();
+
+    if (!this.remotechannels[topic] || !this.remotechannels[topic].aes ){
+      // Create a secure tunnel
+
+      var c = new JSEncrypt({
+        default_key_size: 512
+      });
+
+      var datatopic = this._getpincode(30);
+      this.localchannels[datatopic] = {
+        crypt: c,
+        messagequeue: [input]
+      };
+
+      this.localchannels[datatopic].filter = this.web3.shh.filter({
+        "topics": [this.web3.fromAscii(datatopic)],
+      });
+      this.localchannels[datatopic].filter.watch(this._processmessage.bind(this));
+
+      this.raw_whisperpost(topic,{
+        command: 'requestaes',
+        pubkey: this.localchannels[datatopic].crypt.getPublicKey(),
+        from: datatopic
+      });
+    }
+
+    if (this.remotechannels[topic] && !this.remotechannels[topic].aes){
+      this.localchannels[topic].messagequeue.push(input);
+    }
+    if (this.remotechannels[topic] && this.remotechannels[topic].aes){
+        this.encryptandsend(this.remotechannels[topic].to,topic,input);
+    }
+  },
+
+  encryptandsend: function(from,topic,input){
+      var aeskey = this.remotechannels[topic].aes;
+      console.log('Encrypting message to ',topic,'with key',aeskey);
+      var encrypted_objectdata = CryptoJS.AES.encrypt(input, aeskey).toString();
+      this.raw_whisperpost(topic,{
+        command: 'message',
+        msg: encrypted_objectdata,
+        from: from,
+        to: topic
+      });
+  },
+
+  // unencrypted whisper post..
+  raw_whisperpost: function(topic, input) {
+    if (!this.identity) {
+      this.identity = this.web3.shh.newIdentity();
+    }
+    var options = {
+      "from": this.identity,
+      "topics": [this.web3.fromAscii(topic)],
+      "payload": this.web3.fromAscii(JSON.stringify(input)),
+      "ttl": 100,
+      "priority": 1000
+    };
+
+    return this.web3.shh.post(options, function(err, res) {
+      console.log(err, res);
+    });
+  }
+
+
+});
+
+</script>
