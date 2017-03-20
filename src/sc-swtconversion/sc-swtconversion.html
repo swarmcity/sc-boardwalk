@@ -482,7 +482,7 @@ Polymer({
     console.log('sc-swtconversion -> WE ARE READY');
     var self = this;
     if (!self.SWTTokenInstance) {
-      this.$.helpers.getjson('./contracts/ARCToken.json', function(err, tokendata) {
+      this.$.helpers.getjson('../contracts/ARCToken.json', function(err, tokendata) {
         var MyContract = self.web3.eth.contract(tokendata.abi);
         self.ARCTokenInstance = MyContract.at(self.config.tokencontractaddress);
         self.getARCBalance(function() {
@@ -495,13 +495,13 @@ Polymer({
       });
     }
     if (!self.SWTConverterInstance){
-       this.$.helpers.getjson('./contracts/SWTConverter.json', function(err, tokendata) {
+       this.$.helpers.getjson('../contracts/SWTConverter.json', function(err, tokendata) {
         var MyContract = self.web3.eth.contract(tokendata.abi);
         self.SWTConverterInstance = MyContract.at(self.config.swtconversioncontractaddress);
       });      
     }
     if (!self.SWTTokenInstance){
-      this.$.helpers.getjson('./contracts/MiniMeToken.json', function(err, tokendata) {
+      this.$.helpers.getjson('../contracts/MiniMeToken.json', function(err, tokendata) {
         var MyContract = self.web3.eth.contract(tokendata.abi);
         self.SWTTokenInstance = MyContract.at(self.config.swttokencontractaddress);
         self.getSWTBalance();
