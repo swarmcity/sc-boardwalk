@@ -63,7 +63,6 @@
       },
 
       checkreadystate: function(){
-
         if (!this.status && this.arcbalance != undefined && this.swtbalance != undefined && this.ethbalance != undefined){
           console.log('vals:',this.swtbalance,this.ethbalance,this.arcbalance);
           this.status = 'ready';
@@ -124,13 +123,21 @@
         this.updateBalance();
       },
 
-      updateBalance: function(e) {
+      updateBalance: function(cb) {
         var self = this;
         if (!this.pubkey || !self.web3 || !self.web3.eth || !this.ARCTokeninstance || !this.SWTTokeninstance) {
+          if (cb){
+              cb();
+          }
           return;
         }
-        self._readARCBalance();
-        self._readSWTBalance();
+        self._readARCBalance(function(err,balance){
+          self._readSWTBalance(function(){
+            if (cb){
+              cb();
+            }
+          });
+        });
       },
 
       _readARCBalance: function(cb) {
@@ -161,6 +168,10 @@
               console.log('ETH balance is', self.ethbalance.toFormat(2));
               console.log('ARC balance is', self.arcbalance.toFormat(2));
               
+              if (self.arcbalance>0){
+                self.fire('needsswtconverting');
+              }
+
               self.updating = false;
               
               if (cb){
