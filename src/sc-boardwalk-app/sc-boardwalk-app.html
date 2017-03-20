@@ -122,7 +122,7 @@
       on-exit="intro_toAppStart"
       >
     </sc-vault>
-    
+
     <sc-home
       id="home"
       data-page="home"
@@ -367,7 +367,9 @@
       },
 
       converted: function(){
-        this.transitionto('/home');
+        this.$.wallet.updateBalance(function(){
+          this.transitionto('/home');
+        })
       },
 
 
