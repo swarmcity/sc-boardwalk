@@ -679,13 +679,15 @@
       * 'init'...
       */
       init: function(cb){
-        try{
-          this.username = this.identity.username;
-          this.newusername = this.username;
-          this.avatarhash = this.identity.avatarhash;
-        }catch(e){
-          console.log(e);
-          //
+        if (this.identity){
+          try{
+            this.username = this.identity.username;
+            this.newusername = this.username;
+            this.avatarhash = this.identity.avatarhash;
+          }catch(e){
+            console.log(e);
+            //
+          }
         }
         if (cb) cb();
       },

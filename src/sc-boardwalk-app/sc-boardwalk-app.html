@@ -123,10 +123,10 @@
       on-exit="intro_toAppStart"
       >
     </sc-vault>
-
+    
     <sc-home
       id="home"
-      data-page=""
+      data-page="home"
       keystore="[[keystore]]"
       identity="[[identity]]"
       lastbackup=[[lastbackup]]
@@ -246,10 +246,11 @@
 
         console.log('checkready -> ',this.route);
 
-        if (this.route && this.route.path !== ""){
-          console.log('path specified...');
-          return;
-        }
+        // does not work when coming from /vault.importPK when fires ready...
+        // if (this.route && this.route.path !== ""){
+        //   console.log('path specified...');
+        //   return;
+        // }
 
 
         if (!this.vaultstatus) {

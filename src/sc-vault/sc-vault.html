@@ -165,7 +165,7 @@
 
   <template>
     <sc-ipfs id="ipfs"></sc-ipfs>
-    <ac-helpers id="helpers"></ac-helpers>
+    <sc-helpers id="helpers"></sc-helpers>
     <detect-js device="{{device}}" os="{{os}}" browser="{{browser}}"></detect-js>
     <app-route route="{{route}}" pattern="/:page" data="{{data}}"></app-route>
 
@@ -1059,6 +1059,11 @@
 
             case 1:
               this.keystore = lightwallet.keystore.deserialize(vaultdata.keystore);
+              var addresses = this.keystore.getAddresses();
+              if (!addresses || addresses.length === 0){
+                console.log('sc-vault -> ERROR, no addresses found in vault.');
+                return false;
+              }
               this._setpasswordProvider();
               this.set('currentkeystore',this.keystore);
               this.currentaccount = this.$.helpers.fixaddress(this.keystore.getAddresses()[0]);
@@ -1139,6 +1144,8 @@
         this.password = e.detail.password;
         var self = this;
         this.createVault(1,function(){
+          self.saveVault();
+          self.loadVault();          
           // self.creatingvault = false;
           self.status = 'unlocked';
           self.fire('ready');
@@ -1171,8 +1178,8 @@
           
           if (amountofaccounts==0){
             self.currentidentity = self._creatBlankIdentity();
-            self.saveVault();
-            self.loadVault();
+            // self.saveVault();
+            // self.loadVault();
             if (fn) {
               fn();
             }
@@ -1182,8 +1189,8 @@
             self.generateNewAddress(1,function() {
               self.currentaccount = self.keystore.getAddresses()[0];
               self.currentidentity = self._creatBlankIdentity();
-              self.saveVault();
-              self.loadVault();
+              // self.saveVault();
+              // self.loadVault();
               if (fn) {
                 fn();
               }

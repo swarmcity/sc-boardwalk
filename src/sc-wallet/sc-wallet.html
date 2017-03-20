@@ -140,26 +140,35 @@
         var self = this;
         this.debounce('_readARCBalance', function() {
           self.updating = true;
-          self.ethbalance = self.web3.eth.getBalance(self.$.helpers.fixaddress(self.pubkey));
-          if (self.ethbalance.equals(0)){
-            self.emptygas = true;
-            self.lowgas = false;
-          }else{
-            self.emptygas = false;
-            if (self.ethbalance.lessThanOrEqualTo(100000)){
-                self.lowgas = true;
+          self.web3.eth.getBalance(self.$.helpers.fixaddress(self.pubkey),function(err,ethbalance){
+
+            self.ethbalance =ethbalance;
+
+            if (self.ethbalance.equals(0)){
+              self.emptygas = true;
+              self.lowgas = false;
             }else{
-                self.lowgas = false;
+              self.emptygas = false;
+              if (self.ethbalance.lessThanOrEqualTo(100000)){
+                  self.lowgas = true;
+              }else{
+                  self.lowgas = false;
+              }
             }
-          }
-          self.arcbalance = self.ARCTokeninstance.balanceOf(self.$.helpers.fixaddress(self.pubkey));
-          self.updating = false;
-          console.log('ETH balance is', self.ethbalance.toFormat(2));
-          console.log('ARC balance is', self.arcbalance.toFormat(2));
-          if (cb){
-            cb.bind(self)();
-          }
-        }, 500);
+            self.ARCTokeninstance.balanceOf(self.$.helpers.fixaddress(self.pubkey),function(err,arcbalance){
+
+              self.arcbalance = arcbalance;
+              console.log('ETH balance is', self.ethbalance.toFormat(2));
+              console.log('ARC balance is', self.arcbalance.toFormat(2));
+              
+              self.updating = false;
+              
+              if (cb){
+                cb.bind(self)();
+              }
+            });
+          });
+        }, 1000);
       },
 
       _readSWTBalance: function(cb) {
@@ -172,13 +181,15 @@
         var self = this;
         this.debounce('_readSWTBalance', function() {
           this.updating = true;
-          self.swtbalance = self.SWTTokeninstance.balanceOf(self.$.helpers.fixaddress(self.pubkey));
-          self.updating = false;
-          console.log('SWT balance is', self.swtbalance.toFormat(2));
-          if (cb){
-            cb();
-          }
-        }, 500);
+          self.SWTTokeninstance.balanceOf(self.$.helpers.fixaddress(self.pubkey), function(err, swtbalance) {
+            self.swtbalance = swtbalance;
+            self.updating = false;
+            console.log('SWT balance is', self.swtbalance.toFormat(2));
+            if (cb) {
+              cb();
+            }
+          });
+        }, 1000);
       }
 
     });
