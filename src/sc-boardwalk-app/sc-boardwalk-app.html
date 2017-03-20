@@ -179,9 +179,8 @@
       keystore="[[keystore]]"
       identity="[[identity]]"
       pubkey="[[account]]"
+      swtbalance="[[swtbalance]]"
       on-leave="hashtag_tohome"
-      on-to-itemdetail="toItemdetail"
-      on-to-newitem="hashtag_to_newitem"
       currenthasht="{{currenthasht}}">
     </sc-hashtag>
 
@@ -357,9 +356,9 @@
         this.transitionto('/home');
       },
 
-      hashtag_to_newitem: function(){
-        this.transitionto('/newitem');
-      },
+      // hashtag_to_newitem: function(){
+      //   this.transitionto('/newitem');
+      // },
 
 
       saveIdentity: function(e) {
