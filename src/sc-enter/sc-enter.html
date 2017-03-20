@@ -419,7 +419,10 @@ This is the homescreen of boardwalk.
       * use this to reset any variables when leaving this component while it remains loaded.
       */
       onExit: function(){
-        //this.showStartScreen = true;
+        //debugger;
+        this.showStartScreen = true;
+        this.showApp = false;
+        this.showLoader = false;
       },
 
       boardwalkReady: function(){
@@ -436,7 +439,7 @@ This is the homescreen of boardwalk.
         }
       },
 
-      // nothing has been loaded..
+      // there is no vault ...
       novault: function(){
         this.showStartScreen = true;
         this.showLoader = false;      },
