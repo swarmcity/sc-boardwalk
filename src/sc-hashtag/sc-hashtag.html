@@ -253,7 +253,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
     
     <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
 
-    <app-route route="[[route]]" pattern="/:hashtag/:action" data="{{data}}"></app-route>
+    <app-route route="{{route}}" pattern="/:hashtag/:action" data="{{data}}"></app-route>
 
     <neon-animated-pages attr-for-selected="data-action" selected="[[data.action]]" entry-animation="{{entryAnimation}}" exit-animation="{{exitAnimation}}">
 
