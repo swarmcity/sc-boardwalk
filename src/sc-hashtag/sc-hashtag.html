@@ -24,8 +24,9 @@ This is the component showing all requests of a certain hashtag. It contains a r
     <style>
       :host {
         display: block;
+        @apply(--base-structure);
         width: 100%;
-        min-height: 100%;
+        height: 100%;
       }
 
       .avatar_username_balance_hashtaglist {
@@ -33,7 +34,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
         @apply(--layout-start);
         @apply(--layout-start-justified); 
         box-sizing:border-box;
-        padding: 0px 14vw 0px 14vw;       
+        padding: 0px 14vw 0px 14vw;   
+        height: 100%;
       }
 
       .avatar_username_balance {
@@ -41,12 +43,27 @@ This is the component showing all requests of a certain hashtag. It contains a r
         box-sizing:border-box;
         padding: 18vh 0px 18vh 0px;
         margin-right: 5vw;
-        @apply(--base-structure);
         @apply(--layout-vertical);
         @apply(--layout-center);
         @apply(--layout-start-justified);
       }
 
+      #hashtagcontent {
+        box-sizing:border-box;
+        padding-top: 18vh;
+        overflow-y:scroll;
+        height: 100%;
+
+      }
+
+      sc-avatar {
+        margin: 0px 0px 20px 0px;
+      }
+
+      sc-balance {
+        margin-top: 26px;
+        /*border:1px solid red;*/
+      }
 
       .paddingsides {
         padding-left: 4vw;
@@ -107,8 +124,35 @@ This is the component showing all requests of a certain hashtag. It contains a r
       }
 
 
+      .profilebalance_box {
+        min-width: 180px;
+      }
 
     @media all and (min-width: 0) and (max-width: 420px) { 
+
+      .avatar_username_balance_hashtaglist {
+        @apply(--layout-vertical);
+        @apply(--layout-center-center);
+        box-sizing:border-box;
+        padding: 0px;            
+      }
+
+      .avatar_username_balance {
+        width: 100%;
+        height: 14%;
+        min-height: 82px;
+        box-sizing:border-box;
+        padding: 30px 30px 0px 50px;
+        margin-right: 0px;
+        @apply(--layout-horizontal-reverse);
+        @apply(--layout-center);
+        @apply(--layout-start-justified);
+      }
+
+      sc-balance {
+        margin-top: 0px;
+        /*border:1px solid red;*/
+      }
 
       .hashtagtotal {
         @apply(--layout-horizontal);
@@ -184,18 +228,16 @@ This is the component showing all requests of a certain hashtag. It contains a r
         margin: 0px 0px 6px 14px;
       }
 
-      .avatar_username_balance_hashtaglist {
-        @apply(--layout-vertical);
-        @apply(--layout-center-center);        
+
+      #hashtagcontent {
+        box-sizing:border-box;
+        padding-top: 0px;
       }
 
-      .avatar_username_balance {
-        width: 100%;
-        height: 14%;
-        min-height: 82px;
-        box-sizing:border-box;
-        padding: 30px 30px 20px 50px;
+      sc-avatar {
+        margin: 0px 0px 20px 0px;
       }
+
 
     }
 
@@ -206,54 +248,31 @@ This is the component showing all requests of a certain hashtag. It contains a r
     <paper-icon-button id="addbtn" icon="sc-icons:plus" class="left whiteback shadow medium addbtn" on-tap="tonewItem" noink>+ new offer</paper-icon-button>
 
     <div class="avatar_username_balance_hashtaglist totalwidth">
-        <div class="avatar_username_balance">
-
-      <template is="dom-if" if="{{phoneview}}">
-        <div class="flex"></div>
-        <div class="balance-box" id="mobile_balancebox">
-          <sc-balance
-            refcur="EUR"
-            swtbalance="[[swtbalance]]"
-            ethbalance="{{ethbalance}}"
-            viewmode="small"
-            ></sc-balance>
-        </div>
-        <div class="avatar-box">
-          <sc-avatar
-            id="mobile_currentavatar"
-            identity="{{identity}}"
-            pubkey="{{account}}"
-            mode="imgonly"
-            size="small"
-            on-tap="exit">
-          </sc-avatar>
-        </div>
-      </template>
-
-      <template is="dom-if" if="{{!phoneview}}">
-          <div class="avatar_username_box vertic centercenter" on-tap="toProfile">
+        <div class="avatar_username_balance" on-tap="toProfile">
             <sc-avatar
             identity="[[identity]]"
             pubkey="[[pubkey]]"
             id="currentavatar"
+            size="{{currentviewmode}}"
             ></sc-avatar>
+          <template is="dom-if" if="{{!phoneview}}">
             <sc-username
             identity="[[identity]]"
             pubkey="[[pubkey]]"
-            id="homeusername"
+            id="hashtag_username"
             size="small"
             ></sc-username>
-          </div>
-          <div class="whitespace"></div>
-          <div class="minispace"></div>
-          <div id="balancebox" class="homebalance_box" on-tap="toWalletview">
+          </template>
+
+          <div id="balancebox" class="profilebalance_box" on-tap="toWalletview">
             <sc-balance
               refcur="EUR"
               swtbalance="[[swtbalance]]"
               ethbalance="{{ethbalance}}"
+              viewmode="{{currentviewmode}}"
               ></sc-balance>
           </div>
-      </template>
+<!--       </template> -->
       </div>
 
       <div id="hashtagcontent" class="totalwidth paddingsides">
@@ -302,26 +321,98 @@ This is the component showing all requests of a certain hashtag. It contains a r
           type: Object,
           value: function() {
             return {
-              'hero': '',
-              'balance': '',
+              'hero': this.$.currentavatar,
+              'balance': this.$.balancebox
             }
           }
-        }, 
+        },
 
+        /**
+       * `phoneview` is a boolean to determine the viewport.
+       */ 
+        phoneview: {
+          type: Boolean,
+          observer: '_checkSize'
+        },
 
         /**
        * `animationConfig` is used to configure animations.
        */
         animationConfig: {
-          type: Object
+          type: Object,
+          value: function() {
+            return {
+              'entry': [{
+                name: 'slide-from-bottom-animation',
+                node:this.$.hashtagcontent,
+                toPage: this,
+                timing: {
+                  duration: 700
+                }
+              },{
+                name: 'fade-in-animation',
+                node:this.$.backbtn,
+                fromPage: this,
+                timing: {
+                  duration: 125
+                }
+
+              }, {
+                name: 'hero-animation',
+                id: 'hero',
+                toPage: this,
+                timing: {
+                    duration: 600
+                }
+              }, {
+                name: 'hero-animation',
+                id: 'balance',
+                toPage: this,
+                timing: {
+                    duration: 600
+                }
+              }],
+
+              'exit': [{
+                name: 'slide-down-animation',
+                node:this.$.hashtagcontent,
+                fromPage: this,
+                timing: {
+                  duration: 700
+                }
+
+              },{
+                name: 'fade-out-animation',
+                node:this.$.backbtn,
+                fromPage: this,
+                timing: {
+                  duration: 125
+                }
+
+              }, {
+                name: 'hero-animation',
+                id: 'hero',
+                fromPage: this,
+                timing: {
+                    duration: 600
+                }
+              }, {
+                name: 'hero-animation',
+                id: 'balance',
+                fromPage: this,
+                timing: {
+                    duration: 600
+                }
+                }]
+              }
+            },
           }
 
         },
 
       ready: function() {
-
-          this._setAnimconfig();
-
+          this._checkSize();
+          
           this.testitemzzz = [
            {
               offereravatar: 'http://www.american.edu/uploads/profiles/large/chris_palmer_profile_11.jpg',
@@ -381,119 +472,24 @@ This is the component showing all requests of a certain hashtag. It contains a r
       },
 
       /**
-      * '_setAnimconfig' sets the Animationconfig on the onEnter-event.
+      * '_checkSize' responds to the iron-media-query and sets some variables according to the result.
       */      
-      _setAnimconfig: function(){
-
+      _checkSize: function() {
         if (this.phoneview) {
-          var hero = document.getElementById('mobile_currentavatar');
-          var balance = document.getElementById('mobile_currentavatar');
-
-          this.sharedElements = {
-            'hero': hero,
-            'balance': balance
-          };
-
-          console.log("Jooooooo kennem, tis Phone", hero, balance);
-
+        this.currentviewmode = "small";
         } else {
-          var hero = document.getElementById('currentavatar');
-          var balance = document.getElementById('currentavatar');
-
-          this.sharedElements = {
-            'hero': hero,
-            'balance': balance
-          };
-          console.log("Jooooooo kennem, tis NIET Phone dus é", hero, balance);
-
-        };
-
-
-        this.animationConfig = {
-             'entry': [{
-                name: 'slide-from-bottom-animation',
-                node:this.$.hashtagcontent,
-                toPage: this,
-                timing: {
-                  duration: 700
-                }
-              },{
-                name: 'fade-in-animation',
-                node:this.$.backbtn,
-                fromPage: this,
-                timing: {
-                  duration: 125
-                }
-
-              }, {
-                name: 'hero-animation',
-                id: 'hero',
-                toPage: this,
-                timing: {
-                    duration: 600
-                }
-              }, {
-                name: 'hero-animation',
-                id: 'balance',
-                toPage: this,
-                timing: {
-                    duration: 600
-                }
-              }],
-
-
-              'exit': [{
-                name: 'slide-down-animation',
-                node:this.$.hashtagcontent,
-                fromPage: this,
-                timing: {
-                  duration: 700
-                }
-
-              },{
-                name: 'fade-out-animation',
-                node:this.$.backbtn,
-                fromPage: this,
-                timing: {
-                  duration: 125
-                }
-
-              }, {
-                name: 'hero-animation',
-                id: 'hero',
-                fromPage: this,
-                timing: {
-                    duration: 600
-                }
-              }, {
-                name: 'hero-animation',
-                id: 'balance',
-                fromPage: this,
-                timing: {
-                    duration: 600
-                }
-                }]
-          };
-
+        this.currentviewmode = "normal";
+        }
       },
 
       /**
       * 'leave' fires the 'leave' to the parent-element. (This also contains animation-config for going back to sc-home.)
       */
       leave: function(){
-
-        if (this.phoneview) {
-          this.sharedElements = {
-            'hero': this.$.mobile_currentavatar,
-            'balance': this.$.mobile_balancebox
-          };
-        } else {
-          this.sharedElements = {
-            'hero': this.$.currentavatar,
-            'balance': this.$.balancebox
-          };
-        }
-
+        this.sharedElements = {
+          'hero': this.$.currentavatar,
+          'balance': this.$.balancebox
+        };
 
         this.animationConfig = {
              'entry': [{
@@ -569,17 +565,10 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       toItemdetail: function(e){
 
-        if (this.phoneview) {
-          this.sharedElements = {
-            'hero': this.$.mobile_currentavatar,
-            'balance': this.$.mobile_balancebox
-          };
-        } else {
-          this.sharedElements = {
-            'hero': this.$.currentavatar,
-            'balance': this.$.balancebox
-          };
-        }
+        this.sharedElements = {
+          'hero': this.$.currentavatar,
+          'balance': this.$.balancebox
+        };
 
 
         this.animationConfig = {
