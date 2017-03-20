@@ -267,7 +267,13 @@
               return this.transitionto('/swt/intro');
             }else{
               console.log('no SRC balance -> head home');
-              return this.transitionto('/home');
+              if (this.route && this.route.path !== ""){
+                console.log('all ready -> go to ',this.route.path);
+                return;
+              }else{
+                console.log('all ready -> head home');
+                return this.transitionto('/home');
+              }
             }
           }
         }
