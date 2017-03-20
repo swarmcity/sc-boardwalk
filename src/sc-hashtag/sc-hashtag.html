@@ -4,6 +4,8 @@
 <link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<script src="../../node_modules/redux/dist/redux.min.js"></script>
+<link rel="import" href="../../bower_components/polymer-redux/polymer-redux.html">
 
 <link rel="import" href="../../bower_components/sc-style/sc-style.html">
 <link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
@@ -306,7 +308,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
               </div>
               <div class="flex"></div>
             </div>
-            <template is="dom-repeat" items="{{testitemzzz}}">
+            <template is="dom-repeat" items="{{deals}}">
               <sc-hashtagitem
                 offereravatar="{{item.offereravatar}}"
                 offerer="{{item.offerer}}"
@@ -338,18 +340,68 @@ This is the component showing all requests of a certain hashtag. It contains a r
   </template>
 
   <script>
+    const reducer = (state, action) => {
+      if (!state) return {
+        deals: []
+      };
+      // copy deals list
+      deals = state.deals.slice(0);
+      switch (action.type) {
+        case 'ADD_ITEM':
+          deals.push(action.friend);
+          break;
+        case 'REMOVE_ITEM':
+          const idx = deals.indexOf(action.friend)
+          if (idx !== -1) {
+            deals.splice(idx, 1)
+          }
+          break;
+        case 'SORT_ITEMS':
+          deals.sort()
+          break;
+      }
+      state.deals = deals;
+      return state;
+    }
+    const store = Redux.createStore(reducer);
+    const ReduxBehavior = PolymerRedux(store);
+
     Polymer({
       is: 'sc-hashtag',
 
       behaviors: [
-        Polymer.NeonSharedElementAnimatableBehavior
+        Polymer.NeonSharedElementAnimatableBehavior,
+        ReduxBehavior
       ],
 
+ actions: {
+                add: function(name) {
+                  return {
+                    type: 'ADD_ITEM',
+                    friend: name
+                  };
+                },
+                remove: function(name) {
+                  return {
+                    type: 'REMOVE_ITEM',
+                    friend: name
+                  };
+                },
+                sort: function() {
+                  return {
+                    type: 'SORT_ITEMS'
+                  };
+                },
+              },  
       properties: {
 
         route: {
           type: Object,
           notify: true
+        },
+        deals: {
+          type: Array,
+          statePath: 'deals'
         },
 
         /**
@@ -451,8 +503,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
       ready: function() {
           this._checkSize();
           
-          this.testitemzzz = [
-           {
+          this.dispatch('add', {
               offereravatar: 'QmWA8eaJyZpVT5mUx1qBvbNXYfprSdds1oachxmhV1sDGh',
               offerer: 'Mr Rogers',
               offer: 'This is just a test-request!',
@@ -461,7 +512,20 @@ This is the component showing all requests of a certain hashtag. It contains a r
               offertime: 'a few minutes ago',
               offeramount: '233.50',
               nrofreplies: '2'
-            },
+            });
+
+
+          // this.deals = [
+          //  {
+          //     offereravatar: 'QmWA8eaJyZpVT5mUx1qBvbNXYfprSdds1oachxmhV1sDGh',
+          //     offerer: 'Mr Rogers',
+          //     offer: 'This is just a test-request!',
+          //     offerhashtag: 'pioneer',
+          //     offererrep: '6',
+          //     offertime: 'a few minutes ago',
+          //     offeramount: '233.50',
+          //     nrofreplies: '2'
+          //   },
            // {
            //    offereravatar: 'http://jcket.com/stoneyroads/files/2014/10/600x/Mr-Oizo.jpg',
            //    offerer: 'Mr Oizo',
@@ -492,7 +556,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
            //    offeramount: '330.00',
            //    nrofreplies: '0'
            //  },
-          ];
+          // ];
       },
 
       /**
@@ -709,7 +773,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
           nrofreplies: '0'
         }
         console.log('Yes!', newrequest);
-        this.push('testitemzzz',newrequest);
+        this.dispatch('add',newrequest);
+//        this.push('deals',newrequest);
 
       }
 
