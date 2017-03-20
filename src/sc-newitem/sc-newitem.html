@@ -25,16 +25,30 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         min-height: 100%;
       }
 
-      .topbar {
-        height: 14%;
-        min-height: 82px;
+      .totalcontainer {
+        width: 100%;
+        @apply(--layout-vertical);
+        @apply(--layout-start);
+        @apply(--layout-start-justified);        
+      }
+
+
+
+      #detailcontent {
+        background-color: white;
+        margin: 10vh 3vw 2vh 10vw;
+        /*width: 94vw;*/    
         box-sizing:border-box;
-        padding: 40px 50px 0px 50px;
+        padding-top: 5vh;      
+        padding-bottom: 8vh;      
+        width: 86%;
+        max-width: 800px;
+
       }
 
       .paddingsides {
-        padding-left: 12vw;
-        padding-right: 12vw;
+        padding-left: 5vw;
+        padding-right: 5vw;
       }
 
 
@@ -58,13 +72,20 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
 
       paper-input.swtamount {
+        max-width: 200px;
+/*        width: 100%;*/
         --paper-input-container-input: {
-          @apply(--montserrat-bold);
+          font-family: montserratbold;
           font-size: 24px;
           line-height: 24px;
           color: var(--sc-yellow);
         };
         --paper-input-container-focus-color: var(--sc-yellow);
+      }
+
+      paper-textarea.offermsg {
+/*        max-width: 600px;*/
+        width: 100%;
       }
 
       .padder {
@@ -91,19 +112,99 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       }
 
 
+      .alignedhashtag {
+        width: 100%;        
+      }
+
+      .confirmbtns {
+        z-index: 2;
+        width: 100%;
+        margin: -40px 3vw 2vh 10vw;   
+        width: 76%;
+        max-width: 740px;
+        @apply(--layout-horizontal);
+        @apply(--layout-start);
+        @apply(--layout-end-justified);
+  /*        box-sizing:border-box;
+        padding: 50px 10vw 50px 10vw;*/
+      }
+
+      .btnback {
+        background-color: var(--sc-blue);
+        @apply(--layout-horizontal);
+        @apply(--layout-center-center);
+        width: 76px;
+        height: 76px;
+        border-radius: 50%;
+      }
+
+      @media all and (min-width: 0) and (max-width: 420px) { 
+
+
+        #detailcontent {
+          background-color: white;
+          margin: 5vh 5vw 2vh 5vw;
+          /*width: 94vw;*/    
+          box-sizing:border-box;
+          padding-top: 5vh;      
+          padding-bottom: 8vh;      
+
+          width: 90vw;
+          max-width: 800px;
+
+        }
+
+        .totalcontainer {
+          width: 100%;
+          @apply(--layout-vertical);
+          @apply(--layout-center-center);        
+        }
+
+
+        .paddingsides {
+          padding-left: 10vw;
+          padding-right: 10vw;
+        }
+
+      }
 
     </style>
-  <div class="totalwidth vertic centercenter">
+  <div class="totalcontainer">
 
-      <div class="topbar whiteback" id="topbar">
+<!--       <div class="topbar whiteback" id="topbar">
         <span class="flex"></span>
         <div class="balance-box" id="balancebox">
           <p class="grey1">?</p>
         </div>
         <iron-icon on-tap="toHashtag" id="backbtn" icon="sc-icons:decline" class="decliner grey2 big">back</iron-icon>
-      </div> 
+      </div>  -->
 
-      <div class="totalwidth whiteback" id="detailcontent">
+      <div class="whiteback shadow" id="detailcontent">
+
+      <div class="totalwidth horizont centercenter paddingsides">
+        <span class="flex"></span>
+        <iron-icon class="grey3" icon="sc-icons:decline" on-tap="leave">back</iron-icon>
+      </div>
+
+        <div class="totalwidth vertic centercenter paddingsides">
+          <div class="totalwidth vertic start centerjust">
+            <div class="whitespace"></div>
+            <paper-textarea label="Description" class="totalwidth offermsg" autofocus value="{{offermsg}}">
+            </paper-textarea>
+            <div class="totalwidth horizont center endjust alignedhashtag">
+              <p class="bold"><span>#</span>{{selectedhashtag}}</p>
+            </div>
+          </div>
+
+          <div class="horizont start startjust totalwidth">
+            <paper-input class="offeramount swtamount" value="{{replyamount}}">
+            <div suffix class="yellow bold swtwithoffer">SWT</div>
+            </paper-input>
+          </div>
+        </div>
+
+        <div class="whitespace"></div>
+        <div class="whitespace"></div>
         <div class="totalwidth horizont centercenter paddingsides">
           <div class="avatar-box">
             <sc-avatar
@@ -126,39 +227,27 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
             </sc-username>
 
             <p class="bold rep blue">{{offererrep}} REP</p>
-              <ac-balance               
+<!--               <sc-balance               
                 refcur="EUR"
                 arcbalance="{{arcbalance}}"
                 ethbalance="{{ethbalance}}"
                 showswt="false"
                 viewmode="verysmall">
-              </ac-balance>
+              </sc-balance> -->
           </div>  
-        </div>
 
-        <div class="totalwidth paddingsides vertic centercenter">
-          <div class="totalwidth vertic start centerjust">
-            <div class="whitespace"></div>
-            <paper-textarea label="Description" class="totalwidth" autofocus value="{{offermsg}}">
-            </paper-textarea>
-            <div class="totalwidth horizont center endjust">
-              <p class="bold"><span>#</span>{{selectedhashtag}}</p>
-            </div>
-
-            <div class="totalwidth horizont end startjust">
-              <paper-input class="offeramount swtamount" value="{{replyamount}}">
-              <div suffix class="yellow bold swtwithoffer">SWT</div>
-              </paper-input>
-            </div>
-          </div>
-          <div class="whitespace"></div>
-          <div class="whitespace"></div>
-          <paper-button noink class="bigbtn blueback white">post this offer</paper-button>
-          <div class="whitespace"></div>
-          <div class="whitespace"></div>
-          <div class="whitespace"></div>
         </div>
+        <div class="fivespace"></div>
+
+
+
       </div> 
+      <div class="confirmbtns">
+       <!--  <paper-icon-button noink class="bigbtn blueback white" icon="sc-icons:v">post this offer</paper-icon-button> -->
+       <div class="btnback">
+          <paper-icon-button icon="sc-icons:v" class="big blueback white" on-tap="pktoggle" noink disabled="{{!btnable}}">show</paper-icon-button>
+        </div>
+      </div>
   </div> 
 
   </template>
@@ -181,7 +270,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
             }
           }
         },
-        
+
       animationConfig: {
         type: Object,
         value: function() {
@@ -288,6 +377,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       * use this to initialize any variables to start the component
       */
       onEnter: function(){
+        this.btnable = false;
         // this.replystate = 'init';
         // this.bgcolor = "whiteback";
         // this.bordertop = "greytopborder";
@@ -306,6 +396,11 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       },
       toHashtag: function(){
         this.fire('to-hashtag');
+      },
+
+      _btnable: function(){
+        // When the requested fields (offermsg + SWT) are filled in, 
+        // then btn = able
       },
 
 
