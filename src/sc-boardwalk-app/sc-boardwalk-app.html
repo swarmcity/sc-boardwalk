@@ -119,7 +119,7 @@
 
     <sc-home
       id="home"
-      data-page="home"
+      data-page=""
       keystore="[[keystore]]"
       identity="[[identity]]"
       lastbackup=[[lastbackup]]
@@ -206,18 +206,17 @@
       },
 
       attached: function(){
-        //setTimeout(function(){
-          console.log('sc-boardwalk-app -> loaded');
-          this.fire('loaded');
-        //}.bind(this),2*1000);
+        console.log('sc-boardwalk-app -> loaded');
+        this.fire('loaded');
+        this.checkready();
       },
+
       onEnter: function(){
-        console.log('sc-boardwalk -> onEnter');
-        this.transitionto('/p1');        
+        console.log('sc-boardwalk -> onEnter');  
       },
+
       onExit: function(){
         console.log('sc-boardwalk -> onExit');
-        this.transitionto('/');
       },
 
       exit: function() {
@@ -225,6 +224,15 @@
       },
 
       checkready: function(e) {
+
+        console.log('checkready -> ',this.route);
+
+        if (this.route && this.route.path !== ""){
+          console.log('path specified...');
+          return;
+        }
+
+
         if (!this.vaultstatus) {
           return;
         }
@@ -343,7 +351,8 @@
       },
 
       logout: function(){
-        this.transitionto('/');
+        this.transitionto('/vault/unlock');
+        this.fire('exit');
       },
 
       converted: function(){
