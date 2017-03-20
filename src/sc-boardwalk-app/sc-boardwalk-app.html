@@ -50,12 +50,10 @@
       }
     </style>
 
-   <!--  <app-location route="{{route}}" use-hash-as-path></app-location> -->
-    <app-route route="[[route]]" pattern="/:page" data="{{routedata}}" tail="{{pageTail}}"></app-route>
+    <app-route route="{{route}}" pattern="/:page" data="{{routedata}}" tail="{{pageTail}}"></app-route>
    
-
- <!-- <app-route route="[[route]]" pattern="/:page" data="{{routedata}}" tail="{{pageTail}}"></app-route> -->
     <sc-web3 id="web3" web3="{{web3}}" keystore="[[keystore]]"></sc-web3>
+
     <sc-wallet
         id="wallet"
         web3="[[web3]]"
@@ -72,11 +70,6 @@
     </sc-wallet>
 
   <neon-animated-pages attr-for-selected="data-page" selected="[[routedata.page]]">
-
-   <!--  <sc-loadview
-        data-page="loading"
-        msg="">
-    </sc-loadview> -->
 
     <sc-swtconversion
       data-page="swt"
