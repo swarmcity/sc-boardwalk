@@ -210,9 +210,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
           <div class="avatar-box">
             <sc-avatar
               id="avatarimg"
-              identity="{{identity}}"
-              pubkey="{{account}}"
-              mode="imgonly"
+              ipfshash="[[identity.avatarhash]]"
               size="medium"
               on-tap="leave">
             </sc-avatar>
@@ -247,7 +245,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       <div class="confirmbtns">
        <!--  <paper-icon-button noink class="bigbtn blueback white" icon="sc-icons:v">post this offer</paper-icon-button> -->
        <div class="btnback">
-          <paper-icon-button icon="sc-icons:v" class="big blueback white" on-tap="pktoggle" noink disabled="{{!btnable}}">show</paper-icon-button>
+          <paper-icon-button icon="sc-icons:v" class="big blueback white" on-tap="confirmRequest" noink disabled="{{!btnable}}">show</paper-icon-button>
         </div>
       </div>
   </div> 
@@ -419,6 +417,11 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       },
 
       confirmRequest: function(){
+        var totalnew = {
+          msg: this.offermsg,
+          amount: this.replyamount
+        }
+        this.fire('new-submitted',totalnew);
         
       },
 

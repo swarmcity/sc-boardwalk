@@ -104,7 +104,7 @@ This component shows the avatar. The size can be determined with the property `s
       <sc-ipfs id="ipfs"></sc-ipfs>
 
       <div class$="avatar {{size}}">
-        <img src="{{ipfsurl(identity.avatarhash)}}">
+        <img src="{{ipfsurl(ipfshash)}}">
       </div>
 <!-- 
     <template is="dom-if" if="{{_is(mode, 'txtonly')}}">
@@ -137,10 +137,10 @@ This component shows the avatar. The size can be determined with the property `s
           value: 'normal',
         },
         /**
-       * `identity` is received from parent-element, as an object containing an IPFS-hash, which is img-source.
+       * `ipfshash` is the IPFS-hash, which is img-source.
        */
-        identity: {
-          type: Object
+        ipfshash: {
+          type: String
         }
       },
 

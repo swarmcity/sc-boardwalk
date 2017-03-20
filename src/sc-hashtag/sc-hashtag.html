@@ -64,10 +64,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       }
 
-      sc-avatar {
-        margin: 0px 0px 20px 0px;
-      }
-
       sc-balance {
         margin-top: 26px;
         /*border:1px solid red;*/
@@ -105,6 +101,9 @@ This is the component showing all requests of a certain hashtag. It contains a r
         word-break: keep-all;
       }
 
+      sc-avatar {
+        margin: 0px 0px 20px 0px;
+      }
       .backhash {
         margin:0px 0px 3px 8px;    
       }
@@ -133,6 +132,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
 
       .profilebalance_box {
+        @apply(--layout-horizontal);
+        @apply(--layout-center-center);
         min-width: 180px;
       }
 
@@ -243,7 +244,14 @@ This is the component showing all requests of a certain hashtag. It contains a r
       }
 
       sc-avatar {
-        margin: 0px 0px 20px 0px;
+        margin: 0px 0px 0px 20px;
+      }
+
+      .profilebalance_box {
+        @apply(--layout-horizontal);
+        @apply(--layout-end-justified);
+        @apply(--layout-center);
+        min-width: 180px;
       }
 
 
@@ -263,7 +271,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
         <div class="avatar_username_balance_hashtaglist totalwidth">
             <div class="avatar_username_balance" on-tap="toProfile">
                 <sc-avatar
-                identity="[[identity]]"
+                ipfshash="[[identity.avatarhash]]"
                 pubkey="[[pubkey]]"
                 id="currentavatar"
                 size="{{currentviewmode}}"
@@ -293,7 +301,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
                 <div class="symbol">
                   <p class="semibold">#</p>
                 </div>
-                <p class="bold wordbreak">{{currenthasht}}</p>
+                <p class="bold wordbreak">pioneer</p>
                 <iron-icon on-tap="leave" icon="sc-icons:decline" class="small backhash grey4">back</iron-icon>
               </div>
               <div class="flex"></div>
@@ -321,7 +329,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
         pubkey="[[account]]"
         on-back="newitem_to_hashtag"
         on-leave="newitem_to_home"
-        on-to-hashtag="newitem_to_hashtag"
+        on-cancel="newitem_to_hashtag"
+        on-new-submitted="newitem_submitted"
         currenthasht="{{currenthasht}}">
     </sc-newitem>
 
@@ -444,45 +453,45 @@ This is the component showing all requests of a certain hashtag. It contains a r
           
           this.testitemzzz = [
            {
-              offereravatar: 'http://www.american.edu/uploads/profiles/large/chris_palmer_profile_11.jpg',
-              offerer: 'Dick Richards',
-              offer: 'Need a ride to 5711 meadow crest and picked up at 404 6th street. Jackalope',
-              offerhashtag: '#ridesharing',
+              offereravatar: 'QmWA8eaJyZpVT5mUx1qBvbNXYfprSdds1oachxmhV1sDGh',
+              offerer: 'Mr Rogers',
+              offer: 'This is just a test-request!',
+              offerhashtag: 'pioneer',
               offererrep: '6',
               offertime: 'a few minutes ago',
-              offeramount: '1233.50',
+              offeramount: '233.50',
               nrofreplies: '2'
             },
-           {
-              offereravatar: 'http://jcket.com/stoneyroads/files/2014/10/600x/Mr-Oizo.jpg',
-              offerer: 'Mr Oizo',
-              offer: 'Need a ride from 5905 hidden valley trl to 2408 wolf run',
-              offerhashtag: '#ridesharing',
-              offererrep: '22',
-              offertime: 'today at 21:25',
-              offeramount: '330.00',
-              nrofreplies: '0'
-            },
-           {
-              offereravatar: 'http://vignette3.wikia.nocookie.net/southpark/images/c/c2/Butters_(Facebook).jpg/revision/latest?cb=20101010032409',
-              offerer: 'Leopold Butters',
-              offer: 'I need a pick up from 2795 pleasant vally',
-              offerhashtag: '#ridesharing',
-              offererrep: '398',
-              offertime: 'yesterday at 19:45',
-              offeramount: '330.00',
-              nrofreplies: '4'
-            },          
-           {
-              offereravatar: 'http://jcket.com/stoneyroads/files/2014/10/600x/Mr-Oizo.jpg',
-              offerer: 'Mr Oizo',
-              offer: 'Need a ride pick up at walmart on ben white and dropped off at 5711 meadow crest',
-              offerhashtag: '#ridesharing',
-              offererrep: '22',
-              offertime: '2 days ago',
-              offeramount: '330.00',
-              nrofreplies: '0'
-            },
+           // {
+           //    offereravatar: 'http://jcket.com/stoneyroads/files/2014/10/600x/Mr-Oizo.jpg',
+           //    offerer: 'Mr Oizo',
+           //    offer: 'Need a ride from 5905 hidden valley trl to 2408 wolf run',
+           //    offerhashtag: '#ridesharing',
+           //    offererrep: '22',
+           //    offertime: 'today at 21:25',
+           //    offeramount: '330.00',
+           //    nrofreplies: '0'
+           //  },
+           // {
+           //    offereravatar: 'http://vignette3.wikia.nocookie.net/southpark/images/c/c2/Butters_(Facebook).jpg/revision/latest?cb=20101010032409',
+           //    offerer: 'Leopold Butters',
+           //    offer: 'I need a pick up from 2795 pleasant vally',
+           //    offerhashtag: '#ridesharing',
+           //    offererrep: '398',
+           //    offertime: 'yesterday at 19:45',
+           //    offeramount: '330.00',
+           //    nrofreplies: '4'
+           //  },          
+           // {
+           //    offereravatar: 'http://jcket.com/stoneyroads/files/2014/10/600x/Mr-Oizo.jpg',
+           //    offerer: 'Mr Oizo',
+           //    offer: 'Need a ride pick up at walmart on ben white and dropped off at 5711 meadow crest',
+           //    offerhashtag: '#ridesharing',
+           //    offererrep: '22',
+           //    offertime: '2 days ago',
+           //    offeramount: '330.00',
+           //    nrofreplies: '0'
+           //  },
           ];
       },
 
@@ -684,6 +693,25 @@ This is the component showing all requests of a certain hashtag. It contains a r
           };
         this.fire('to-itemdetail');
       },
+
+
+      newitem_submitted: function(e){
+        this.set('route.path','/pioneer/list');
+
+        var newrequest = {
+          offereravatar: this.identity.avatarhash,
+          offerer: this.identity.username,
+          offer: e.detail.msg,
+          offerhashtag: 'pioneer',
+          offererrep: '0',
+          offertime: 'a few minutes ago',
+          offeramount: e.detail.amount,
+          nrofreplies: '0'
+        }
+        console.log('Yes!', newrequest);
+        this.push('testitemzzz',newrequest);
+
+      }
 
 
       // newitem_to_home: function(){
