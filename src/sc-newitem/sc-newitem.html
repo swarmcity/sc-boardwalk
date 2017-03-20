@@ -1,4 +1,10 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+
+<link rel="import" href="../../bower_components/sc-style/sc-style.html">
+<link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
+
 <!--
 `sc-newitem`
 
@@ -8,13 +14,80 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 -->
 
 <dom-module id="sc-newitem">
+<link rel="import" href="../../bower_components/sc-style/sc-style.css" type="css">
   <template>
     <style>
       :host {
         display: block;
       }
     </style>
-      <h2>Hello, I'm [[prop1]]</h2>
+  <div class="totalwidth vertic centercenter">
+
+      <div class="topbar whiteback" id="topbar">
+        <span class="flex"></span>
+        <div class="balance-box" id="balancebox">
+          <p class="grey1">?</p>
+        </div>
+        <iron-icon on-tap="toHashtag" id="backbtn" icon="sc-icons:decline" class="decliner grey2 big">back</iron-icon>
+      </div> 
+
+      <div class="totalwidth whiteback" id="detailcontent">
+        <div class="totalwidth horizont centercenter paddingsides">
+          <div class="avatar-box">
+            <sc-avatar
+              id="avatarimg"
+              identity="{{identity}}"
+              pubkey="{{account}}"
+              mode="imgonly"
+              size="medium"
+              on-tap="leave">
+            </sc-avatar>
+          </div>
+
+          <div class="vertic start startjust flex">
+            <sc-username
+              id="username"
+              identity="{{identity}}"
+              pubkey="{{account}}"
+              size="medium"
+              on-tap="leave">
+            </sc-username>
+
+            <p class="bold rep blue">{{offererrep}} REP</p>
+              <ac-balance               
+                refcur="EUR"
+                arcbalance="{{arcbalance}}"
+                ethbalance="{{ethbalance}}"
+                showswt="false"
+                viewmode="verysmall">
+              </ac-balance>
+          </div>  
+        </div>
+
+        <div class="totalwidth paddingsides vertic centercenter">
+          <div class="totalwidth vertic start centerjust">
+            <div class="whitespace"></div>
+            <paper-textarea label="Description" class="totalwidth" autofocus value="{{offermsg}}">
+            </paper-textarea>
+            <div class="totalwidth horizont center endjust">
+              <p class="bold"><span>#</span>{{selectedhashtag}}</p>
+            </div>
+
+            <div class="totalwidth horizont end startjust">
+              <paper-input class="offeramount swtamount" value="{{replyamount}}">
+              <div suffix class="yellow bold swtwithoffer">SWT</div>
+              </paper-input>
+            </div>
+          </div>
+          <div class="whitespace"></div>
+          <div class="whitespace"></div>
+          <paper-button noink class="bigbtn blueback white">post this offer</paper-button>
+          <div class="whitespace"></div>
+          <div class="whitespace"></div>
+          <div class="whitespace"></div>
+        </div>
+      </div> 
+  </div> 
 
   </template>
 
@@ -34,6 +107,10 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       },
 
       ready: function(){
+      // DUMMY!!!
+      this.selectedhashtag = "pioneer";
+      this.onEnter();
+
       },
 
       /**
@@ -41,6 +118,9 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       * use this to initialize any variables to start the component
       */
       onEnter: function(){
+        // this.replystate = 'init';
+        // this.bgcolor = "whiteback";
+        // this.bordertop = "greytopborder";
       },
 
       /**
@@ -48,7 +128,17 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       * use this to reset any variables when leaving this component while it remains loaded.
       */
       onExit: function(){
-      }
+      },
+
+
+      leave: function(){
+        this.fire('leave');
+      },
+      toHashtag: function(){
+        this.fire('to-hashtag');
+      },
+
+
 
     });
   </script>

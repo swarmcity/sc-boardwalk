@@ -10,6 +10,7 @@
 <link rel="import" href="../sc-walletview/sc-walletview.html">
 <link rel="import" href="../sc-profile/sc-profile.html">
 <link rel="import" href="../sc-hashtag/sc-hashtag.html">
+<link rel="import" href="../sc-newitem/sc-newitem.html">
 
 <!-- <link rel="import" href="../sc-newdeal/sc-newdeal.html"> -->
 
@@ -179,9 +180,21 @@
       pubkey="[[account]]"
       on-leave="hashtag_tohome"
       on-to-itemdetail="toItemdetail"
-      on-to-newitem="toNewitem"
+      on-to-newitem="hashtag_to_newitem"
       currenthasht="{{currenthasht}}">
     </sc-hashtag>
+
+    <sc-newitem
+      data-page="newitem"
+      identity="[[identity]]"
+      pubkey="[[account]]"
+      on-back="newitem_to_hashtag"
+      on-leave="newitem_to_home"
+      on-to-hashtag="newitem_to_hashtag"
+      currenthasht="{{currenthasht}}">
+    </sc-newitem>
+
+
 
  </neon-animated-pages>
 
@@ -325,19 +338,19 @@
 
       profile_tohome: function(){
         this.transitionto('/home');
-        // Is this right?
       },
 
       walletview_tohome: function(){
         this.transitionto('/home');
-        // Is this right?
       },
-
 
 
       hashtag_tohome: function(){
         this.transitionto('/home');
-        // Is this right?
+      },
+
+      hashtag_to_newitem: function(){
+        this.transitionto('/newitem');
       },
 
 

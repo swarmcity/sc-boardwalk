@@ -78,7 +78,7 @@ This components shows all the hashtags that are available for doing deals on. Th
    <div class="totalwidth totalcontainer">
     <div class="total vertic start" id="hashtaglistcontent">
       <div class="filtering totalwidth">
-        <p class="grey2">Trending in Swarm City</p>
+        <p class="grey2">Popular in your area</p>
       </div>
       <template is="dom-repeat" items="{{hashtagzzz}}">
         <div on-tap="toHashtag" id="{{item}}" class="hashtag big totalwidth horizont start startjust ">
@@ -119,12 +119,13 @@ This components shows all the hashtags that are available for doing deals on. Th
       ready: function(){
         // THIS IS DUMMY CONTENT
         this.hashtagzzz = [
-            'ridesharing',
-            'dev-ops',
-            'testingSC',
-            'dogwalking',
-            'food-delivery',
-            'it-hive'
+              'pioneer'
+            // 'ridesharing',
+            // 'dev-ops',
+            // 'testingSC',
+            // 'dogwalking',
+            // 'food-delivery',
+            // 'it-hive'
         ];
 
       },

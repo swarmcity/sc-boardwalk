@@ -559,18 +559,21 @@ This is the component showing all requests of a certain hashtag. It contains a r
         this.fire('leave');
       },
 
+      /**
+      * 'tonewItem' fires 'to-newitem' to the parent-element.
+      */
       tonewItem: function(){
         this.fire('to-newitem');
       },
 
+      /**
+      * 'toItemdetail' fires 'to-itemdetail' to the parent-element, and includes the animationconfig for this action.
+      */
       toItemdetail: function(e){
-
         this.sharedElements = {
           'hero': this.$.currentavatar,
           'balance': this.$.balancebox
         };
-
-
         this.animationConfig = {
               'entry': [{
                 name: 'slide-from-left-animation',
