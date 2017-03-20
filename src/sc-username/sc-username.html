@@ -43,10 +43,10 @@ This component shows the avatar. The size can be determined with the property `s
 
       <div class="username grey4">
           <template is="dom-if" if="{{_is(size, 'small')}}">
-            <p class="bold">username {{identity.username}}</p>
+            <p class="bold">{{identity.username}}</p>
           </template>
         <template is="dom-if" if="{{!_is(size, 'small')}}">
-            <h1 class="bold">USERNAME {{identity.username}}</h1>
+            <h1 class="bold">{{identity.username}}</h1>
           </template>
         </div>
 

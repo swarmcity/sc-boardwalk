@@ -1,4 +1,5 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
 <link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
 <link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
@@ -10,6 +11,9 @@
 <link rel="import" href="../sc-avatar/sc-avatar.html">
 <link rel="import" href="../sc-balance/sc-balance.html">
 <link rel="import" href="../sc-hashtagitem/sc-hashtagitem.html">
+<link rel="import" href="../sc-newitem/sc-newitem.html">
+
+
 <!--
 `sc-hashtag`
 
@@ -26,6 +30,10 @@ This is the component showing all requests of a certain hashtag. It contains a r
         display: block;
         @apply(--base-structure);
         width: 100%;
+        height: 100%;
+      }
+
+      neon-animated-pages {
         height: 100%;
       }
 
@@ -245,63 +253,79 @@ This is the component showing all requests of a certain hashtag. It contains a r
     
     <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
 
-    <paper-icon-button id="addbtn" icon="sc-icons:plus" class="left whiteback shadow medium addbtn" on-tap="tonewItem" noink>+ new offer</paper-icon-button>
+    <app-route route="{{route}}" pattern="/:hashtag/:action" data="{{data}}"></app-route>
 
-    <div class="avatar_username_balance_hashtaglist totalwidth">
-        <div class="avatar_username_balance" on-tap="toProfile">
-            <sc-avatar
-            identity="[[identity]]"
-            pubkey="[[pubkey]]"
-            id="currentavatar"
-            size="{{currentviewmode}}"
-            ></sc-avatar>
-          <template is="dom-if" if="{{!phoneview}}">
-            <sc-username
-            identity="[[identity]]"
-            pubkey="[[pubkey]]"
-            id="hashtag_username"
-            size="small"
-            ></sc-username>
-          </template>
+    <neon-animated-pages attr-for-selected="data-action" selected="[[data.action]]" entry-animation="{{entryAnimation}}" exit-animation="{{exitAnimation}}">
 
-          <div id="balancebox" class="profilebalance_box" on-tap="toWalletview">
-            <sc-balance
-              refcur="EUR"
-              swtbalance="[[swtbalance]]"
-              ethbalance="{{ethbalance}}"
-              viewmode="{{currentviewmode}}"
-              ></sc-balance>
+      <neon-animatable data-action="list">
+        <paper-icon-button id="addbtn" icon="sc-icons:plus" class="left whiteback shadow medium addbtn" on-tap="tonewItem" noink>+ new offer</paper-icon-button>
+
+        <div class="avatar_username_balance_hashtaglist totalwidth">
+            <div class="avatar_username_balance" on-tap="toProfile">
+                <sc-avatar
+                identity="[[identity]]"
+                pubkey="[[pubkey]]"
+                id="currentavatar"
+                size="{{currentviewmode}}"
+                ></sc-avatar>
+              <template is="dom-if" if="{{!phoneview}}">
+                <sc-username
+                identity="[[identity]]"
+                pubkey="[[pubkey]]"
+                id="hashtag_username"
+                size="small"
+                ></sc-username>
+              </template>
+
+              <div id="balancebox" class="profilebalance_box" on-tap="toWalletview">
+                <sc-balance
+                  refcur="EUR"
+                  swtbalance="[[swtbalance]]"
+                  ethbalance="{{ethbalance}}"
+                  viewmode="{{currentviewmode}}"
+                  ></sc-balance>
+              </div>
           </div>
-<!--       </template> -->
-      </div>
 
-      <div id="hashtagcontent" class="totalwidth paddingsides">
-        <div id="{{item}}" class="hashtagtotal totalwidth horizont centercenter">
-          <div class="hashtagtitle horizont start startjust">
-            <div class="symbol">
-              <p class="semibold">#</p>
+          <div id="hashtagcontent" class="totalwidth paddingsides">
+            <div id="{{item}}" class="hashtagtotal totalwidth horizont centercenter">
+              <div class="hashtagtitle horizont start startjust">
+                <div class="symbol">
+                  <p class="semibold">#</p>
+                </div>
+                <p class="bold wordbreak">{{currenthasht}}</p>
+                <iron-icon on-tap="leave" icon="sc-icons:decline" class="small backhash grey4">back</iron-icon>
+              </div>
+              <div class="flex"></div>
             </div>
-            <p class="bold wordbreak">{{currenthasht}}</p>
-            <iron-icon on-tap="leave" icon="sc-icons:decline" class="small backhash grey4">back</iron-icon>
+            <template is="dom-repeat" items="{{testitemzzz}}">
+              <sc-hashtagitem
+                offereravatar="{{item.offereravatar}}"
+                offerer="{{item.offerer}}"
+                offererrep="{{item.offererrep}}"
+                offer="{{item.offer}}"
+                offerhashtag="{{item.offerhashtag}}"
+                offertime="{{item.offertime}}"
+                offeramount="{{item.offeramount}}"
+                nrofreplies="{{item.nrofreplies}}"
+                on-tap="toItemdetail">
+              </sc-hashtagitem>
+            </template>
           </div>
-          <div class="flex"></div>
         </div>
-        <template is="dom-repeat" items="{{testitemzzz}}">
-          <sc-hashtagitem
-            offereravatar="{{item.offereravatar}}"
-            offerer="{{item.offerer}}"
-            offererrep="{{item.offererrep}}"
-            offer="{{item.offer}}"
-            offerhashtag="{{item.offerhashtag}}"
-            offertime="{{item.offertime}}"
-            offeramount="{{item.offeramount}}"
-            nrofreplies="{{item.nrofreplies}}"
-            on-tap="toItemdetail">
-          </sc-hashtagitem>
-        </template>
-      </div>
-    </div>
+      </neon-animatable>
 
+      <sc-newitem
+        data-action="newitem"
+        identity="[[identity]]"
+        pubkey="[[account]]"
+        on-back="newitem_to_hashtag"
+        on-leave="newitem_to_home"
+        on-to-hashtag="newitem_to_hashtag"
+        currenthasht="{{currenthasht}}">
+    </sc-newitem>
+
+    </neon-animated-pages>
   </template>
 
   <script>
@@ -313,6 +337,11 @@ This is the component showing all requests of a certain hashtag. It contains a r
       ],
 
       properties: {
+
+        route: {
+          type: Object,
+          notify: true
+        },
 
         /**
        * `sharedElements` is used to share elements between components for doing animations.
@@ -563,7 +592,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
       * 'tonewItem' fires 'to-newitem' to the parent-element.
       */
       tonewItem: function(){
-        this.fire('to-newitem');
+        debugger;
+        this.set('route.path','/pioneer/newitem');
       },
 
       /**
@@ -654,9 +684,16 @@ This is the component showing all requests of a certain hashtag. It contains a r
                 }]
           };
         this.fire('to-itemdetail');
-      }
+      },
 
 
+      // newitem_to_home: function(){
+      //   this.transitionto('/home');
+      // },
+
+      // newitem_to_hashtag: function(){
+      //   this.transitionto('/hashtag');
+      // },
 
 
 

@@ -171,7 +171,8 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
     </style>
   <div class="totalcontainer">
 
-<!--       <div class="topbar whiteback" id="topbar">
+      <!--       
+      <div class="topbar whiteback" id="topbar">
         <span class="flex"></span>
         <div class="balance-box" id="balancebox">
           <p class="grey1">?</p>
@@ -197,7 +198,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
           </div>
 
           <div class="horizont start startjust totalwidth">
-            <paper-input class="offeramount swtamount" value="{{replyamount}}">
+            <paper-input class="offeramount swtamount" value="{{replyamount}}" type="number">
             <div suffix class="yellow bold swtwithoffer">SWT</div>
             </paper-input>
           </div>
@@ -227,7 +228,8 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
             </sc-username>
 
             <p class="bold rep blue">{{offererrep}} REP</p>
-<!--               <sc-balance               
+            <!--               
+              <sc-balance               
                 refcur="EUR"
                 arcbalance="{{arcbalance}}"
                 ethbalance="{{ethbalance}}"
@@ -254,8 +256,11 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
   <script>
     Polymer({
-
       is: 'sc-newitem',
+
+      behaviors: [
+        Polymer.NeonSharedElementAnimatableBehavior
+      ],
 
       properties: {
         /**
@@ -365,11 +370,12 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
       },
 
-      ready: function(){
-      // DUMMY!!!
-      this.selectedhashtag = "pioneer";
-      this.onEnter();
+      observers: [
+      '_btnable(offermsg,replyamount)'
+      ],
 
+      ready: function(){
+      this.onEnter();
       },
 
       /**
@@ -377,10 +383,11 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       * use this to initialize any variables to start the component
       */
       onEnter: function(){
+        // This is DUMMY!!!
+        this.selectedhashtag = "pioneer";
+
+        // These are for REALS
         this.btnable = false;
-        // this.replystate = 'init';
-        // this.bgcolor = "whiteback";
-        // this.bordertop = "greytopborder";
       },
 
       /**
@@ -399,8 +406,20 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       },
 
       _btnable: function(){
-        // When the requested fields (offermsg + SWT) are filled in, 
-        // then btn = able
+        // console.log('Deze dan???',this.offermsg,this.replyamount);
+        if (!this.offermsg || !this.replyamount) {
+          return;
+        }
+
+        if (this.offermsg && this.replyamount) {
+          this.btnable = true;
+        } else {
+          this.btnable = false;
+        }
+      },
+
+      confirmRequest: function(){
+        
       },
 
 

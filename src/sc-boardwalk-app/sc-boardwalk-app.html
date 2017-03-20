@@ -11,7 +11,6 @@
 <link rel="import" href="../sc-swtconversion/sc-swtconversion.html">
 <link rel="import" href="../sc-profile/sc-profile.html">
 <link rel="import" href="../sc-hashtag/sc-hashtag.html">
-<link rel="import" href="../sc-newitem/sc-newitem.html">
 
 <!-- <link rel="import" href="../sc-newdeal/sc-newdeal.html"> -->
 
@@ -176,6 +175,7 @@
     <sc-hashtag
       data-page="hashtag"
       id="hashtag"
+      route="{{pageTail}}"
       keystore="[[keystore]]"
       identity="[[identity]]"
       pubkey="[[account]]"
@@ -185,15 +185,7 @@
       currenthasht="{{currenthasht}}">
     </sc-hashtag>
 
-    <sc-newitem
-      data-page="newitem"
-      identity="[[identity]]"
-      pubkey="[[account]]"
-      on-back="newitem_to_hashtag"
-      on-leave="newitem_to_home"
-      on-to-hashtag="newitem_to_hashtag"
-      currenthasht="{{currenthasht}}">
-    </sc-newitem>
+    
 
 
 
@@ -342,7 +334,7 @@
       home_tohashtag: function(e){
         // console.log("yes, home_tohashtag");
         this.currenthasht = e.detail;
-        this.transitionto('/hashtag');
+        this.transitionto('/hashtag'+'/'+this.currenthasht+'/list');
       },
 
 
@@ -361,15 +353,6 @@
 
       hashtag_to_newitem: function(){
         this.transitionto('/newitem');
-      },
-
-
-      newitem_to_home: function(){
-        this.transitionto('/home');
-      },
-
-      newitem_to_hashtag: function(){
-        this.transitionto('/hashtag');
       },
 
 
