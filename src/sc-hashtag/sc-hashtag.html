@@ -16,11 +16,8 @@
 <link rel="import" href="../sc-balance/sc-balance.html">
 <link rel="import" href="../sc-hashtagitem/sc-hashtagitem.html">
 <link rel="import" href="../sc-newitem/sc-newitem.html">
-<<<<<<< HEAD
 <link rel="import" href="../sc-shh/sc-shh.html">
-=======
 <link rel="import" href="../sc-itemdetail/sc-itemdetail.html">
->>>>>>> b0e0fe26d10cc88c490b4e0fae70f4ed50f054c7
 
 
 <!--
@@ -279,7 +276,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
     </style>
  
-    <ac-shh web3="{{web3}}"></ac-shh>
+    <sc-shh web3="{{web3}}"></sc-shh>
 
     
     <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
@@ -617,6 +614,18 @@ This is the component showing all requests of a certain hashtag. It contains a r
   _processmessage: function(error, result) {
       console.log('incoming in whisperer: web3 ', this.web3);
       var self = this;
+      var payload = JSON.parse(self.web3.toAscii(result.payload));
+      this.dispatch('add',payload);
+        // this.dispatch('add', {
+        //       offereravatar: 'QmWA8eaJyZpVT5mUx1qBvbNXYfprSdds1oachxmhV1sDGh',
+        //       offerer: 'Mr Rogers',
+        //       offer: 'This is just a test-request!',
+        //       offerhashtag: 'pioneer',
+        //       offererrep: '6',
+        //       offertime: 'a few minutes ago',
+        //       offeramount: '233.50',
+        //       nrofreplies: '2'
+        //     });      
     },
 
 
@@ -756,8 +765,25 @@ This is the component showing all requests of a certain hashtag. It contains a r
           offeramount: e.detail.amount,
           nrofreplies: '0'
         }
+        if (!this.shhidentity){
+          this.shhidentity = this.web3.shh.newIdentity();
+        }
+
+        var options = {
+          "from": this.shhidentity,
+          "topics": [this.web3.fromAscii("pioneer")],
+          "payload": this.web3.fromAscii(JSON.stringify(newrequest)),
+          "ttl": 100,
+          "priority": 1000
+        };
+
+        return this.web3.shh.post(options, function(err, res) {
+          console.log(err, res);
+        });
+
+
         // console.log('Yes!', newrequest);
-        this.dispatch('add',newrequest);
+        //this.dispatch('add',newrequest);
 //        this.push('deals',newrequest);
 
       },
