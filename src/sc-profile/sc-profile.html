@@ -353,7 +353,7 @@
               </template>
 
                 <sc-avatar
-              id="currentavatar"
+              id="profileavatar"
               ipfshash="[[identity.avatarhash]]"
               pubkey="{{account}}"
               mode="imgonly"
@@ -454,8 +454,8 @@
             </div>
             <div class="whitespace"></div>
               <div class="confirmbtns">
-                <iron-icon icon="sc-icons:decline" class="blue big" on-tap="setcurrentavatar_cancel">decline</iron-icon>
-                <paper-icon-button icon="sc-icons:v" class="blue whiteback shadow big" on-tap="setcurrentavatar"></paper-icon-button>
+                <iron-icon icon="sc-icons:decline" class="blue big" on-tap="setprofileavatar_cancel">decline</iron-icon>
+                <paper-icon-button icon="sc-icons:v" class="blue whiteback shadow big" on-tap="setprofileavatar"></paper-icon-button>
               </div>
           </div>
         </div>
@@ -539,7 +539,7 @@
           type: Object,
           value: function() {
             return {
-              'hero': this.$.currentavatar
+              'hero': this.$.profileavatar
             }
           }
         },  
@@ -672,7 +672,7 @@
 
       // receive identity from data binder
       _identity: function() {
-      //  this.currentavatar = this.identity.avatarurl;
+      //  this.profileavatar = this.identity.avatarurl;
       },
 
       /**
@@ -698,7 +698,7 @@
       */
       toCropper: function(image) {
         this.datastate = 'edit';
-        this.currentavatar = image;
+        this.profileavatar = image;
         if (this.croppie && this.croppie.destroy) {
           this.croppie.destroy();
           delete self.croppie;
@@ -735,18 +735,18 @@
 
 
       /**
-      * 'setcurrentavatar_cancel' cancels the flow of setting a new avatr image.
+      * 'setprofileavatar_cancel' cancels the flow of setting a new avatr image.
       */
-      setcurrentavatar_cancel: function() {
+      setprofileavatar_cancel: function() {
         this.datastate = 'view';
         self.croppie.destroy();
         delete self.croppie;
       },
 
       /**
-      * 'setcurrentavatar' is activated when the user confirms the picture cropped by the Croppie-component. It then is saved to IPFS and set as the new avatar. 
+      * 'setprofileavatar' is activated when the user confirms the picture cropped by the Croppie-component. It then is saved to IPFS and set as the new avatar. 
       */
-      setcurrentavatar: function() {
+      setprofileavatar: function() {
         this.avatarloading = true;
         var self = this;
         this.croppie.result({
@@ -756,7 +756,7 @@
         }).then(function(base64) {
 
           // set the avatar to the dataURL.
-          this.currentavatar = base64;
+          this.profileavatar = base64;
           this.datastate = 'view';
 
           // now convert and save to IPFS in the background.

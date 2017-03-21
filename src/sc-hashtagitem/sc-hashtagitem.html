@@ -124,13 +124,13 @@ This components is the representation of a request in the requests-list on sc-ha
     </style>
  
 
-      <div class="totalwidth vertic start startjust">
-        <small class="small grey3 light margbot">{{offertime}}</small>
-        <p class="totalwidth offer grey4"> {{offer}} <span class="semibold"> 
-          #{{offerhashtag}}</span></p>
+      <div class="totalwidth vertic start startjust" on-tap="toDetail">
+        <small class="small grey3 light margbot">{{item.offertime}}</small>
+        <p class="totalwidth offer grey4"> {{item.offer}} <span class="semibold"> 
+          #{{item.offerhashtag}}</span></p>
         <template is="dom-if" if="{{showreplies}}">
           <div class="nrofreplies horizont start startjust">
-            <p class="small reg grey3">{{nrofreplies}}</p>
+            <p class="small reg grey3">{{item.nrofreplies}}</p>
             <iron-icon icon="sc-icons:babble" class="grey3">replies</iron-icon>
           </div>
         </template>
@@ -145,17 +145,17 @@ This components is the representation of a request in the requests-list on sc-ha
 
         <div class="totalwidth horizont start startjust">
           <sc-avatar
-            ipfshash="[[offereravatar]]"
+            ipfshash="[[item.offereravatar]]"
             size="small">
           </sc-avatar>
           <div class="flex vertic centercenter">
-            <p class="totalwidth offerer small bold grey3">{{offerer}}</p>
-            <p class="totalwidth yourrep small bold blue">{{offererrep}} REP</p>
+            <p class="totalwidth offerer small bold grey3">{{item.offerer}}</p>
+            <p class="totalwidth yourrep small bold blue">{{item.offererrep}} REP</p>
           </div>
 
 <!--         <div class="totalwidth horizont centercenter">
           <div class="flex"></div> -->
-          <p class="offeramount bold yellow">{{offeramount}}<span class="offeramountSWT">SWT</span></p>
+          <p class="offeramount bold yellow">{{item.offeramount}}<span class="offeramountSWT">SWT</span></p>
 <!--         </div> -->
 
 
@@ -176,11 +176,10 @@ This components is the representation of a request in the requests-list on sc-ha
 
       properties: {
         /**
-       * `prop1` this is the first property and what it does is described right here.
+       * `` .
        */
-        prop1: {
-          type: String,
-          value: 'sc-hashtagitem',
+        item: {
+          type: Object
         },
       },
 
@@ -199,6 +198,10 @@ This components is the representation of a request in the requests-list on sc-ha
       * use this to reset any variables when leaving this component while it remains loaded.
       */
       onExit: function(){
+      },
+
+      toDetail: function(){
+        this.fire('to-detail',this.item);
       }
 
     });
