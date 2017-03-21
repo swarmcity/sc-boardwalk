@@ -69,7 +69,7 @@
         >
     </sc-wallet>
 
-  <neon-animated-pages attr-for-selected="data-page" selected="[[routedata.page]]">
+  <neon-animated-pages id="mainpages" attr-for-selected="data-page" selected="[[routedata.page]]">
 
     <sc-swtconversion
       data-page="swt"
@@ -332,7 +332,7 @@
       home_tohashtag: function(e){
         // console.log("yes, home_tohashtag");
         this.currenthasht = e.detail;
-        this.transitionto('/hashtag'+'/'+this.currenthasht+'/list');
+        this.transitionto('/hashtag/pioneer/list');
       },
 
 

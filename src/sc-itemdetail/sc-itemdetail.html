@@ -1,4 +1,10 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+
+<link rel="import" href="../../bower_components/sc-style/sc-style.html">
+<link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
+<link rel="import" href="../../bower_components/sc-avatar/sc-avatar.html">
+
 <!--
 `sc-itemdetail`
 
@@ -8,29 +14,490 @@ This components shows the detailed view of a request.
 -->
 
 <dom-module id="sc-itemdetail">
+<link rel="import" href="../../bower_components/sc-style/sc-style.css" type="css">
+
   <template>
     <style>
-      :host {
-        display: block;
-      }
+    :host {
+      display: block;
+      width: 100%;
+      @apply(--base-structure);
+    }
+
+    #itemdetailcontent {
+      /*background-color: green;*/
+      box-sizing:border-box;
+      padding-top: 18vh;
+    }
+
+
+    .detailtotal {
+/*      margin: 5vh 5vw 2vh 5vw;*/
+      box-sizing: border-box;
+      padding-top: 4vw;
+      padding-bottom: 4vw;
+      width: 100%;
+/*      max-width: 800px;*/
+/*      border: 1px solid blue;*/
+      background-color: white;
+
+    }
+
+    .paddingsides {
+      padding-left: 4vw;
+      padding-right: 4vw;
+    }
+
+    .offereravatar {
+      margin-right: 14px;     
+    }
+
+
+  .offer {
+    font-size: 20px;
+    line-height: 28px;
+
+  }
+
+
+
+  .rep {
+    font-size: 14px;
+  }
+
+  .amount {
+    font-size: 36px;
+  }
+
+  .swt {
+    font-size: 18px;
+  }
+
+/*  .yourrespond {
+    box-sizing:border-box;
+    padding-top: 28px;
+    padding-bottom: 28px;
+    transition: all 1s linear;
+  }
+
+  .yourreplyamount {
+    width: 50%;
+  }*/
+
+  .margbottom {
+    margin-bottom: 12px;
+  }
+
+
+/*  paper-input.swtamount {
+    --paper-input-container-input: {
+      @apply(--montserrat-bold);
+      font-size: 24px;
+      line-height: 24px;
+      color: var(--sc-darkblue);
+    };
+    --paper-input-container-focus-color: var(--sc-darkblue);
+  }*/
+
+/*
+  .padder {
+    box-sizing:border-box;
+    padding: 20px;    
+  }
+*/
+/*  .amountinput {
+    width: 100px;
+  }
+
+  .respondbtn {
+    width: 80%;
+  }
+*/
+/*  .swtwithoffer {
+      font-size: 12px;
+      line-height: 12px;
+  }*/
+
+/*  .replyitem {
+    margin-top: 10px;
+  }
+*/
+/*
+  .youravatar {
+    margin-right: 10px;
+  }
+
+
+  .yourname {
+    margin-bottom: 4px;
+
+  }
+  
+  .yourtxt {
+      font-size: 16px;
+      line-height: 22px;
+      margin: 12px 0px 0px 0px;
+  }
+
+
+  .youramount {
+      font-size: 22px;
+      line-height: 22px;
+  }
+
+  .youramountSWT {
+      font-size: 11px;
+      line-height: 11px;
+  }
+
+
+
+  .responditem {
+    box-sizing:border-box;
+    padding-top: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid rgba(0,0,0,0.075);
+
+  }
+
+  .replyeravatar {
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    min-height: 30px;  
+    border-radius: 50%;
+    margin-right: 10px;
+    overflow: hidden;  
+  }
+  .replyeravatar img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .replyername {
+    margin-bottom: 4px;
+  }
+  
+  .reply {
+      margin: 12px 0px 0px 0px;
+      font-size: 16px;
+      line-height: 22px;
+  }
+
+
+  .replyeramount {
+      font-size: 22px;
+      line-height: 22px;
+  }
+
+  .replyeramountSWT {
+      font-size: 11px;
+      line-height: 11px;
+  }
+
+
+  .greytopborder {
+    border-top: 1px solid var(--sc-grey1);
+  }
+
+  .notopborder {
+    border-top: none;
+  }
+
+  .bluebottomborder {
+    border-bottom: 2px solid var(--sc-blue);
+  }  
+*/
+
+
+/*  .acceptsfor p {
+    font-size: 18px;
+    margin: 0px 4px 2px 0px;
+  }*/
+
+/*  .replySWT {
+    font-size: 11px;
+    line-height: 11px;
+  }*/
+
+/*  .acceptsfor iron-icon {
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    min-height: 20px;
+  }
+*/
+
+
+
+
+
+/*  YOU ARE USER ???*/
+
+  .detailtotal_yau {
+/*    box-sizing:border-box;
+    padding-top: 50px;*/
+
+  }
+
+  .responds_yau {
+    border-top: 1px solid rgba(0,0,0,0.075);
+
+  }
+
+
+
+  @media all and (min-width: 0) and (max-width: 420px) { 
+
+
+    .detailtotal {
+      background-color: white;
+/*      margin: 5vh 5vw 2vh 5vw;*/
+      box-sizing: border-box;
+      padding-top: 7vh;
+      padding-bottom: 7vh;
+      width: 100%;
+    }
+    .paddingsides {
+      padding-left: 7vw;
+      padding-right: 7vw;
+    }
+
+    #itemdetailcontent {
+      /*background-color: green;*/
+      box-sizing:border-box;
+      padding-top: 0vh;
+      margin-top: 5vh;
+    }
+
+
+  }
+
+
     </style>
-      <h2>Hello, I'm [[prop1]]</h2>
+<!--       <h2>Hello, this is my offer:</h2>
+      <p>{{itemdata.offer}}</p> -->
+
+      <div id="itemdetailcontent" class="totalwidth flex paddingsides">
+        <div class="detailtotal totalwidth vertic shadow paddingsides">
+          <div class="totalwidth horizont endjust center">
+            <iron-icon class="grey3" icon="sc-icons:decline" on-tap="back">back</iron-icon>
+          </div>
+          <div class="totalwidth">
+
+            <p class="offer"><span class="small grey3">{{itemdata.offertime}}</span><br>{{itemdata.offer}}<span class="bold"># {{itemdata.offerhashtag}}</span></p>
+          </div>
+          <div class="whitespace"></div>
+          <div class="whitespace"></div>
+
+          <div class="totalwidth horizont centercenter">
+            <sc-avatar
+              class="offereravatar"
+              ipfshash="[[itemdata.offereravatar]]"
+              size="medium">
+            </sc-avatar>
+            <div class="vertic start startjust offertxt flex">
+              <p class="reg">{{itemdata.offerer}}</p>
+              <p class="bold rep blue">{{itemdata.offererrep}} REP</p>
+            </div>  
+          </div>
+
+
+          <div class="whitespace"></div>
+          <div class="whitespace"></div>
+
+          <div class="totalwidth horizont centercenter">
+            <div class="flex"></div>
+            <p class="bold yellow amount">{{itemdata.offeramount}} <span class="swt">SWT</span></p>
+          </div>
+
+<!--           <div class="responds totalwidth vertic center startjust basestructure">
+
+            <div class$="{{bgcolor}} {{borderz}} yourrespond totalwidth vertic centercenter paddingsides">
+
+              <template is="dom-if" if="{{_is(replystate,'init')}}">
+                <div class="minispace"></div>
+                <paper-button noink class="darker blue shadow respondbtn big" on-tap="replystateChanger">
+                Reply
+                </paper-button>
+                <div class="minispace"></div>
+              </template>
+
+              <template is="dom-if" if="{{_is(replystate,'replying')}}">
+              <iron-collapse class="totalwidth" id="replycoll">
+                <div class="totalwidth horizont end endjust">
+                  <iron-icon icon="sc-icons:decline" class="grey3" on-tap="backtoInit">close collapse</iron-icon>
+                </div>
+
+                <div class="total vertic centercenter">
+                  <paper-textarea label="Your reply" class="totalwidth grey2unfocus" autofocus></paper-textarea>
+                  <div class="totalwidth horizont end startjust">
+                    <paper-input label="Your offer" class="yourreplyamount swtamount grey2unfocus" value="{{replyamount}}">
+                    <div suffix class="yellow bold swtwithoffer">SWT</div>
+                  </paper-input>
+
+                  </div>
+
+                  <div class="whitespace"></div>
+                  <paper-button noink class="white blueback shadow big horizont cetercenter" on-tap="replystateChanger">
+                    Reply with offer
+                  </paper-button>
+
+                </div>
+              </iron-collapse>
+              </template>
+
+
+              <template is="dom-if" if="{{_is(replystate,'replygivven')}}">
+                <template is="dom-if" if="{{loadingreply}}">
+                  <sc-loader small color="blue" class="blue" on-tap="replyLoaded">Submitting your reply</sc-loader>
+                </template>
+                <template is="dom-if" if="{{!loadingreply}}">
+                  <div class="totalwidth vertic centercenter">
+                    <div class="totalwidth horizont start startjust">
+                    <ac-avatar
+                      identity="{{identity}}"
+                      pubkey="{{account}}"
+                      mode="imgonly"
+                      size="verysmall"
+                      on-tap="exit"
+                      class="youravatar">
+                    </ac-avatar>
+                      <div class="flex vertic centercenter">
+                        <p class="totalwidth yourname small bold grey4">You</p>
+                        <p class="totalwidth yourrep small bold blue">12 REP</p>
+                      </div>
+                    <div class="horizont end endjust acceptsfor">
+                      <p class="bold grey4">1300.00 <span class="replySWT">SWT</span></p>
+                      <iron-icon class="grey4 small" icon="sc-icons:v">checked</iron-icon>
+                    </div>
+                    </div>
+                    <p class="totalwidth yourtxt grey4">
+                      <small class="grey3 small">a few seconds ago</small><br>
+                      I'd love to drive you! Pick you up at 14:00?</p>
+                  </div>
+                </template>                
+              </template>
+            </div>
+            <div class="otherresponds totalwidth vertic center startjust darker">
+              <template is="dom-repeat" items="{{replies}}">
+                <div class="responditem totalwidth vertic centercenter paddingsides">
+                  <div class="totalwidth vertic start centerjust">
+                    <div class="totalwidth horizont start startjust">
+                      <div class="replyeravatar">
+                        <img src="{{item.replyeravatar}}">
+                      </div>
+                      <div class="flex vertic centercenter">
+                        <p class="totalwidth replyername small bold grey3">{{item.replyername}}</p>
+                        <p class="totalwidth replyerrep small bold blue">{{item.replyerrep}} REP</p>
+                      </div>
+                    <div class="horizont end endjust acceptsfor">
+                      <p class="bold grey4">{{item.replyamount}} <span class="replySWT">SWT</span></p>
+                      <iron-icon class="grey4 small" icon="sc-icons:v">checked</iron-icon>
+                    </div>
+                    </div>
+                    <p class="totalwidth reply grey4">
+                      <small class="grey3 small">{{item.replytime}}</small><br>
+                      {{item.reply}}
+                    </p>
+                  </div>
+                </div>
+
+              </template>
+              <div class="whitespace"></div>
+              <div class="whitespace"></div>
+              <div class="whitespace"></div>
+              <div class="whitespace"></div>
+              <div class="whitespace"></div>
+              <div class="whitespace"></div>
+              <div class="whitespace"></div>
+              <div class="whitespace"></div>
+              <div class="whitespace"></div>
+              <div class="whitespace"></div>
+            </div>
+          </div> -->
+        </div>
+      </div>
 
   </template>
 
   <script>
     Polymer({
 
+      behaviors: [
+        Polymer.NeonSharedElementAnimatableBehavior
+      ],
+
       is: 'sc-itemdetail',
 
       properties: {
         /**
-       * `prop1` this is the first property and what it does is described right here.
+       * `itemdata` this is the first property and what it does is described right here.
        */
-        prop1: {
-          type: String,
-          value: 'sc-itemdetail',
+        itemdata: {
+          type: String
         },
+    animationConfig: {
+        type: Object,
+        value: function() {
+          return {
+            'entry': [{
+              name: 'slide-from-right-animation',
+              node:this.$.itemdetailcontent,
+              toPage: this,
+              timing: {
+                duration: 600
+              }
+            // },{
+            //   name: 'slide-from-right-animation',
+            //   node:this.$.topbar,
+            //   fromPage: this,
+            //   timing: {
+            //     duration: 600
+            //   }
+            // },{
+            //   name: 'fade-in-animation',
+            //   node:this.$.backbtn,
+            //   fromPage: this,
+            //   timing: {
+            //     duration: 200
+            //   }
+            // },{
+            //   name: 'fade-in-animation',
+            //   node:this.$.username,
+            //   fromPage: this,
+            //   timing: {
+            //     duration: 200
+            //   }
+            // }, {
+              // name: 'hero-animation',
+              // id: 'hero',
+              // toPage: this,
+              // timing: {
+              //     duration: 200
+              // }
+            // }, {
+            //   name: 'hero-animation',
+            //   id: 'balance',
+            //   toPage: this,
+            //   timing: {
+            //       duration: 200
+            //   }
+            }],
+
+            'exit': [{
+              name: 'fade-out-animation',
+              node:this.$.itemdetailcontent,
+              fromPage: this,
+              timing: {
+                duration: 125
+              }
+              }]
+            }
+          },
+        }
+
+
       },
 
       ready: function(){
@@ -48,7 +515,11 @@ This components shows the detailed view of a request.
       * use this to reset any variables when leaving this component while it remains loaded.
       */
       onExit: function(){
-      }
+      },
+
+      back: function(){
+        this.fire('back');
+      },
 
     });
   </script>

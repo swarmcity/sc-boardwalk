@@ -3,6 +3,7 @@
 <link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
 <link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/neon-animation/neon-animation.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 <script src="../../node_modules/redux/dist/redux.min.js"></script>
 <link rel="import" href="../../bower_components/polymer-redux/polymer-redux.html">
@@ -11,9 +12,11 @@
 <link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
 
 <link rel="import" href="../sc-avatar/sc-avatar.html">
+<link rel="import" href="../sc-username/sc-username.html">
 <link rel="import" href="../sc-balance/sc-balance.html">
 <link rel="import" href="../sc-hashtagitem/sc-hashtagitem.html">
 <link rel="import" href="../sc-newitem/sc-newitem.html">
+<link rel="import" href="../sc-itemdetail/sc-itemdetail.html">
 
 
 <!--
@@ -37,9 +40,10 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       neon-animated-pages {
         height: 100%;
+        width: 100%;
       }
 
-      .avatar_username_balance_hashtaglist {
+      .avatar_username_balance_hashtagcontent {
         @apply(--layout-horizontal);
         @apply(--layout-start);
         @apply(--layout-start-justified); 
@@ -63,7 +67,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
         padding-top: 18vh;
         overflow-y:scroll;
         height: 100%;
-
       }
 
       sc-balance {
@@ -78,15 +81,15 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
 
       .hashtagtitle p {
-        font-size: 42px;
-        line-height: 42px;
+        font-size: 30px;
+        line-height: 30px;
         margin: 0px 0px 2px 0px;
       }
 
       .symbol p {
-        font-size: 38px;
-        line-height: 38px;  
-        margin: 0px 0px 0px 0px;
+        font-size: 27px;
+        line-height: 27px;  
+        margin: 0px 6px 0px 0px;
 
       }
 
@@ -107,8 +110,9 @@ This is the component showing all requests of a certain hashtag. It contains a r
         margin: 0px 0px 20px 0px;
       }
       .backhash {
-        margin:0px 0px 3px 8px;    
+        margin:6px 0px 0px 8px;    
       }
+
 
       sc-hashtagitem {
         width: 100%;
@@ -139,9 +143,17 @@ This is the component showing all requests of a certain hashtag. It contains a r
         min-width: 180px;
       }
 
+      .default {
+        display: block;
+      }
+
+      .mobile {
+        display: none;
+      }
+
     @media all and (min-width: 0) and (max-width: 420px) { 
 
-      .avatar_username_balance_hashtaglist {
+      .avatar_username_balance_hashtagcontent {
         @apply(--layout-vertical);
         @apply(--layout-center-center);
         box-sizing:border-box;
@@ -256,7 +268,9 @@ This is the component showing all requests of a certain hashtag. It contains a r
         min-width: 180px;
       }
 
-
+      .backhash {
+        margin: 2px 0px 0px 5px;
+      }
     }
 
     </style>
@@ -265,37 +279,38 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
     <app-route route="{{route}}" pattern="/:hashtag/:action" data="{{data}}"></app-route>
 
-    <neon-animated-pages attr-for-selected="data-action" selected="[[data.action]]" entry-animation="{{entryAnimation}}" exit-animation="{{exitAnimation}}">
+
+
+    <div class="avatar_username_balance_hashtagcontent totalwidth">
+        <div class="avatar_username_balance" on-tap="toProfile">
+          <sc-avatar
+          ipfshash="[[identity.avatarhash]]"
+          pubkey="[[pubkey]]"
+          id="hashtagavatar"
+          size="{{currentviewmode}}"
+          ></sc-avatar>
+          <sc-username
+          class$="{{visibleclass}}"
+          id="hashtagusername"
+          identity="[[identity]]"
+          pubkey="[[pubkey]]"
+          size="small"
+          ></sc-username>
+          <div id="balancebox" class="profilebalance_box" on-tap="toWalletview">
+            <sc-balance
+              refcur="EUR"
+              swtbalance="[[swtbalance]]"
+              ethbalance="{{ethbalance}}"
+              viewmode="{{currentviewmode}}"
+              ></sc-balance>
+          </div>
+        </div>
+
+
+    <neon-animated-pages id="hashpages" attr-for-selected="data-action" selected="[[data.action]]">
 
       <neon-animatable data-action="list">
         <paper-icon-button id="addbtn" icon="sc-icons:plus" class="left whiteback shadow medium addbtn" on-tap="tonewItem" noink>+ new offer</paper-icon-button>
-
-        <div class="avatar_username_balance_hashtaglist totalwidth">
-            <div class="avatar_username_balance" on-tap="toProfile">
-                <sc-avatar
-                ipfshash="[[identity.avatarhash]]"
-                pubkey="[[pubkey]]"
-                id="currentavatar"
-                size="{{currentviewmode}}"
-                ></sc-avatar>
-              <template is="dom-if" if="{{!phoneview}}">
-                <sc-username
-                identity="[[identity]]"
-                pubkey="[[pubkey]]"
-                id="hashtag_username"
-                size="small"
-                ></sc-username>
-              </template>
-
-              <div id="balancebox" class="profilebalance_box" on-tap="toWalletview">
-                <sc-balance
-                  refcur="EUR"
-                  swtbalance="[[swtbalance]]"
-                  ethbalance="{{ethbalance}}"
-                  viewmode="{{currentviewmode}}"
-                  ></sc-balance>
-              </div>
-          </div>
 
           <div id="hashtagcontent" class="totalwidth paddingsides">
             <div id="{{item}}" class="hashtagtotal totalwidth horizont centercenter">
@@ -309,7 +324,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
               <div class="flex"></div>
             </div>
             <template is="dom-repeat" items="{{deals}}">
-              <sc-hashtagitem
+<!--               <sc-hashtagitem
+                item="[[item]]"
                 offereravatar="{{item.offereravatar}}"
                 offerer="{{item.offerer}}"
                 offererrep="{{item.offererrep}}"
@@ -318,25 +334,37 @@ This is the component showing all requests of a certain hashtag. It contains a r
                 offertime="{{item.offertime}}"
                 offeramount="{{item.offeramount}}"
                 nrofreplies="{{item.nrofreplies}}"
-                on-tap="toItemdetail">
+                on-tap="hashtag_to_detail">
+              </sc-hashtagitem> -->
+
+
+              <sc-hashtagitem
+                item="[[item]]"
+                on-to-detail="hashtag_to_detail">
               </sc-hashtagitem>
             </template>
           </div>
-        </div>
       </neon-animatable>
 
       <sc-newitem
         data-action="newitem"
         identity="[[identity]]"
         pubkey="[[account]]"
-        on-back="newitem_to_hashtag"
-        on-leave="newitem_to_home"
-        on-cancel="newitem_to_hashtag"
+        on-back="newitem_cancel"
+        on-cancel=""
         on-new-submitted="newitem_submitted"
         >
-    </sc-newitem>
+      </sc-newitem>
+
+      <sc-itemdetail
+      data-action="detail"
+      itemdata="[[currentitem]]"
+      on-back="detail_to_hashtag"
+      ></sc-itemdetail>
 
     </neon-animated-pages>
+        </div>
+
   </template>
 
   <script>
@@ -369,30 +397,34 @@ This is the component showing all requests of a certain hashtag. It contains a r
     Polymer({
       is: 'sc-hashtag',
 
+      // behaviors: [
+      //   Polymer.NeonSharedElementAnimatableBehavior
+      // ],
       behaviors: [
         Polymer.NeonSharedElementAnimatableBehavior,
         ReduxBehavior
       ],
 
- actions: {
-                add: function(name) {
-                  return {
-                    type: 'ADD_ITEM',
-                    friend: name
-                  };
-                },
-                remove: function(name) {
-                  return {
-                    type: 'REMOVE_ITEM',
-                    friend: name
-                  };
-                },
-                sort: function() {
-                  return {
-                    type: 'SORT_ITEMS'
-                  };
-                },
-              },  
+      actions: {
+        add: function(name) {
+          return {
+            type: 'ADD_ITEM',
+            friend: name
+          };
+        },
+        remove: function(name) {
+          return {
+            type: 'REMOVE_ITEM',
+            friend: name
+          };
+        },
+        sort: function() {
+          return {
+            type: 'SORT_ITEMS'
+          };
+        },
+      },  
+
       properties: {
 
         route: {
@@ -403,6 +435,13 @@ This is the component showing all requests of a certain hashtag. It contains a r
           type: Array,
           statePath: 'deals'
         },
+        /**
+       * `phoneview` is a boolean to determine the viewport.
+       */ 
+        phoneview: {
+          type: Boolean,
+          observer: '_checkSize'
+        },
 
         /**
        * `sharedElements` is used to share elements between components for doing animations.
@@ -411,18 +450,10 @@ This is the component showing all requests of a certain hashtag. It contains a r
           type: Object,
           value: function() {
             return {
-              'hero': this.$.currentavatar,
+              'hero': this.$.hashtagavatar,
               'balance': this.$.balancebox
             }
           }
-        },
-
-        /**
-       * `phoneview` is a boolean to determine the viewport.
-       */ 
-        phoneview: {
-          type: Boolean,
-          observer: '_checkSize'
         },
 
         /**
@@ -439,14 +470,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
                 timing: {
                   duration: 700
                 }
-              },{
-                name: 'fade-in-animation',
-                node:this.$.backbtn,
-                fromPage: this,
-                timing: {
-                  duration: 125
-                }
-
               }, {
                 name: 'hero-animation',
                 id: 'hero',
@@ -464,12 +487,12 @@ This is the component showing all requests of a certain hashtag. It contains a r
               }],
 
               'exit': [{
-                // name: 'slide-down-animation',
-                // node:this.$.hashtagcontent,
-                // fromPage: this,
-                // timing: {
-                //   duration: 700
-                // }
+                name: 'slide-down-animation',
+                node:this.$.hashtagcontent,
+                fromPage: this,
+                timing: {
+                  duration: 700
+                }
 
               // },{
               //   name: 'fade-out-animation',
@@ -479,84 +502,47 @@ This is the component showing all requests of a certain hashtag. It contains a r
               //     duration: 125
               //   }
 
-              // }, {
-              //   name: 'hero-animation',
-              //   id: 'hero',
-              //   fromPage: this,
-              //   timing: {
-              //       duration: 600
-              //   }
-              // }, {
-              //   name: 'hero-animation',
-              //   id: 'balance',
-              //   fromPage: this,
-              //   timing: {
-              //       duration: 600
-              //   }
+              }, {
+                name: 'hero-animation',
+                id: 'hero',
+                fromPage: this,
+                timing: {
+                    duration: 600
+                }
+              }, {
+                name: 'hero-animation',
+                id: 'balance',
+                fromPage: this,
+                timing: {
+                    duration: 600
+                }
                 }]
               }
             },
-          }
+          },
 
         },
 
-      ready: function() {
-          this._checkSize();
-          
-          this.dispatch('add', {
-              offereravatar: 'QmWA8eaJyZpVT5mUx1qBvbNXYfprSdds1oachxmhV1sDGh',
-              offerer: 'Mr Rogers',
-              offer: 'This is just a test-request!',
-              offerhashtag: 'pioneer',
-              offererrep: '6',
-              offertime: 'a few minutes ago',
-              offeramount: '233.50',
-              nrofreplies: '2'
-            });
+    ready: function() {
 
+      this._checkSize();
+      var self = this;
+      // setTimeout(function(){
+      //         self.setAnimconfig();
+      //     },500);
 
-          // this.deals = [
-          //  {
-          //     offereravatar: 'QmWA8eaJyZpVT5mUx1qBvbNXYfprSdds1oachxmhV1sDGh',
-          //     offerer: 'Mr Rogers',
-          //     offer: 'This is just a test-request!',
-          //     offerhashtag: 'pioneer',
-          //     offererrep: '6',
-          //     offertime: 'a few minutes ago',
-          //     offeramount: '233.50',
-          //     nrofreplies: '2'
-          //   },
-           // {
-           //    offereravatar: 'http://jcket.com/stoneyroads/files/2014/10/600x/Mr-Oizo.jpg',
-           //    offerer: 'Mr Oizo',
-           //    offer: 'Need a ride from 5905 hidden valley trl to 2408 wolf run',
-           //    offerhashtag: '#ridesharing',
-           //    offererrep: '22',
-           //    offertime: 'today at 21:25',
-           //    offeramount: '330.00',
-           //    nrofreplies: '0'
-           //  },
-           // {
-           //    offereravatar: 'http://vignette3.wikia.nocookie.net/southpark/images/c/c2/Butters_(Facebook).jpg/revision/latest?cb=20101010032409',
-           //    offerer: 'Leopold Butters',
-           //    offer: 'I need a pick up from 2795 pleasant vally',
-           //    offerhashtag: '#ridesharing',
-           //    offererrep: '398',
-           //    offertime: 'yesterday at 19:45',
-           //    offeramount: '330.00',
-           //    nrofreplies: '4'
-           //  },          
-           // {
-           //    offereravatar: 'http://jcket.com/stoneyroads/files/2014/10/600x/Mr-Oizo.jpg',
-           //    offerer: 'Mr Oizo',
-           //    offer: 'Need a ride pick up at walmart on ben white and dropped off at 5711 meadow crest',
-           //    offerhashtag: '#ridesharing',
-           //    offererrep: '22',
-           //    offertime: '2 days ago',
-           //    offeramount: '330.00',
-           //    nrofreplies: '0'
-           //  },
-          // ];
+      // console.log("LOOOOOGGGG",this.$.hashpages.animationConfig,this.sharedElements);
+      
+      this.dispatch('add', {
+          offereravatar: 'QmWA8eaJyZpVT5mUx1qBvbNXYfprSdds1oachxmhV1sDGh',
+          offerer: 'Mr Rogers',
+          offer: 'This is just a test-request!',
+          offerhashtag: 'pioneer',
+          offererrep: '6',
+          offertime: 'a few minutes ago',
+          offeramount: '233.50',
+          nrofreplies: '2'
+        });
       },
 
       /**
@@ -578,8 +564,10 @@ This is the component showing all requests of a certain hashtag. It contains a r
       */      
       _checkSize: function() {
         if (this.phoneview) {
+        this.visibleclass = 'mobile';
         this.currentviewmode = "small";
         } else {
+        this.visibleclass = 'default';
         this.currentviewmode = "normal";
         }
       },
@@ -588,27 +576,27 @@ This is the component showing all requests of a certain hashtag. It contains a r
       * 'leave' fires the 'leave' to the parent-element. (This also contains animation-config for going back to sc-home.)
       */
       leave: function(){
-        this.sharedElements = {
-          'hero': this.$.currentavatar,
-          'balance': this.$.balancebox
-        };
+        this.fire('leave');
+      },
 
-        this.animationConfig = {
-             'entry': [{
+      /**
+      * 'tonewItem' .
+      */
+      tonewItem: function(){
+          this.sharedElements = {
+              'hero': this.$.hashtagavatar,
+              'balance': this.$.balancebox
+            };
+
+            this.animationConfig = {
+
+              'entry': [{
                 name: 'slide-from-bottom-animation',
                 node:this.$.hashtagcontent,
                 toPage: this,
                 timing: {
                   duration: 700
                 }
-              },{
-                name: 'fade-in-animation',
-                node:this.$.backbtn,
-                fromPage: this,
-                timing: {
-                  duration: 125
-                }
-
               }, {
                 name: 'hero-animation',
                 id: 'hero',
@@ -625,23 +613,24 @@ This is the component showing all requests of a certain hashtag. It contains a r
                 }
               }],
 
+
               'exit': [{
-                name: 'fade-out-animation',
+                name: 'slide-down-animation',
                 node:this.$.hashtagcontent,
                 fromPage: this,
                 timing: {
-                  duration: 125
+                  duration: 700
                 }
 
               },{
-                name: 'fade-out-animation',
-                node:this.$.backbtn,
-                fromPage: this,
-                timing: {
-                  duration: 125
-                }
+              //   name: 'fade-out-animation',
+              //   node:this.$.backbtn,
+              //   fromPage: this,
+              //   timing: {
+              //     duration: 125
+              //   }
 
-              }, {
+              // }, {
                 name: 'hero-animation',
                 id: 'hero',
                 fromPage: this,
@@ -656,108 +645,28 @@ This is the component showing all requests of a certain hashtag. It contains a r
                     duration: 600
                 }
                 }]
-          };
+              };
 
-        this.fire('leave');
-      },
-
-      /**
-      * 'tonewItem' fires 'to-newitem' to the parent-element.
-      */
-      tonewItem: function(){
         this.set('route.path','/pioneer/newitem');
       },
 
       /**
-      * 'toItemdetail' fires 'to-itemdetail' to the parent-element, and includes the animationconfig for this action.
+      * 'hashtag_to_detail' fires 'to-itemdetail' to the parent-element, and includes the animationconfig for this action.
       */
-      toItemdetail: function(e){
-        this.sharedElements = {
-          'hero': this.$.currentavatar,
-          'balance': this.$.balancebox
-        };
-        this.animationConfig = {
-              'entry': [{
-                name: 'slide-from-left-animation',
-                node:this.$.hashtagcontent,
-                toPage: this,
-                timing: {
-                  duration: 600
-                }
-              },{
-                name: 'fade-in-animation',
-                node:this.$.backbtn,
-                toPage: this,
-                timing: {
-                  duration: 200
-                }
-              },{
-                name: 'fade-in-animation',
-                node:this.$.addbtn,
-                toPage: this,
-                timing: {
-                  duration: 200
-                }
-
-              }, {
-                name: 'hero-animation',
-                id: 'hero',
-                toPage: this,
-                timing: {
-                    duration: 200
-                }
-              }, {
-                name: 'hero-animation',
-                id: 'balance',
-                toPage: this,
-                timing: {
-                    duration: 200
-                }
-
-              }],
-
-              'exit': [{
-                name: 'slide-left-animation',
-                node:this.$.hashtagcontent,
-                fromPage: this,
-                timing: {
-                  duration: 600
-                }
-
-              },{
-                name: 'fade-out-animation',
-                node:this.$.backbtn,
-                fromPage: this,
-                timing: {
-                  duration: 200
-                }
-              },{
-                name: 'fade-out-animation',
-                node:this.$.addbtn,
-                fromPage: this,
-                timing: {
-                  duration: 200
-                }
-              }, {
-                name: 'hero-animation',
-                id: 'hero',
-                fromPage: this,
-                timing: {
-                    duration: 200
-                }
-
-                }, {
-                  name: 'hero-animation',
-                  id: 'balance',
-                  fromPage: this,
-                  timing: {
-                      duration: 200
-                  }
-                }]
-          };
-        this.fire('to-itemdetail');
+      hashtag_to_detail: function(e){
+        console.log("Dit is de e uit hashtgitem",e.detail);
+        this.currentitem = e.detail;
+        this.set('route.path','/pioneer/detail');
       },
 
+      detail_to_hashtag: function(){
+        this.set('route.path','/pioneer/list');
+      },
+
+
+      newitem_cancel: function(e){
+        this.set('route.path','/pioneer/list');
+      },
 
       newitem_submitted: function(e){
         this.set('route.path','/pioneer/list');
@@ -772,21 +681,90 @@ This is the component showing all requests of a certain hashtag. It contains a r
           offeramount: e.detail.amount,
           nrofreplies: '0'
         }
-        console.log('Yes!', newrequest);
+        // console.log('Yes!', newrequest);
         this.dispatch('add',newrequest);
 //        this.push('deals',newrequest);
 
-      }
+      },
+
+      // setAnimconfig: function(){
+      //   var avatar = document.getElementById('hashtagavatar');
+      //   var balance = document.getElementById('balancebox');
+      //   // console.log("LOOOOOGGGG",avatar,balance);
+      //   this.sharedElements = {
+      //         'hero': avatar,
+      //         'balance': balance
+      //       };
 
 
-      // newitem_to_home: function(){
-      //   this.transitionto('/home');
-      // },
+      //     // this.sharedElements = {
+      //     //     'hero': this.$.homeavatar,
+      //     //     'balance': this.$.homebalance
+      //     //   };
 
-      // newitem_to_hashtag: function(){
-      //   this.transitionto('/hashtag');
-      // },
+      //     this.animationConfig = {
 
+      //         'entry': [{
+      //           name: 'slide-from-top-animation',
+      //           node:this.$.hashtagcontent,
+      //           toPage: this,
+      //           timing: {
+      //             duration: 2700
+      //           }
+      //         }, {
+      //           name: 'hero-animation',
+      //           id: 'hero',
+      //           toPage: this,
+      //           timing: {
+      //               duration: 600
+      //           }
+      //         }, {
+      //           name: 'hero-animation',
+      //           id: 'balance',
+      //           toPage: this,
+      //           timing: {
+      //               duration: 600
+      //           }
+      //         }],
+
+
+      //         'exit': [{
+      //           // name: 'slide-down-animation',
+      //           // node:this.$.hashtagcontent,
+      //           // fromPage: this,
+      //           // timing: {
+      //           //   duration: 700
+      //           // }
+
+      //         // },{
+      //         //   name: 'fade-out-animation',
+      //         //   node:this.$.backbtn,
+      //         //   fromPage: this,
+      //         //   timing: {
+      //         //     duration: 125
+      //         //   }
+
+      //         // }, {
+      //           name: 'hero-animation',
+      //           id: 'hero',
+      //           fromPage: this,
+      //           timing: {
+      //               duration: 600
+      //           }
+      //         }, {
+      //           name: 'hero-animation',
+      //           id: 'balance',
+      //           fromPage: this,
+      //           timing: {
+      //               duration: 600
+      //           }
+      //           }]
+      //         };
+
+
+      //   console.log("LOOOOOGGGG 2",this.sharedElements,this.animationConfig);
+
+      // }
 
 
     });
