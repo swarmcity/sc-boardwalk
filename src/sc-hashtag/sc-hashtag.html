@@ -14,6 +14,7 @@
 <link rel="import" href="../sc-balance/sc-balance.html">
 <link rel="import" href="../sc-hashtagitem/sc-hashtagitem.html">
 <link rel="import" href="../sc-newitem/sc-newitem.html">
+<link rel="import" href="../sc-shh/sc-shh.html">
 
 
 <!--
@@ -260,6 +261,9 @@ This is the component showing all requests of a certain hashtag. It contains a r
     }
 
     </style>
+ 
+    <ac-shh web3="{{web3}}"></ac-shh>
+
     
     <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
 
@@ -386,6 +390,9 @@ This is the component showing all requests of a certain hashtag. It contains a r
         }
       },
 
+      observers: [
+      '_web3(web3)'
+    ],
       properties: {
 
         route: {
@@ -495,7 +502,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       ready: function() {
           this._checkSize();
-          
+        
+
           this.dispatch('add', {
               offereravatar: 'QmWA8eaJyZpVT5mUx1qBvbNXYfprSdds1oachxmhV1sDGh',
               offerer: 'Mr Rogers',
@@ -551,6 +559,36 @@ This is the component showing all requests of a certain hashtag. It contains a r
            //  },
           // ];
       },
+
+
+ _web3: function() {
+    var self = this;
+  
+
+    if (!this.web3){
+      throw new Error('web3 not set while requesting whisper listener');
+    }
+
+    if (self.web3) {
+
+      //this._stopTopicFilter();
+
+      var topic = "pioneer";
+      this.filter = self.web3.shh.filter({
+        "topics": [self.web3.fromAscii(topic)],
+      });
+
+      console.log("sc-whisperer: channelswitch, start listening to", topic, ' knows web3 ', this.web3);
+      this.filter.watch(this._processmessage.bind(this));
+    }
+  },
+
+  // processinging of channel setup messages.
+  _processmessage: function(error, result) {
+      console.log('incoming in whisperer: web3 ', this.web3);
+      var self = this;
+    },
+
 
       /**
       * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
