@@ -1,4 +1,14 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+
+<link rel="import" href="../../bower_components/sc-style/sc-style.html">
+<link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
+
+<link rel="import" href="../sc-avatar/sc-avatar.html">
+<link rel="import" href="../sc-loader/sc-loader.html">
+
 <!--
 `sc-itemreplier`
 
@@ -8,13 +18,144 @@ This components allow a Swarm Citizen to reply on a request.
 -->
 
 <dom-module id="sc-itemreplier">
+<link rel="import" href="../../bower_components/sc-style/sc-style.css"  type="css">
+
   <template>
     <style>
       :host {
         display: block;
       }
+
+
+      .yourrespond {
+        box-sizing:border-box;
+        padding: 1vw 4vw 3vw 4vw;
+        transition: all 1s linear;
+      }
+
+      .lightgreytopborder {
+        border-top: 1px solid var(--sc-grey1);
+        border-bottom: 1px solid var(--sc-grey1);
+
+      }
+
+
+      .greytopborder {
+        border-top: 1px solid var(--sc-grey1);
+        border-bottom: 1px solid var(--sc-grey2);
+      }
+
+      .notopborder {
+        border-top: none;
+      }
+
+      .bluebottomborder {
+        border-bottom: 2px solid var(--sc-blue);
+      }  
+
+      paper-input.swtamount {
+        --paper-input-container-input: {
+          @apply(--montserrat-bold);
+          font-size: 24px;
+          line-height: 24px;
+          color: var(--sc-darkblue);
+        };
+        --paper-input-container-focus-color: var(--sc-darkblue);
+      }
+
+      .confirmbtns {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        @apply(--layout-end-justified);
+      }
+      .confirmbtns paper-icon-button {
+        margin-left: 5px;
+      }
+
+      @media all and (min-width: 0) and (max-width: 420px) { 
+
+        .yourrespond {
+          box-sizing:border-box;
+          padding: 10vw;
+          transition: all 0.25s linear;
+        }
+
+        .confirmbtns {
+          @apply(--layout-horizontal);
+          @apply(--layout-center-center);
+        }
+
+      }
+
+
     </style>
-      <h2>Hello, I'm [[prop1]]</h2>
+    
+      <div class$="{{bgcolor}} {{borderz}} yourrespond totalwidth vertic centercenter">
+
+        <template is="dom-if" if="{{_is(replystate,'init')}}">
+          <div class="minispace"></div>
+          <paper-button noink class="darker totalwidth blue shadow respondbtn big" on-tap="replystateChanger">Reply</paper-button>
+          <div class="minispace"></div>
+        </template>
+
+        <template is="dom-if" if="{{_is(replystate,'replying')}}">
+        <iron-collapse class="totalwidth" id="replycoll">
+
+          <div class="total vertic centercenter">
+            <paper-textarea label="Your reply" class="totalwidth grey2unfocus" autofocus></paper-textarea>
+            <div class="totalwidth horizont end startjust">
+              <paper-input label="Your offer" class="yourreplyamount swtamount grey2unfocus" value="{{replyamount}}">
+              <div suffix class="yellow bold swtwithoffer">SWT</div>
+              </paper-input>
+            </div>
+            <div class="whitespace"></div>
+
+
+          <div class="totalwidth confirmbtns">
+            <iron-icon icon="sc-icons:decline" class="medium blue" on-tap="backtoInit">close collapse</iron-icon>
+            <paper-icon-button icon="sc-icons:v" noink class="white medium blueback shadow confirmbtn" on-tap="replystateChanger"> Reply with offer</paper-icon-button>
+          </div>
+
+
+          </div>
+        </iron-collapse>
+        </template>
+
+
+        <template is="dom-if" if="{{_is(replystate,'replygivven')}}">
+          <template is="dom-if" if="{{loadingreply}}">
+            <sc-loader small color="blue" class="blue" on-tap="replyLoaded">Submitting your reply</sc-loader>
+          </template>
+          <template is="dom-if" if="{{!loadingreply}}">
+            <div class="totalwidth vertic centercenter">
+              <div class="totalwidth horizont start startjust">
+              <ac-avatar
+                identity="{{identity}}"
+                pubkey="{{account}}"
+                mode="imgonly"
+                size="verysmall"
+                on-tap="exit"
+                class="youravatar">
+              </ac-avatar>
+                <div class="flex vertic centercenter">
+                  <p class="totalwidth yourname small bold grey4">You</p>
+                  <p class="totalwidth yourrep small bold blue">12 REP</p>
+                </div>
+              <div class="horizont end endjust acceptsfor">
+                <p class="bold grey4">1300.00 <span class="replySWT">SWT</span></p>
+                <iron-icon class="grey4 small" icon="sc-icons:v">checked</iron-icon>
+              </div>
+              </div>
+              <p class="totalwidth yourtxt grey4">
+                <small class="grey3 small">a few seconds ago</small><br>
+                I'd love to drive you! Pick you up at 14:00?</p>
+            </div>
+          </template>                
+        </template>
+      </div>
+
+
+
 
   </template>
 
@@ -34,6 +175,7 @@ This components allow a Swarm Citizen to reply on a request.
       },
 
       ready: function(){
+        this.onEnter();
       },
 
       /**
@@ -41,6 +183,10 @@ This components allow a Swarm Citizen to reply on a request.
       * use this to initialize any variables to start the component
       */
       onEnter: function(){
+        this.replystate = 'init';
+        this.loadingreply = true;
+        this.bgcolor = "whiteback";
+        this.borderz = "lightgreytopborder";
       },
 
       /**
@@ -48,7 +194,71 @@ This components allow a Swarm Citizen to reply on a request.
       * use this to reset any variables when leaving this component while it remains loaded.
       */
       onExit: function(){
-      }
+        this.backtoInit();
+      },
+
+
+
+      /**
+      * '_is', a function to bind a template to a certain value of a variable.
+      */
+      _is: function(a, b) {
+        if (b === undefined){
+          b = true;
+        }
+        return a === b;
+      },
+
+
+      /**
+      * When the action is trigger, 'replystateChanger' checks the replystate and does a certain action accordingly
+      */
+    replystateChanger: function(){
+        switch (this.replystate) {
+          case 'init':
+            this.replystate = 'replying'
+            this.bgcolor = "whiteback";
+            this.borderz = "greytopborder";
+              console.log("yes dit dus");
+
+            setTimeout(function(){ 
+            var coll = document.getElementById('replycoll');
+              if(!coll.opened){
+                coll.toggle();
+              }
+             }, 50);
+            break;
+          case 'replying':
+            this.replystate = 'replygivven'
+            this.bgcolor = "basestructure";
+            this.borderz = "notopborder";
+            var coll = document.getElementById('replycoll');
+            if(coll.opened){
+              coll.toggle();
+            }
+            setTimeout(function(){ 
+            this.replystate = 'replygivven'
+             }, 50);
+            break;
+          case 'replygivven':
+            this.replystate = 'deletereply'
+            this.borderz = "notopborder";
+            break;
+          default:
+            console.log("!!! ** Niks");
+        }
+    },
+
+
+    backtoInit: function(){
+      this.replystate = 'init'
+      this.bgcolor = "whiteback";
+      this.borderz = "lightgreytopborder";
+    },
+
+    replyLoaded: function(){
+      this.loadingreply = false;
+    },
 
     });
   </script>
