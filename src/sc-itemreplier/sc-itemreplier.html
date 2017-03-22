@@ -94,7 +94,11 @@ This components allow a Swarm Citizen to reply on a request.
 
         <template is="dom-if" if="{{_is(replystate,'init')}}">
           <div class="minispace"></div>
-          <paper-button noink class="darker totalwidth blue shadow respondbtn big" on-tap="replystateChanger">Reply</paper-button>
+          <!-- <paper-button noink class="darker totalwidth blue shadow respondbtn big" on-tap="replystateChanger">Reply</paper-button> -->
+          <div class="replybtn horizont centercenter">
+            <iron-icon icon="sc-icons:babble" class="medium blue" on-tap="replystateChanger">reply-icon</iron-icon>
+            <p>Reply</p>
+          </div>
           <div class="minispace"></div>
         </template>
 

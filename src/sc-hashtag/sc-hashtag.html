@@ -18,6 +18,7 @@
 <link rel="import" href="../sc-newitem/sc-newitem.html">
 <link rel="import" href="../sc-shh/sc-shh.html">
 <link rel="import" href="../sc-itemdetail/sc-itemdetail.html">
+<link rel="import" href="../sc-itemreply/sc-itemreply.html">
 
 
 <!--
@@ -370,6 +371,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       <sc-itemreply
       data-action="replydetail"
+      viewmode="detail"
       itemdata="[[currentitem]]"
       replydata="[[currentreply]]"
       on-back="reply_to_detail"
@@ -788,13 +790,14 @@ This is the component showing all requests of a certain hashtag. It contains a r
         this.set('route.path','/'+this.hashtag+'/list');
       },
 
-      reply_to_reply_to_detail: function(){
-        this.set('route.path','/'+this.hashtag+'/list');
-      },
-
       detail_to_hashtag: function(){
         this.set('route.path','/'+this.hashtag+'/list');
       },
+
+      detail_to_reply: function(){
+        this.set('route.path','/'+this.hashtag+'/replydetail');
+      },
+
 
       newitem_cancel: function(e){
         this.set('route.path','/'+this.hashtag+'/list');
@@ -830,10 +833,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
           return this.web3.shh.post(options, function(err, res) {
             console.log(err, res);
           });
-
         }
-
-
 
         // console.log('Yes!', newrequest);
         //this.dispatch('add',newrequest);
@@ -841,84 +841,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       },
 
-      // setAnimconfig: function(){
-      //   var avatar = document.getElementById('hashtagavatar');
-      //   var balance = document.getElementById('balancebox');
-      //   // console.log("LOOOOOGGGG",avatar,balance);
-      //   this.sharedElements = {
-      //         'hero': avatar,
-      //         'balance': balance
-      //       };
-
-
-      //     // this.sharedElements = {
-      //     //     'hero': this.$.homeavatar,
-      //     //     'balance': this.$.homebalance
-      //     //   };
-
-      //     this.animationConfig = {
-
-      //         'entry': [{
-      //           name: 'slide-from-top-animation',
-      //           node:this.$.hashtagcontent,
-      //           toPage: this,
-      //           timing: {
-      //             duration: 2700
-      //           }
-      //         }, {
-      //           name: 'hero-animation',
-      //           id: 'hero',
-      //           toPage: this,
-      //           timing: {
-      //               duration: 600
-      //           }
-      //         }, {
-      //           name: 'hero-animation',
-      //           id: 'balance',
-      //           toPage: this,
-      //           timing: {
-      //               duration: 600
-      //           }
-      //         }],
-
-
-      //         'exit': [{
-      //           // name: 'slide-down-animation',
-      //           // node:this.$.hashtagcontent,
-      //           // fromPage: this,
-      //           // timing: {
-      //           //   duration: 700
-      //           // }
-
-      //         // },{
-      //         //   name: 'fade-out-animation',
-      //         //   node:this.$.backbtn,
-      //         //   fromPage: this,
-      //         //   timing: {
-      //         //     duration: 125
-      //         //   }
-
-      //         // }, {
-      //           name: 'hero-animation',
-      //           id: 'hero',
-      //           fromPage: this,
-      //           timing: {
-      //               duration: 600
-      //           }
-      //         }, {
-      //           name: 'hero-animation',
-      //           id: 'balance',
-      //           fromPage: this,
-      //           timing: {
-      //               duration: 600
-      //           }
-      //           }]
-      //         };
-
-
-      //   console.log("LOOOOOGGGG 2",this.sharedElements,this.animationConfig);
-
-      // }
+  
 
 
     });
