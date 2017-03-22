@@ -11,8 +11,7 @@
 <link rel="import" href="../sc-swtconversion/sc-swtconversion.html">
 <link rel="import" href="../sc-profile/sc-profile.html">
 <link rel="import" href="../sc-hashtag/sc-hashtag.html">
-
-<!-- <link rel="import" href="../sc-newdeal/sc-newdeal.html"> -->
+<link rel="import" href="../sc-geohash/sc-geohash.html">
 
 <!--
 `sc-boardwalk-app`
@@ -53,6 +52,9 @@
     <app-route route="{{route}}" pattern="/:page" data="{{routedata}}" tail="{{pageTail}}"></app-route>
    
     <sc-web3 id="web3" web3="{{web3}}" keystore="[[keystore]]"></sc-web3>
+
+    <!-- we dont need this here quite yet, but put the GPS to work already -->
+    <sc-geohash geohash="{{geohash}}" locate-on-start></sc-geohash>
 
     <sc-wallet
         id="wallet"

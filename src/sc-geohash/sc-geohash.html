@@ -14,6 +14,9 @@
         geohash: {
           type: String,
           notify: true
+        },
+        locateOnStart: {
+          type: Boolean,
         }
       },
 
@@ -25,9 +28,14 @@
           /* geolocation IS NOT available */
           console.log('sc-geohash -> geolocation is not available in this browser.');
         }
+        if (this.geolocation && this.locateOnStart){
+          this.getCurrentGeohash();
+        }
       },
 
+      // looks up your LAT/LNG from the 
       getCurrentGeohash: function(cb){
+        var self=this;
         if (!this.geolocation){
           cb(new Error('no geolocation available'));
         }
