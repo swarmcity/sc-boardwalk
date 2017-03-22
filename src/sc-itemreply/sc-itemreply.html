@@ -44,7 +44,7 @@ This component shows a reply on a request.
       }
 
       .replyamount {
-        margin-bottom: 4px;
+        
       }
       
       .replyer {
@@ -66,6 +66,31 @@ This component shows a reply on a request.
 
 
 
+
+
+    .totalcontainer_detail {
+      width: 100%;
+      @apply(--layout-vertical);
+      @apply(--layout-start);
+      @apply(--layout-start-justified); 
+      box-sizing:border-box;
+      padding-top: 18vh;    
+    }
+
+      .paddingsides {
+        padding-left: 4vw;
+        padding-right: 4vw;
+      }
+
+      #responditemcontent {
+        width: 100%;
+        max-width: 700px;
+      }
+
+      .username {
+        font-size: 16px;
+        line-height: 18px;
+      }
 
 
       @media all and (min-width: 0) and (max-width: 420px) { 
@@ -99,6 +124,9 @@ This component shows a reply on a request.
 
     </style>
       
+
+    <template is="dom-if" if="{{_is(viewmode,'normal')}}">
+
       <div class="responditem totalwidth vertic centercenter paddingsides lighter">
         <div class="totalwidth vertic start centerjust">
 
@@ -136,6 +164,41 @@ This component shows a reply on a request.
 
         </div>
       </div>
+      </template>
+
+      <template is="dom-if" if="{{_is(viewmode,'detail')}}">
+      <div class="totalcontainer_detail paddingsides">
+
+      <div class="requestself whiteback totalwidth">
+        <p>Hier komt de request zelf</p>
+      </div>
+      <div id="responditemcontent" class="shadow totalwidth vertic start centerjust">
+        <div class="totalwidth vertic centercenter">
+            <sc-avatar
+              class="replyeravatar"
+              ipfshash="[[replydata.replyer.replyeravatar]]"
+              size="normal">
+            </sc-avatar>
+            <!-- <sc-username></sc-username> -->
+            <h1 class="bold username centertxt">username</h1>
+            <div class="whitespace"></div>
+            <div class="whitespace"></div>
+            <h1 class="centertxt">msg itself</h1>
+
+            <div class="horizont center endjust totalwidth">
+              <p class="bold grey4 replyamount">88 <span class="replySWT">SWT</span></p>
+              <iron-icon class="grey4 small" icon="sc-icons:v">checked</iron-icon>
+            </div>
+
+        </div>
+      </div>
+
+      </div>
+      </div>
+
+
+      </template>
+
 
   </template>
 
@@ -148,9 +211,9 @@ This component shows a reply on a request.
         /**
        * `size` can be 'verysmall' (28px), 'small' (40px), 'medium' (50px), 'normal' (100px) or 'big' (115px).
        */
-        size: {
+        viewmode: {
           type: String,
-          value: 'normal',
+          value: 'normal'
         },
         /**
        * `identity` is received from parent-element, as an object containing an IPFS-hash, which is img-source.
@@ -189,13 +252,6 @@ This component shows a reply on a request.
         return a === b;
       },
 
-
-      /**
-      * 'ipfsurl' gets a hash from the ipfs-component, resolves it and sets it as source for the avatar.
-      */
-      ipfsurl: function(hash){
-        return this.$.ipfs.geturl(hash);
-      },
 
     });
   </script>
