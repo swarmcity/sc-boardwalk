@@ -21,38 +21,38 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
     <style>
       :host {
         display: block;
-        width: 100%;
         min-height: 100%;
+        width: 100%;
       }
 
       .totalcontainer {
         width: 100%;
         @apply(--layout-vertical);
         @apply(--layout-start);
-        @apply(--layout-start-justified);        
+        @apply(--layout-start-justified); 
+        box-sizing:border-box;
+        padding-top: 18vh;    
+      }
+
+      .paddingsides {
+        padding-left: 4vw;
+        padding-right: 4vw;
+      }
+
+
+
+      #newitemcontent {
+        width: 100%;
+        max-width: 700px;
       }
 
       #avatarimg {
         z-index: 9;
       }
 
-
-
-      #detailcontent {
-        background-color: white;
-        margin: 10vh 3vw 2vh 10vw;
-        /*width: 94vw;*/    
-        box-sizing:border-box;
-        padding-top: 5vh;      
-        padding-bottom: 8vh;      
-        width: 86%;
-        max-width: 800px;
-
-      }
-
-      .paddingsides {
-        padding-left: 5vw;
-        padding-right: 5vw;
+      .newitempadding {
+        padding-left: 4vw;
+        padding-right: 4vw;
       }
 
 
@@ -122,19 +122,18 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
       .confirmbtns {
         z-index: 2;
+        margin-top: -40px;   
         width: 100%;
-        margin: -40px 3vw 2vh 10vw;   
-        width: 76%;
-        max-width: 740px;
+        max-width: 700px;
         @apply(--layout-horizontal);
         @apply(--layout-start);
         @apply(--layout-end-justified);
-  /*        box-sizing:border-box;
-        padding: 50px 10vw 50px 10vw;*/
+        box-sizing:border-box;
+        padding-right: 30px;
       }
 
-      .btnback {
-        background-color: var(--sc-blue);
+      .confirmbtn {
+        background-color: var(--sc-white);
         @apply(--layout-horizontal);
         @apply(--layout-center-center);
         width: 76px;
@@ -142,30 +141,37 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         border-radius: 50%;
       }
 
+      .backbtnarea {
+        padding: 25px;
+
+      }
+
       @media all and (min-width: 0) and (max-width: 420px) { 
 
-
-        #detailcontent {
-          background-color: white;
-          margin: 5vh 5vw 2vh 5vw;
-          /*width: 94vw;*/    
-          box-sizing:border-box;
-          padding-top: 5vh;      
-          padding-bottom: 8vh;      
-
-          width: 90vw;
-          max-width: 800px;
-
-        }
 
         .totalcontainer {
           width: 100%;
           @apply(--layout-vertical);
           @apply(--layout-center-center);        
+          box-sizing:border-box;
+          padding-top: 4vh; 
         }
 
+/*        #newitemcontent {
+          background-color: white;
+          margin: 5vh 5vw 2vh 5vw;
+          box-sizing:border-box;    
+          padding: 0px;
+          width: 100%;
+        }
+*/
 
-        .paddingsides {
+
+        #newitemcontent {
+          width: 100%;
+        }
+
+        .newitempadding {
           padding-left: 10vw;
           padding-right: 10vw;
         }
@@ -173,25 +179,15 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       }
 
     </style>
-  <div class="totalcontainer">
+    <div class="totalcontainer paddingsides">
+      <div id="newitemcontent" class="whiteback shadow">
 
-      <!--       
-      <div class="topbar whiteback" id="topbar">
-        <span class="flex"></span>
-        <div class="balance-box" id="balancebox">
-          <p class="grey1">?</p>
-        </div>
-        <iron-icon on-tap="toHashtag" id="backbtn" icon="sc-icons:decline" class="decliner grey2 big">back</iron-icon>
-      </div>  -->
-
-      <div class="whiteback shadow" id="detailcontent">
-
-      <div class="totalwidth horizont centercenter paddingsides">
+      <div class="totalwidth horizont centercenter backbtnarea">
         <span class="flex"></span>
         <iron-icon class="grey3" icon="sc-icons:decline" on-tap="back">back</iron-icon>
       </div>
 
-        <div class="totalwidth vertic centercenter paddingsides">
+        <div class="totalwidth vertic centercenter newitempadding">
           <div class="totalwidth vertic start centerjust">
             <div class="whitespace"></div>
             <paper-textarea label="Description" class="totalwidth offermsg" autofocus value="{{offermsg}}">
@@ -206,47 +202,37 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
             <div suffix class="yellow bold swtwithoffer">SWT</div>
             </paper-input>
           </div>
-        </div>
 
-        <div class="whitespace"></div>
-        <div class="whitespace"></div>
-        <div class="totalwidth horizont centercenter paddingsides">
-          <div class="avatar-box">
-            <sc-avatar
-              id="avatarimg"
-              ipfshash="[[identity.avatarhash]]"
-              size="medium">
-            </sc-avatar>
+          <div class="whitespace"></div>
+          <div class="whitespace"></div>
+          <div class="totalwidth horizont centercenter">
+            <div class="avatar-box">
+              <sc-avatar
+                id="avatarimg"
+                ipfshash="[[identity.avatarhash]]"
+                size="medium">
+              </sc-avatar>
+            </div>
+
+            <div class="vertic start startjust flex">
+              <sc-username
+                id="username"
+                identity="{{identity}}"
+                pubkey="{{account}}"
+                size="medium">
+              </sc-username>
+
+              <p class="bold rep blue">{{offererrep}} REP</p>
+            </div>  
+
           </div>
-
-          <div class="vertic start startjust flex">
-            <sc-username
-              id="username"
-              identity="{{identity}}"
-              pubkey="{{account}}"
-              size="medium">
-            </sc-username>
-
-            <p class="bold rep blue">{{offererrep}} REP</p>
-            <!--               
-              <sc-balance               
-                refcur="EUR"
-                arcbalance="{{arcbalance}}"
-                ethbalance="{{ethbalance}}"
-                showswt="false"
-                viewmode="verysmall">
-              </sc-balance> -->
-          </div>  
-
         </div>
-        <div class="fivespace"></div>
 
-
-
+        <div class="tenspace"></div>
       </div> 
       <div class="confirmbtns">
        <!--  <paper-icon-button noink class="bigbtn blueback white" icon="sc-icons:v">post this offer</paper-icon-button> -->
-       <div class="btnback">
+       <div class="confirmbtn">
           <paper-icon-button icon="sc-icons:v" class="big blueback white" on-tap="confirmRequest" noink disabled="{{!btnable}}">show</paper-icon-button>
         </div>
       </div>
@@ -282,7 +268,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
           return {
             'entry': [{
               name: 'slide-from-bottom-animation',
-              node:this.$.detailcontent,
+              node:this.$.newitemcontent,
               toPage: this,
               timing: {
                 duration: 600
@@ -326,7 +312,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
             'exit': [{
               name: 'fade-out-animation',
-              node:this.$.detailcontent,
+              node:this.$.newitemcontent,
               fromPage: this,
               timing: {
                 duration: 125
@@ -408,6 +394,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       _btnable: function(){
         // console.log('Deze dan???',this.offermsg,this.replyamount);
         if (!this.offermsg || !this.replyamount) {
+          this.btnable = false;
           return;
         }
 

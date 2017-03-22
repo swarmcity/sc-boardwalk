@@ -1,0 +1,202 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../sc-ipfs/sc-ipfs.html">
+
+<link rel="import" href="../../bower_components/sc-style/sc-style.html">
+<link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
+
+<link rel="import" href="../sc-avatar/sc-avatar.html">
+
+<!--
+`sc-itemreply`
+
+This component shows a reply on a request. 
+
+@demo src/sc-itemreply/demo/index.html 
+-->
+
+<dom-module id="sc-itemreply">
+<link rel="import" href="../../bower_components/sc-style/sc-style.css"  type="css">
+
+  <template>
+    <style>
+      :host {
+        display: block;
+        width: 100%
+        @apply(--base-structure);
+      }
+
+
+      .responditem {
+        /*background-color: var(--sc-grey1);*/
+        box-sizing:border-box;
+        padding-top: 28px;
+        padding-bottom: 28px;
+        padding-left: 4vw;
+        padding-right: 4vw;
+        border-bottom: 1px solid rgba(0,0,0,0.075);
+      }
+
+
+
+      .replyeravatar {
+        margin-right: 10px;
+      }
+
+      .replyamount {
+        margin-bottom: 4px;
+      }
+      
+      .replyer {
+/*        margin: 12px 0px 0px 0px;*/
+        font-size: 11px;
+        line-height: 14px;
+      }
+
+
+      .replyeramount {
+        font-size: 22px;
+        line-height: 22px;
+      }
+
+      .replyeramountSWT {
+        font-size: 11px;
+        line-height: 11px;
+      }
+
+
+
+
+
+      @media all and (min-width: 0) and (max-width: 420px) { 
+
+
+        .totalcontainer {
+          width: 100%;
+          @apply(--layout-vertical);
+          @apply(--layout-center-center);        
+          box-sizing:border-box;
+          padding-top: 4vh; 
+        }
+
+
+        #itemdetailcontent {
+          width: 100%;
+        }
+
+      .responditem {
+/*        background-color: var(--sc-grey1);*/
+        box-sizing:border-box;
+        padding-top: 8vw;
+        padding-bottom: 8vw;
+        padding-left: 10vw;
+        padding-right: 10vw;
+        border-bottom: 1px solid rgba(0,0,0,0.075);
+      }
+
+
+      }
+
+    </style>
+      
+      <div class="responditem totalwidth vertic centercenter paddingsides lighter">
+        <div class="totalwidth vertic start centerjust">
+
+
+        <div class="vertic start centerjust totalwidth">
+          <p class="grey3 small">{{replydata.replytime}}</p>
+          <p class="reply grey4">{{replydata.reply}}</p>
+        </div>
+        <div class="minispace"></div>
+        <div class="minispace"></div>
+        <div class="totalwidth horizont end centerjust">
+          <div class="horizont startjust center flex">
+            <sc-avatar
+              class="replyeravatar"
+              ipfshash="[[replydata.replyer.replyeravatar]]"
+              size="verysmall">
+            </sc-avatar>
+
+            <div class="vertic centercenter replyer">
+              <p class="totalwidth replyername small bold grey3">{{replydata.replyer.replyerusername}}</p>
+              <p class="totalwidth replyerrep small bold blue">{{replydata.replyer.replyerrep}} REP</p>
+            </div>
+          </div>
+
+
+          <div class="horizont start startjust">
+            <div class="horizont end endjust acceptsfor">
+              <p class="bold grey4 replyamount">{{replydata.replyamount}} <span class="replySWT">SWT</span></p>
+              <iron-icon class="grey4 small" icon="sc-icons:v">checked</iron-icon>
+            </div>
+          </div>
+        </div>
+
+
+
+        </div>
+      </div>
+
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'sc-itemreply',
+
+      properties: {
+        /**
+       * `size` can be 'verysmall' (28px), 'small' (40px), 'medium' (50px), 'normal' (100px) or 'big' (115px).
+       */
+        size: {
+          type: String,
+          value: 'normal',
+        },
+        /**
+       * `identity` is received from parent-element, as an object containing an IPFS-hash, which is img-source.
+       */
+        identity: {
+          type: Object
+        }
+      },
+
+      ready: function(){
+      },
+
+      /**
+      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
+      * use this to initialize any variables to start the component
+      */
+      onEnter: function(){
+      },
+
+      /**
+      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage 
+      * use this to reset any variables when leaving this component while it remains loaded.
+      */
+      onExit: function(){
+      },
+
+
+      /**
+      * '_is', a function to bind a template to a certain value of a variable.
+      */
+      _is: function(a, b) {
+        if (b === undefined){
+          b = true;
+        }
+        //console.log(a ,'(',typeof a,') is',b,'(',typeof b,') they are equal for ==',a == b,', they are equal for ===',a === b);
+        return a === b;
+      },
+
+
+      /**
+      * 'ipfsurl' gets a hash from the ipfs-component, resolves it and sets it as source for the avatar.
+      */
+      ipfsurl: function(hash){
+        return this.$.ipfs.geturl(hash);
+      },
+
+    });
+  </script>
+</dom-module>

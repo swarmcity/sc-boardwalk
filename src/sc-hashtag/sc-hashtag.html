@@ -363,8 +363,18 @@ This is the component showing all requests of a certain hashtag. It contains a r
       <sc-itemdetail
       data-action="detail"
       itemdata="[[currentitem]]"
-      on-back="detail_to_hashtag"
+      on-back="detail_to_list"
+      on-reply-selected="detail_to_reply"
       ></sc-itemdetail>
+
+
+      <sc-itemreply
+      data-action="replydetail"
+      itemdata="[[currentitem]]"
+      replydata="[[currentreply]]"
+      on-back="reply_to_detail"
+      ></sc-itemdetail>
+
 
     </neon-animated-pages>
         </div>
@@ -545,16 +555,38 @@ This is the component showing all requests of a certain hashtag. It contains a r
           this._checkSize();
         
 
-          // this.dispatch('add', {
-          //     offereravatar: 'QmWA8eaJyZpVT5mUx1qBvbNXYfprSdds1oachxmhV1sDGh',
-          //     offerer: 'Mr Rogers',
-          //     offer: 'This is just a test-request!',
-          //     offerhashtag: 'pioneer',
-          //     offererrep: '6',
-          //     offertime: 'a few minutes ago',
-          //     offeramount: '233.50',
-          //     nrofreplies: '2'
-          //   });
+
+          this.dispatch('add', {
+              offereravatar: 'QmWA8eaJyZpVT5mUx1qBvbNXYfprSdds1oachxmhV1sDGh',
+              offerer: 'Mr Rogers',
+              offer: 'This is just a test-request!',
+              offerhashtag: 'pioneer',
+              offererrep: '6',
+              offertime: 'a few minutes ago',
+              offeramount: '233.50',
+              // nrofreplies: '2'
+              replies: [
+                {
+                  replyer: {
+                    replyeravatar:'QmWA8eaJyZpVT5mUx1qBvbNXYfprSdds1oachxmhV1sDGh',
+                    replyerusername:'Mr Rogers',
+                    replyerrep: '0'},
+                  reply: 'Ik reageer op men eigen item!',
+                  replyamount: '44',
+                  replytime:'Just now'
+                },
+                {
+                  replyer: {
+                    replyeravatar:'QmWA8eaJyZpVT5mUx1qBvbNXYfprSdds1oachxmhV1sDGh',
+                    replyerusername:'Mr Rogers',
+                    replyerrep: '0'},
+                  reply: 'Ik reageer op men eigen item!',
+                  replyamount: '44',
+                  replytime:'Just now'
+                }
+              ]
+
+            });
 
 
           // this.deals = [
@@ -752,10 +784,17 @@ This is the component showing all requests of a certain hashtag. It contains a r
         this.set('route.path','/'+this.hashtag+'/detail');
       },
 
-      detail_to_hashtag: function(){
+      detail_to_list: function(){
         this.set('route.path','/'+this.hashtag+'/list');
       },
 
+      reply_to_reply_to_detail: function(){
+        this.set('route.path','/'+this.hashtag+'/list');
+      },
+
+      detail_to_hashtag: function(){
+        this.set('route.path','/'+this.hashtag+'/list');
+      },
 
       newitem_cancel: function(e){
         this.set('route.path','/'+this.hashtag+'/list');
