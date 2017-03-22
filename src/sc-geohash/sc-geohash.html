@@ -1,0 +1,42 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<script type="text/javascript" src="../../bower_components/latlon-geohash/latlon-geohash.js"></script>
+
+<!--
+`sc-geohash` is a component to calculate geohashes and determine your geohash from your internal GPS (if available).
+
+@demo src/sc-geohash/demo/index.html 
+-->
+<dom-module id="sc-geohash">
+  <script>
+    Polymer({
+      is: 'sc-geohash',
+      properties: {
+        geohash: {
+          type: String,
+          notify: true
+        }
+      },
+
+      ready: function(){
+        if ("geolocation" in navigator) {
+          /* geolocation is available */
+          this.geolocation = true;
+        } else {
+          /* geolocation IS NOT available */
+          console.log('sc-geohash -> geolocation is not available in this browser.');
+        }
+      },
+
+      getCurrentGeohash: function(cb){
+        if (!this.geolocation){
+          cb(new Error('no geolocation available'));
+        }
+        navigator.geolocation.getCurrentPosition(function(position) {
+          self.geohash = Geohash.encode(position.coords.latitude, position.coords.longitude);
+          if (cb) cb(null,self.geohash);
+        });
+      }
+
+    });
+  </script>
+</dom-module>

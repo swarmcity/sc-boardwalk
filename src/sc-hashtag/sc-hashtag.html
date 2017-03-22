@@ -322,7 +322,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
                 <div class="symbol">
                   <p class="semibold">#</p>
                 </div>
-                <p class="bold wordbreak">pioneer</p>
+                <p class="bold wordbreak">{{hashtag}}</p>
                 <iron-icon on-tap="leave" icon="sc-icons:decline" class="small backhash grey4">back</iron-icon>
               </div>
               <div class="flex"></div>
@@ -388,6 +388,9 @@ This is the component showing all requests of a certain hashtag. It contains a r
             deals.splice(idx, 1)
           }
           break;
+        case 'REMOVE_ALL':
+          deals = [];
+          break;
       }
       state.deals = deals;
       return state;
@@ -419,11 +422,17 @@ This is the component showing all requests of a certain hashtag. It contains a r
             type: 'REMOVE_ITEM',
             deal: dealdata
           };
-        }
+        },
+        removeall: function() {
+          return {
+            type: 'REMOVE_ALL',
+          };
+        },
       },
 
       observers: [
-      '_web3(web3)'
+      '_web3(web3)',
+      '_routedata(data)'
     ],
       properties: {
 
@@ -523,21 +532,29 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
         },
 
+      _routedata: function(){
+        if (this.data && this.data.hashtag){
+          this.hashtag = this.data.hashtag;
+          this._starthastaglistener();
+          this.dispatch('removeall');
+        }
+//        debugger;
+      },
 
       ready: function() {
           this._checkSize();
         
 
-          this.dispatch('add', {
-              offereravatar: 'QmWA8eaJyZpVT5mUx1qBvbNXYfprSdds1oachxmhV1sDGh',
-              offerer: 'Mr Rogers',
-              offer: 'This is just a test-request!',
-              offerhashtag: 'pioneer',
-              offererrep: '6',
-              offertime: 'a few minutes ago',
-              offeramount: '233.50',
-              nrofreplies: '2'
-            });
+          // this.dispatch('add', {
+          //     offereravatar: 'QmWA8eaJyZpVT5mUx1qBvbNXYfprSdds1oachxmhV1sDGh',
+          //     offerer: 'Mr Rogers',
+          //     offer: 'This is just a test-request!',
+          //     offerhashtag: 'pioneer',
+          //     offererrep: '6',
+          //     offertime: 'a few minutes ago',
+          //     offeramount: '233.50',
+          //     nrofreplies: '2'
+          //   });
 
 
           // this.deals = [
@@ -589,23 +606,25 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
 
  _web3: function() {
-    var self = this;
+    
   
 
     if (!this.web3){
       throw new Error('web3 not set while requesting whisper listener');
     }
 
-    if (self.web3) {
+   this._starthastaglistener();
+  },
 
-      //this._stopTopicFilter();
+  _starthastaglistener: function(){
+    var self = this;
+     if (this.web3 && this.hashtag) {
 
-      var topic = "pioneer";
       this.filter = self.web3.shh.filter({
-        "topics": [self.web3.fromAscii(topic)],
+        "topics": [self.web3.fromAscii(this.hashtag)],
       });
 
-      console.log("sc-whisperer: channelswitch, start listening to", topic, ' knows web3 ', this.web3);
+      console.log("sc-whisperer: channelswitch, start listening to", this.hashtag);
       this.filter.watch(this._processmessage.bind(this));
     }
   },
@@ -616,16 +635,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
       var self = this;
       var payload = JSON.parse(self.web3.toAscii(result.payload));
       this.dispatch('add',payload);
-        // this.dispatch('add', {
-        //       offereravatar: 'QmWA8eaJyZpVT5mUx1qBvbNXYfprSdds1oachxmhV1sDGh',
-        //       offerer: 'Mr Rogers',
-        //       offer: 'This is just a test-request!',
-        //       offerhashtag: 'pioneer',
-        //       offererrep: '6',
-        //       offertime: 'a few minutes ago',
-        //       offeramount: '233.50',
-        //       nrofreplies: '2'
-        //     });      
     },
 
 
@@ -731,7 +740,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
                 }]
               };
 
-        this.set('route.path','/pioneer/newitem');
+        this.set('route.path','/'+this.hashtag+'/newitem');
       },
 
       /**
@@ -740,46 +749,51 @@ This is the component showing all requests of a certain hashtag. It contains a r
       hashtag_to_detail: function(e){
         console.log("Dit is de e uit hashtgitem",e.detail);
         this.currentitem = e.detail;
-        this.set('route.path','/pioneer/detail');
+        this.set('route.path','/'+this.hashtag+'/detail');
       },
 
       detail_to_hashtag: function(){
-        this.set('route.path','/pioneer/list');
+        this.set('route.path','/'+this.hashtag+'/list');
       },
 
 
       newitem_cancel: function(e){
-        this.set('route.path','/pioneer/list');
+        this.set('route.path','/'+this.hashtag+'/list');
       },
 
       newitem_submitted: function(e){
-        this.set('route.path','/pioneer/list');
+        this.set('route.path','/'+this.hashtag+'/list');
 
         var newrequest = {
           offereravatar: this.identity.avatarhash,
           offerer: this.identity.username,
           offer: e.detail.msg,
-          offerhashtag: 'pioneer',
+          offerhashtag: this.hashtag,
           offererrep: '0',
           offertime: 'a few minutes ago',
           offeramount: e.detail.amount,
           nrofreplies: '0'
         }
-        if (!this.shhidentity){
-          this.shhidentity = this.web3.shh.newIdentity();
+
+        if (this.web3 && this.hashtag){
+          if (!this.shhidentity){
+            this.shhidentity = this.web3.shh.newIdentity();
+          }
+
+          var options = {
+            "from": this.shhidentity,
+            "topics": [this.web3.fromAscii(this.hashtag)],
+            "payload": this.web3.fromAscii(JSON.stringify(newrequest)),
+            "ttl": 60*60*24, // is a time for the message to live on the network, specified in seconds. This defaults to 50.
+            "priority": 1000
+          };
+
+          return this.web3.shh.post(options, function(err, res) {
+            console.log(err, res);
+          });
+
         }
 
-        var options = {
-          "from": this.shhidentity,
-          "topics": [this.web3.fromAscii("pioneer")],
-          "payload": this.web3.fromAscii(JSON.stringify(newrequest)),
-          "ttl": 100,
-          "priority": 1000
-        };
-
-        return this.web3.shh.post(options, function(err, res) {
-          console.log(err, res);
-        });
 
 
         // console.log('Yes!', newrequest);
