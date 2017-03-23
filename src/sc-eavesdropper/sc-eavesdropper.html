@@ -1,10 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-<!-- <link rel="import" href="../../bower_components/app-route/app-location.html">
-<link rel="import" href="../../bower_components/app-route/app-route.html"> -->
 <link rel="import" href="../sc-shh/sc-shh.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
-
-
 
 <!--
 `sc-eavesdropper` is a component to snoop on whisper channels
@@ -12,32 +8,46 @@
 @demo src/sc-eavesdropper/demo/index.html 
 -->
 <dom-module id="sc-eavesdropper">
-  <template>
-<!--     <app-location route="{{route}}" use-hash-as-path></app-location>  
-    <app-route route="{{route}}" pattern=":page/:hashtag" data="{{routedata}}" tail="{{pageTail}}"></app-route>
- -->    <sc-shh web3="{{web3}}"></sc-shh>
+  <template is="dom-bind">
+  <style>
+.target-fade {
+  -webkit-animation: target-fade 4s 1;
+  -moz-animation: target-fade 4s 1;
+}
 
-		<img src="./eavesdropping.gif">
-Enter hashtag to snoop <paper-input value="{{hashtag}}">
-<div>
-<template is="dom-repeat" items="{{messages}}">
-<li><pre>{{_tostring(item)}}</pre></li>
-</template>
-</div>
+@-webkit-keyframes target-fade {
+  0% { background-color: rgba(80, 173, 118, .5); }
+  100% { background-color: rgba(80, 173, 118, 0); }
+}
+
+@-moz-keyframes target-fade {
+  0% { background-color: rgba(80, 173, 118, .5); }
+  100% { background-color: rgba(80, 173, 118, 0); }
+}
+  </style>
+   <sc-shh web3="{{web3}}"></sc-shh>
+	<img src="./eavesdropping.gif" width="400px">
+	Enter hashtag to snoop <paper-input value="{{hashtag}}"></paper-input>
+	<div>
+		<template is="dom-repeat" items="{{messages}}">
+			<div class="target-fade"><pre class="">{{_tostring(item)}}</pre></div>
+		</template>
+	</div>
 
 
-    </template>
+	</template>
  	<script>
     Polymer({
     	is: 'sc-eavesdropper',
     	properties: {
     		messages: {
     			type: Array,
-    			value: [],
+    			value: [{'jaap':'joep'}],
     		},
     	},
     	observers: [
-    		'_openwhisperchannel(hashtag,web3)'
+    		'_openwhisperchannel(hashtag,web3)',
+    		'_messages(messages)'
     	],
     	attached: function() {
     		console.log('sc-eavesdropper -> ready.', this.routedata);
@@ -45,17 +55,19 @@ Enter hashtag to snoop <paper-input value="{{hashtag}}">
     	detached: function(){
     		this._stophastaglistener();
     	},
+    	_messages: function(){
+    		console.log('array changed');
+    	},
 
     	_openwhisperchannel: function() {
     		if (!this.web3 || !this.hashtag) {
     			return;
     		}
-    		console.log('start listening to', this.hashtag);
     		this._starthastaglistener();
     	},
 
     	_tostring: function(o) {
-    		return JSON.stringify(o);
+    		return JSON.stringify(o, null, '  ');;
     	},
 
     	_stophastaglistener: function(){
@@ -65,27 +77,34 @@ Enter hashtag to snoop <paper-input value="{{hashtag}}">
     	},
 
     	_starthastaglistener: function() {
+			var self = this;
+				
+			this.debounce('_starthastaglistener', function() {
+	    		self._stophastaglistener();
+				console.log('start listening to', this.hashtag);
+    			self.messages = [];
+	    		if (self.web3 && self.hashtag) {
 
-    		this._stophastaglistener();
+	    			self.filter = self.web3.shh.filter({
+	    				"topics": [self.web3.fromAscii(self.hashtag)],
+	    			});
 
-    		var self = this;
-    		if (this.web3 && this.hashtag) {
-
-    			this.filter = self.web3.shh.filter({
-    				"hashtags": [self.web3.fromAscii(this.hashtag)],
-    			});
-
-    			console.log("sc-whisperer: channelswitch, start listening to", this.hashtag);
-    			this.filter.watch(this._processmessage.bind(this));
-    		}
+	    			console.log("sc-whisperer: channelswitch, start listening to", self.hashtag);
+	    			self.filter.watch(self._processmessage.bind(self));
+	    		}
+	    	}.bind(this),500);
     	},
 
     	// processinging of channel setup messages.
     	_processmessage: function(error, result) {
-    		console.log('incoming in whisperer: web3 ', this.web3);
     		var self = this;
     		var payload = JSON.parse(self.web3.toAscii(result.payload));
-    		this.dispatch('add', payload);
+    		console.log('incoming in whisperer: web3 ', payload);
+			this.unshift('messages', {
+				datetime: new Date(),
+				payload: payload
+			});
+    		//this.dispatch('add', payload);
     	},
 
 
