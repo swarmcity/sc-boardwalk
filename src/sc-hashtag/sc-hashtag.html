@@ -366,15 +366,14 @@ This is the component showing all requests of a certain hashtag. It contains a r
       itemdata="[[currentitem]]"
       on-back="detail_to_list"
       on-reply-selected="detail_to_reply"
+      on-reply-to-detail="reply_to_detail"
       ></sc-itemdetail>
 
 
       <sc-itemreply
       data-action="replydetail"
       viewmode="detail"
-      itemdata="[[currentitem]]"
       replydata="[[currentreply]]"
-      on-back="reply_to_detail"
       ></sc-itemdetail>
 
 
@@ -794,8 +793,18 @@ This is the component showing all requests of a certain hashtag. It contains a r
         this.set('route.path','/'+this.hashtag+'/list');
       },
 
-      detail_to_reply: function(){
+      detail_to_reply: function(e){
+
+        // THIS IS A TEMP SOLUTION: IT SHOULD WORK ON THE STATE (WITH REDUX)
+        console.log("OUT OF HASHTAG:::::",e.detail)
+        this.currentreply = e.detail;
+
         this.set('route.path','/'+this.hashtag+'/replydetail');
+      },
+
+
+      reply_to_detail: function(){
+        this.set('route.path','/'+this.hashtag+'/detail');
       },
 
 

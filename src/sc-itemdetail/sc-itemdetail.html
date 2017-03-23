@@ -175,7 +175,10 @@ This components shows the detailed view of a request.
         </sc-itemreplier>
 
         <template is="dom-repeat" items="{{itemdata.replies}}">
-          <sc-itemreply replydata="{{item}}" on-tap="fireReplyselected">
+          <sc-itemreply
+          replydata="{{item}}"
+          on-to-detail="fireReplyselected"
+          on-item-detail="firetoItemdetail">
           </sc-itemreply>
         </template>
 
@@ -284,9 +287,16 @@ This components shows the detailed view of a request.
         this.fire('back');
       },
 
-      fireReplyselected: function(){
-        this.fire('reply-selected');
-      }
+      // TEMP FUNCTION
+      fireReplyselected: function(e){
+        var replydata = e.detail;
+        this.fire('reply-selected',replydata);
+      },
+
+      firetoItemdetail: function(){
+        console.log('WHaaaaaattt???');
+        this.fire('reply-to-detail');
+      },
 
     });
   </script>

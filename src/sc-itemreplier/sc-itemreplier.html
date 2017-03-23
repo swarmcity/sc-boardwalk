@@ -29,7 +29,7 @@ This components allow a Swarm Citizen to reply on a request.
 
       .yourrespond {
         box-sizing:border-box;
-        padding: 1vw 4vw 3vw 4vw;
+        padding: 0vw 4vw 1vw 4vw;
         transition: all 1s linear;
       }
 
@@ -72,6 +72,24 @@ This components allow a Swarm Citizen to reply on a request.
         margin-left: 5px;
       }
 
+      .replybtn {
+        border-bottom: 2px dotted var(--sc-blue);
+        box-sizing:border-box;
+        padding-top: 8px;
+        padding-bottom: 4px;
+      }
+
+      .replybtn iron-icon {
+        margin-right: 5px;
+      }
+
+      .replybtn:hover {
+        cursor: pointer;
+      }
+      .replybtn p:hover {
+        color: var(--sc-blue);
+      }
+
       @media all and (min-width: 0) and (max-width: 420px) { 
 
         .yourrespond {
@@ -85,6 +103,7 @@ This components allow a Swarm Citizen to reply on a request.
           @apply(--layout-center-center);
         }
 
+
       }
 
 
@@ -95,9 +114,9 @@ This components allow a Swarm Citizen to reply on a request.
         <template is="dom-if" if="{{_is(replystate,'init')}}">
           <div class="minispace"></div>
           <!-- <paper-button noink class="darker totalwidth blue shadow respondbtn big" on-tap="replystateChanger">Reply</paper-button> -->
-          <div class="replybtn horizont centercenter">
-            <iron-icon icon="sc-icons:babble" class="medium blue" on-tap="replystateChanger">reply-icon</iron-icon>
-            <p>Reply</p>
+          <div class="replybtn horizont centercenter" on-tap="replystateChanger">
+            <iron-icon icon="sc-icons:babble" class="blue">reply-icon</iron-icon>
+            <p class="bold">Reply</p>
           </div>
           <div class="minispace"></div>
         </template>
