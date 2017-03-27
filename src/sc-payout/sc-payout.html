@@ -1,39 +1,47 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
 <link rel="import" href="../../bower_components/sc-style/sc-style.html">
 <link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
+
 <!--
-`sc-dealchat`
+`sc-payout`
 
-This is dealchat.
+This component shows a reply on a request. 
 
-@demo src/sc-dealchat/demo/index.html 
+@demo src/sc-payout/demo/index.html 
 -->
 
-<dom-module id="sc-dealchat">
+<dom-module id="sc-payout">
 <link rel="import" href="../../bower_components/sc-style/sc-style.css"  type="css">
+
   <template>
     <style>
       :host {
         display: block;
       }
-    </style>
-      <h2>Hello, I'm [[prop1]]</h2>
 
+
+      @media all and (min-width: 0) and (max-width: 420px) { 
+      }
+
+    </style>
+      
+    <paper-button noink class$="darkerer white shadow {{extraclass}}" on-tap="sendmytokens">Payout {{dealamount}} SWT</paper-button>
+  
   </template>
 
   <script>
     Polymer({
 
-      is: 'sc-dealchat',
+      is: 'sc-payout',
 
       properties: {
         /**
-       * `prop1` this is the first property and what it does is described right here.
+       * `dealamount`
        */
-        prop1: {
-          type: String,
-          value: 'sc-dealchat',
+        dealamount: {
+          type: Number
         },
       },
 
@@ -52,7 +60,21 @@ This is dealchat.
       * use this to reset any variables when leaving this component while it remains loaded.
       */
       onExit: function(){
-      }
+      },
+
+
+      /**
+      * '_is', a function to bind a template to a certain value of a variable.
+      */
+      _is: function(a, b) {
+        if (b === undefined){
+          b = true;
+        }
+        //console.log(a ,'(',typeof a,') is',b,'(',typeof b,') they are equal for ==',a == b,', they are equal for ===',a === b);
+        return a === b;
+      },
+
+
 
     });
   </script>
