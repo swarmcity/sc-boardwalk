@@ -7,6 +7,7 @@
 <link rel="import" href="../sc-vault/sc-vault.html">
 <link rel="import" href="../sc-intro/sc-intro.html">
 <link rel="import" href="../sc-home/sc-home.html">
+<link rel="import" href="../sc-makedeal/sc-makedeal.html">
 <link rel="import" href="../sc-walletview/sc-walletview.html">
 <link rel="import" href="../sc-swtconversion/sc-swtconversion.html">
 <link rel="import" href="../sc-profile/sc-profile.html">
@@ -180,6 +181,16 @@
     </sc-hashtag>
 
     
+    <sc-makedeal
+      data-page="makedeal"
+      id="makedeal"
+      route="{{pageTail}}"
+      keystore="[[keystore]]"
+      identity="[[identity]]"
+      pubkey="[[account]]"
+      swtbalance="[[swtbalance]]"
+      on-leave="makedeal_tohome">
+    </sc-makedeal>
 
 
 
@@ -348,6 +359,10 @@
 
 
       hashtag_tohome: function(){
+        this.transitionto('/home');
+      },
+
+      makedeal_tohome: function(){
         this.transitionto('/home');
       },
 

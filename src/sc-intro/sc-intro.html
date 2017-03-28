@@ -64,9 +64,7 @@
 
     <div class$="topbar {{topbarbg}}">
       <span class="flex"></span>
-      <template is="dom-if" if="{{!_is(data.page,'welcome')}}">
       <iron-icon class="grey3" icon="sc-icons:decline" on-tap="exit">back</iron-icon>
-      </template>
     </div>
 
     <neon-animated-pages id="createwalletpgs" attr-for-selected="data-page" selected="[[data.page]]" entry-animation="{{entryAnimationintro}}" exit-animation="{{exitAnimationintro}}">
@@ -182,6 +180,12 @@
       observers: [
           '_onRoutePathChanged(data.page)'
         ],
+
+
+
+      ready: function(){
+        this.onEnter();
+      },
 
       /**
       * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 

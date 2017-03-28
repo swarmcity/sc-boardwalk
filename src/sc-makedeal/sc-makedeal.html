@@ -1,4 +1,21 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/neon-animation/neon-animation.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
+<link rel="import" href="../../bower_components/sc-style/sc-style.html">
+<link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
+<link rel="import" href="../sc-payout/sc-payout.html">
+<link rel="import" href="../sc-avatar/sc-avatar.html">
+<link rel="import" href="../sc-username/sc-username.html">
+<link rel="import" href="../sc-loader/sc-loader.html">
+<link rel="import" href="../sc-dealchat/sc-dealchat.html">
+
+<!--<link rel="import" href="../sc-balance/sc-balance.html"> -->
+
+
 <!--
 `sc-makedeal`
 
@@ -8,20 +25,345 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 -->
 
 <dom-module id="sc-makedeal">
+<link rel="import" href="../../bower_components/sc-style/sc-style.css" type="css">
+
   <template>
     <style>
       :host {
         display: block;
+        height: 100%;
+        width: 100%;
       }
+
+      neon-animated-pages {
+        height: 100%;
+        width: 100%;
+      }
+
+      .fullheight {
+        height: 100%;
+      }
+
+      .totalbox {
+/*        background-color: red;*/
+        width: 100%;
+        height: 92%;
+      }
+
+      .tophalf {
+        height: 40%;
+        padding-top: 8vh;
+        padding-bottom: 3vh;
+      }
+
+      .strips {
+        width: 75vw;
+        max-width: 380px;
+        box-sizing:border-box;
+/*        padding-top: 18vh;
+        */
+      }
+
+
+      .connectionline {
+        height: 2px;
+        width: 28%;
+        margin: 1px;
+        border-top: 2px dotted var(--sc-blue);
+      }
+
+
+      sc-avatar {
+        width: 75px;
+        height: 75px;
+        min-width: 75px;
+        min-height: 75px;          
+      }
+
+      .avatarbox {
+/*        width: 22vw;*/
+      }
+
+      .avatarstrip {
+/*        width: 70%;*/
+      }
+
+      .userinfostrip {
+        box-sizing:border-box;
+        padding-top: 20px;
+      }
+
+
+      .box {
+        width: 50%;
+      }
+
+
+      .amountwaiting {
+        opacity: 0.15;
+      }
+
+
+      .amountconfirmed {
+        opacity: 1;
+      }
+
+/*
+      .getoutlink {
+        border-bottom: 2px 
+      }
+*/
+
+
+      .bottomhalf {
+        height: 60%;
+      }
+
+      .dealamountio {
+        margin-top: 10px;
+        @apply(--layout-vertical-reverse);
+        @apply(--layout-center-center);
+      }
+
+      .dealamountio p {
+        font-size: 22px;
+        line-height: 24px;
+        margin-top: 10px;
+      }
+
+      .SWTletters {
+        font-size: 10px;
+        line-height: 12px;   
+      }
+
+    @media all and (min-width: 0) and (max-width: 420px) { 
+
+      sc-avatar {
+        width: 75px;
+        height: 75px;
+        min-width: 75px;
+        min-height: 75px;          
+      }
+
+      .connectionline {
+        height: 2px;
+        width: 25%;
+        margin: 1px;
+      }
+/*      .strips {
+        width: 75vw;
+        max-width: 300px;
+        box-sizing:border-box;
+        padding-top: 14vh;
+        padding-bottom: 8vh;
+      }*/
+
+
+      .strips {
+        width: 75vw;
+        max-width: 300px;
+        box-sizing:border-box;
+        padding-bottom: 0px;
+        height: 100%;
+
+      }
+      .tophalf {
+        height: 28%;
+        padding: 0px;
+      }
+
+      .middlepiece {
+        height: 12%;
+      }
+
+
+      .bottomhalf {
+        height: 60%;
+      }
+
+      .dealamountio {
+        width: 100px;
+        @apply(--layout-horizontal);
+        @apply(--layout-end);
+        @apply(--layout-center-justified);
+      }
+
+      .flexer {
+        width: 18%;
+      }
+
+    }
+
+
     </style>
-      <h2>Hello, I'm [[prop1]]</h2>
+    <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
+
+    <!-- <app-route route="{{route}}" pattern="/:hashtag/:action" data="{{data}}"></app-route> -->
+
+    <div class="topbar">
+      <span class="flex"></span>
+      <iron-icon class="grey3" icon="sc-icons:decline" on-tap="leave">back</iron-icon>
+    </div>
+
+    <div class="totalbox vertic center startjust totalwidth">
+
+      <div class="tophalf horizont start centerjust totalwidth">
+        <template is="dom-if" if="{{!phoneview}}">
+          <template is="dom-if" if="{{_is(myamount_state,'amountwaiting')}}">
+            <div class="dealamountio amountwaiting">
+              <p class="centertxt small bold grey3">{{dealamount}} <span class="SWTletters">SWT</span></p>
+            </div>
+          </template>
+          <template is="dom-if" if="{{_is(myamount_state,'amountloading')}}">
+            <div class$="dealamountio amountloading">
+              <sc-loader color="grey3"></sc-loader>
+            </div>
+          </template>
+          <template is="dom-if" if="{{_is(myamount_state,'amountconfirmed')}}">
+            <div class="dealamountio amountconfirmed">
+              <iron-icon class="medium green" icon="sc-icons:v">checked</iron-icon>
+            </div>
+          </template>
+        </template>
+        <div class="vertic center endjust strips">
+          <div class="horizont centercenter totalwidth avatarstrip">
+            <div class="avatarbox horizont endjust center box">
+              <sc-avatar
+                ipfshash="[[identity.avatarhash]]"
+                pubkey="[[pubkey]]"
+                id="makedeal_myavatar"
+                size="{{avatarsize}}"
+                ></sc-avatar>
+            <div class="connectionline"></div>
+            </div>
+            <div class="avatarbox horizont startjust center box">
+            <div class="connectionline"></div>
+            <sc-avatar
+              ipfshash=""
+              pubkey=""
+              id="makedeal_otheravatar"
+              size="{{avatarsize}}"
+              ></sc-avatar>
+            </div>
+          </div>
+          <div class="horizont centercenter totalwidth userinfostrip">
+              <div class="vertic centercenter userinfo box">
+                <sc-username
+                  identity="[[identity]]"
+                  pubkey="[[pubkey]]"
+                  size="small"
+                  ></sc-username>
+                <p class="centertxt small bold blue">0 REP</p>
+                <div class="minispace"></div>
+                <div class="minispace"></div>
+              </div>
+              <div class="vertic centercenter userinfo box">
+                 <p class="centertxt small bold grey3">0ther username</p>
+                <p class="centertxt small bold blue">0 REP</p>
+                <div class="minispace"></div>
+                <div class="minispace"></div>
+              </div>
+          </div>
+        </div>
+        <template is="dom-if" if="{{!phoneview}}">
+          <template is="dom-if" if="{{_is(otheramount_state,'amountwaiting')}}">
+            <div class="dealamountio amountwaiting">
+              <p class="centertxt small bold grey3">{{dealamount}} <span class="SWTletters">SWT</span></p>
+            </div>
+          </template>
+          <template is="dom-if" if="{{_is(otheramount_state,'amountloading')}}">
+            <div class$="dealamountio amountloading">
+              <sc-loader color="grey3"></sc-loader>
+            </div>
+          </template>
+          <template is="dom-if" if="{{_is(otheramount_state,'amountconfirmed')}}">
+            <div class="dealamountio amountconfirmed">
+              <iron-icon class="medium green" icon="sc-icons:v">checked</iron-icon>
+            </div>
+          </template>
+        </template>
+      </div>
+
+      <template is="dom-if" if="{{phoneview}}">
+        <div class="middlepiece totalwidth horizont centerjust start">
+          <template is="dom-if" if="{{_is(myamount_state,'amountwaiting')}}">
+            <div class="dealamountio amountwaiting">
+              <p class="centertxt small bold grey3">{{dealamount}} <span class="SWTletters">SWT</span></p>
+            </div>
+          </template>
+          <template is="dom-if" if="{{_is(myamount_state,'amountloading')}}">
+            <div class$="dealamountio amountloading">
+              <sc-loader color="grey3"></sc-loader>
+            </div>
+          </template>
+          <template is="dom-if" if="{{_is(myamount_state,'amountconfirmed')}}">
+            <div class="dealamountio amountconfirmed">
+              <iron-icon class="medium green" icon="sc-icons:v">checked</iron-icon>
+            </div>
+          </template>
+          <div class="flexer"></div>
+          <template is="dom-if" if="{{_is(otheramount_state,'amountwaiting')}}">
+            <div class="dealamountio amountwaiting">
+              <p class="centertxt small bold grey3">{{dealamount}} <span class="SWTletters">SWT</span></p>
+            </div>
+          </template>
+          <template is="dom-if" if="{{_is(otheramount_state,'amountloading')}}">
+            <div class$="dealamountio amountloading">
+              <sc-loader color="grey3"></sc-loader>
+            </div>
+          </template>
+          <template is="dom-if" if="{{_is(otheramount_state,'amountconfirmed')}}">
+            <div class="dealamountio amountconfirmed">
+              <iron-icon class="medium green" icon="sc-icons:v">checked</iron-icon>
+            </div>
+          </template>
+        </div>
+      </template>
+
+      <div class="bottomhalf totalwidth">
+        <neon-animated-pages id="hashpages" attr-for-selected="data-action" selected="{{selecteddealpage}}" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
+          <neon-animatable data-action="init">
+          <div class="totalwidth vertic centercenter blueback fullheight">
+            <paper-button noink class$="darkerer white {{sendbtnsize}} shadow" on-tap="sendmytokens">Send {{dealamount}} SWT now</paper-button>
+            <div class="fivespace"></div>
+            <a class="getoutlink bold white whitelink">get out of this deal</a>
+          </div>
+          </neon-animatable>
+          <neon-animatable data-action="dealchat">
+          <div class="totalwidth vertic centercenter fullheight">
+            <sc-dealchat on-tap="toPayout"></sc-dealchat>
+          </div>
+          </neon-animatable>
+          <neon-animatable data-action="payout">
+          <div class="totalwidth vertic centercenter greenback fullheight">
+            <sc-payout dealamount="{{dealamount}}" extraclass="{{sendbtnsize}}"></sc-payout>
+            <div class="fivespace"></div>
+            <a class="conflictlink bold white whitelink">Conflict!</a>
+          </div>
+          </neon-animatable>
+
+        </neon-animated-pages>
+      </div>
+
+    </div>
+
 
   </template>
 
   <script>
+
     Polymer({
 
       is: 'sc-makedeal',
+
+      behaviors: [
+        Polymer.NeonSharedElementAnimatableBehavior
+      ],
+
+      observers: [
+      '_checksize(phoneview)',
+      '_connectionline(myamount_state,otheramount_state)'
+      ],
 
       properties: {
         /**
@@ -34,6 +376,11 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       },
 
       ready: function(){
+        this.dealamount = 44;
+        this.myamount_state = 'amountwaiting';
+        this.otheramount_state = 'amountconfirmed';
+        this.linestyle = "dotted";
+        this.selecteddealpage = 'init';
       },
 
       /**
@@ -48,7 +395,59 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       * use this to reset any variables when leaving this component while it remains loaded.
       */
       onExit: function(){
-      }
+      },
+
+      /**
+      * 'leave' fires the 'leave' to the parent-element. (This also contains animation-config for going back to sc-home.)
+      */
+      leave: function(){
+        this.fire('leave');
+      },
+
+
+      _checksize: function(){
+        // console.log('Jooooooooo phoneview?', this.phoneview);
+        if (this.phoneview) {
+          this.avatarsize = "more";
+          this.sendbtnsize = "";
+        } else {
+          this.avatarsize = "more";
+          this.sendbtnsize = "bigbtn";
+        }
+      },
+
+
+      /**
+      * '_is', a function to bind a template to a certain value of a variable.
+      */
+      _is: function(a, b) {
+        if (b === undefined){
+          b = true;
+        }
+        //console.log(a ,'(',typeof a,') is',b,'(',typeof b,') they are equal for ==',a == b,', they are equal for ===',a === b);
+        return a === b;
+      },
+
+      sendmytokens: function(){
+        this.selecteddealpage = 'dealchat';
+        this.myamount_state = 'amountconfirmed';  
+      },
+
+      _connectionline: function(){
+        if(this.myamount_state=='amountconfirmed' && this.otheramount_state=='amountconfirmed') {
+          this.linestyle = "solid";
+        } else {
+          this.linestyle = "dotted";
+        }
+      },
+
+
+      toPayout: function(){
+        this.selecteddealpage = 'payout';
+      },
+
+
+
 
     });
   </script>

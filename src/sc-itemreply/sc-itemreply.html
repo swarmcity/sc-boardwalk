@@ -66,16 +66,16 @@ This component shows a reply on a request.
 
 
 
+    /* THIS IS CSS FOR DETAIL */
 
-
-    .totalcontainer_detail {
-      width: 100%;
-      @apply(--layout-vertical);
-      @apply(--layout-start);
-      @apply(--layout-start-justified); 
-      box-sizing:border-box;
-      padding-top: 18vh;    
-    }
+      .totalcontainer_detail {
+        width: 100%;
+        @apply(--layout-vertical);
+        @apply(--layout-start);
+        @apply(--layout-start-justified); 
+        box-sizing:border-box;
+        padding-top: 18vh;    
+      }
 
       .paddingsides {
         padding-left: 4vw;
@@ -85,6 +85,9 @@ This component shows a reply on a request.
       #responditemcontent {
         width: 100%;
         max-width: 700px;
+        box-sizing:border-box;
+        padding-top: 6vh; 
+        padding-bottom: 6vh; 
       }
 
       .username {
@@ -92,6 +95,40 @@ This component shows a reply on a request.
         line-height: 18px;
       }
 
+      .replymsg_detail {
+        width: 80%;
+        font-size: 22px;
+        line-height: 24px;
+        margin-top: 10px;        
+        margin-bottom: 10px;        
+      }
+
+      .replyeravatar_detail {
+        margin-right: 12px;        
+      }
+
+      .requestself {
+        box-sizing:border-box;
+        padding: 20px;
+      }
+
+      .requestself iron-icon {
+        width: 24px;
+        height: 24px;
+        min-width: 24px;
+        min-height: 24px;
+        margin-right: 5px;
+      }
+
+      .requestself p {
+        @apply(--sc-font-nowrap);
+      }
+
+      .dottedlinio {
+        width: 80%;
+        height: 2px;
+        border-top: 2px dotted rgba(0,0,0,0.05);
+      }
 
       @media all and (min-width: 0) and (max-width: 420px) { 
 
@@ -109,15 +146,15 @@ This component shows a reply on a request.
           width: 100%;
         }
 
-      .responditem {
-/*        background-color: var(--sc-grey1);*/
-        box-sizing:border-box;
-        padding-top: 8vw;
-        padding-bottom: 8vw;
-        padding-left: 10vw;
-        padding-right: 10vw;
-        border-bottom: 1px solid rgba(0,0,0,0.075);
-      }
+        .responditem {
+          /*  background-color: var(--sc-grey1);*/
+          box-sizing:border-box;
+          padding-top: 8vw;
+          padding-bottom: 8vw;
+          padding-left: 10vw;
+          padding-right: 10vw;
+          border-bottom: 1px solid rgba(0,0,0,0.075);
+        }
 
 
       }
@@ -169,27 +206,34 @@ This component shows a reply on a request.
       <template is="dom-if" if="{{_is(viewmode,'detail')}}">
       <div class="totalcontainer_detail paddingsides">
 
-      <div class="requestself whiteback totalwidth">
-        <p>Hier komt de request zelf</p>
+      <div
+        class="requestself whiteback totalwidth horizont start startjust"
+        on-tap="fireBack">
+        <iron-icon icon="sc-icons:arrowleft" class="blue">arrowleft-icon</iron-icon>
+        <p>Hier komt de request zelf en dus ook alle text die daarmee gemoeid is enzo allemaal wete wel</p>
       </div>
-      <div id="responditemcontent" class="shadow totalwidth vertic start centerjust">
-        <div class="totalwidth vertic centercenter">
-            <sc-avatar
-              class="replyeravatar"
-              ipfshash="[[replydata.replyer.replyeravatar]]"
-              size="normal">
-            </sc-avatar>
-            <!-- <sc-username></sc-username> -->
-            <h1 class="bold username centertxt">username</h1>
-            <div class="whitespace"></div>
-            <div class="whitespace"></div>
-            <h1 class="centertxt">msg itself</h1>
+      <div id="responditemcontent" class="shadow totalwidth vertic centercenter">
+        <p class="centertxt small replytime_detail grey3">{{replydata.replytime}}</p>
 
-            <div class="horizont center endjust totalwidth">
-              <p class="bold grey4 replyamount">88 <span class="replySWT">SWT</span></p>
-              <iron-icon class="grey4 small" icon="sc-icons:v">checked</iron-icon>
-            </div>
+        <p class="centertxt replymsg_detail ultralight">{{replydata.reply}}</p>
+        <div class="horizont centercenter totalwidth">
+          <p class="bold grey4 replyamount">{{replydata.replyamount}} <span class="replySWT">SWT</span></p>
+          <iron-icon class="grey4 small" icon="sc-icons:v">checked</iron-icon>
+        </div>
+        <div class="fivespace"></div>
+        <div class="dottedlinio"></div>
+        <div class="fivespace"></div>
 
+        <div class="horizont centercenter">
+          <sc-avatar
+            class="replyeravatar_detail"
+            ipfshash="[[replydata.replyer.replyeravatar]]"
+            size="medium">
+          </sc-avatar>
+          <div class="vertic start centerjust">
+            <p class="replyerusername_detail bold centertxt grey3">{{replydata.replyer.replyerusername}}</p>
+            <p class="replyerrep_detail bold centertxt blue">{{replydata.replyer.replyerrep}} REP</p>
+          </div>
         </div>
       </div>
 
@@ -223,6 +267,11 @@ This component shows a reply on a request.
         }
       },
 
+      listeners: {
+        'tap': 'fireTodetail',
+      },
+
+
       ready: function(){
       },
 
@@ -251,6 +300,18 @@ This component shows a reply on a request.
         //console.log(a ,'(',typeof a,') is',b,'(',typeof b,') they are equal for ==',a == b,', they are equal for ===',a === b);
         return a === b;
       },
+
+      fireBack: function(){
+        this.fire('item-detail');
+        debugger;
+        console.log("Jooo");
+      },
+
+      // TEMP FUNCTION
+      fireTodetail: function(){
+        this.fire('to-detail',this.replydata);
+      },
+
 
 
     });
