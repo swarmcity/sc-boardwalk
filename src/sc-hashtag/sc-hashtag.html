@@ -392,7 +392,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
       deals = state.deals.slice(0);
       switch (action.type) {
         case 'ADD_ITEM':
-          deals.push(action.deal);
+          deals.unshift(action.deal);
           break;
         case 'REMOVE_ITEM':
           const idx = deals.indexOf(action.deal)
@@ -665,9 +665,9 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
   // processinging of channel setup messages.
   _processmessage: function(error, result) {
-      console.log('incoming in whisperer: web3 ', this.web3);
-      var self = this;
+//      var self = this;
       var payload = JSON.parse(self.web3.toAscii(result.payload));
+      console.log('incoming in whisperer: web3 ', payload);
       this.dispatch('add',payload);
     },
 
