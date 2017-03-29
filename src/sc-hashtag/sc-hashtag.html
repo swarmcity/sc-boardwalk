@@ -664,11 +664,16 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
   // processinging of channel setup messages.
   _processmessage: function(error, result) {
-//      var self = this;
+    var self = this;
+    try {
       var payload = JSON.parse(self.web3.toAscii(result.payload));
       console.log('incoming in whisperer: web3 ', payload);
-      this.dispatch('add',payload);
-    },
+      this.dispatch('add', payload);
+
+    } catch (e) {
+      console.log(e);
+    }
+  },
 
 
       /**
