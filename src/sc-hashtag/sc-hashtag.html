@@ -422,23 +422,14 @@ This is the component showing all requests of a certain hashtag. It contains a r
       actions: {
 
         add: function(dealdata) {
-          this.push('deals',dealdata);
+          let deals = this.deals.slice(0);
+          deals.push(dealdata);
           return {
             type: 'DEALS',
-            deals: this.deals
+            deals: deals
           };
         },
-        // remove: function(dealdata) {
-        //   return {
-        //     type: 'REMOVE_ITEM',
-        //     deal: dealdata
-        //   };
-        // },
-        // removeall: function() {
-        //   return {
-        //     type: 'REMOVE_ALL',
-        //   };
-        // },
+        
       },
 
       observers: [
@@ -450,11 +441,11 @@ This is the component showing all requests of a certain hashtag. It contains a r
         route: {
           type: Object,
           notify: true,
-          statePath: 'route'
+          //statePath: 'route'
         },
         deals: {
           type: Array,
-          statePath: 'deals'
+          statePath: 'deals',
         },
         /**
        * `phoneview` is a boolean to determine the viewport.
