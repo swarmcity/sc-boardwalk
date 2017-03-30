@@ -5,7 +5,6 @@
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/neon-animation/neon-animation.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
-<script src="../../node_modules/redux/dist/redux.min.js"></script>
 <link rel="import" href="../../bower_components/polymer-redux/polymer-redux.html">
 
 <link rel="import" href="../../bower_components/sc-style/sc-style.html">
@@ -383,31 +382,31 @@ This is the component showing all requests of a certain hashtag. It contains a r
   </template>
 
   <script>
-    const reducer = (state, action) => {
-      if (!state) return {
-        deals: []
-      };
-      // copy deals list
-      deals = state.deals.slice(0);
-      switch (action.type) {
-        case 'ADD_ITEM':
-          deals.push(action.deal);
-          break;
-        case 'REMOVE_ITEM':
-          const idx = deals.indexOf(action.deal)
-          if (idx !== -1) {
-            deals.splice(idx, 1)
-          }
-          break;
-        case 'REMOVE_ALL':
-          deals = [];
-          break;
-      }
-      state.deals = deals;
-      return state;
-    }
-    const store = Redux.createStore(reducer);
-    const ReduxBehavior = PolymerRedux(store);
+    // const reducer = (state, action) => {
+    //   if (!state) return {
+    //     deals: []
+    //   };
+    //   // copy deals list
+    //   deals = state.deals.slice(0);
+    //   switch (action.type) {
+    //     case 'ADD_ITEM':
+    //       deals.unshift(action.deal);
+    //       break;
+    //     case 'REMOVE_ITEM':
+    //       const idx = deals.indexOf(action.deal)
+    //       if (idx !== -1) {
+    //         deals.splice(idx, 1)
+    //       }
+    //       break;
+    //     case 'REMOVE_ALL':
+    //       deals = [];
+    //       break;
+    //   }
+    //   state.deals = deals;
+    //   return state;
+    // }
+    //const store = Redux.createStore(reducer);
+    //const ReduxBehavior = PolymerRedux(store);
 
     Polymer({
       is: 'sc-hashtag',
@@ -417,28 +416,20 @@ This is the component showing all requests of a certain hashtag. It contains a r
       // ],
       behaviors: [
         Polymer.NeonSharedElementAnimatableBehavior,
-        ReduxBehavior
+        ReduxBehaviour
       ],
 
       actions: {
 
         add: function(dealdata) {
+          let deals = this.deals.slice(0);
+          deals.push(dealdata);
           return {
-            type: 'ADD_ITEM',
-            deal: dealdata
+            type: 'DEALS',
+            deals: deals
           };
         },
-        remove: function(dealdata) {
-          return {
-            type: 'REMOVE_ITEM',
-            deal: dealdata
-          };
-        },
-        removeall: function() {
-          return {
-            type: 'REMOVE_ALL',
-          };
-        },
+        
       },
 
       observers: [
@@ -449,11 +440,12 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
         route: {
           type: Object,
-          notify: true
+          notify: true,
+          //statePath: 'route'
         },
         deals: {
           type: Array,
-          statePath: 'deals'
+          statePath: 'deals',
         },
         /**
        * `phoneview` is a boolean to determine the viewport.
@@ -558,6 +550,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
 
           this.dispatch('add', {
+            
               offereravatar: 'QmWA8eaJyZpVT5mUx1qBvbNXYfprSdds1oachxmhV1sDGh',
               offerer: 'Mr Rogers',
               offer: 'This is just a test-request!',
@@ -664,11 +657,16 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
   // processinging of channel setup messages.
   _processmessage: function(error, result) {
-      console.log('incoming in whisperer: web3 ', this.web3);
-      var self = this;
+    var self = this;
+    try {
       var payload = JSON.parse(self.web3.toAscii(result.payload));
-      this.dispatch('add',payload);
-    },
+      console.log('incoming in whisperer: web3 ', payload);
+      this.dispatch('add', payload);
+      //this.push('deals',payload);
+    } catch (e) {
+      console.log(e);
+    }
+  },
 
 
       /**
