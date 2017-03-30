@@ -1,0 +1,183 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/neon-animation/neon-animation.html">
+
+<link rel="import" href="../../bower_components/sc-style/sc-style.html">
+<link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
+
+<link rel="import" href="../sc-avatar/sc-avatar.html">
+
+<!--
+`sc-dealchatitem`
+
+This is dealchatitem.
+
+@demo src/sc-dealchatitem/demo/index.html 
+-->
+
+<dom-module id="sc-dealchatitem">
+<link rel="import" href="../../bower_components/sc-style/sc-style.css"  type="css">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      .item_total {
+        width: 100%;
+        @apply(--layout-horizontal);
+        @apply(--layout-end-justified);        
+        @apply(--layout-start);
+        margin: 6px 0px 6px 0px;
+      }
+
+      .itsme {
+        @apply(--layout-horizontal);
+        @apply(--layout-start-justified);        
+        @apply(--layout-start);
+      }
+
+
+      .balloon {
+        margin: 0px 10px 0px 10px;
+        box-sizing:border-box;
+        padding: 3px 5px 0px 5px;
+      }
+
+      .balloon p {
+        line-height: 16px;
+      }
+
+      .rightm {
+        margin-right: 6px;
+      }
+
+      .leftm {
+        margin-left: 6px;
+      }
+
+      .rightalign {
+        text-align: right;
+      }
+
+
+    </style>
+
+<!-- <div class="vertic centercenter">
+  <h1>seg</h1>
+  <h1>seg</h1>
+</div> -->
+
+          <template is="dom-if" if="{{_is(item.chatterpubkey,pubk)}}">
+            <div class="item_total itsme">
+              <sc-avatar
+                ipfshash="[[item.chatteravatar]]"
+                pubkey="[[pubkey]]"
+                size="verysmall">
+              </sc-avatar>
+              <div class="balloon">
+                <p>{{item.chatmsg}}</p>
+                <small class="semibold grey4">{{item.chattername}}<span class="reg grey3 leftm">{{item.chattime}}</span></small>
+              </div>
+            </div>
+          </template>
+
+
+            <template is="dom-if" if="{{!_is(item.chatterpubkey,pubk)}}">
+          <div class="item_total">
+
+              <div class="balloon rightalign">
+                <p>{{item.chatmsg}}</p>
+                <small class="semibold grey4"><span class="reg grey3 rightm">{{item.chattime}}</span>{{item.chattername}}</small>
+              </div>
+              <sc-avatar
+                ipfshash="[[item.chatteravatar]]"
+                pubkey="[[pubkey]]"
+                size="verysmall">
+              </sc-avatar>
+
+          </div>
+
+            </template>
+
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'sc-dealchatitem',
+  behaviors: [
+    Polymer.NeonAnimationRunnerBehavior
+  ],
+      properties: {
+
+        animationConfig: {
+          value: function() {
+            return {
+              // provided by neon-animation/animations/scale-down-animation.html
+              name: 'fade-in-animation',
+              node: this
+            }
+          }
+        }
+
+      },
+  listeners: {
+    // this event is fired when the animation finishes
+    'neon-animation-finish': '_onNeonAnimationFinish',
+    'tap':'animate'
+  },
+      ready: function(){
+        console.log("PUUBBBKKKYYYYYYYY",this.pubk);
+        console.log("PUUBBBKKKYY",this.item);
+        this.animate();
+
+      },
+
+      /**
+      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
+      * use this to initialize any variables to start the component
+      */
+      onEnter: function(){
+      },
+
+      /**
+      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage 
+      * use this to reset any variables when leaving this component while it remains loaded.
+      */
+      onExit: function(){
+      },
+
+      /**
+      * 'msgIncoming'
+      */
+      msgIncoming: function(){
+
+      },
+
+      /**
+      * '_is', a function to bind a template to a certain value of a variable.
+      */
+      _is: function(a, b) {
+        if (b === undefined){
+          b = true;
+        }
+        //console.log(a ,'(',typeof a,') is',b,'(',typeof b,') they are equal for ==',a == b,', they are equal for ===',a === b);
+        return a === b;
+      },
+
+
+      _onNeonAnimationFinish: function(){
+        // debugger;
+      },
+
+  animate: function() {
+    // run scale-down-animation
+        // debugger;
+        this.playAnimation();
+  },
+
+
+    });
+  </script>
+</dom-module>

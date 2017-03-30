@@ -69,9 +69,14 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         height: 2px;
         width: 28%;
         margin: 1px;
-        border-top: 2px dotted var(--sc-blue);
       }
 
+      .dotted {
+        border-top: 2px dotted var(--sc-blue);
+      }
+      .solid {
+        border-top: 1px solid var(--sc-blue);
+      }
 
       sc-avatar {
         width: 75px;
@@ -121,6 +126,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
       .dealamountio {
         margin-top: 10px;
+        margin-left: -35px;
+        margin-right: -35px;        
         @apply(--layout-vertical-reverse);
         @apply(--layout-center-center);
       }
@@ -139,8 +146,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       sc-dealchat {
         width: 100%;
         height: 100%;
-        border: 1px solid red;
       }
+
 
     @media all and (min-width: 0) and (max-width: 420px) { 
 
@@ -189,6 +196,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
       .dealamountio {
         width: 100px;
+        margin-left: 0px;
+        margin-right: 0px;   
         @apply(--layout-horizontal);
         @apply(--layout-end);
         @apply(--layout-center-justified);
@@ -240,13 +249,13 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                 id="makedeal_myavatar"
                 size="{{avatarsize}}"
                 ></sc-avatar>
-            <div class="connectionline"></div>
+            <div class="connectionline dotted"></div>
             </div>
+
             <div class="avatarbox horizont startjust center box">
-            <div class="connectionline"></div>
+            <div class="connectionline dotted"></div>
             <sc-avatar
-              ipfshash=""
-              pubkey=""
+              ipfshash="{{otherid.avatarhash}}"
               id="makedeal_otheravatar"
               size="{{avatarsize}}"
               ></sc-avatar>
@@ -259,12 +268,12 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                   pubkey="[[pubkey]]"
                   size="small"
                   ></sc-username>
-                <p class="centertxt small bold blue">0 REP</p>
+                <p class="centertxt small bold blue">{{otherid.rep}} REP</p>
                 <div class="minispace"></div>
                 <div class="minispace"></div>
               </div>
               <div class="vertic centercenter userinfo box">
-                 <p class="centertxt small bold grey3">0ther username</p>
+                 <p class="centertxt small bold grey3">{{otherid.username}}</p>
                 <p class="centertxt small bold blue">0 REP</p>
                 <div class="minispace"></div>
                 <div class="minispace"></div>
@@ -273,7 +282,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         </div>
         <template is="dom-if" if="{{!phoneview}}">
           <template is="dom-if" if="{{_is(otheramount_state,'amountwaiting')}}">
-            <div class="dealamountio amountwaiting">
+            <div class="dealamountio amountwaiting" on-tap="dummyClick">
               <p class="centertxt small bold grey3">{{dealamount}} <span class="SWTletters">SWT</span></p>
             </div>
           </template>
@@ -327,19 +336,28 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       </template>
 
       <div class="bottomhalf totalwidth">
-<!-- <sc-dealchat on-tap="toPayout"></sc-dealchat> -->
-<!-- 
+
         <neon-animated-pages id="hashpages" attr-for-selected="data-action" selected="{{selecteddealpage}}" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
           <neon-animatable data-action="init">
           <div class="totalwidth vertic centercenter blueback fullheight">
-            <paper-button noink class$="darkerer white {{sendbtnsize}} shadow" on-tap="sendmytokens">Send {{dealamount}} SWT now</paper-button>
+            <paper-button noink class$="darkerer white {{sendbtnsize}} shadow" on-tap="sendmytokens">Send {{dealamount}} SWT</paper-button>
             <div class="fivespace"></div>
             <a class="getoutlink bold white whitelink">get out of this deal</a>
           </div>
           </neon-animatable>
+          <neon-animatable data-action="waiting">
+          <div class="totalwidth vertic centercenter darkerer fullheight paddingsides">
+<!--             <sc-loader small color="grey3">Waiting for the other party to send  {{dealamount}} SWT</sc-loader> -->
+            <p class="grey3 centertxt">Waiting for the other party to send  {{dealamount}} SWT to the deal</p>
+          </div>
+          </neon-animatable>
+
           <neon-animatable data-action="dealchat">
           <div class="totalwidth vertic centercenter fullheight">
-            <p>Hoo</p>            
+            <sc-dealchat
+              pubkey="[[pubkey]]"
+              identity="[[identity]]">
+            </sc-dealchat>
           </div>
           </neon-animatable>
           <neon-animatable data-action="payout">
@@ -350,7 +368,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           </div>
           </neon-animatable>
 
-        </neon-animated-pages> -->
+        </neon-animated-pages>
       </div>
 
     </div>
@@ -385,9 +403,16 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
       ready: function(){
         this.dealamount = 44;
+
         this.myamount_state = 'amountwaiting';
-        this.otheramount_state = 'amountconfirmed';
-        this.linestyle = "dotted";
+        this.otheramount_state = 'amountwaiting';
+
+        this.otherid = {
+          avatarhash: 'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
+          username: 'Hank Moovy',
+          rep: '0'
+        }
+
         this.selecteddealpage = 'init';
       },
 
@@ -437,15 +462,15 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       },
 
       sendmytokens: function(){
-        this.selecteddealpage = 'dealchat';
+        this.selecteddealpage = 'waiting';
         this.myamount_state = 'amountconfirmed';  
       },
 
       _connectionline: function(){
         if(this.myamount_state=='amountconfirmed' && this.otheramount_state=='amountconfirmed') {
-          this.linestyle = "solid";
+
         } else {
-          this.linestyle = "dotted";
+
         }
       },
 
@@ -453,6 +478,13 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       toPayout: function(){
         this.selecteddealpage = 'payout';
       },
+
+      dummyClick: function(){
+        debugger;
+        this.otheramount_state = 'amountconfirmed';
+        this.selecteddealpage = 'dealchat';
+
+      }
 
 
 

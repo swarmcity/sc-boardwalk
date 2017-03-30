@@ -1,7 +1,15 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/sc-style/sc-style.html">
 <link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
+<link rel="import" href="../../bower_components/iron-a11y-keys/iron-a11y-keys.html">
+
+
+<link rel="import" href="../sc-avatar/sc-avatar.html">
+<link rel="import" href="sc-dealchatitem.html">
+
 <!--
 `sc-dealchat`
 
@@ -16,24 +24,74 @@ This is dealchat.
     <style>
       :host {
         display: block;
+        width: 100%;
+        height: 100%;  
+        @apply(--layout-horizontal);
+        @apply(--layout-center-center);
+        background-color: rgba(0,0,0,0.035);
       }
 
       .dealchat_container {
-        background-color: blue;        
+        width: 100%;
+        max-width: 600px;
+        height: 100%;      
       }
 
 
-    </style>
-<!-- 
-    <div class="dealchat_container">
-      <div class="balloon whiteback">
-        <p>Avatar</p>
-        <p>Lorem ipsum en de sponnt kan zo zevere man!</p>
-      </div>
-    </div>
- -->
+      .msg_canvas {
+        @apply(--layout-vertical-reverse);
+        @apply(--layout-start-justified);        
+        @apply(--layout-start); 
+        overflow-y:scroll; 
+/*        height: 80%;*/
+        box-sizing:border-box;
+        padding: 25px 25px 25px 25px;
+      }
 
-        <p>Lorem ipsum en de sponnt kan zo zevere man!</p>
+      .msg_inputter {
+        /*height: 20%;*/
+        box-sizing:border-box;
+        padding: 10px 25px 25px 25px;
+      }
+
+      .msg_inputter paper-input {
+        margin: 0px 15px 20px 20px;
+
+      }
+
+/*      sc-dealchatitem {
+
+   }
+*/
+
+
+    </style>
+
+    <div class="dealchat_container vertic start startjust">
+
+      <div class="msg_canvas totalwidth flex" on-tap="hanksaysfirstwords">
+        <template is="dom-repeat" items="{{dummychatballoons}}">
+          <sc-dealchatitem item="[[item]]" pubk="{{pubkey}}" class="totalwidth"></sc-dealchatitem>
+        </template>
+      </div>
+      <div class="msg_inputter totalwidth horizont center startjust whiteback">
+        <sc-avatar
+          ipfshash="[[identity.avatarhash]]"
+          pubkey="[[pubkey]]"
+          size="small"
+          on-tap="tempfunction">
+        </sc-avatar>
+
+        <iron-a11y-keys id="a11y" target="[[target]]" keys="enter"
+          on-keys-pressed="addDummy"></iron-a11y-keys>
+
+        <paper-input id="msginput" value="{{msg::input}}" autofocus class="flex"></paper-input>
+        <paper-icon-button disabled="{{_is(msg,'')}}"on-tap="addDummy" class="grey1back blue shadow" icon="sc-icons:v">say!</paper-icon-button>
+      </div>
+
+    </div>
+
+
 
   </template>
 
@@ -43,43 +101,46 @@ This is dealchat.
       is: 'sc-dealchat',
 
       properties: {
-        /**
-       * `prop1` this is the first property and what it does is described right here.
-       */
-        // prop1: {
-        //   type: String,
-        //   value: 'sc-dealchat',
-        // },
-        dummyballoon1: {
+
+        target: {
           type: Object,
           value: function() {
-            return {
-              chatteravatar: 'QmRzCWs6F4LiEC4umwLiMB5C6MAo1bKQa4frCC1iKvntme',
-              chattername: 'Frank David',
-              chatmsg: 'This is balloon 1!',
-              chattime: 'today at 16:33'
-            }
+            return this.$.msginput;
           }
-
-        }
-
-
-        dummyballoon2: {
-          type: Object,
-          value: function() {
-            return {
-              chatteravatar: 'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
-              chattername: 'Hank Moovy',
-              chatmsg: 'This is balloon 2!',
-              chattime: 'today at 21:05'
-            }
-          }
-
-        }
+        },
 
       },
 
       ready: function(){
+        this.msg = '';        
+        this.dummychatballoons = [
+          // {
+          //     chatteravatar: 'QmRzCWs6F4LiEC4umwLiMB5C6MAo1bKQa4frCC1iKvntme',
+          //     chattername: 'Frank David',
+          //     chatterpubkey: '2',
+          //     chatmsg: 'This is balloon 1!',
+          //     chattime: 'today at 16:33'              
+          //   },
+          // {
+          //     chatteravatar: 'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
+          //     chattername: 'Hank Moovy',
+          //     chatterpubkey: '3',
+          //     chatmsg: 'This is balloon 2!',
+          //     chattime: 'today at 21:05'             
+          //   },
+          // {
+          //     chatteravatar: 'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
+          //     chattername: 'Hank Moovy',
+          //     chatterpubkey: '3',
+          //     chatmsg: 'This is balloon 2!',
+          //     chattime: 'today at 21:05'             
+          //   },
+
+        ];
+
+
+
+        
       },
 
       /**
@@ -102,6 +163,66 @@ This is dealchat.
       msgIncoming: function(){
 
       },
+
+      /**
+      * '_is', a function to bind a template to a certain value of a variable.
+      */
+      _is: function(a, b) {
+        if (b === undefined){
+          b = true;
+        }
+        //console.log(a ,'(',typeof a,') is',b,'(',typeof b,') they are equal for ==',a == b,', they are equal for ===',a === b);
+        return a === b;
+      },
+
+      addDummy: function(){
+
+        console.log("** -- ",this.identity);
+        var newballoon = {
+          chatteravatar: this.identity.avatarhash,
+          chattername: this.identity.username,
+          chatterpubkey: this.pubkey,
+          chatterrep: '0',
+          chatmsg: this.msg,
+          chattime: '21:05'
+        };
+
+        this.unshift('dummychatballoons',newballoon);
+        this.msg = '';        
+        setTimeout(function() {
+            var msginput = document.getElementById('msginput');
+            msginput.focus();
+        }, 5);
+      },
+
+
+      hanksaysfirstwords: function() {
+        var hanksfirstwords =   {  
+              chatteravatar: 'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
+              chattername: 'Hank Moovy',
+              chatterrep: '4',
+              chatterpubkey: '2',
+              chatmsg: 'Hi there!',
+              chattime: '21:05'             
+            }
+
+        this.unshift('dummychatballoons',hanksfirstwords);
+      },
+
+      tempfunction: function() {
+        var newballoonhank = {
+          chatteravatar: 'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
+          chattername: 'Hank Moovy',
+          chatterpubkey: '2',
+          chatterrep: '4',
+          chatmsg: "Yes, that's perfect. See you there in 5?",
+          chattime: '21:05'
+        };
+
+        this.unshift('dummychatballoons',newballoonhank);
+      },
+
+
 
     });
   </script>
