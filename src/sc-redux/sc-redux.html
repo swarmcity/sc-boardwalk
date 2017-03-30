@@ -1,0 +1,25 @@
+<link rel="import" href="../../bower_components/polymer-redux/polymer-redux.html">
+<script src="../../node_modules/redux/dist/redux.min.js"></script>
+
+<script>
+        
+    let initialState = {
+        deals: [],
+    };
+
+    let reducer = function(state, action){
+        if(!state){ 
+            return initialState
+        };
+        switch(action.type){
+            case 'DEALS':
+                let deals = state.deals;
+                deals  = action.deals;
+                return Object.assign({}, state, {deals: deals})
+        }
+    }
+    const store = Redux.createStore(reducer, /* preloadedState, */
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    );
+    const ReduxBehaviour = PolymerRedux(store);
+</script>
