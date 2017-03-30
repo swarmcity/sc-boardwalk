@@ -136,6 +136,12 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         line-height: 12px;   
       }
 
+      sc-dealchat {
+        width: 100%;
+        height: 100%;
+        border: 1px solid red;
+      }
+
     @media all and (min-width: 0) and (max-width: 420px) { 
 
       sc-avatar {
@@ -321,6 +327,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       </template>
 
       <div class="bottomhalf totalwidth">
+<!-- <sc-dealchat on-tap="toPayout"></sc-dealchat> -->
+<!-- 
         <neon-animated-pages id="hashpages" attr-for-selected="data-action" selected="{{selecteddealpage}}" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
           <neon-animatable data-action="init">
           <div class="totalwidth vertic centercenter blueback fullheight">
@@ -331,7 +339,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           </neon-animatable>
           <neon-animatable data-action="dealchat">
           <div class="totalwidth vertic centercenter fullheight">
-            <sc-dealchat on-tap="toPayout"></sc-dealchat>
+            <p>Hoo</p>            
           </div>
           </neon-animatable>
           <neon-animatable data-action="payout">
@@ -342,7 +350,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           </div>
           </neon-animatable>
 
-        </neon-animated-pages>
+        </neon-animated-pages> -->
       </div>
 
     </div>

@@ -17,8 +17,23 @@ This is dealchat.
       :host {
         display: block;
       }
+
+      .dealchat_container {
+        background-color: blue;        
+      }
+
+
     </style>
-      <h2>Hello, I'm [[prop1]]</h2>
+<!-- 
+    <div class="dealchat_container">
+      <div class="balloon whiteback">
+        <p>Avatar</p>
+        <p>Lorem ipsum en de sponnt kan zo zevere man!</p>
+      </div>
+    </div>
+ -->
+
+        <p>Lorem ipsum en de sponnt kan zo zevere man!</p>
 
   </template>
 
@@ -31,10 +46,37 @@ This is dealchat.
         /**
        * `prop1` this is the first property and what it does is described right here.
        */
-        prop1: {
-          type: String,
-          value: 'sc-dealchat',
-        },
+        // prop1: {
+        //   type: String,
+        //   value: 'sc-dealchat',
+        // },
+        dummyballoon1: {
+          type: Object,
+          value: function() {
+            return {
+              chatteravatar: 'QmRzCWs6F4LiEC4umwLiMB5C6MAo1bKQa4frCC1iKvntme',
+              chattername: 'Frank David',
+              chatmsg: 'This is balloon 1!',
+              chattime: 'today at 16:33'
+            }
+          }
+
+        }
+
+
+        dummyballoon2: {
+          type: Object,
+          value: function() {
+            return {
+              chatteravatar: 'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
+              chattername: 'Hank Moovy',
+              chatmsg: 'This is balloon 2!',
+              chattime: 'today at 21:05'
+            }
+          }
+
+        }
+
       },
 
       ready: function(){
@@ -52,7 +94,14 @@ This is dealchat.
       * use this to reset any variables when leaving this component while it remains loaded.
       */
       onExit: function(){
-      }
+      },
+
+      /**
+      * 'msgIncoming'
+      */
+      msgIncoming: function(){
+
+      },
 
     });
   </script>
