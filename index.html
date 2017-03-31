@@ -1,11 +1,30 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <title>sc-boardwalk</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
-    <title>sc-boardwalk</title>
     <meta name="description" content="Swarm.City Boardwalk">
+    <meta name="theme-color" content="#ffffff"/>
+    <!-- Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Swarm City">
+    <!-- Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Swarm City">
+    <!-- iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Swarm City">
+    <!-- home screen icons -->
+    <link rel="apple-touch-icon" href="images/manifest/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="images/manifest/152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/manifest/180.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="images/manifest/167.png">
+    <!-- manifest -->
     <link rel="manifest" href="./manifest.json">
+    <!-- app -->
     <link rel="import" href="./src/sc-enter/sc-enter.html" async>
     
     <script>
@@ -14,7 +33,6 @@
         lazyRegister: true,
       };
 
-    // Are web components already supported?
       (function() {
         'use strict';
         var onload = function() {
@@ -42,7 +60,6 @@
         }
       })();
 
-      // Load and register pre-caching Service Worker 
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
           navigator.serviceWorker.register('/service-worker.js');
@@ -60,7 +77,7 @@
           display: none;
       }
     </style>
-    
+    <noscript>Welcome to Swarm City Boardwalk, please enable JavaScript</noscript>
   </head>
   <body>
     <sc-enter></sc-enter>
