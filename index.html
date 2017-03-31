@@ -3,17 +3,52 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
-
     <title>sc-boardwalk</title>
     <meta name="description" content="Swarm.City Boardwalk">
-
-    <!-- See https://goo.gl/OOhYW5 -->
     <link rel="manifest" href="./manifest.json">
-
-    <script src="./bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="./src/sc-enter/sc-enter.html" async>
     
-    <link rel="import" href="./src/sc-enter/sc-enter.html">
+    <script>
+      window.Polymer = {
+        dom: 'shadow',
+        lazyRegister: true,
+      };
 
+    // Are web components already supported?
+      (function() {
+        'use strict';
+        var onload = function() {
+          if (!window.HTMLImports) {
+            document.dispatchEvent(
+              new CustomEvent('WebComponentsReady', {bubbles: true})
+            );
+          }
+        };
+
+        var webComponentsSupported = (
+          'registerElement' in document
+          && 'import' in document.createElement('link')
+          && 'content' in document.createElement('template')
+        );
+
+        if (!webComponentsSupported) {
+          var script = document.createElement('script');
+          script.async = true;
+          script.src = '/bower_components/webcomponentsjs/webcomponents-lite.min.js';
+          script.onload = onload;
+          document.head.appendChild(script);
+        } else {
+          onload();
+        }
+      })();
+
+      // Load and register pre-caching Service Worker 
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/service-worker.js');
+        });
+      }
+    </script>
     <style>
       body {
         margin: 0px;
