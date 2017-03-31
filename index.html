@@ -1,19 +1,72 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <title>sc-boardwalk</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
-
-    <title>sc-boardwalk</title>
     <meta name="description" content="Swarm.City Boardwalk">
-
-    <!-- See https://goo.gl/OOhYW5 -->
+    <meta name="theme-color" content="#ffffff"/>
+    <!-- Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Swarm City">
+    <!-- Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Swarm City">
+    <!-- iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Swarm City">
+    <!-- home screen icons -->
+    <link rel="icon" sizes="192x192" href="images/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" href="images/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="images/icons/icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/icons/icon-180x180.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="images/icons/icon-157x167.png">
+    <!-- manifest -->
     <link rel="manifest" href="./manifest.json">
-
-    <script src="./bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <!-- app -->
+    <link rel="import" href="./src/sc-enter/sc-enter.html" async>
     
-    <link rel="import" href="./src/sc-enter/sc-enter.html">
+    <script>
+      window.Polymer = {
+        dom: 'shadow',
+        lazyRegister: true,
+      };
 
+      (function() {
+        'use strict';
+        var onload = function() {
+          if (!window.HTMLImports) {
+            document.dispatchEvent(
+              new CustomEvent('WebComponentsReady', {bubbles: true})
+            );
+          }
+        };
+
+        var webComponentsSupported = (
+          'registerElement' in document
+          && 'import' in document.createElement('link')
+          && 'content' in document.createElement('template')
+        );
+
+        if (!webComponentsSupported) {
+          var script = document.createElement('script');
+          script.async = true;
+          script.src = './bower_components/webcomponentsjs/webcomponents-lite.min.js';
+          script.onload = onload;
+          document.head.appendChild(script);
+        } else {
+          onload();
+        }
+      })();
+
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('./service-worker.js');
+        });
+      }
+    </script>
     <style>
       body {
         margin: 0px;
@@ -25,7 +78,7 @@
           display: none;
       }
     </style>
-    
+    <noscript>Welcome to Swarm City Boardwalk, please enable JavaScript</noscript>
   </head>
   <body>
     <sc-enter></sc-enter>
