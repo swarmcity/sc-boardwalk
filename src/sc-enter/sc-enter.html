@@ -8,6 +8,7 @@
 <link rel="import" href="../../bower_components/app-route/app-location.html">   
 <link rel="import" href="../sc-backbone/sc-backbone.html">
 <link rel="import" href="../sc-loader/sc-loader.html">
+<link rel="import" href="../sc-styles/sc-styles.html">
 
 <!--
 `sc-enter`
@@ -21,6 +22,8 @@ An element that
 - If there is a vault object in local storage the start screen is hiden, the loading screen is shown and then the app is shown
 - If there is no vault object in local storage the start screen is shown
 
+3. sc-backbone is imediatly loaded
+
 Example:
 ```
 <sc-enter></sc-enter>
@@ -30,10 +33,10 @@ Example:
 -->
 
 <dom-module id="sc-enter">
-<link rel="import" href="../../bower_components/sc-style/sc-style.css"  type="css">
+<!--<link rel="import" href="../../bower_components/sc-style/sc-style.css"  type="css">-->
 
   <template>
-    <style>
+    <style include="sc-styles">
       :host {
         display: block;
       }
@@ -195,18 +198,18 @@ Example:
         }
     }
     </style>
-    
+
     <iron-localstorage 
       name="sc-vault"
       value="{{vault}}"
       on-iron-localstorage-load-empty="novault">
     </iron-localstorage>  
-    
+
     <app-location 
       route="{{route}}" 
       use-hash-as-path>
     </app-location>  
-    
+
     <sc-backbone id="backbone"></sc-backbone>
 
     <iron-media-query query="max-width: 420px" query-matches="{{phoneview}}"></iron-media-query>
@@ -216,7 +219,7 @@ Example:
         <sc-loader color="yellow"></sc-loader>
       </div>
     </template>
-    
+
     <template is="dom-if" if="{{showStartScreen}}">
 
       <div class="totalwidth logoalign paddingsides yellowback">
@@ -271,7 +274,7 @@ Example:
           <a target="_blank" href="http://releaseroadmap.swarm.city">Release Roadmap</a> -->
           <a target="_blank" href="https://faq.swarm.city">FAQ</a>
         </div>
-        
+
         <div class="linkblok_two">
           <p class="bold grey3 small">Find Swarm City on</p>
           <div class="minispace"></div>
