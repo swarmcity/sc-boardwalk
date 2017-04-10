@@ -1,13 +1,14 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
 <link rel="import" href="../../bower_components/neon-animation/neon-animation.html">
+<!-- <link rel="import" href="../../bower_components/polymer-redux/polymer-redux.html"> -->
 
 <link rel="import" href="../../bower_components/sc-style/sc-style.html">
 <link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
 
 <link rel="import" href="../sc-ipfs/sc-ipfs.html">
 <link rel="import" href="../sc-avatar/sc-avatar.html">
-
+<link rel="import" href="../sc-redux/sc-redux.html">
 
 <link rel="stylesheet" href="../../bower_components/Croppie/croppie.css" />
 <script src="../../bower_components/Croppie/croppie.js"></script>
@@ -354,9 +355,7 @@
 
                 <sc-avatar
               id="profileavatar"
-              ipfshash="[[identity.avatarhash]]"
-              pubkey="{{account}}"
-              mode="imgonly"
+              ipfshash="[[avatarhash]]"
               size="big"
               ></sc-avatar>
                 <input type="file" accept="image/*" class="hidden" id="avatarupload" on-change="avatarChange"/>
@@ -365,7 +364,7 @@
             </div>
 
             <div class="username_pubkey">
-              <paper-input label="username" value="{{newusername}}" on-change="usernameChange" class="usernameinput" id="usernameinput">{{newusername}}</paper-input>
+              <paper-input label="username" value="{{username}}" class="usernameinput" id="usernameinput">{{username}}</paper-input>
               <iron-collapse id="collapse" opened="{{datachanged}}">
                 <div class="whitespace"></div>
 
@@ -474,6 +473,19 @@
 
       is: 'sc-profile',
 
+      // behaviors: [
+      //   ReduxBehaviour
+      // ],
+
+      actions: {
+        update: function(identitydata) {
+          return {
+            type: 'IDENTITY',
+            identity: identitydata
+          };
+        },
+      },
+
       properties: {
 
         /**
@@ -482,7 +494,8 @@
         identity: {
           type: String,
           observer: '_identity',
-          notify: true
+          statePath: 'identity'
+          //notify: true
         },
 
         /**
@@ -526,10 +539,6 @@
         username: {
           type: String,
           observer: '_username'
-        },
-
-        newusername: {
-          type: String
         },
 
         /**
@@ -617,7 +626,8 @@
       },
 
       behaviors: [
-        Polymer.NeonSharedElementAnimatableBehavior
+        Polymer.NeonSharedElementAnimatableBehavior,
+        ReduxBehaviour
       ],
 
       ready: function(){
@@ -671,7 +681,13 @@
       */
 
       // receive identity from data binder
-      _identity: function() {
+      _identity: function(newVal,oldVal) {
+        if (!newVal){
+          return;
+        }
+        this.username = newVal.username;
+        this.avatarhash = newVal.avatarhash;
+        //this.dispatch('update',this.identity);
       //  this.profileavatar = this.identity.avatarurl;
       },
 
@@ -679,16 +695,16 @@
       * 'init'...
       */
       init: function(cb){
-        if (this.identity){
-          try{
-            this.username = this.identity.username;
-            this.newusername = this.username;
-            this.avatarhash = this.identity.avatarhash;
-          }catch(e){
-            console.log(e);
-            //
-          }
-        }
+        // if (this.identity){
+        //   try{
+        //     this.username = this.identity.username;
+        //     this.username = this.username;
+        //     this.avatarhash = this.identity.avatarhash;
+        //   }catch(e){
+        //     console.log(e);
+        //     //
+        //   }
+        // }
         if (cb) cb();
       },
 
@@ -743,6 +759,10 @@
         delete self.croppie;
       },
 
+      geturl: function(hash){
+        return this.$.ipfs.geturl(result[0].hash);
+      },
+
       /**
       * 'setprofileavatar' is activated when the user confirms the picture cropped by the Croppie-component. It then is saved to IPFS and set as the new avatar. 
       */
@@ -771,13 +791,14 @@
               console.log(err, result[0].hash);
               //var hashurl = this.$.ipfs.geturl(result[0].hash);
               self.avatarhash = result[0].hash;
-              self.avatarurl = this.$.ipfs.geturl(result[0].hash);
-              // self.datachanged = true;
+              //self.avatarurl = this.$.ipfs.geturl(result[0].hash);
+              self.datachanged = true;
 
-              self.fire('identity-update',{
-                username: self.username,
-                avatarhash: self.avatarhash
-              });
+//               this.dispatch('update',{
+              
+//                 username: self.username,
+//                 avatarhash: self.avatarhash
+//               });
               this.avatarloading = false;
             }
           }.bind(this));
@@ -803,7 +824,7 @@
       * 'uploadfile' masks the click on the inputfield: when clicked on avatar, the upload is active. 
       */
       uploadfile: function() {
-        document.querySelector('#avatarupload').click();
+        this.$.avatarupload.click();
       },
 
 
@@ -819,14 +840,6 @@
           }.bind(this);
           reader.readAsDataURL(input.files[0]);
         }
-      },
-
-      /**
-      * 'usernameChange' sets the new username from the inputfield as the current username. 
-      */
-      usernameChange: function() {
-        this.datachanged = true;
-        this.identity.username = this.username;
       },
 
       /**
@@ -858,14 +871,19 @@
       * 'confirm' closes the collapse-menu in which the buttons are to change username, and saves the new username. 
       */
       confirm: function() {
-        this.username = this.newusername;
-        this.set('identity.username', this.newusername);
-        this.datachanged = false;
-
-        this.fire('identity-update',{
+        this.dispatch('update', {
           username: this.username,
           avatarhash: this.avatarhash
         });
+
+        this.datachanged = false;
+
+        this.fire('identity-update');
+
+        // this.fire('identity-update',{
+        //   username: this.username,
+        //   avatarhash: this.avatarhash
+        // });
         //this.fire('exit');
 
       },
@@ -919,11 +937,10 @@
         this.fire('deletevault');
       },
 
-
       _username: function(newVal,oldVal) {
-        if (oldVal){
+        if (newVal && newVal !== oldVal){
           this.datachanged = true;
-          console.log('dit komt van username', newVal, oldVal);
+          //console.log('dit komt van username', newVal, oldVal);
         }
       },
 

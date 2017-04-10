@@ -5,6 +5,7 @@
 <link rel="import" href="../sc-helpers/sc-helpers.html">
 <link rel="import" href="../sc-password/sc-password.html">
 <link rel="import" href="../sc-ipfs/sc-ipfs.html">
+<link rel="import" href="../sc-redux/sc-redux.html">
 
 <script src="./lightwallet.min.js"></script>
 <link rel="import" href="../../bower_components/neon-animation/neon-animation.html">
@@ -629,6 +630,19 @@
 
       is: 'sc-vault',
 
+      behaviors: [
+        ReduxBehaviour
+      ],
+
+      actions: {
+        update: function(identitydata) {
+          return {
+            type: 'IDENTITY',
+            identity: identitydata
+          };
+        },
+      },
+
       properties: {
         route: {
           type: Object,
@@ -655,7 +669,8 @@
         // an object containing a set of fields with identity data.
         currentidentity: {
           type: Object,
-          notify: true
+          statePath: 'identity',
+          observer: '_currentidentity'
         },
         lastbackup: {
           type: Number,
@@ -928,6 +943,7 @@
 
       _currentidentity: function(){
         console.log('sc-vault ->','currentidentity updated',this.currentidentity);
+//        self.saveVault();
       },
 
       unlockvault: function(e) {
@@ -1067,7 +1083,8 @@
               this._setpasswordProvider();
               this.set('currentkeystore',this.keystore);
               this.currentaccount = this.$.helpers.fixaddress(this.keystore.getAddresses()[0]);
-              this.set('currentidentity',vaultdata.identity);
+              this.dispatch('update',vaultdata.identity);
+//              this.set('currentidentity',vaultdata.identity);
               console.log('sc-vault -> Vault loaded. Account=', this.currentaccount);
               return true;
               break;
@@ -1087,7 +1104,7 @@
         this.password = null;
         this.keystore = null;
         this.set('currentkeystore',null);
-        this.set('currentidentity',null);
+        //this.set('currentidentity',null);
         sessionStorage.removeItem('vaultpassword');
         this.set('status','locked');
       },
@@ -1177,7 +1194,8 @@
           self._setpasswordProvider();
           
           if (amountofaccounts==0){
-            self.currentidentity = self._creatBlankIdentity();
+            self.dispatch('update',self._creatBlankIdentity());
+//            self.currentidentity = self._creatBlankIdentity();
             // self.saveVault();
             // self.loadVault();
             if (fn) {
@@ -1188,7 +1206,8 @@
           }else{
             self.generateNewAddress(1,function() {
               self.currentaccount = self.keystore.getAddresses()[0];
-              self.currentidentity = self._creatBlankIdentity();
+              self.dispatch('update',self._creatBlankIdentity());
+    //            self.currentidentity = self._creatBlankIdentity();
               // self.saveVault();
               // self.loadVault();
               if (fn) {
