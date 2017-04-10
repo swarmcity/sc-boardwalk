@@ -3,77 +3,70 @@
 <link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
 <link rel="import" href="../../bower_components/iron-localstorage/iron-localstorage.html">
-
 <link rel="import" href="../../bower_components/sc-style/sc-style.html">
 <link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
-<link rel="import" href="../../bower_components/app-route/app-location.html">
-
-
+<link rel="import" href="../../bower_components/app-route/app-location.html">   
 <link rel="import" href="../sc-backbone/sc-backbone.html">
 <link rel="import" href="../sc-loader/sc-loader.html">
-
-<!-- note that this will be lazy-loaded -->
-<!-- <link rel="import" href="../sc-boardwalk-app/sc-boardwalk-app.html"> -->
+<link rel="import" href="../sc-styles/sc-styles.html">
 
 <!--
 `sc-enter`
 
-This is the homescreen of boardwalk.
+An element that 
+1. Ensures the app is served over https when not served locally 
+- if the app is not local and is served over http, the app will redirect to https
+- if the app is local or the app is served over https sc-backbone is called to lazyload
+
+2. Conditinally shows Loading, Start or the App.
+- If there is a vault object in local storage the start screen is hiden, the loading screen is shown and then the app is shown
+- If there is no vault object in local storage the start screen is shown
+
+3. sc-backbone is imediatly loaded
+
+Example:
+```
+<sc-enter></sc-enter>
+```
 
 @demo src/sc-enter/demo/index.html 
 -->
 
 <dom-module id="sc-enter">
-<link rel="import" href="../../bower_components/sc-style/sc-style.css"  type="css">
-
   <template>
-    <iron-localstorage name="sc-vault"
-      value="{{vault}}"
-      on-iron-localstorage-load-empty="novault"
-    ></iron-localstorage>  
-    <app-location route="{{route}}" use-hash-as-path></app-location>  
-    <sc-backbone id="backbone"></sc-backbone>
-    <style>
+    <style include="sc-styles">
       :host {
         display: block;
       }
-
-
       a {
         font-family: montserratlight;
         -webkit-font-smoothing: antialiased;
         font-weight: 100;
-
         font-size: 12px;
         font-weight: 300;
         line-height: 14px;
         -webkit-margin-before:4px;
         -webkit-margin-after:4px;
-        -webkit-margin-start:0em;
-        -webkit-margin-end:0em;
-        margin:4px 0px 4px 0px;
-
+        -webkit-margin-start:0;
+        -webkit-margin-end:0;
+        margin:4px 0;
         text-decoration: none;
         outline: none;
       }
-
       a:visited {
         text-decoration: none;
         outline: none;
       }
-
       .logotitle {
         text-align: left;
         font-size: 78px;
         line-height: 72px;
       }
-
       .welcometo {
         text-align: left;
         font-size: 48px;
         line-height: 50px;
       }
-
       .logoalign {
         box-sizing:border-box;
         padding-top: 14vh;
@@ -82,34 +75,25 @@ This is the homescreen of boardwalk.
         @apply(--layout-center-justified);
         @apply(--layout-end);
       }
-
       .inneralign {
         @apply(--layout-vertical);
         @apply(--layout-start-justified);
         @apply(--layout-start);
         @apply(--layout-flex);
       }
-
       .maintxt {
         font-size: 30px;
         line-height: 36px;
       }
-
       .maxwidthz {
         max-width:590px;
       }
-
       .enterbtn {
         background-color:rgba(255,255,255,0.1);
       }
-      
       .linkblocks {
-        padding-top: 10vh;
-        padding-left: 10vw;
-        padding-right: 10vw;
-        padding-bottom: 8vh;
+      padding:10vh 10vw 8vh;
       }
-
       .linkblok_one {
         @apply(--layout-vertical);
         @apply(--layout-start-justified);
@@ -117,7 +101,6 @@ This is the homescreen of boardwalk.
         @apply(--layout-flex);
         min-width:  300px;
       }
-
       .linkblok_two {
         @apply(--layout-vertical);
         @apply(--layout-start-justified);
@@ -126,34 +109,26 @@ This is the homescreen of boardwalk.
         max-width:  500px;
         margin-top: 0px;
       }
-
       .linkblok_one a {
         color: var(--sc-blue);
         border-bottom: 1px dotted var(--sc-blue);
       }
-
       .linkblok_one a:visited {
         color: var(--sc-blue);
         border-bottom: 1px dotted var(--sc-blue);
       }
-
       .linkblok_two a {
         color: var(--sc-grey3);
         border-bottom: 1px dotted var(--sc-grey2);
       }
-
       .linkblok_two a:visited {
         color: var(--sc-grey3);
         border-bottom: 1px dotted var(--sc-grey2);
       }
-
-
-
       .whatitem {
         width: 230px;
         margin-top: 20px;
       }
-
       .whatitemimg {
         width: 90px;
         height: 90px;
@@ -161,173 +136,154 @@ This is the homescreen of boardwalk.
         border-radius: 50%;
         overflow: hidden;
       }
-
       .whatitemimg img {
         width: 100%;
         height: 100%;
       }
-
       .loadingscreen {
         width: 100vw;
         height: 100vh;
-
       }
-
       .semiopacity {
         opacity: 0.15;
       }
-
-
-
-    @media all and (min-width: 0px) and (max-width: 500px) {
-
-      .logotitle {
-        text-align: center;
-        font-size: 44px;
-        line-height: 42px;
-      }
-
-
-      .welcometo {
-        text-align: center;
-        font-size: 34px;
-        line-height: 36px;
-      }
-
-      .logoalign {
-        @apply(--layout-vertical);
-        @apply(--layout-center-center);
-        padding-top: 15vh;
-        padding-bottom: 15vh;
-      }
-
-      .inneralign {
-        @apply(--layout-vertical);
-        @apply(--layout-center-center);
-        -ms-flex: none;
-        -webkit-flex: none;
-        flex: none;
-      }
-
-      .maintxt {
-        font-size: 30px;
-        line-height: 36px;
-      }
-      
-      .enterbtn {
-        background-color:rgba(255,255,255,0.075);
-        margin-top: 12vh;
-      }
-
-      .linkblocks {
-        padding-top: 8vh;
-        padding-left: 10vw;
-        padding-right: 10vw;
-        padding-bottom: 8vh;
-      }
-
-      .linkblok_one {
-        @apply(--layout-vertical);
-        @apply(--layout-start-justified);
-        @apply(--layout-start);
-       -ms-flex: none;
-        -webkit-flex: none;
-        flex: none;
-      }
-
-      .linkblok_two {
-        @apply(--layout-vertical);
-        @apply(--layout-start-justified);
-        @apply(--layout-start);
-        margin-top: 30px;
-      }
-
-      .whatitem {
-        width: 300px;
-        margin: 20px 0px 20px 0px;
-      }
-
+      @media all and (max-width: 500px) {
+        .logotitle {
+          text-align: center;
+          font-size: 44px;
+          line-height: 42px;
+        }
+        .welcometo {
+          text-align: center;
+          font-size: 34px;
+          line-height: 36px;
+        }
+        .logoalign {
+          @apply(--layout-vertical);
+          @apply(--layout-center-center);
+          padding-top: 15vh;
+          padding-bottom: 15vh;
+        }
+        .inneralign {
+          @apply(--layout-vertical);
+          @apply(--layout-center-center);
+        }
+        .maintxt {
+          font-size: 30px;
+          line-height: 36px;
+        }
+        .enterbtn {
+          background-color:rgba(255,255,255,0.075);
+          margin-top: 12vh;
+        }
+        .linkblocks {
+          padding:8vh 10vw;
+        }
+        .linkblok_one {
+          @apply(--layout-vertical);
+          @apply(--layout-start-justified);
+          @apply(--layout-start);
+        }
+        .linkblok_two {
+          @apply(--layout-vertical);
+          @apply(--layout-start-justified);
+          @apply(--layout-start);
+          margin-top: 30px;
+        }
+        .whatitem {
+          width: 300px;
+          margin: 20px 0px 20px 0px;
+        }
     }
-
-
     </style>
 
-    <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
+    <iron-localstorage 
+      name="sc-vault"
+      value="{{vault}}"
+      on-iron-localstorage-load-empty="novault">
+    </iron-localstorage>  
+
+    <app-location 
+      route="{{route}}" 
+      use-hash-as-path>
+    </app-location>  
+
+    <sc-backbone id="backbone"></sc-backbone>
+
+    <iron-media-query query="max-width: 420px" query-matches="{{phoneview}}"></iron-media-query>
 
     <template is="dom-if" if="{{showLoader}}">
-       <div class="loadingscreen grey4back horizont centercenter">
+      <div class="loadingscreen grey4back horizont centercenter">
         <sc-loader color="yellow"></sc-loader>
       </div>
-     </template>
-    
+    </template>
+
     <template is="dom-if" if="{{showStartScreen}}">
 
       <div class="totalwidth logoalign paddingsides yellowback">
         <div class="inneralign">
-          <iron-icon icon="sc-icons:logonew" class="giant grey4 logoicon">Swarmcity-logo</iron-icon>
-          <h1 class="welcometo">Welcome to</h1>
-          <h1 class="bold grey4 logotitle">swarm.<template is="dom-if" if="{{!phoneview}}"><br></template>city</h1>
+            <iron-icon icon="sc-icons:logonew" class="giant grey4 logoicon">Swarmcity-logo</iron-icon>
+            <h1 class="welcometo">Welcome to</h1>
+            <h1 class="bold grey4 logotitle">swarm.<template is="dom-if" if="{{!phoneview}}"><br></template>city</h1>
         </div>
+        <paper-button on-tap="_toggleapp" class="grey4 shadow enterbtn bigbtn" noink>enter here</paper-button>
+      </div>
 
-        <paper-button on-tap="toggleapp" class="grey4 shadow enterbtn bigbtn" noink>enter here</paper-button>
-        </div>
-        <div class="totalwidth whiteback vertic centercenter paddingallround">
-          <p class="centertxt ultralight maintxt grey3 maxwidthz">Swarm City is the first truly decentralized peer to peer sharing economy.</p>
-          <div class="whitespace"></div>
-
-          <div class="whatitems horizont start centerjust wrap">
-
-            <div class="whatitem vertic center startjust">
-              <div class="whatitemimg grey1back">
-                <img src="./images/site_whatitem.png">
-              </div>
-              <p class="centertxt small reg grey5">Enabled by the SWT token, running<br>on the Ethereum blockchain</p>
-              <div class="minispace"></div>
-              <!-- <a class="morelink" target="_blank" href="https://swt.swarm.city">tell me more</a> -->
+      <div class="totalwidth whiteback vertic centercenter paddingallround">
+        <p class="centertxt ultralight maintxt grey3 maxwidthz">Swarm City is the first truly decentralized peer to peer sharing economy.</p>
+        <div class="whitespace"></div>
+        <div class="whatitems horizont start centerjust wrap">
+          <div class="whatitem vertic center startjust">
+            <div class="whatitemimg grey1back">
+              <img src="./images/site_whatitem.png">
             </div>
-
-            <div class="whatitem vertic center startjust">
-              <div class="whatitemimg grey1back">
-                <img src="./images/site_whatitem2.png">
-              </div>
-              <p class="centertxt small reg grey5">Stored locally on your device,<br>no central database</p>
-              <div class="minispace"></div>
-              <!-- <a class="morelink" target="_blank" href="https://thisis.swarm.city">tell me more</a> -->
-            </div>
-
-            <div class="whatitem vertic center startjust">
-              <div class="whatitemimg grey1back">
-                <img src="./images/site_whatitem3.png">
-              </div>
-              <p class="centertxt small reg grey5">It's an open source project,<br>so you can jump right in</p>
-              <div class="minispace"></div>
-              <a class="morelink" target="_blank" href="https://getactivein.swarm.city">tell me more</a>
-            </div>
-
-          </div>
-
-        </div>
-        <div class="totalwidth horizont wrap centerjust start linkblocks">
-          <div class="linkblok_one">
-            <!-- <a target="_blank" href="http://thisis.swarm.city">What is Swarm City?</a> -->
-            <a target="_blank" href="https://getactivein.swarm.city">Get active in Swarm City</a>
-            <!-- <a target="_blank" href="http://swt.swarm.city">About the Swarm City Token</a> -->
-            <a target="_blank" href="https://advisors.swarm.city">Swarm City Advisors</a>
-            <!-- <a target="_blank" href="http://dev.swarm.city">Development</a>
-            <a target="_blank" href="http://releaseroadmap.swarm.city">Release Roadmap</a> -->
-            <a target="_blank" href="https://faq.swarm.city">FAQ</a>
-          </div>
-          <div class="linkblok_two">
-            <p class="bold grey3 small">Find Swarm City on</p>
+            <p class="centertxt small reg grey5">Enabled by the SWT token, running<br>on the Ethereum blockchain</p>
             <div class="minispace"></div>
-            <a href="https://swarm-slack-invite.herokuapp.com/" target="_blank">Slack</a>
-            <a href="https://medium.com/swarm-city-times" target="_blank">Medium</a>
-            <a href="https://github.com/swarmcity" target="_blank">Github</a>
-            <a href="https://twitter.com/SwarmCityHive" target="_blank">Twitter</a>
-            <a href="https://www.youtube.com/channel/UCsHBWn_ytZ3xdMbTyYe5Ifg" target="_blank">Youtube</a>
-            <a href="https://www.facebook.com/groups/SwarmCity/" target="_blank">Facebook</a>
+            <!-- <a class="morelink" target="_blank" href="https://swt.swarm.city">tell me more</a> -->
+          </div>
+
+          <div class="whatitem vertic center startjust">
+            <div class="whatitemimg grey1back">
+              <img src="./images/site_whatitem2.png">
+            </div>
+            <p class="centertxt small reg grey5">Stored locally on your device,<br>no central database</p>
+            <div class="minispace"></div>
+            <!-- <a class="morelink" target="_blank" href="https://thisis.swarm.city">tell me more</a> -->
+          </div>
+
+          <div class="whatitem vertic center startjust">
+            <div class="whatitemimg grey1back">
+              <img src="./images/site_whatitem3.png">
+            </div>
+            <p class="centertxt small reg grey5">It's an open source project,<br>so you can jump right in</p>
+            <div class="minispace"></div>
+            <a class="morelink" target="_blank" href="https://getactivein.swarm.city">tell me more</a>
           </div>
         </div>
+      </div>
+
+      <div class="totalwidth horizont wrap centerjust start linkblocks">
+        <div class="linkblok_one">
+          <!-- <a target="_blank" href="http://thisis.swarm.city">What is Swarm City?</a> -->
+          <a target="_blank" href="https://getactivein.swarm.city">Get active in Swarm City</a>
+          <!-- <a target="_blank" href="http://swt.swarm.city">About the Swarm City Token</a> -->
+          <a target="_blank" href="https://advisors.swarm.city">Swarm City Advisors</a>
+          <!-- <a target="_blank" href="http://dev.swarm.city">Development</a>
+          <a target="_blank" href="http://releaseroadmap.swarm.city">Release Roadmap</a> -->
+          <a target="_blank" href="https://faq.swarm.city">FAQ</a>
+        </div>
+
+        <div class="linkblok_two">
+          <p class="bold grey3 small">Find Swarm City on</p>
+          <div class="minispace"></div>
+          <a href="https://swarm-slack-invite.herokuapp.com/" target="_blank">Slack</a>
+          <a href="https://medium.com/swarm-city-times" target="_blank">Medium</a>
+          <a href="https://github.com/swarmcity" target="_blank">Github</a>
+          <a href="https://twitter.com/SwarmCityHive" target="_blank">Twitter</a>
+          <a href="https://www.youtube.com/channel/UCsHBWn_ytZ3xdMbTyYe5Ifg" target="_blank">Youtube</a>
+          <a href="https://www.facebook.com/groups/SwarmCity/" target="_blank">Facebook</a>
+        </div>
+      </div>
     </template>
 
     <template is="dom-if" if="{{showApp}}">
@@ -335,129 +291,119 @@ This is the homescreen of boardwalk.
         id="boardwalk"
         route="{{route}}"
         on-loaded="boardwalkReady"
-        on-exit="onExit"
-        ></sc-boardwalk-app>      
-     <!--  <template is="dom-if" if="{{!boardwalkLoaded}}">
+        on-exit="onExit">
+      </sc-boardwalk-app>      
+      <!--  <template is="dom-if" if="{{!boardwalkLoaded}}">
         <div class="loadingscreen grey4back horizont centercenter">
           <sc-loader color="yellow"></sc-loader>
         </div>
       </template> -->
     </template>
-
   </template>
 
   <script>
     Polymer({
-
       is: 'sc-enter',
-
       properties: {
-
-        route: {
-          type: Object,
-          observer: '_onRouteDataChanged',
-        },
-
+        /**
+        * Represents an object from iron-localstorage if this value is null the public function "novault" is called
+        *
+        * @type {Object}
+        */
         vault: {
           type: Object,
           observer: '_vault'
         },
+        /**
+        * Determines if the loader is shown or not
+        *
+        * @type {Boolean}
+        */
         showLoader: {
           type: Boolean,
+          value: false
         },
+        /**
+        * Determines if the start screen is shown or not
+        *
+        * @type {Boolean}
+        */
         showshowStartScreen: {
-          type: Boolean
+          type: Boolean,
+          value: false
         },
+        /**
+        * Determines if the app is shown or not
+        *
+        * @type {Boolean}
+        */
         showApp: {
-          type: Boolean
+          type: Boolean,
+          value: false
         }        
       },
-
-      ready: function(){
-        
-      },
-
-      _onRouteDataChanged: function(page,oldpage) {
-        if (!page){
-          return;
-        }
-        console.log('sc-enter -> _onRouteDataChanged',oldpage,'->',page);
-      },
-
-      _isLocalhost: function(hostname) {
-        // !! coerces the logical expression to evaluate to the values true or false.
-        return !!(hostname === 'localhost' ||
-                  // [::1] is the IPv6 localhost address.
-                  hostname === '[::1]' ||
-                  // 127.0.0.1/8 is considered localhost for IPv4.
-                  hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/));
-      },      
-
+      /**
+      * If the user has connected via http and they are not on a local address they are redirected to https
+      * If they have connected via https or they are on a local addresss call lazyload on sc-backbone passing the string 'bundle-terminal'
+      */
       attached: function(){
         if (window.location.protocol === 'http:' && !this._isLocalhost(window.location.hostname)) {
-          // Redirect to https: if we're currently using http: and we're not on localhost.
           window.location.href = 'https:' + window.location.href.substring(window.location.protocol.length);
-        }else{
-          //this.onEnter();
+        } else {
           this.$.backbone.lazyload('bundle-terminal');
         }        
       },
-
       /**
-      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
-      * use this to initialize any variables to start the component
+      * '_isLocalhost' is passed a hostname as a string and returns a boolean value 
+      * If the hostname is represents a local address return true otherwise return false
       */
-      onEnter: function(){
-        // this.showStartScreen = false;
-        // this.showApp = false;
-        // this.showLoader = true;
-        // this.boardwalkLoaded = false;
+      _isLocalhost: function(hostname) {
+        return (hostname === 'localhost' || hostname === '[::1]' || hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/));
       },
-
       /**
-      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage 
-      * use this to reset any variables when leaving this component while it remains loaded.
+      * '_vault' is called when the vault object IS found in local storage 
+      *  when called showApp and showLoader are set to tue and showStartScreen is set to false.
       */
-      onExit: function(){
-        //debugger;
+      _vault: function(){
+        if (this.vault){
+          this.showApp = true;
+          this.showLoader = true;
+          this.showStartScreen = false;     
+        }
+      },
+      /**
+      * 'novault' is called when the vault object IS NOT found in local storage 
+      *  when called showStartScreen is set to true and showLoader is set to false
+      */
+      novault: function(){
         this.showStartScreen = true;
-        this.showApp = false;
-        this.showLoader = false;
+        this.showLoader = false;      
+      },   
+      /**
+      * 'toggleapp' is called when the user clicks the 'Enter Here' button
+      * showStartScreen and showApp are toggled based on showStartScreen
+      */
+      _toggleapp: function(){
+        this.showStartScreen = !this.showStartScreen;
+        this.showApp = !this.showStartScreen;
       },
-
+      /**
+      * 'boardwalkReady' is called from sc-boardwalk-app
+      * when called it sets showApp to true and showLoader to false
+      */
       boardwalkReady: function(){
         this.showApp = true;
         this.showLoader = false;
-        //this.$.boardwalk.onEnter();
       },
-
-      toggleapp: function(){
-        this.showStartScreen = !this.showStartScreen;
-        this.showApp = !this.showStartScreen;
-        if (this.showApp){
-          this.lastversionstarted = "1.0";
-        }
-      },
-
-      // there is no vault ...
-      novault: function(){
+      /**
+      * 'onExit' is called from sc-boardwalk-app
+      * when called it sets showApp and showLoader to false and showStartScreen to true
+      */
+      onExit: function(){
         this.showStartScreen = true;
-        this.showLoader = false;      },
-
-      _vault: function(){
-        if (!this.vault){
-          return;
-        }
-        this.showApp = true;
-        this.showLoader = true;
-        this.showStartScreen = false;        
-      },
-      debug: function(){
-        debugger;
+        this.showApp = false;
+        this.showLoader = false;
       }
-
-
-
     });
   </script>
 </dom-module>

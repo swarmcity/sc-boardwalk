@@ -8,7 +8,6 @@
     <sc-config web3host="{{host}}"></sc-config>
   </template>
   <script>
-
     var scweb3_web3;
     var acweb3_customproviderset = false;
 
@@ -24,24 +23,19 @@
           observer: '_keystore'
         }
       },
-
       observers: [
         '_host(host)'
       ],
-
       _host: function(){
         this.initweb3();        
       },
-
       ready: function(){
         console.log('sc-web3 -> ready');
       },
-
       _keystore: function(){
         console.log('sc-web3 -> new keystore attached!')
         this.initweb3();        
       },
-
       initweb3: function(){
         if (!scweb3_web3){
           if (!this.host){
