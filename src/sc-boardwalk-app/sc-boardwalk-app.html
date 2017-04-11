@@ -2,24 +2,21 @@
 <link rel="import" href="../../bower_components/neon-animation/neon-animation.html">
 <link rel="import" href="../../bower_components/app-route/app-location.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
-<link rel="import" href="../../bower_components/polymer-redux/polymer-redux.html">
 <link rel="import" href="../sc-redux/sc-redux.html">
 <link rel="import" href="../sc-web3/sc-web3.html">
 <link rel="import" href="../sc-wallet/sc-wallet.html">
 <link rel="import" href="../sc-vault/sc-vault.html">
-<link rel="import" href="../sc-intro/sc-intro.html">
-<link rel="import" href="../sc-home/sc-home.html">
-<link rel="import" href="../sc-makedeal/sc-makedeal.html">
-<link rel="import" href="../sc-walletview/sc-walletview.html">
-<link rel="import" href="../sc-swtconversion/sc-swtconversion.html">
-<link rel="import" href="../sc-profile/sc-profile.html">
-<link rel="import" href="../sc-hashtag/sc-hashtag.html">
-<link rel="import" href="../sc-geohash/sc-geohash.html">
+<!-- <link rel="import" href="../sc-intro/sc-intro.html"> -->
+<!-- <link rel="import" href="../sc-home/sc-home.html"> -->
+<!-- <link rel="import" href="../sc-makedeal/sc-makedeal.html"> -->
+<!-- <link rel="import" href="../sc-walletview/sc-walletview.html"> -->
+<!-- <link rel="import" href="../sc-swtconversion/sc-swtconversion.html"> -->
+<!-- <link rel="import" href="../sc-profile/sc-profile.html"> -->
+<!-- <link rel="import" href="../sc-hashtag/sc-hashtag.html"> -->
+<!-- <link rel="import" href="../sc-geohash/sc-geohash.html"> -->
 
 <!--
 `sc-boardwalk-app`
-
-
 -->
 <dom-module id="sc-boardwalk-app">
   <template>
@@ -74,10 +71,10 @@
         >
     </sc-wallet>
 
-  <neon-animated-pages id="mainpages" attr-for-selected="data-page" selected="[[routedata.page]]">
+  <neon-animated-pages fallback-selection="view404"  id="mainpages" attr-for-selected="data-page" selected="[[routedata.page]]">
 
     <sc-swtconversion
-      data-page="swt"
+      data-page="swtconversion"
       id="swt"
       route="[[pageTail]]"
       keystore="[[keystore]]"
@@ -111,7 +108,6 @@
       data-page="vault"
       route="[[pageTail]]"
       currentkeystore="{{keystore}}"
-      currentidentity="{{identity}}"
       currentaccount="{{account}}"
       lastbackup="{{lastbackup}}"
       on-ready="checkready"
@@ -125,14 +121,13 @@
       id="home"
       data-page="home"
       keystore="[[keystore]]"
-      identity="[[identity]]"
       lastbackup=[[lastbackup]]
       web3="[[web3]]"
       pubkey="[[account]]"
       swtbalance="[[swtbalance]]"
       ethbalance="[[ethbalance]]"
       balanceupdating="[[balanceupdating]]"
-      on-to-profile="home_toprofile"
+      on-to-profile="toProfile"
       on-to-walletview="home_towalletview"
       on-to-hashtag="home_tohashtag"
       >
@@ -142,7 +137,6 @@
     <sc-profile
       data-page="profile"
       id="profile"
-      identity="[[identity]]"
       lastbackup=[[lastbackup]]
       pubkey="[[account]]"
       on-leave="profile_tohome"
@@ -193,6 +187,12 @@
       swtbalance="[[swtbalance]]"
       on-leave="makedeal_tohome">
     </sc-makedeal>
+
+    <div
+      data-page="view404">
+      <h1>404</h1>
+    </div>
+
 
 
 
@@ -271,7 +271,7 @@
             // no NOW we can check ARC/SWT balance
             if (this.arcbalance>0){
               console.log('having SRC balance -> to convert');
-              return this.transitionto('/swt/intro');
+              return this.transitionto('/swtconversion/intro');
             }else{
               console.log('no SRC balance -> head home');
               if (this.route && this.route.path !== "" && this.route.path !== "/vault/unlock"&& this.route.path !== "/vault/createnew"){
@@ -291,6 +291,11 @@
 
       },
 
+      deletevault: function(){
+        this.$.vault.deleteVault();
+        this.intro_toAppStart();
+      },
+
       intro_toAppStart: function(){
         this.transitionto('/intro/welcome');
       },
@@ -299,12 +304,33 @@
         this.set('route.path',target);
       },
 
+      toBackup: function(){
+        this.transitionto('/vault/backup');
+      },
+
       _onRouteDataChanged: function(page,oldpage) {
         if (!page){
           return;
         }
         console.log('sc-boardwalk-app -> _onRouteDataChanged',oldpage,'->',page);
+
+
+        const resolvedPageUrl = this.resolveUrl('../sc-' + page + '/sc-' + page + '.html');
+
+        console.log('loading',resolvedPageUrl);
+
+
+        Polymer.Base.importHref(
+            resolvedPageUrl,
+            null,
+            this._showPage404.bind(this),
+            true);
+
        },
+
+      _showPage404(){
+        this.page = 'view404';
+      },
 
       // intro routing
       intro_createNewVault: function(){
@@ -335,7 +361,7 @@
         this.transitionto('/vault/importipfs');
       },
 
-      home_toprofile: function(){
+      toProfile: function(){
         this.transitionto('/profile');
       },
 
@@ -374,7 +400,7 @@
 
 
       saveIdentity: function(e) {
-        this.identity = e.detail;
+        //this.identity = e.detail;
         this.$.vault.saveVault();
       },
 

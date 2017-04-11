@@ -5,6 +5,10 @@
         
     let initialState = {
         deals: [],
+        identity: {
+            username: 'username',
+            avatarhash: 'Qme5k7WUAoo5JwySiYGfhm4umvhUCTqVKPw2yfP7jhiqPT'
+        }
     };
 
     let reducer = function(state, action){
@@ -15,7 +19,13 @@
             case 'DEALS':
                 let deals = state.deals;
                 deals  = action.deals;
-                return Object.assign({}, state, {deals: deals})
+                return Object.assign({}, state, {deals: deals});
+                break;
+            case 'IDENTITY':
+                let identity = state.identity;
+                identity  = action.identity;
+                return Object.assign({}, state, {identity: identity})
+                break;
         }
     }
     const store = Redux.createStore(reducer, /* preloadedState, */

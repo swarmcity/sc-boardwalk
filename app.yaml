@@ -1,0 +1,12 @@
+  runtime: python27
+  api_version: 1
+  threadsafe: true
+
+  handlers:
+    - url: /
+      static_files: build/unbundled/index.html
+      upload: build/unbundled/index.html    
+    
+    - url: /(.*)
+      static_files: build/unbundled/\1
+      upload: build/unbundled/(.*)

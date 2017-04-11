@@ -9,6 +9,8 @@
 <link rel="import" href="../sc-balance/sc-balance.html">
 <link rel="import" href="../sc-hashtaglist/sc-hashtaglist.html">
 <link rel="import" href="../sc-backbone/sc-backbone.html">
+<link rel="import" href="../sc-redux/sc-redux.html">
+<link rel="import" href="../sc-ipfs/sc-ipfs.html">
 
 <!--
 `sc-home` is homeview of the Swarm City app. It shows your avatar/username/pubkey ( > to go to profile-view), your balance ( > to go to sc-wallet-view) and the hashtaglist ( > to go to a specific hashtag).
@@ -107,6 +109,7 @@
 
     </style>
     <sc-backbone id="helpers"></sc-backbone>
+    <sc-ipfs id="ipfs"></sc-ipfs>
     <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
 
     <div class="totalcontainer horizont start startjust wrap">
@@ -115,7 +118,6 @@
         <div class="avatar_username_box vertic centercenter" on-tap="toProfile">
           <sc-avatar
           ipfshash="[[identity.avatarhash]]"
-          pubkey="[[pubkey]]"
           id="homeavatar"
           ></sc-avatar>
           <div class="horizont centercenter">
@@ -158,9 +160,9 @@
        * `identity` is received from parent-element, as an object containing an IPFS-hash, which is img-source.
        */
         identity: {
-          type: String,
+          type: Object,
           observer: '_identity',
-          notify: true
+          statePath: 'identity'
         },
 
         /**
@@ -216,7 +218,8 @@
       },
 
       behaviors: [
-        Polymer.NeonSharedElementAnimatableBehavior
+        Polymer.NeonSharedElementAnimatableBehavior,
+        ReduxBehaviour
       ],
 
       attached: function(){
@@ -260,10 +263,12 @@
       * '_identity' monitors is the identity changes.
       */
       _identity: function() {
-        if (this.identity){
-          this.currentavatar = this.identity.avatarurl;
-        }
+       //debugger;
+        // if (this.identity){
+        //   this.currentavatar = this.identity.avatarurl;
+        // }
       },
+
 
 
       /**
