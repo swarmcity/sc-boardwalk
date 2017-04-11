@@ -80,7 +80,7 @@ Example:
         @apply(--layout-vertical);
         @apply(--layout-start-justified);
         @apply(--layout-start);
-        @apply(--layout-flex);
+/*        @apply(--layout-flex);*/
       }
       .maintxt {
         font-size: 30px;
@@ -168,6 +168,7 @@ Example:
         .inneralign {
           @apply(--layout-vertical);
           @apply(--layout-center-center);
+
         }
         .maintxt {
           font-size: 30px;
@@ -227,6 +228,9 @@ Example:
             <h1 class="welcometo">Welcome to</h1>
             <h1 class="bold grey4 logotitle">swarm.<template is="dom-if" if="{{!phoneview}}"><br></template>city</h1>
         </div>
+          <template is="dom-if" if="{{!phoneview}}">
+            <div class="flex"></div>
+          </template>
         <paper-button on-tap="_toggleapp" class="grey4 shadow enterbtn bigbtn" noink>enter here</paper-button>
       </div>
 
