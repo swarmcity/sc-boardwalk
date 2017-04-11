@@ -71,7 +71,11 @@
         >
     </sc-wallet>
 
-  <neon-animated-pages fallback-selection="view404"  id="mainpages" attr-for-selected="data-page" selected="[[routedata.page]]">
+  <neon-animated-pages fallback-selection="loadingstate"  id="mainpages" attr-for-selected="data-page" selected="[[routedata.page]]">
+
+    <div data-page="loadingstate">
+      <p>Still figuring out where to go...</p>
+    </div>
 
     <sc-swtconversion
       data-page="swtconversion"
@@ -169,7 +173,6 @@
       id="hashtag"
       route="{{pageTail}}"
       keystore="[[keystore]]"
-      identity="[[identity]]"
       pubkey="[[account]]"
       swtbalance="[[swtbalance]]"
       on-leave="hashtag_tohome"

@@ -7,5 +7,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
-- sc-backbone : load deployed version from IPFS reference on the blockchain.
+- restore Vault from backup file
+- improved loading speed
 

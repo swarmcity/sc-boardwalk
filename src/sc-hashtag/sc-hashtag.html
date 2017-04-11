@@ -291,7 +291,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
         <div class="avatar_username_balance" on-tap="toProfile">
           <sc-avatar
           ipfshash="[[identity.avatarhash]]"
-          pubkey="[[pubkey]]"
           id="hashtagavatar"
           size="{{currentviewmode}}"
           ></sc-avatar>
@@ -442,6 +441,10 @@ This is the component showing all requests of a certain hashtag. It contains a r
           notify: true,
           //statePath: 'route'
         },
+        identity: {
+          type: Object,
+          statePath: 'identity',
+        },        
         deals: {
           type: Array,
           statePath: 'deals',
