@@ -262,7 +262,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
             </div>
           </div>
           <div class="horizont centercenter totalwidth userinfostrip">
-              <div class="vertic centercenter userinfo box">
+              <div class="vertic centercenter userinfo box" on-tap="toPayout">
                 <sc-username
                   identity="[[identity]]"
                   pubkey="[[pubkey]]"
@@ -318,7 +318,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           </template>
           <div class="flexer"></div>
           <template is="dom-if" if="{{_is(otheramount_state,'amountwaiting')}}">
-            <div class="dealamountio amountwaiting">
+            <div class="dealamountio amountwaiting"  on-tap="dummyClick">
               <p class="centertxt small bold grey3">{{dealamount}} <span class="SWTletters">SWT</span></p>
             </div>
           </template>
@@ -480,7 +480,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       },
 
       dummyClick: function(){
-        debugger;
         this.otheramount_state = 'amountconfirmed';
         this.selecteddealpage = 'dealchat';
 
