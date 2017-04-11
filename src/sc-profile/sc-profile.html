@@ -850,7 +850,7 @@
 
         var itemp = e.target.id;
         var collapsid = itemp + 'collapser';
-        var collapsdis = document.getElementById(collapsid);
+        var collapsdis = this.$[collapsid];
         collapsdis.toggle();
 
         this.itemshow =! this.itemshow;
@@ -902,7 +902,7 @@
       * 'closeMe' closes the collapse-menu of deleting the user. 
       */
       closeMe: function()  {
-        var collapsdis = document.getElementById('deletemyvaultcollapser');
+        var collapsdis = this.$['deletemyvaultcollapser'];
         // console.log("*******",collapsdis);
         collapsdis.toggle();
         this.itemshow =! this.itemshow;

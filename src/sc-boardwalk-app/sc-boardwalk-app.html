@@ -127,7 +127,7 @@
       swtbalance="[[swtbalance]]"
       ethbalance="[[ethbalance]]"
       balanceupdating="[[balanceupdating]]"
-      on-to-profile="home_toprofile"
+      on-to-profile="toProfile"
       on-to-walletview="home_towalletview"
       on-to-hashtag="home_tohashtag"
       >
@@ -291,12 +291,21 @@
 
       },
 
+      deletevault: function(){
+        this.$.vault.deleteVault();
+        this.intro_toAppStart();
+      },
+
       intro_toAppStart: function(){
         this.transitionto('/intro/welcome');
       },
       transitionto: function(target){
         console.log('sc-boardwalk-app -> transitionTo',target);
         this.set('route.path',target);
+      },
+
+      toBackup: function(){
+        this.transitionto('/vault/backup');
       },
 
       _onRouteDataChanged: function(page,oldpage) {
@@ -352,7 +361,7 @@
         this.transitionto('/vault/importipfs');
       },
 
-      home_toprofile: function(){
+      toProfile: function(){
         this.transitionto('/profile');
       },
 
