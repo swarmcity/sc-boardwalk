@@ -772,7 +772,8 @@
         this.croppie.result({
           type: 'base64',
           format: 'jpeg',
-          quality: 0.9
+          quality: 0.9,
+          size: { width: 250 }
         }).then(function(base64) {
 
           // set the avatar to the dataURL.
