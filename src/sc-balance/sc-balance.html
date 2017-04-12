@@ -70,11 +70,14 @@ This component shows the SWT-balance and the reference currency (when in sc-wall
     </style>
 
      <iron-ajax
-      url="https://api.coinmarketcap.com/v1/ticker/swarm-city/?convert=EUR"
+      url="https://crossorigin.me/https://api.coinmarketcap.com/v1/ticker/swarm-city/?convert=EUR"
       on-response="handleResponse"
+      handle-as="json"
       auto>
     </iron-ajax>
   <!--
+      url="https://api.coinmarketcap.com/v1/ticker/swarm-city/?convert=EUR"
+
     <iron-ajax
       url="https://api.fixer.io/latest?base=USD"
       on-response="handleResponseUSDEUR"

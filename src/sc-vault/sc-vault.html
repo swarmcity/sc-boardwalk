@@ -288,8 +288,8 @@
       </neon-animatable>
 
       <neon-animatable data-page="restore">
-        <a href="#/vault/importipfs">restore from IPFS</a><br/>
-        <a href="#/vault/importbackupfile">restore from backup file</a>
+        <div on-tap="torestorefromipfs">restore from IPFS</div><br/>
+        <div on-tap="torestorefrombackupfile">restore from backup file</div>
       </neon-animatable>
 
 
@@ -750,6 +750,15 @@
       vaulttoipfsroute: function(){
         this.set('route.path', '/backupipfs');
       },
+
+      torestorefromipfs: function(){
+        this.set('route.path', '/importipfs');
+      },
+
+      torestorefrombackupfile: function(){
+        this.set('route.path', '/importbackupfile');
+      },
+
 
       removeall: function(){
         this.set('route.path', '/removeall');
