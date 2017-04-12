@@ -152,7 +152,7 @@
   }
 
   h1 {
-        word-wrap: break-word;
+    word-wrap: break-word;
   }
 
   .hrefpadding {
@@ -295,9 +295,15 @@
       </neon-animatable>
 
       <neon-animatable data-page="restore">
-        <div class="fullcanvas vertic centercenter">
-          <paper-button class="blue lighter bigbtn shadow centertxt doublesbtn" noink on-tap="torestorefromipfs">restore from IPFS</paper-button>
-          <paper-button class="blue lighter bigbtn shadow centertxt doublesbtn" noink on-tap="torestorefrombackupfile">restore from backup file</paper-button>
+        <div class="total vertic centercenter">
+          <div class="topbar">
+            <span class="flex"></span>
+              <iron-icon class="grey4" icon="sc-icons:decline" on-tap="exit">back</iron-icon>
+          </div>
+          <div class="pascanvasunderexit vertic centercenter paddingsides">
+            <paper-button class="blue lighter bigbtn shadow centertxt doublesbtn" noink on-tap="torestorefromipfs">restore from IPFS</paper-button>
+            <paper-button class="blue lighter bigbtn shadow centertxt doublesbtn" noink on-tap="torestorefrombackupfile">restore from backup file</paper-button>
+          </div>
         </div>
       </neon-animatable>
 
