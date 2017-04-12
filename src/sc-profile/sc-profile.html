@@ -939,7 +939,7 @@
       },
 
       _username: function(newVal,oldVal) {
-        if (newVal && newVal !== oldVal){
+        if (newVal && newVal !== oldVal && oldVal != ""){
           this.datachanged = true;
           //console.log('dit komt van username', newVal, oldVal);
         }

@@ -247,7 +247,7 @@
               <p class="red bold"><span class="oops">You didn't enter a valid key.</span></p>
             </template>  
             <div class="totalwidth horizont center endjust">
-            <paper-icon-button icon="sc-icons:arrowright" class="big whiteback shadow blue" on-tap="pkreceived" noink>next</paper-icon-button>
+            <paper-icon-button icon="sc-icons:arrowright" class="big whiteback shadow blue" on-tap="pkreceivedeth" noink>next</paper-icon-button>
             </div>
           </div>
           <div class="tenspace"></div>
@@ -916,7 +916,19 @@
       pkreceived: function(){
         this.invalidpk = false;
         var patt = new RegExp(/^[a-f0-9]{64}$/i);
-        var res = patt.test(this.privatekey);
+        var res = patt.test(this.$.privatekeyinput.value);
+        if (!res){
+          console.log('foute key');
+          this.invalidpk = true;
+        }else{
+          this.set('route.path', '/importpkmakewallet');
+        }
+      },
+      
+      pkreceivedeth: function(){
+        this.invalidpk = false;
+        var patt = new RegExp(/^[a-f0-9]{64}$/i);
+        var res = patt.test(this.$.privatekeyethinput.value);
         if (!res){
           console.log('foute key');
           this.invalidpk = true;

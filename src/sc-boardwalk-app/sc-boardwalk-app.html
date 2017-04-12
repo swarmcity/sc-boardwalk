@@ -277,7 +277,7 @@
               return this.transitionto('/swtconversion/intro');
             }else{
               console.log('no SRC balance -> head home');
-              if (this.route && this.route.path !== "" && this.route.path !== "/vault/unlock"&& this.route.path !== "/vault/createnew"){
+              if (this.route && this.route.path !== "" && this.route.path !== "/vault/unlock" && this.route.path !== "/vault/createnew" && this.route.path !== "/vault/restore"){
                 console.log('all ready -> go to ',this.route.path);
                 return;
               }else{
