@@ -4,6 +4,7 @@
 
 <link rel="import" href="../sc-helpers/sc-helpers.html">
 <link rel="import" href="../sc-password/sc-password.html">
+<link rel="import" href="../sc-loader/sc-loader.html">
 <link rel="import" href="../sc-ipfs/sc-ipfs.html">
 <link rel="import" href="../sc-redux/sc-redux.html">
 
@@ -159,6 +160,12 @@
     padding: 15px;
   }
 
+  .doublesbtn {
+    min-width: 270px;
+    max-width: 370px;
+    margin: 4px;
+  }
+
 
     </style>
 
@@ -288,8 +295,10 @@
       </neon-animatable>
 
       <neon-animatable data-page="restore">
-        <a href="#/vault/importipfs">restore from IPFS</a><br/>
-        <a href="#/vault/importbackupfile">restore from backup file</a>
+        <div class="fullcanvas vertic centercenter">
+          <paper-button class="blue lighter bigbtn shadow centertxt doublesbtn" noink on-tap="fromIPFS">restore from IPFS</paper-button>
+          <paper-button class="blue lighter bigbtn shadow centertxt doublesbtn" noink on-tap="fromBackupfile">restore from backup file</paper-button>
+        </div>
       </neon-animatable>
 
 
@@ -580,7 +589,15 @@
         </div>
         <template is="dom-if" if="{{!tappedunlockbtn}}">
         <div class="pascanvasunderexit vertic centercenter paddingsides">
+
+        <template is="dom-if" if="{{loadingpassw}}">
+          <sc-loader color="blue" small>Unlocking</sc-loader>
+          <div class="whitespace"></div>
+          <div class="whitespace"></div>
+        </template>
+        <template is="dom-if" if="{{!loadingpassw}}">
           <sc-password passwordlabel="Enter your password" class="height" id="newuser" sessionname="vaultpassword" on-btn-tapped="unlockBtnbool" on-password-received="unlockvault" wrongpass="[[unlockpasswordwrong]]"></sc-password> 
+        </template>
         </div>
 
         </template>
@@ -920,7 +937,7 @@
       },
 
       ready: function(){
-     
+        this.loadingpassw = false;
       },
 
       reset: function() {
@@ -1017,6 +1034,7 @@
             self.fire('ready');
           } else {
             self.unlockpasswordwrong = true;
+            self.loadingpassw = false;
           }
         });
       },
@@ -1355,12 +1373,22 @@
       },
 
 
-      // unlockBtnbool: function(){
-      // },
+      unlockBtnbool: function(){
+        this.loadingpassw = true;
+      },
 
       _logThis: function(){
         // console.log("is die vault nu eig creating????",this.creatingvault);
+      },
+
+      fromIPFS: function(){
+        this.set('route.path', '/importipfs');
+      },
+
+      fromBackupfile: function(){
+        this.set('route.path', '/importbackupfile');
       }
+
 
     });
   </script>
