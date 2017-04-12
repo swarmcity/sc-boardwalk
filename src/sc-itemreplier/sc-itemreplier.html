@@ -1,5 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
+
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 
@@ -30,7 +32,7 @@ This components allow a Swarm Citizen to reply on a request.
       .yourrespond {
         box-sizing:border-box;
         padding: 0vw 4vw 1vw 4vw;
-        transition: all 1s linear;
+        transition: all 0.5s linear;
       }
 
       .lightgreytopborder {
@@ -122,7 +124,6 @@ This components allow a Swarm Citizen to reply on a request.
         </template>
 
         <template is="dom-if" if="{{_is(replystate,'replying')}}">
-        <iron-collapse class="totalwidth" id="replycoll">
 
           <div class="total vertic centercenter">
             <paper-textarea label="Your reply" class="totalwidth grey2unfocus" autofocus></paper-textarea>
@@ -141,7 +142,6 @@ This components allow a Swarm Citizen to reply on a request.
 
 
           </div>
-        </iron-collapse>
         </template>
 
 
@@ -237,38 +237,24 @@ This components allow a Swarm Citizen to reply on a request.
       * When the action is trigger, 'replystateChanger' checks the replystate and does a certain action accordingly
       */
     replystateChanger: function(){
+
         switch (this.replystate) {
           case 'init':
             this.replystate = 'replying'
             this.bgcolor = "whiteback";
             this.borderz = "greytopborder";
-              console.log("yes dit dus");
-
-            setTimeout(function(){ 
-            var coll = document.getElementById('replycoll');
-              if(!coll.opened){
-                coll.toggle();
-              }
-             }, 50);
+            //   console.log("yes dit dus");
             break;
           case 'replying':
             this.replystate = 'replygivven'
             this.bgcolor = "basestructure";
             this.borderz = "notopborder";
-            var coll = document.getElementById('replycoll');
-            if(coll.opened){
-              coll.toggle();
-            }
-            setTimeout(function(){ 
-            this.replystate = 'replygivven'
-             }, 50);
             break;
           case 'replygivven':
             this.replystate = 'deletereply'
             this.borderz = "notopborder";
             break;
           default:
-            console.log("!!! ** Niks");
         }
     },
 
