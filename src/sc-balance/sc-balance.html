@@ -69,11 +69,14 @@ This component shows the SWT-balance and the reference currency (when in sc-wall
 
     </style>
 
-<!--     <iron-ajax
-      url="https://api.coinmarketcap.com/v1/ticker/arcade-token/"
+     <iron-ajax
+      url="https://crossorigin.me/https://api.coinmarketcap.com/v1/ticker/swarm-city/?convert=EUR"
       on-response="handleResponse"
+      handle-as="json"
       auto>
     </iron-ajax>
+  <!--
+      url="https://api.coinmarketcap.com/v1/ticker/swarm-city/?convert=EUR"
 
     <iron-ajax
       url="https://api.fixer.io/latest?base=USD"
@@ -181,10 +184,11 @@ This component shows the SWT-balance and the reference currency (when in sc-wall
       // /**
       // * 'handleResponse' handles the response of an ajax-call... **TBC**
       // */
-      // handleResponse: function(e) {
-      //   this.priceusd = e.detail.response[0].price_usd;
-      //   this.convertcurrency(this.swtbalance);
-      // },
+      handleResponse: function(e) {
+        debugger;
+        this.priceusd = e.detail.response[0].price_usd;
+        this.convertcurrency(this.swtbalance);
+      },
 
       // /**
       // * 'handleResponseUSDEUR'... **TBC**
@@ -211,9 +215,13 @@ This component shows the SWT-balance and the reference currency (when in sc-wall
           //console.log(x);
           this.balanceref = this.swtbalance * this.priceusd / 1e18;
           this.balanceref = this.balanceref.toFixed(2);
-          this.eurref = this.balanceref * this.eurusd;
-          this.eurref = this.eurref.toFixed(2);
+          //this.eurref = this.balanceref * this.eurusd;
+          //this.eurref = this.eurref.toFixed(2);
+          
+          debugger;
           return x.toFixed(2);
+
+
         }
       },
 

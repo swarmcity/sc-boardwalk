@@ -296,8 +296,8 @@
 
       <neon-animatable data-page="restore">
         <div class="fullcanvas vertic centercenter">
-          <paper-button class="blue lighter bigbtn shadow centertxt doublesbtn" noink on-tap="fromIPFS">restore from IPFS</paper-button>
-          <paper-button class="blue lighter bigbtn shadow centertxt doublesbtn" noink on-tap="fromBackupfile">restore from backup file</paper-button>
+          <paper-button class="blue lighter bigbtn shadow centertxt doublesbtn" noink on-tap="torestorefromipfs">restore from IPFS</paper-button>
+          <paper-button class="blue lighter bigbtn shadow centertxt doublesbtn" noink on-tap="torestorefrombackupfile">restore from backup file</paper-button>
         </div>
       </neon-animatable>
 
@@ -767,6 +767,15 @@
       vaulttoipfsroute: function(){
         this.set('route.path', '/backupipfs');
       },
+
+      torestorefromipfs: function(){
+        this.set('route.path', '/importipfs');
+      },
+
+      torestorefrombackupfile: function(){
+        this.set('route.path', '/importbackupfile');
+      },
+
 
       removeall: function(){
         this.set('route.path', '/removeall');
@@ -1381,13 +1390,6 @@
         // console.log("is die vault nu eig creating????",this.creatingvault);
       },
 
-      fromIPFS: function(){
-        this.set('route.path', '/importipfs');
-      },
-
-      fromBackupfile: function(){
-        this.set('route.path', '/importbackupfile');
-      }
 
 
     });
