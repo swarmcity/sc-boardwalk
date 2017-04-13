@@ -430,8 +430,9 @@
       },
 
       converted: function(){
+        var self = this;
         this.$.wallet.updateBalance(function(){
-          this.transitionto('/home');
+          self.transitionto('/home');
         })
       },
 
