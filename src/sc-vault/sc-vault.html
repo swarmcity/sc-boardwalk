@@ -920,21 +920,15 @@
       },
 
       pkreceived: function(){
-        this.invalidpk = false;
-        var patt = new RegExp(/^[a-f0-9]{64}$/i);
-        var res = patt.test(this.$.privatekeyinput.value);
-        if (!res){
-          console.log('foute key');
-          this.invalidpk = true;
-        }else{
-          this.set('route.path', '/importpkmakewallet');
-        }
+        this.privatekey = this.$.privatekeyinput.value;
+        this.pkreceivedeth();
       },
-      
+
       pkreceivedeth: function(){
+        this.privatekey = this.$.privatekeyethinput.value;
         this.invalidpk = false;
         var patt = new RegExp(/^[a-f0-9]{64}$/i);
-        var res = patt.test(this.$.privatekeyethinput.value);
+        var res = patt.test(this.privatekey);
         if (!res){
           console.log('foute key');
           this.invalidpk = true;
