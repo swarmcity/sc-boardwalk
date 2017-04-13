@@ -6,6 +6,8 @@
 <link rel="import" href="../sc-web3/sc-web3.html">
 <link rel="import" href="../sc-wallet/sc-wallet.html">
 <link rel="import" href="../sc-vault/sc-vault.html">
+<link rel="import" href="../sc-loader/sc-loader.html">
+
 <!-- <link rel="import" href="../sc-intro/sc-intro.html"> -->
 <!-- <link rel="import" href="../sc-home/sc-home.html"> -->
 <!-- <link rel="import" href="../sc-makedeal/sc-makedeal.html"> -->
@@ -47,6 +49,16 @@
         width: 100vw;
         height: 100vh;
       }
+
+      .fullcanvas {
+        width: 100vw;
+        height: 100vh;
+        @apply(--layout-vertical);
+        @apply(--layout-center-center);
+        background-color: #333333;
+        color: #24B1FF;
+      }
+
     </style>
 
     <app-route route="{{route}}" pattern="/:page" data="{{routedata}}" tail="{{pageTail}}"></app-route>
@@ -74,7 +86,9 @@
   <neon-animated-pages fallback-selection="loadingstate"  id="mainpages" attr-for-selected="data-page" selected="[[routedata.page]]">
 
     <div data-page="loadingstate">
-      <p>Still figuring out where to go...</p>
+      <div class="fullcanvas">
+        <sc-loader small color="blue">Loading Swarm City</sc-loader>
+      </div>
     </div>
 
     <sc-swtconversion

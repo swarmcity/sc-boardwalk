@@ -1,5 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
+
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
 <link rel="import" href="../../bower_components/sc-style/sc-style.html">
@@ -50,6 +52,20 @@ This component shows the SWT-balance and the reference currency (when in sc-wall
         line-height: 22px;    
       }
 
+      .prefc {
+        opacity:0.2;
+        box-sizing:border-box;
+        padding-top: 5px;
+        padding-left: 15px;
+
+      }
+
+
+      .prefc p {
+        font-size: 14px;
+        line-height: 16px;   
+      }
+
 
       @media all and (min-width: 0) and (max-width: 420px) {
 
@@ -63,6 +79,13 @@ This component shows the SWT-balance and the reference currency (when in sc-wall
           line-height: 16px;
           margin-left: 6px;
         }
+      .prefc {
+        opacity:0.2;
+        box-sizing:border-box;
+        padding-top: 5px;
+        padding-left: 0px;
+
+      }
 
       }
 
@@ -75,6 +98,8 @@ This component shows the SWT-balance and the reference currency (when in sc-wall
       handle-as="json"
       auto>
     </iron-ajax>
+    <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
+
   <!--
       url="https://api.coinmarketcap.com/v1/ticker/swarm-city/?convert=EUR"
 
@@ -98,6 +123,22 @@ This component shows the SWT-balance and the reference currency (when in sc-wall
           <h1 class="yellow bold"><span class="SWTletters"> SWT</span></h1>
         </template>
       </div>
+
+      <template is="dom-if" if="{{_is(phoneview)}}">
+        <div class$="horizont centercenter {{viewmode}} prefc">
+          <template is="dom-if" if="{{wereinwallet}}">
+            <p class="bold">{{balanceref}} {{prefcurrency}}</p>
+          </template>
+        </div>
+      </template>
+
+      <template is="dom-if" if="{{!_is(phoneview)}}">
+        <div class$="horizont center startjust {{viewmode}} prefc leftm">
+          <template is="dom-if" if="{{wereinwallet}}">
+            <p class="bold">{{balanceref}} {{prefcurrency}}</p>
+          </template>
+        </div>
+      </template>
 
 
     <!--     <template is="dom-if" if="{{wereinwallet}}">
@@ -133,14 +174,14 @@ This component shows the SWT-balance and the reference currency (when in sc-wall
        * `balanceref` is the balance of the reference currency.
        */        
         balanceref: {
-          type: Number,
+          type: Number
         },
         /**
        * `prefcurrency` ***TBC***.
        */  
         prefcurrency: {
           type: String,
-          value: '$',
+          value: 'USD',
         },
         /**
        * `viewmode` determines the size, it's default on 'normal'.
@@ -204,6 +245,10 @@ This component shows the SWT-balance and the reference currency (when in sc-wall
         var charcount = this.swtbalance.toString().length;
         this.balancesize = charcount * this.basesize;
         this.balanceref = this.convertcurrency(this.swtbalance);
+
+        // THIS IS DUMMY, PLEASE REMOVE WHEN THE FUNCTION WORKS
+        this.balanceref = '0,00';
+
       },
 
       /**
@@ -223,6 +268,8 @@ This component shows the SWT-balance and the reference currency (when in sc-wall
 
 
         }
+
+
       },
 
       /**
