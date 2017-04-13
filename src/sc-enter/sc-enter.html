@@ -389,8 +389,8 @@ Example:
       * showStartScreen and showApp are toggled based on showStartScreen
       */
       _toggleapp: function(){
-        this.showStartScreen = !this.showStartScreen;
-        this.showApp = !this.showStartScreen;
+        this.showStartScreen = false; // !this.showStartScreen;
+        this.showApp = true; //!this.showStartScreen;
       },
       /**
       * 'boardwalkReady' is called from sc-boardwalk-app

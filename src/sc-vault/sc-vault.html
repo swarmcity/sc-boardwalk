@@ -1048,8 +1048,8 @@
         this.loadVault();
         this.checkpassword(function(err, pwdcorrect) {
           if (pwdcorrect) {
-            this.tappedunlockbtn =! this.tappedunlockbtn;
-
+            self.tappedunlockbtn = false;
+            self.loadingpassw = false;
             sessionStorage.setItem('vaultpassword',self.password);
             self.status = 'unlocked';
             self.fire('ready');

@@ -12,6 +12,7 @@
 <link rel="import" href="../sc-username/sc-username.html">
 <link rel="import" href="../sc-loader/sc-loader.html">
 <link rel="import" href="../sc-dealchat/sc-dealchat.html">
+<link rel="import" href="../sc-redux/sc-redux.html">
 
 <!--<link rel="import" href="../sc-balance/sc-balance.html"> -->
 
@@ -383,7 +384,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       is: 'sc-makedeal',
 
       behaviors: [
-        Polymer.NeonSharedElementAnimatableBehavior
+        Polymer.NeonSharedElementAnimatableBehavior,
+        ReduxBehaviour
       ],
 
       observers: [
@@ -395,9 +397,9 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         /**
        * `prop1` this is the first property and what it does is described right here.
        */
-        prop1: {
-          type: String,
-          value: 'sc-makedeal',
+        identity: {
+          type: Object,
+          statePath: 'identity',
         },
       },
 

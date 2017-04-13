@@ -8,6 +8,7 @@
 <link rel="import" href="../sc-shortcode/sc-shortcode.html">
 <link rel="import" href="../sc-tokensend/sc-tokensend.html">
 <link rel="import" href="../sc-tokenreceive/sc-tokenreceive.html">
+<link rel="import" href="../sc-redux/sc-redux.html">
 <!-- <link rel="import" href="ac-log.html"> -->
 <!-- <link rel="import" href="sc-spinner.html"> -->
 
@@ -190,6 +191,7 @@
     properties: {
       identity: {
         type: Object,
+        statePath: 'identity'
       },
       keystore: {
         type: Object,
@@ -267,7 +269,8 @@
 
 
     behaviors: [
-      Polymer.NeonSharedElementAnimatableBehavior
+      Polymer.NeonSharedElementAnimatableBehavior,
+      ReduxBehaviour
     ],
 
 

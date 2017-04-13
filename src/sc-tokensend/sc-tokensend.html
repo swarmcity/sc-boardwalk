@@ -552,7 +552,7 @@
       transfer: function(amount, pubkey, cb) {
         var self = this;
         this.sendcoinstate = 'sending';
-        this.contracturl = this.resolveUrl('./contracts/ARCToken.json');
+        this.contracturl = this.resolveUrl('../contracts/ARCToken.json');
         this.importHref(this.contracturl, function(e) {
           this.contractjson = JSON.parse(e.target.import.body.innerText);
           self.web3.eth.getGasPrice(function(err, result) {
