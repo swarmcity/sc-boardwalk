@@ -444,7 +444,7 @@
           </div>
           <div class="pascanvasunderexit vertic centercenter paddingsides">        
             <a id="downloadAnchorElem" style="display:none"></a>
-            <template is="dom-if" if="{{!backup_unavailable}}">
+            <template is="dom-if" if="{{download_backup_available}}">
 
 <!--             <template is="dom-if" if="{{backup_download}}"> -->
               <paper-button on-tap="downloadvault" class="blue bigbtn lighter centertxt backupbtn" noink>Download your backup-file</paper-button>
@@ -976,7 +976,7 @@
         this.vaulttoipfsstatus = 'init';
         
         this.backup_download = true;
-        this.backup_unavailable = true;
+        this.download_backup_available = false;
 
         this.password = sessionStorage.getItem('vaultpassword');
         
@@ -1015,7 +1015,7 @@
           this.backup_download = false;
         }
         if (this.browser.family != 'Safari'){
-          this.backup_unavailable = false;
+          this.download_backup_available = true;
         }
 
         this.exitAnimation = "slide-left-animation";

@@ -308,15 +308,12 @@
 
       deletevault: function(){
         this.$.vault.deleteVault();
-        this.toHomepage();
-      },
-
-      toHomepage: function(){
-        this.transitionto('/');
+        this.intro_toAppStart();
       },
 
       intro_toAppStart: function(){
         this.transitionto('/intro/welcome');
+        this.fire('exit');
       },
       transitionto: function(target){
         console.log('sc-boardwalk-app -> transitionTo',target);
@@ -426,6 +423,10 @@
       logout: function(){
         this.transitionto('/vault/unlock');
         this.fire('exit');
+      },
+
+      refreshwallet: function(){
+        this.$.wallet.updateBalance();
       },
 
       converted: function(){
