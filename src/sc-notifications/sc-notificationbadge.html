@@ -1,0 +1,181 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+
+<link rel="import" href="../../bower_components/sc-style/sc-style.html">
+<link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
+
+<!--<link rel="import" href="../sc-balance/sc-balance.html"> -->
+
+
+<!--
+`sc-notificationbadge`
+
+This components simple shows the number of in-app notifications in a badge-icon.
+
+@demo src/sc-notificationbadge/demo/index.html 
+-->
+
+<dom-module id="sc-notificationbadge">
+<link rel="import" href="../../bower_components/sc-style/sc-style.css" type="css">
+
+  <template>
+    <style>
+      :host {
+        display: inline-block;
+
+      }
+
+      .havemsg {
+        min-width: 20px;
+        height: 20px;
+        border-radius: 10px;
+        box-sizing:border-box;
+        transition: all 0.1s linear;
+      }
+
+      .havepaddings {
+        padding: 0px 6px 0px 6px; 
+      }
+
+      .nopaddings {
+        padding: 0px; 
+      }
+
+      .newclass {
+        transform: scale(1.15, 1.15);
+      }
+
+      .defaultclass {
+        transform: scale(1,1);
+      }
+
+      .havemsg p {
+        font-size: 12px;
+        line-height: 14px;
+      }
+
+
+      .havenomsg {
+        padding: 0px; 
+        opacity: 0.5;
+      }
+
+
+      .babbleicon {
+        width: 16px;
+        height: 16px;
+      }
+
+
+
+
+    @media all and (min-width: 0) and (max-width: 420px) { 
+
+    }
+
+
+    </style>
+  
+        <div class$="havemsg horizont centercenter {{paddings}} {{backgr}} {{animclass}} {{shadow}}">
+          <template is="dom-if" if="{{!_is(notifnumber,0)}}">
+            <p class="white bold">{{notifnumber}}</p>
+          </template>
+          <template is="dom-if" if="{{_is(notifnumber,0)}}">
+              <iron-icon icon="sc-icons:babble" class="grey3 babbleicon">reply-icon</iron-icon>
+          </template>
+        </div>
+  
+
+  </template>
+
+  <script>
+
+    Polymer({
+
+      is: 'sc-notificationbadge',
+
+      behaviors: [
+        Polymer.NeonSharedElementAnimatableBehavior
+      ],
+
+      observers: [
+        '_watch(notifnumber)'
+      ],
+
+      properties: {
+        /**
+       * `prop1` this is the first property and what it does is described right here.
+       */
+        notifnumber: {
+          type: Number,
+          value: 0,
+        },
+      },
+
+      listeners: {
+        // 'tap':'change'
+      },
+
+
+      ready: function(){
+        this.animclass = "defaultclass";
+      },
+
+      /**
+      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
+      * use this to initialize any variables to start the component
+      */
+      onEnter: function(){
+      },
+
+      /**
+      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage 
+      * use this to reset any variables when leaving this component while it remains loaded.
+      */
+      onExit: function(){
+      },
+
+      /**
+      * 'leave' fires the 'leave' to the parent-element. (This also contains animation-config for going back to sc-home.)
+      */
+      leave: function(){
+        this.fire('leave');
+      },
+
+
+      /**
+      * '_is', a function to bind a template to a certain value of a variable.
+      */
+      _is: function(a, b) {
+        if (b === undefined){
+          b = true;
+        }
+        //console.log(a ,'(',typeof a,') is',b,'(',typeof b,') they are equal for ==',a == b,', they are equal for ===',a === b);
+        return a === b;
+      },
+
+
+      _watch: function(){
+        if (this.notifnumber>0){
+          this.paddings = "havepaddings";
+          this.backgr = "blueback";
+          this.animclass = "newclass";
+          this.shadow = "shadow";
+
+           var self = this;
+           setTimeout(function(){
+            self.animclass = "defaultclass";
+           }, 100);
+
+        } else {
+          this.paddings = "nopaddings";
+          this.backgr = "";
+        }
+
+
+      },
+
+
+    });
+  </script>
+</dom-module>

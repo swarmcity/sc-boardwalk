@@ -148,6 +148,7 @@
       on-to-profile="toProfile"
       on-to-walletview="home_towalletview"
       on-to-hashtag="home_tohashtag"
+      on-to-notifications="home_tonotifications"
       >
     </sc-home>
 
@@ -204,6 +205,20 @@
       swtbalance="[[swtbalance]]"
       on-leave="makedeal_tohome">
     </sc-makedeal>
+
+
+    
+    <sc-notifications
+      data-page="notifications"
+      id="notifications"
+      route="{{pageTail}}"
+      keystore="[[keystore]]"
+      identity="[[identity]]"
+      pubkey="[[account]]"
+      swtbalance="[[swtbalance]]"
+      on-leave="notifications_tohome">
+    </sc-notifications>
+
 
     <div
       data-page="view404">
@@ -391,6 +406,10 @@
         // console.log("yes, home_tohashtag");
         this.currenthasht = e.detail;
         this.transitionto('/hashtag/pioneer/list');
+      },
+
+      home_tonotifications: function(){
+        this.transitionto('/notifications');
       },
 
 

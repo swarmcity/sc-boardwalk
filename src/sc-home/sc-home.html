@@ -11,6 +11,7 @@
 <link rel="import" href="../sc-backbone/sc-backbone.html">
 <link rel="import" href="../sc-redux/sc-redux.html">
 <link rel="import" href="../sc-ipfs/sc-ipfs.html">
+<link rel="import" href="../sc-notifications/sc-notificationbadge.html">
 
 <!--
 `sc-home` is homeview of the Swarm City app. It shows your avatar/username/pubkey ( > to go to profile-view), your balance ( > to go to sc-wallet-view) and the hashtaglist ( > to go to a specific hashtag).
@@ -72,6 +73,10 @@
         padding: 18vh 0px 15vh 0px;
       }
 
+      sc-notificationbadge {
+        margin-left: 6px;
+      }
+
       .warningbackup {
         margin-left: 10px;
         width: 18px;
@@ -114,22 +119,25 @@
 
     <div class="totalcontainer horizont start startjust wrap">
       
-      <div class="avatar_username_balance">
-        <div class="avatar_username_box vertic centercenter" on-tap="toProfile">
+      <div class="avatar_username_balance noSelect">
+        <div class="avatar_username_box vertic centercenter noSelect">
           <sc-avatar
           ipfshash="[[identity.avatarhash]]"
           id="homeavatar"
+          on-tap="toProfile"
           ></sc-avatar>
-          <div class="horizont centercenter">
+          <div class="horizont centercenter noSelect">
             <sc-username
             identity="[[identity]]"
             pubkey="[[pubkey]]"
             id="homeusername"
             size="small"
+            on-tap="toProfile"
             ></sc-username>
             <template is="dom-if" if="{{!lastbackup}}">
               <div class="warningbackup blue vertic centercenter"><p class="bold blue">!</p></div>
             </template>
+            <sc-notificationbadge on-tap="toNotifs" class="noSelect" notifnumber="{{notifnumber}}"></sc-notificationbadge>
           </div>
         </div>
         <div class="whitespace"></div>
@@ -228,6 +236,13 @@
       attached: function(){
         // TODO : remove this
         this.onEnter();
+
+        this.notifnumber = 0;
+        var self = this;
+
+         setTimeout(function(){
+          self.notifnumber ++;
+         }, 5000);
       },
 
       /**
@@ -286,15 +301,17 @@
             };
 
           this.animationConfig = {
-              'entry': [{
-                  name: 'fade-in-animation',
-                  node:this.$.homebalance,
-                  toPage: this,
-                  timing: {
-                    delay: 200,
-                    duration: 125
-                  }
-                },{
+              'entry': [
+              // {
+              //     name: 'fade-in-animation',
+              //     node:this.$.homebalance,
+              //     toPage: this,
+              //     timing: {
+              //       delay: 200,
+              //       duration: 125
+              //     }
+              //   },
+                {
                   name: 'fade-in-animation',
                   node:this.$.homeusername,
                   toPage: this,
@@ -445,14 +462,16 @@
             'hero': this.$.homebalance,
             };
           this.animationConfig = {
-                'entry': [{
-                  name: 'fade-in-animation',
-                  node:this.$.homebalance,
-                  toPage: this,
-                  timing: {
-                    duration: 200
-                  }
-                }, {
+                'entry': [
+                // {
+                //   name: 'fade-in-animation',
+                //   node:this.$.homebalance,
+                //   toPage: this,
+                //   timing: {
+                //     duration: 200
+                //   }
+                // }, 
+                {
                   name: 'fade-in-animation',
                   node:this.$.homeusername,
                   toPage: this,
@@ -468,14 +487,16 @@
                   }
                 }],
 
-                'exit': [{
-                  name: 'fade-out-animation',
-                  node:this.$.homebalance,
-                  fromPage: this,
-                  timing: {
-                      duration: 200
-                  }
-                }, {
+                'exit': [
+                // {
+                //   name: 'fade-out-animation',
+                //   node:this.$.homebalance,
+                //   fromPage: this,
+                //   timing: {
+                //       duration: 200
+                //   }
+                // }, 
+                {
                   name: 'fade-out-animation',
                   node:this.$.homeusername,
                   fromPage: this,
@@ -495,6 +516,11 @@
         // } else {
         //   this.fire('to-walletview');
         // }
+      },
+
+
+      toNotifs: function(){
+          this.fire('to-notifications');
       },
 
 
