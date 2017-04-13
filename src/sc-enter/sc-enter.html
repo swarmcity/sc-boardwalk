@@ -355,7 +355,7 @@ Example:
         if (window.location.protocol === 'http:' && !this._isLocalhost(window.location.hostname)) {
           window.location.href = 'https:' + window.location.href.substring(window.location.protocol.length);
         } else {
-          //this.$.backbone.lazyload('bundle-terminal');
+          this.$.backbone.lazyload('bundle-terminal');
         }        
       },
       /**

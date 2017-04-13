@@ -310,7 +310,11 @@
 
       deletevault: function(){
         this.$.vault.deleteVault();
-        this.intro_toAppStart();
+        this.toHomepage();
+      },
+
+      toHomepage: function(){
+        this.transitionto('/');
       },
 
       intro_toAppStart: function(){
