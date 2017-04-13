@@ -10,7 +10,6 @@
 <link rel="import" href="../sc-avatar/sc-avatar.html">
 <link rel="import" href="../sc-redux/sc-redux.html">
 
-<link rel="stylesheet" href="../../bower_components/Croppie/croppie.css" />
 <script src="../../bower_components/Croppie/croppie.js"></script>
 <!--
 `sc-profile` is profile-view where a Swarm Citizen can do his profile-things. Here the user has the possibility of changing his avatar/username, he can view his complete pubkey, or creating a backup of his profile via IPFS. The user can also logout here, or delete his complete user-data from the device.
@@ -20,6 +19,7 @@
 
 <dom-module id="sc-profile">
 <link rel="import" href="../../bower_components/sc-style/sc-style.css"  type="css">
+<link rel="import" href="../../bower_components/Croppie/croppie.css" type="css">
 
   <template>
     <style>
@@ -443,21 +443,21 @@
 
 
       <neon-animatable data-state="edit">
-<!--         <div class="profilepic vertic centercenter">
-          <div class="profilepicinner edit"> -->
+         <div class="profilepic vertic centercenter">
+          <div class="profilepicinner edit">
             <div id="croppie"></div>
             <div class="croppiecontrols totalwidth horizont centercenter">
               <p class="blue small bold txtshadow">Scroll to zoom</p>
               <div class="flex"></div>
               <paper-icon-button icon="sc-icons:imgrotate" class="blue" on-tap="rotate" noink>decline</paper-icon-button>
             </div>
-<!--             <div class="whitespace"></div>
+            <div class="whitespace"></div>
               <div class="confirmbtns">
                 <iron-icon icon="sc-icons:decline" class="blue big" on-tap="setprofileavatar_cancel">decline</iron-icon>
                 <paper-icon-button icon="sc-icons:v" class="blue whiteback shadow big" on-tap="setprofileavatar"></paper-icon-button>
               </div>
           </div>
-        </div> -->
+        </div> 
 
 
       </neon-animatable>
