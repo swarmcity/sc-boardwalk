@@ -355,7 +355,7 @@ Example:
         if (window.location.protocol === 'http:' && !this._isLocalhost(window.location.hostname)) {
           window.location.href = 'https:' + window.location.href.substring(window.location.protocol.length);
         } else {
-          //this.$.backbone.lazyload('bundle-terminal');
+          this.$.backbone.lazyload('bundle-terminal');
         }        
       },
       /**
@@ -389,8 +389,8 @@ Example:
       * showStartScreen and showApp are toggled based on showStartScreen
       */
       _toggleapp: function(){
-        this.showStartScreen = !this.showStartScreen;
-        this.showApp = !this.showStartScreen;
+        this.showStartScreen = false; // !this.showStartScreen;
+        this.showApp = true; //!this.showStartScreen;
       },
       /**
       * 'boardwalkReady' is called from sc-boardwalk-app
@@ -408,6 +408,13 @@ Example:
         this.showStartScreen = true;
         this.showApp = false;
         this.showLoader = false;
+      },
+
+      onEnter: function(){
+        debugger;
+        this.showStartScreen = true;
+        this.showApp = false;
+        this.showLoader = false;        
       }
     });
   </script>

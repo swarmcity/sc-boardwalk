@@ -2,14 +2,7 @@
   "entrypoint": "index.html",
   "shell": "src/sc-enter/sc-enter.html",
   "fragments": [
-    "src/sc-intro/sc-intro.html",
-    "src/sc-home/sc-home.html",
-    "src/sc-makedeal/sc-makedeal.html",
-    "src/sc-walletview/sc-walletview.html",
-    "src/sc-swtconversion/sc-swtconversion.html",
-    "src/sc-profile/sc-profile.html",
-    "src/sc-hashtag/sc-hashtag.html",
-    "src/sc-geohash/sc-geohash.html"
+    "src/bundle-terminal.html"
   ],
   "sources": [
     "bower.json"

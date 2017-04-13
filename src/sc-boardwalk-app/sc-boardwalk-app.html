@@ -173,7 +173,6 @@
       id="walletview"
       web3="[[web3]]"
       keystore="[[keystore]]"
-      identity="[[identity]]"
       account="[[account]]"
       lowgas="[[lowgas]]"
       emptygas="[[emptygas]]"
@@ -200,7 +199,6 @@
       id="makedeal"
       route="{{pageTail}}"
       keystore="[[keystore]]"
-      identity="[[identity]]"
       pubkey="[[account]]"
       swtbalance="[[swtbalance]]"
       on-leave="makedeal_tohome">
@@ -306,7 +304,7 @@
               return this.transitionto('/swtconversion/intro');
             }else{
               console.log('no SRC balance -> head home');
-              if (this.route && this.route.path !== "" && this.route.path !== "/vault/unlock" && this.route.path !== "/vault/createnew" && this.route.path !== "/vault/restore"){
+              if (this.route && this.route.path !== "" && this.route.path !== "/vault/unlock" && this.route.path !== "/vault/createnew" && this.route.path !== "/vault/restore" && this.route.path !== "/vault/importethwallet" && this.route.path !== "/vault/importpk"  && this.route.path !== "/vault/importfile"){
                 console.log('all ready -> go to ',this.route.path);
                 return;
               }else{
@@ -330,6 +328,7 @@
 
       intro_toAppStart: function(){
         this.transitionto('/intro/welcome');
+        this.fire('exit');
       },
       transitionto: function(target){
         console.log('sc-boardwalk-app -> transitionTo',target);
@@ -445,9 +444,14 @@
         this.fire('exit');
       },
 
+      refreshwallet: function(){
+        this.$.wallet.updateBalance();
+      },
+
       converted: function(){
+        var self = this;
         this.$.wallet.updateBalance(function(){
-          this.transitionto('/home');
+          self.transitionto('/home');
         })
       },
 

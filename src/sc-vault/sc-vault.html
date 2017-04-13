@@ -444,7 +444,7 @@
           </div>
           <div class="pascanvasunderexit vertic centercenter paddingsides">        
             <a id="downloadAnchorElem" style="display:none"></a>
-            <template is="dom-if" if="{{!backup_unavailable}}">
+            <template is="dom-if" if="{{download_backup_available}}">
 
 <!--             <template is="dom-if" if="{{backup_download}}"> -->
               <paper-button on-tap="downloadvault" class="blue bigbtn lighter centertxt backupbtn" noink>Download your backup-file</paper-button>
@@ -483,7 +483,7 @@
             <div class="whitespace"></div>
 
               <paper-button on-tap="vaulttoipfs" class="blue bigbtn lighter centertxt">Backup to IPFS</paper-button>
-              <paper-button on-tap="vaulttodownload" class="blue bigbtn lighter centertxt">Download Backup</paper-button>              
+  <!--             <paper-button on-tap="vaulttodownload" class="blue bigbtn lighter centertxt">Download Backup</paper-button>  -->             
             </template>    
 
             <template is="dom-if" if="{{_is(vaulttoipfsstatus,'uploading')}}">
@@ -912,7 +912,7 @@
             self.pkshowpassw = true;
             self.status = 'locked';
             // reset file
-            e.target.value = null;
+            //e.target.value = null;
             self.set('route.path', '/uploadunlock');
           }
         };
@@ -920,21 +920,15 @@
       },
 
       pkreceived: function(){
-        this.invalidpk = false;
-        var patt = new RegExp(/^[a-f0-9]{64}$/i);
-        var res = patt.test(this.$.privatekeyinput.value);
-        if (!res){
-          console.log('foute key');
-          this.invalidpk = true;
-        }else{
-          this.set('route.path', '/importpkmakewallet');
-        }
+        this.privatekey = this.$.privatekeyinput.value;
+        this.pkreceivedeth();
       },
-      
+
       pkreceivedeth: function(){
+        this.privatekey = this.$.privatekeyethinput.value;
         this.invalidpk = false;
         var patt = new RegExp(/^[a-f0-9]{64}$/i);
-        var res = patt.test(this.$.privatekeyethinput.value);
+        var res = patt.test(this.privatekey);
         if (!res){
           console.log('foute key');
           this.invalidpk = true;
@@ -982,7 +976,7 @@
         this.vaulttoipfsstatus = 'init';
         
         this.backup_download = true;
-        this.backup_unavailable = true;
+        this.download_backup_available = false;
 
         this.password = sessionStorage.getItem('vaultpassword');
         
@@ -1021,7 +1015,7 @@
           this.backup_download = false;
         }
         if (this.browser.family != 'Safari'){
-          this.backup_unavailable = false;
+          this.download_backup_available = true;
         }
 
         this.exitAnimation = "slide-left-animation";
@@ -1054,8 +1048,8 @@
         this.loadVault();
         this.checkpassword(function(err, pwdcorrect) {
           if (pwdcorrect) {
-            this.tappedunlockbtn =! this.tappedunlockbtn;
-
+            self.tappedunlockbtn = false;
+            self.loadingpassw = false;
             sessionStorage.setItem('vaultpassword',self.password);
             self.status = 'unlocked';
             self.fire('ready');
