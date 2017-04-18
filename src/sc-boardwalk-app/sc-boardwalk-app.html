@@ -7,16 +7,18 @@
 <link rel="import" href="../sc-wallet/sc-wallet.html">
 <link rel="import" href="../sc-vault/sc-vault.html">
 <link rel="import" href="../sc-loader/sc-loader.html">
+<link rel="import" href="../sc-helpers/sc-helpers.html">
 
-<!-- <link rel="import" href="../sc-intro/sc-intro.html"> -->
-<!-- <link rel="import" href="../sc-home/sc-home.html"> -->
-<!-- <link rel="import" href="../sc-makedeal/sc-makedeal.html"> -->
-<!-- <link rel="import" href="../sc-walletview/sc-walletview.html"> -->
-<!-- <link rel="import" href="../sc-swtconversion/sc-swtconversion.html"> -->
-<!-- <link rel="import" href="../sc-profile/sc-profile.html"> -->
-<!-- <link rel="import" href="../sc-hashtag/sc-hashtag.html"> -->
+<link rel="import" href="../sc-intro/sc-intro.html">
+<link rel="import" href="../sc-home/sc-home.html">
+
+
+<link rel="import" href="../sc-makedeal/sc-makedeal.html">
+<link rel="import" href="../sc-walletview/sc-walletview.html">
+<link rel="import" href="../sc-swtconversion/sc-swtconversion.html">
+<link rel="import" href="../sc-profile/sc-profile.html">
+<link rel="import" href="../sc-hashtag/sc-hashtag.html">
 <!-- <link rel="import" href="../sc-geohash/sc-geohash.html"> -->
-
 <!--
 `sc-boardwalk-app`
 -->
@@ -60,13 +62,10 @@
       }
 
     </style>
-
+    <sc-helpers id="helpers"></sc-helpers>
     <app-route route="{{route}}" pattern="/:page" data="{{routedata}}" tail="{{pageTail}}"></app-route>
    
     <sc-web3 id="web3" web3="{{web3}}" keystore="[[keystore]]"></sc-web3>
-
-    <!-- we dont need this here quite yet, but put the GPS to work already -->
-    <sc-geohash geohash="{{geohash}}" locate-on-start></sc-geohash>
 
     <sc-wallet
         id="wallet"
@@ -257,6 +256,14 @@
         console.log('sc-boardwalk-app -> loaded');
         this.fire('loaded');
         this.checkready();
+
+
+        // const resolvedPageUrl = this.resolveUrl('../bundle-boardwalk.html');
+
+        // this.$.helpers.getfile(resolvedPageUrl,function(){
+        //   debugger;
+        //   console.log('loaded...',resolvedPageUrl);
+        // });
       },
 
       onEnter: function(){
@@ -281,8 +288,8 @@
         //   return;
         // }
 
-
         if (!this.vaultstatus) {
+          console.log('no vaultstatus... just return');
           return;
         }
 
@@ -346,18 +353,24 @@
         console.log('sc-boardwalk-app -> _onRouteDataChanged',oldpage,'->',page);
 
 
-        const resolvedPageUrl = this.resolveUrl('../sc-' + page + '/sc-' + page + '.html');
+        // const resolvedPageUrl = this.resolveUrl('../sc-' + page + '/sc-' + page + '.html');
 
-        console.log('loading',resolvedPageUrl);
+        // console.log('loading',resolvedPageUrl);
+
+        // this.$.helpers.getfile(resolvedPageUrl,function(){
+        //   //debugger;
+        //   console.log('loaded...',resolvedPageUrl);
+        // });
+      },
 
 
-        Polymer.Base.importHref(
-            resolvedPageUrl,
-            null,
-            this._showPage404.bind(this),
-            true);
+       //  Polymer.Base.importHref(
+       //      resolvedPageUrl,
+       //      null,
+       //      this._showPage404.bind(this),
+       //      true);
 
-       },
+       // },
 
       _showPage404(){
         this.page = 'view404';

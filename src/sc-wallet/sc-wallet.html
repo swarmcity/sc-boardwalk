@@ -82,6 +82,7 @@
 
       setup: function() {
         if (!this.web3 || !this.pubkey) {
+          console.log('sc-wallet -> ERROR no web3 or pubkey on setup web3=',this.web3,'pubkey=',this.pubkey);
           return;
         }
         var self = this;
