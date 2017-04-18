@@ -57,6 +57,7 @@
         }
         var key = fileurl.split(/[\\/]/).pop();
         if (this.filecache[key]) {
+          if (!cb) return;
           return cb(null, this.filecache[key]);
         }
         var fileurl = this.resolveUrl(fileurl);
@@ -68,11 +69,13 @@
             try {
               result = JSON.parse(result);
             } catch (e) {
+              if (!cb) return;
               return cb(e);
             }
           }
           self.filecache[key] = result;
-          cb(null, result);
+          if (!cb) return;
+          return cb(null, result);
         });
       },
 
@@ -91,6 +94,7 @@
 
       // example ('sc-avatar','../sc-avatar/sc-avatar.html',function(err,element){ ... })
       lazyload: function(elementid, filename, cb) {
+        var self = this;
         var t0 = performance.now();
         console.log('lazyload --> lazy loading ', elementid);
         // if (Polymer.isInstance(this.$[elementid])) {
@@ -106,9 +110,9 @@
         Polymer.Base.importHref(
           url,
           function(e) {
-            console.log('lazyload --> ', elementid, 'loaded & added to DOM');
+            console.log('lazyload --> ', url , 'loaded & added to DOM');
             if (cb) {
-              cb(null,this.$[elementid]);
+              cb(null,self.$[elementid]);
             }
             var t1 = performance.now();
             console.log('lazyload --> lazyload',elementid,'took',(t1 - t0),'milliseconds.');

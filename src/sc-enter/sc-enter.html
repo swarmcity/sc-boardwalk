@@ -10,7 +10,7 @@
 <link rel="import" href="../sc-helpers/sc-helpers.html">
 <link rel="import" href="../sc-loader/sc-loader.html">
 <link rel="import" href="../sc-styles/sc-styles.html">
-<link rel="import" href="../sc-boardwalk-app/sc-boardwalk-app.html">
+<!-- <link rel="import" href="../sc-boardwalk-app/sc-boardwalk-app.html"> -->
 
 <!-- <link rel="import" href="../bundle-terminal.html"> -->
 
@@ -357,7 +357,8 @@ Example:
           window.location.href = 'https:' + window.location.href.substring(window.location.protocol.length);
         } else {
           //debugger;
-          this.$.helpers.lazyload('bundle-terminal','../bundle-terminal.html');
+          var self = this;
+          this.$.helpers.lazyload('bundle-terminal','../bundle-terminal.html',this.boardwalkReady);
         }        
       },
       /**

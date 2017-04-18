@@ -102,7 +102,7 @@ This component shows the SWT-balance and the reference currency (when in sc-wall
 
 
     <iron-ajax
-      url="http://ec2-52-34-81-160.us-west-2.compute.amazonaws.com:3000/swtprice"
+      url="https://api.swarm.city/swtprice"
       on-response="handleResponse"
       auto>
     </iron-ajax>
@@ -226,6 +226,9 @@ This component shows the SWT-balance and the reference currency (when in sc-wall
       handleResponse: function(e) {
         //debugger;
         this.priceusd = e.detail.response[0].price_usd;
+        this.priceeur = e.detail.response[0].price_eur;
+        console.log('sc-balance -> 1 SWT is worth USD',this.priceusd);
+        console.log('sc-balance -> 1 SWT is worth EUR',this.priceeur);
         this.convertcurrency(this.swtbalance);
       },
 
@@ -245,7 +248,7 @@ This component shows the SWT-balance and the reference currency (when in sc-wall
         this.balanceref = this.convertcurrency(this.swtbalance);
 
         // THIS IS DUMMY, PLEASE REMOVE WHEN THE FUNCTION WORKS
-        this.balanceref = '0,00';
+        //this.balanceref = '0,00';
 
       },
 

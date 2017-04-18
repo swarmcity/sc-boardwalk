@@ -12,12 +12,12 @@
 <link rel="import" href="../sc-intro/sc-intro.html">
 <link rel="import" href="../sc-home/sc-home.html">
 
-
+<!-- 
 <link rel="import" href="../sc-makedeal/sc-makedeal.html">
 <link rel="import" href="../sc-walletview/sc-walletview.html">
 <link rel="import" href="../sc-swtconversion/sc-swtconversion.html">
 <link rel="import" href="../sc-profile/sc-profile.html">
-<link rel="import" href="../sc-hashtag/sc-hashtag.html">
+<link rel="import" href="../sc-hashtag/sc-hashtag.html"> -->
 <!-- <link rel="import" href="../sc-geohash/sc-geohash.html"> -->
 <!--
 `sc-boardwalk-app`
@@ -352,25 +352,21 @@
         }
         console.log('sc-boardwalk-app -> _onRouteDataChanged',oldpage,'->',page);
 
+        if (page == "home"){
+          // when arriving at the homepage.. load some more components
+//          this.$.helpers.getfile(this.resolveUrl('../sc-makedeal/sc-makedeal.html'));
+          this.$.helpers.getfile(this.resolveUrl('../sc-walletview/sc-walletview.html'));
+          this.$.helpers.getfile(this.resolveUrl('../sc-swtconversion/sc-swtconversion.html'));
+          this.$.helpers.getfile(this.resolveUrl('../sc-profile/sc-profile.html'));
+//          this.$.helpers.getfile(this.resolveUrl('../sc-hashtag/sc-hashtag.html'));
+        }
 
-        // const resolvedPageUrl = this.resolveUrl('../sc-' + page + '/sc-' + page + '.html');
-
-        // console.log('loading',resolvedPageUrl);
-
-        // this.$.helpers.getfile(resolvedPageUrl,function(){
-        //   //debugger;
-        //   console.log('loaded...',resolvedPageUrl);
-        // });
+        const resolvedPageUrl = this.resolveUrl('../sc-' + page + '/sc-' + page + '.html');
+        console.log('loading',resolvedPageUrl);
+        this.$.helpers.getfile(resolvedPageUrl,function(){
+          console.log('loaded...',resolvedPageUrl);
+        });
       },
-
-
-       //  Polymer.Base.importHref(
-       //      resolvedPageUrl,
-       //      null,
-       //      this._showPage404.bind(this),
-       //      true);
-
-       // },
 
       _showPage404(){
         this.page = 'view404';
