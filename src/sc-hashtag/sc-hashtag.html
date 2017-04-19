@@ -19,6 +19,7 @@
 <link rel="import" href="../sc-itemdetail/sc-itemdetail.html">
 <link rel="import" href="../sc-itemreply/sc-itemreply.html">
 <link rel="import" href="../sc-redux/sc-redux.html">
+<link rel="import" href="../sc-filter/sc-filter.html">
 
 
 
@@ -222,11 +223,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
       }
 
 
-      .avatar-box {
-        box-sizing:border-box;
-        padding: 0px 0px 0px 15px;
-      }
-
 
       paper-icon-button.addbtn {
         position: fixed;
@@ -332,6 +328,9 @@ This is the component showing all requests of a certain hashtag. It contains a r
               </div>
               <div class="flex"></div>
             </div>
+
+
+            <sc-filter></sc-filter>
             <template is="dom-repeat" items="{{deals}}">
 <!--               <sc-hashtagitem
                 item="[[item]]"

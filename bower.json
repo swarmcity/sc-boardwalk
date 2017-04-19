@@ -22,7 +22,10 @@
     "polymer-detect-js": "^1.0.3",
     "Croppie": "https://github.com/Foliotek/Croppie.git#^2.4.1",
     "polymer-redux": "^0.4.1",
-    "latlon-geohash": "https://github.com/chrisveness/latlon-geohash.git#^1.1.0"
+    "latlon-geohash": "https://github.com/chrisveness/latlon-geohash.git#^1.1.0",
+    "paper-dropdown-menu": "^1.5.0",
+    "paper-item": "^1.2.2",
+    "paper-listbox": "^1.1.2"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",

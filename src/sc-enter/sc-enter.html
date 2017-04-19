@@ -221,10 +221,10 @@ Example:
     </template>
 
     <template is="dom-if" if="{{showStartScreen}}">
-
+      <div class="totalwidth" id="main">
       <div class="totalwidth logoalign paddingsides yellowback">
         <div class="inneralign">
-            <iron-icon icon="sc-icons:logonew" class="giant grey4 logoicon">Swarmcity-logo</iron-icon>
+            <iron-icon icon="sc-icons:logonew" class="giant grey4 logoicon" id="logo">Swarmcity-logo</iron-icon>
             <h1 class="welcometo">Welcome to</h1>
             <h1 class="bold grey4 logotitle">swarm.<template is="dom-if" if="{{!phoneview}}"><br></template>city</h1>
         </div>
@@ -289,6 +289,9 @@ Example:
           <a href="https://www.facebook.com/groups/SwarmCity/" target="_blank">Facebook</a>
         </div>
       </div>
+
+      <!-- <paper-button on-tap="test">Hiero!!</paper-button> -->
+    </div>
     </template>
 
     <template is="dom-if" if="{{showApp}}">
@@ -307,6 +310,8 @@ Example:
   </template>
 
   <script>
+
+
     Polymer({
       is: 'sc-enter',
       properties: {
@@ -408,7 +413,20 @@ Example:
         this.showStartScreen = true;
         this.showApp = false;
         this.showLoader = false;
+
+
       },
+
+
+      test: function(){
+        // var main = this.shadowRoot.getElementById("main");
+        // console.log("khebbem!", main);
+        // // main.scroller.scrollTop = 0;
+        // // main.scrollTo(0,0);
+        // main.scroller.scrollTop = 20;
+        this.fire('testio');
+      },
+
 
       onEnter: function(){
         debugger;

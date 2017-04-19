@@ -144,6 +144,7 @@
       pubkey="[[account]]"
       swtbalance="[[swtbalance]]"
       ethbalance="[[ethbalance]]"
+      notifs="{{notifs}}"
       balanceupdating="[[balanceupdating]]"
       on-to-profile="toProfile"
       on-to-walletview="home_towalletview"
@@ -209,6 +210,8 @@
     <sc-notifications
       data-page="notifications"
       id="notifications"
+      notifs="{{notifs}}"
+      web3="[[web3]]"
       route="{{pageTail}}"
       keystore="[[keystore]]"
       identity="[[identity]]"
@@ -246,7 +249,8 @@
       },
       
       observers: [
-        '_onRouteDataChanged(routedata.page)'
+        '_onRouteDataChanged(routedata.page)',
+        '_readNotifs(notifs)'
       ],
 
       ready: function(){
@@ -429,6 +433,10 @@
         this.transitionto('/home');
       },
 
+      notifications_tohome: function(){
+        this.transitionto('/home');
+      },
+
       // hashtag_to_newitem: function(){
       //   this.transitionto('/newitem');
       // },
@@ -454,6 +462,10 @@
           self.transitionto('/home');
         })
       },
+
+      _readNotifs: function(){
+        // console.log("Ik heb zeeeeeeee !!!!!!!", this.notifs);
+      }
 
 
 

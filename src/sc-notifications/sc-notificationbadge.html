@@ -26,15 +26,16 @@ This components simple shows the number of in-app notifications in a badge-icon.
       }
 
       .havemsg {
-        min-width: 20px;
-        height: 20px;
-        border-radius: 10px;
+        min-width: 16px;
+        height: 16px;
+        border-radius: 8px;
         box-sizing:border-box;
         transition: all 0.1s linear;
       }
 
       .havepaddings {
-        padding: 0px 6px 0px 6px; 
+        padding: 0px 5px 0px 5px; 
+        margin-left: 4px;
       }
 
       .nopaddings {
@@ -50,20 +51,16 @@ This components simple shows the number of in-app notifications in a badge-icon.
       }
 
       .havemsg p {
-        font-size: 12px;
-        line-height: 14px;
+        font-size: 11px;
+        line-height: 12px;
       }
 
-
-      .havenomsg {
-        padding: 0px; 
-        opacity: 0.5;
-      }
 
 
       .babbleicon {
         width: 16px;
         height: 16px;
+        opacity: 0.5;
       }
 
 
@@ -76,7 +73,7 @@ This components simple shows the number of in-app notifications in a badge-icon.
 
     </style>
   
-        <div class$="havemsg horizont centercenter {{paddings}} {{backgr}} {{animclass}} {{shadow}}">
+        <div class$="havemsg horizont centercenter {{paddings}} {{backgr}} {{animclass}}">
           <template is="dom-if" if="{{!_is(notifnumber,0)}}">
             <p class="white bold">{{notifnumber}}</p>
           </template>
@@ -110,6 +107,11 @@ This components simple shows the number of in-app notifications in a badge-icon.
           type: Number,
           value: 0,
         },
+
+        dummynotifications: {
+          type: Array,
+          notify: true
+        }
       },
 
       listeners: {
@@ -119,6 +121,41 @@ This components simple shows the number of in-app notifications in a badge-icon.
 
       ready: function(){
         this.animclass = "defaultclass";
+          this.dummyNotif();
+
+
+        // var self = this;
+        //  setTimeout(function(){
+        //   self.dummyNotif();
+        //  }, 5000);
+
+      },
+
+
+      dummyNotif: function(){
+
+          this.dummynotifications = [
+            {
+              subjectavatar:'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
+              subjectpub:'0x4458...',
+              subjectusername:'Hank Moovy',
+              timestamp: 'today at 19:45',
+              dealhashtag: 'needaride',
+              msg: 'has replied to your request: "Hi Faffy Dee, I can come and pick you up! Im around to corner, so Ill be there in 5!"'
+            },
+
+            {
+              subjectavatar:'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
+              subjectpub:'0x4458...',
+              subjectusername:'Hank Moovy',
+              timestamp: 'Just now',
+              dealhashtag: 'needaride',
+              msg: 'send his 45 SWT to your deal "Need a ride from here to there"'
+            }
+          ];
+
+        
+        this.notifnumber = this.dummynotifications.length;
       },
 
       /**
@@ -158,7 +195,7 @@ This components simple shows the number of in-app notifications in a badge-icon.
       _watch: function(){
         if (this.notifnumber>0){
           this.paddings = "havepaddings";
-          this.backgr = "blueback";
+          this.backgr = "grey4back";
           this.animclass = "newclass";
           this.shadow = "shadow";
 
