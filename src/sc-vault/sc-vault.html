@@ -239,7 +239,7 @@
             </div>
             <div class="flex"></div>
             <div class="totalwidth horizont end startjust maxwidth">
-              <paper-input id="privatekeyethinput" label="Private key" type="password" bind-value="{{privatekey::input}}"></paper-input>
+              <paper-input id="privatekeyethinput" label="Private key" type="password" bind-value="{{privatekeyeth::input}}"></paper-input>
               <paper-icon-button icon="sc-icons:looky" class="grey1back grey4 saveyourwidth" on-tap="pkethtoggle" noink>show</paper-icon-button>
             </div>
             <div class="whitespace"></div>
@@ -996,7 +996,7 @@
           if (pwdcorrect) {
             self.status = 'unlocked';
             console.log('sc-vault: status=',self.status,'fires READY');
-            self.currentaccount = self.keystore.getAddresses()[0];
+            self.currentaccount = self.$.helpers.fixaddress(self.keystore.getAddresses()[0]);
             return self.fire('ready');
           } else {
             self.status = 'locked';
@@ -1049,7 +1049,9 @@
         this.checkpassword(function(err, pwdcorrect) {
           if (pwdcorrect) {
             self.tappedunlockbtn = false;
-            self.loadingpassw = false;
+            setTimeout(function(){
+              self.loadingpassw = false;
+            },5*1000);
             sessionStorage.setItem('vaultpassword',self.password);
             self.status = 'unlocked';
             self.fire('ready');
@@ -1311,7 +1313,7 @@
 
           }else{
             self.generateNewAddress(1,function() {
-              self.currentaccount = self.keystore.getAddresses()[0];
+              self.currentaccount = self.$.helpers.fixaddress(self.keystore.getAddresses()[0]);
               self.dispatch('update',self._creatBlankIdentity());
     //            self.currentidentity = self._creatBlankIdentity();
               // self.saveVault();

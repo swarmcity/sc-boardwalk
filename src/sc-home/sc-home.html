@@ -8,7 +8,6 @@
 <link rel="import" href="../sc-username/sc-username.html">
 <link rel="import" href="../sc-balance/sc-balance.html">
 <link rel="import" href="../sc-hashtaglist/sc-hashtaglist.html">
-<link rel="import" href="../sc-backbone/sc-backbone.html">
 <link rel="import" href="../sc-redux/sc-redux.html">
 <link rel="import" href="../sc-ipfs/sc-ipfs.html">
 <link rel="import" href="../sc-notifications/sc-notificationbadge.html">
@@ -113,7 +112,6 @@
 
 
     </style>
-    <sc-backbone id="helpers"></sc-backbone>
     <sc-ipfs id="ipfs"></sc-ipfs>
     <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
 
@@ -144,7 +142,7 @@
         <div class="minispace"></div>
         <div id="homebalance" class="homebalance_box" on-tap="toWalletview">
           <sc-balance
-            refcur="EUR"
+            refcur="USD"
             swtbalance="[[swtbalance]]"
             ethbalance="{{ethbalance}}"
             ></sc-balance>
