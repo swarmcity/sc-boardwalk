@@ -1,7 +1,14 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
 
 <link rel="import" href="../../bower_components/sc-style/sc-style.html">
 <link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
+
+<link rel="import" href="../sc-avatar/sc-avatar.html">
+<link rel="import" href="../sc-username/sc-username.html">
+<link rel="import" href="../sc-balance/sc-balance.html">
+<link rel="import" href="../sc-redux/sc-redux.html">
+<link rel="import" href="../sc-notificationsbadge.html">
 
 <!--<link rel="import" href="../sc-balance/sc-balance.html"> -->
 
@@ -24,14 +31,184 @@ This components shows the in-app notifications in Swarm City.
       }
 
 
+      .avatar_username_balance_hashtagcontent {
+        @apply(--layout-horizontal);
+        @apply(--layout-start);
+        @apply(--layout-start-justified); 
+        box-sizing:border-box;
+        padding: 0px 14vw 0px 14vw;   
+        height: 100%;
+      }
+
+      .avatar_username_balance {
+        height: 100%;
+        box-sizing:border-box;
+        padding: 18vh 0px 18vh 0px;
+        margin-right: 5vw;
+        @apply(--layout-vertical);
+        @apply(--layout-center);
+        @apply(--layout-start-justified);
+      }
+
+      .notifbalance_box {
+        margin-top: 26px;
+        min-width: 180px;
+      }
+
+      #notifavatar {
+        margin: 0px 0px 20px 0px;
+      }
+
+      #notifcontent {
+        box-sizing:border-box;
+        padding: 18vh 0vw 0px 0vw;
+        overflow-y:scroll;
+        height: 100%;
+        width: 100%;
+      }
+
+
+      .default {
+        display: block;
+      }
+
+      .mobile {
+        display: none;
+      }
+
+      .notif_item {
+        box-sizing:border-box;
+        padding: 10px 10px 10px 0px;
+        width: 100%;
+        max-width: 600px;
+      }
+
+      .msg {
+        font-size: 14px;
+        line-height: 18px;
+      }
+
+      .timestamp {
+        font-size: 12px;
+        line-height: 15px;
+        margin-bottom: 3px;
+      }
+
+
+      .subjectavatar {
+          margin-right: 14px;
+          margin-top: 4px;
+      }
+
+
+
     @media all and (min-width: 0) and (max-width: 420px) { 
+
+      .avatar_username_balance_hashtagcontent {
+        @apply(--layout-vertical);
+        @apply(--layout-center-center);
+        box-sizing:border-box;
+        padding: 0px;            
+      }
+
+      .avatar_username_balance {
+        width: 100%;
+        height: 14%;
+        min-height: 82px;
+        box-sizing:border-box;
+        padding: 30px 30px 0px 50px;
+        margin-right: 0px;
+        @apply(--layout-horizontal-reverse);
+        @apply(--layout-center);
+        @apply(--layout-start-justified);
+      }
+
+      .notifbalance_box {
+        margin-top: 0px;
+      }
+
+      #notifavatar {
+        margin: 0px 0px 0px 20px;
+      }
+
+      #notifcontent {
+        box-sizing:border-box;
+        padding-top: 0px;
+        width: 100%;
+
+      }
+      .notif_item {
+        box-sizing:border-box;
+        padding: 15px 10px 15px 10px;
+      }
 
     }
 
 
     </style>
     <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
-      <p>Allow, sir!</p>
+
+    <div class="avatar_username_balance_hashtagcontent totalwidth">
+        <div class="avatar_username_balance" on-tap="toProfile">
+
+          <template is="dom-if" if="{{phoneview}}">
+            <iron-icon on-tap="leave" icon="sc-icons:decline" class="small backhash grey4">back</iron-icon>
+          </template>
+
+          <sc-avatar
+          ipfshash="[[identity.avatarhash]]"
+          id="notifavatar"
+          size="{{currentviewmode}}"
+          ></sc-avatar>
+          
+
+
+          <div class="horizont centercenter noSelect">
+            <sc-username
+            class$="{{visibleclass}}"
+            id="hashtagusername"
+            identity="[[identity]]"
+            pubkey="[[pubkey]]"
+            size="small"
+            ></sc-username>
+            <sc-notificationbadge on-tap="toNotifs" class="noSelect" notifnumber="{{notifnumber}}" dummynotifications="{{notifs}}"></sc-notificationbadge>
+          </div>
+
+
+          <div id="balancebox" class="notifbalance_box" on-tap="toWalletview">
+            <sc-balance
+              refcur="EUR"
+              swtbalance="[[swtbalance]]"
+              ethbalance="{{ethbalance}}"
+              viewmode="{{currentviewmode}}"
+              ></sc-balance>
+          </div>
+        </div>
+
+        <div id="notifcontent">
+          <template is="dom-if" if="{{!phoneview}}">
+            <div class="totalwidth horizont endjust center">
+            <iron-icon on-tap="leave" icon="sc-icons:decline" class="small backhash grey4">back</iron-icon>
+            </div>
+          </template>
+            <template is="dom-repeat" items="{{notifs}}">
+            <div class="notif_item horizont start startjust">
+              <sc-avatar
+              class="subjectavatar"
+              ipfshash="[[item.subjectavatar]]"
+              size="verysmall"
+              ></sc-avatar>
+              <div class="flex vertic start startjust">
+
+                <p class="timestamp grey3">{{item.timestamp}} | #{{item.dealhashtag}}</p>
+                <p class="msg grey4"><span class="reg" on-tap="gotoUserprofile">{{item.subjectusername}} </span>{{item.msg}}</p>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+
+
   </template>
 
   <script>
@@ -40,26 +217,49 @@ This components shows the in-app notifications in Swarm City.
 
       is: 'sc-notifications',
 
+
       behaviors: [
-        Polymer.NeonSharedElementAnimatableBehavior
+        Polymer.NeonSharedElementAnimatableBehavior,
+        ReduxBehaviour
       ],
 
       observers: [
+      '_web3(web3)'
+
       ],
 
       properties: {
+
+        pubkey: {
+          type: Object,
+          statePath: 'pubkey'
+        },  
+
+        identity: {
+          type: Object,
+          statePath: 'identity'
+        },  
+
+        notifs: {
+          type: Object,
+          observer: '_notifs'
+        },
+
         /**
-       * `prop1` this is the first property and what it does is described right here.
-       */
-        prop1: {
-          type: String,
-          value: 'sc-notifications',
+       * `phoneview` is a boolean to determine the viewport.
+       */ 
+        phoneview: {
+          type: Boolean,
+          observer: '_checkSize'
         },
       },
 
-      ready: function(){
-      
+
+      ready: function() {
+          this._checkSize();
       },
+
+
 
       /**
       * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
@@ -93,6 +293,47 @@ This components shows the in-app notifications in Swarm City.
         //console.log(a ,'(',typeof a,') is',b,'(',typeof b,') they are equal for ==',a == b,', they are equal for ===',a === b);
         return a === b;
       },
+
+      /**
+      * '_checkSize' responds to the iron-media-query and sets some variables according to the result.
+      */      
+      _checkSize: function() {
+        if (this.phoneview) {
+        this.visibleclass = 'mobile';
+        this.currentviewmode = "small";
+        } else {
+        this.visibleclass = 'default';
+        this.currentviewmode = "normal";
+        }
+      },
+
+      _notifs: function(){
+        console.log("THIS IS IN NOTIFSSS:", this.notifs);
+      },
+
+      gotoUserprofile: function(e){
+        // console.log("yep ----------------",e);
+      },
+
+
+
+
+     _web3: function() {
+        
+        if (!this.web3){
+          throw new Error('web3 not set while requesting whisper listener');
+        }
+
+       console.log("yep ----------------",this.web3);
+      },
+
+      /**
+      * 'leave' fires the 'leave' to the parent-element. (This also contains animation-config for going back to sc-home.)
+      */
+      leave: function(){
+        this.fire('leave');
+      },
+
 
 
     });

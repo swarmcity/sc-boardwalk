@@ -1,0 +1,76 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
+
+<!--
+`sc-filter`
+
+This component shows a filter-component in Swarm City Style. It's a dropdown-menu which passes the right value to the parent-component. 
+
+-->
+
+<dom-module id="sc-filter">
+  <template>
+    <style>
+      :host {
+        display: inline-block;
+
+      }
+
+    </style>    
+
+<p>Jooo howmow's</p>
+<paper-dropdown-menu label="Dinosaurs">
+  <paper-listbox class="dropdown-content" selected="1">
+    <paper-item>allosaurus</paper-item>
+    <paper-item>brontosaurus</paper-item>
+    <paper-item>carcharodontosaurus</paper-item>
+    <paper-item>diplodocus</paper-item>
+  </paper-listbox>
+</paper-dropdown-menu>
+
+
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'sc-filter',
+
+      properties: {
+      },
+
+      ready: function(){
+      },
+
+      /**
+      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
+      * use this to initialize any variables to start the component
+      */
+      onEnter: function(){
+      },
+
+      /**
+      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage 
+      * use this to reset any variables when leaving this component while it remains loaded.
+      */
+      onExit: function(){
+      },
+
+
+      /**
+      * '_is', a function to bind a template to a certain value of a variable.
+      */
+      _is: function(a, b) {
+        if (b === undefined){
+          b = true;
+        }
+        //console.log(a ,'(',typeof a,') is',b,'(',typeof b,') they are equal for ==',a == b,', they are equal for ===',a === b);
+        return a === b;
+      },
+
+
+    });
+  </script>
+</dom-module>
