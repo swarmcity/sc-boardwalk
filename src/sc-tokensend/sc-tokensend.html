@@ -385,12 +385,12 @@
                 <p class="topmsg grey4 hairline">You have successfully sent <span class="ultralight">{{amount}} SWT </span> to
                 </p>
                 <div class="receiver">
-                  <template is="dom-if" if="{{sendtowallet_account}}">
+                  <template is="dom-if" if="{{receiverisexternalwallet}}">
                     <div class="receiverusername">
                       <p class="bold">{{sendtowallet_account}}</p>
                     </div>                  
                   </template>
-                  <template is="dom-if" if="{{!sendtowallet_account}}">
+                  <template is="dom-if" if="{{!receiverisexternalwallet}}">
                     <div class="receiveravatar">
                       <img src="{{receiver.avatarurl}}"></div>
                     <div class="receiverusername">
@@ -761,8 +761,11 @@
         // if the input is a pincode - take another path
         if (this.web3.isAddress(this.pincode)){
           this.sendtowallet_account = this.pincode;
+          this.receiverisexternalwallet = true;
           this.sendcoinstate = 'sendtowallet_confirm';
           return;
+        }else{
+          this.receiverisexternalwallet = false;
         }
 
 
