@@ -159,7 +159,7 @@
         font-size: 13px;
         line-height: 15px;
         @apply(--montserrat-reg);
-        text-align: center;
+        text-align: left;
       } 
 
       .pubhidden {
@@ -172,7 +172,15 @@
       }
       .pubshown {
         width: 70%;
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        @apply(--layout-start-justified);
       }
+
+      .pubshown iron-icon {
+        margin: 0px 0px 0px 5px; 
+      }
+
       .pubshown p {
         word-break: break-all;
         color: var(--sc-grey3);
@@ -264,7 +272,8 @@
           @apply(--layout-center-center);
           -ms-flex: none;
           -webkit-flex: none;
-          flex: none;        
+          flex: none; 
+          min-width: 270px;       
         }
 
         .warning {
@@ -309,7 +318,21 @@
           box-sizing:border-box;
           margin-bottom: 10vh;
         }
+
+        .pubshown {
+          width: 70%;
+          @apply(--layout-vertical);
+          @apply(--layout-center-center);
+        }
+
+        .pubshown iron-icon {
+          margin: 5px 0px 0px 0px; 
+        }
+        .pubkey p {
+          text-align: center;
+        } 
       }
+
 
 
     </style>
@@ -378,9 +401,19 @@
                 <div class="whitespace"></div>
               </iron-collapse>
 
-              <div class$="pubkey {{pubwhat}}" on-tap="togglePub">
-                <p>{{pubkey}}</p>
-              </div>
+
+              <template is="dom-if" if="{{_is(pubwhat,'pubshown')}}">
+                <div class="pubkey pubshown">
+                  <p>{{pubkey}}</p>
+                  <iron-icon on-tap="togglePub" icon="sc-icons:decline" class="verysmall"></iron-icon>
+                </div>
+              </template>
+
+              <template is="dom-if" if="{{_is(pubwhat,'pubhidden')}}">
+                <div class="pubkey pubhidden" on-tap="togglePub">
+                  <p>{{pubkey}}</p>
+                </div>
+              </template>
             </div>
 
             <template is="dom-if" if="{{!phoneview}}">

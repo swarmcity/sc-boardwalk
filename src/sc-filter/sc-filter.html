@@ -2,6 +2,12 @@
 <link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+
+
+
+<link rel="import" href="../sc-styles/sc-styles.html">
 
 <!--
 `sc-filter`
@@ -12,24 +18,93 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
 
 <dom-module id="sc-filter">
   <template>
-    <style>
+    <style include="sc-styles">
       :host {
         display: inline-block;
+        margin: 5px 5px 5px 0px;
+      }
+
+      .filter_selection {
+        box-sizing:border-box;
+        padding: 5px 8px 5px 8px;
+        border-radius: 2px;
+      }
+
+      .filter_selection p {
+        font-size: 12px;
+        line-height: 16px;   
+      }
+
+      .triangle {
+        width: 8px;
+        transition: all 0.075s linear;
+        margin-right: 4px;
+        opacity: 0.75;
+      }
+
+      .triangle svg {
+        width: 100%;
+      }
+
+      .opened {
+        transform: rotate(90deg);
+        opacity: 1;
+      }
+
+      .filter_options {
+        box-sizing:border-box;
+        padding: 0px;
+        border-top: 2px solid rgba(0,0,0,0.25);           
+        border-bottom: 2px solid rgba(0,0,0,0.25);           
 
       }
 
-    </style>    
+      .filter_option {
+        border-bottom: 2px solid rgba(0,0,0,0.05);           
+      }
 
-<p>Jooo howmow's</p>
-<paper-dropdown-menu label="Dinosaurs">
-  <paper-listbox class="dropdown-content" selected="1">
-    <paper-item>allosaurus</paper-item>
-    <paper-item>brontosaurus</paper-item>
-    <paper-item>carcharodontosaurus</paper-item>
-    <paper-item>diplodocus</paper-item>
-  </paper-listbox>
-</paper-dropdown-menu>
+      .filter_option:hover {
+        cursor: pointer;           
+      }
 
+      .filter_option p {
+        box-sizing:border-box;
+        padding: 14px 18px 14px 18px;
+        font-size: 14px;
+        line-height: 15px;      
+      }
+
+      #currentid {
+        position: absolute;
+        background-color: white;
+        z-index: 9;
+      }
+
+      @media all and (max-width: 500px) {
+      }
+
+    </style>
+
+    <div class="vertic start startjust">
+      <div class="filter_selection horizont center startjust darkerer" on-tap="toggleCollapse">
+
+        <div class$="triangle {{collapsestate}}">
+          <svg id="triangle_icon" x="0px" y="0px" viewBox="0 0 50 50" fill="#666666">
+          <polygon points="6.5,4.9 6.5,44.5 42,24.9 "/>
+          </svg>
+        </div>
+        <p class="reg grey3">{{selecteditem}}</p>
+      </div>
+      <iron-collapse id="currentid">
+        <div class="filter_options shadow">
+          <template is="dom-repeat" items="{{filteroptions}}">
+            <div class="filter_option" id="{{item}}" on-tap="select">
+              <p content="{{item}}" class$="reg grey3 {{thisone}}">{{item}}</p>
+            </div>
+          </template>
+        </div>
+      </iron-collapse>
+    </div>
 
   </template>
 
@@ -39,9 +114,33 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
       is: 'sc-filter',
 
       properties: {
+        /**
+        * Show the selected item and passes it to parent-element
+        *
+        * @type {String}
+        */
+        selecteditem: {
+          type: String,
+          notify: true
+        },
+        /**
+        * Is the array of options received from parent-element
+        *
+        * @type {Array}
+        */
+        filteroptions: {
+          type: Array,
+          observer: '_filteroptions'
+        }
+
       },
 
       ready: function(){
+        this.filteroptions = [
+          'Option 1',
+          'Option 2',
+          'Option 3'
+        ];
       },
 
       /**
@@ -68,6 +167,24 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
         }
         //console.log(a ,'(',typeof a,') is',b,'(',typeof b,') they are equal for ==',a == b,', they are equal for ===',a === b);
         return a === b;
+      },
+
+      select: function(e){
+        this.selecteditem = e.target.content;
+        this.toggleCollapse();
+      },
+
+      _filteroptions: function(){
+        this.selecteditem = this.filteroptions[0];
+      },
+
+      toggleCollapse: function(){
+        this.$.currentid.toggle();
+        if (this.$.currentid.opened){
+          this.collapsestate = 'opened';
+        } else {
+          this.collapsestate = '';
+        }
       },
 
 
