@@ -12,6 +12,7 @@
 <link rel="import" href="../sc-avatar/sc-avatar.html">
 <link rel="import" href="../sc-username/sc-username.html">
 <link rel="import" href="../sc-balance/sc-balance.html">
+<link rel="import" href="../sc-geohash/sc-geohash.html">
 <link rel="import" href="../sc-hashtagitem/sc-hashtagitem.html">
 <link rel="import" href="../sc-newitem/sc-newitem.html">
 <link rel="import" href="../sc-shh/sc-shh.html">
@@ -19,6 +20,9 @@
 <link rel="import" href="../sc-itemreply/sc-itemreply.html">
 <link rel="import" href="../sc-redux/sc-redux.html">
 <link rel="import" href="../sc-filter/sc-filter.html">
+
+<script type="text/javascript" src="../../bower_components/uuid-js/lib/uuid.js"></script>
+
 
 <!-- <link rel="import" href="../sc-styles/sc-styles.html">
  -->
@@ -34,6 +38,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 <dom-module id="sc-hashtag">
 <link rel="import" href="../../bower_components/sc-style/sc-style.css" type="css">
   <template>
+   <sc-geohash geohash="{{geohash}}" locate-on-start></sc-geohash>
     <style include="sc-styles">
       :host {
         display: block;
@@ -436,7 +441,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
       observers: [
       '_web3(web3)',
       '_routedata(data)',
-      '_log(locationfilterselected)'
+      '_log(locationfilterselected)',
+      '_geohash(geohash)'
     ],
       properties: {
 
@@ -550,6 +556,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
 //        debugger;
       },
 
+
+
       ready: function() {
           this._checkSize();
         
@@ -658,6 +666,11 @@ This is the component showing all requests of a certain hashtag. It contains a r
    this._starthastaglistener();
   },
 
+  _geohash: function(){
+        console.log('sc-hashtag -> your geohash is',this.geohash);
+         this._starthastaglistener();
+    },
+
   _starthastaglistener: function(){
 
     if (this.filter){
@@ -665,13 +678,19 @@ This is the component showing all requests of a certain hashtag. It contains a r
     }
 
     var self = this;
-     if (this.web3 && this.hashtag) {
+     if (this.web3 && this.geohash) {
 
+      var mytopics = [
+        self.web3.fromAscii(this.geohash.slice(0,2)),
+        [self.web3.fromAscii(this.geohash.slice(0,2)),self.web3.fromAscii(this.geohash.slice(0,3))],
+        [self.web3.fromAscii(this.geohash.slice(0,2)),self.web3.fromAscii(this.geohash.slice(0,3)),self.web3.fromAscii(this.geohash.slice(0,4))]
+        ];
+         
       this.filter = self.web3.shh.filter({
-        "topics": [self.web3.fromAscii(this.hashtag)],
+        "topics": mytopics,
       });
 
-      console.log("sc-whisperer: channelswitch, start listening to", this.hashtag);
+      console.log("sc-whisperer: channelswitch, start listening to", mytopics);
       this.filter.watch(this._processmessage.bind(this));
     }
   },
@@ -832,18 +851,25 @@ This is the component showing all requests of a certain hashtag. It contains a r
       },
 
       newitem_submitted: function(e){
-        this.set('route.path','/'+this.hashtag+'/list');
+        //this.set('route.path','/'+this.hashtag+'/list');
 
         var newrequest = {
+          id: UUIDjs.create().toString(),
           offereravatar: this.identity.avatarhash,
           offerer: this.identity.username,
           offer: e.detail.msg,
           offerhashtag: this.hashtag,
-          offererrep: '0',
-          offertime: 'a few minutes ago',
+//          offererrep: '0',
+          offertime: Date.now(),
           offeramount: e.detail.amount,
-          nrofreplies: '0'
+//          nrofreplies: '0'
         }
+
+        topics = [
+          this.web3.fromAscii(e.detail.geohash.slice(0,2)),
+          this.web3.fromAscii(e.detail.geohash.slice(0,3)),
+          this.web3.fromAscii(e.detail.geohash.slice(0,4)),
+        ];
 
         if (this.web3 && this.hashtag){
           if (!this.shhidentity){
@@ -852,7 +878,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
           var options = {
             "from": this.shhidentity,
-            "topics": [this.web3.fromAscii(this.hashtag)],
+            "topics": topics,
             "payload": this.web3.fromAscii(JSON.stringify(newrequest)),
             "ttl": 60*60*24, // is a time for the message to live on the network, specified in seconds. This defaults to 50.
             "priority": 1000
