@@ -444,6 +444,7 @@
           </div>
           <div class="pascanvasunderexit vertic centercenter paddingsides">        
             <a id="downloadAnchorElem" style="display:none"></a>
+
             <template is="dom-if" if="{{download_backup_available}}">
 
 <!--             <template is="dom-if" if="{{backup_download}}"> -->
@@ -861,6 +862,7 @@
           if (self._parseVault(data)) {
             self.saveVault();
             self.status = 'locked';
+            self.importipfshash = '';
             self.set('route.path', '/unlock');
           }
         });
@@ -1011,10 +1013,10 @@
 
         this.reset();
 
-        if (this.browser.family == 'Safari'){
+        if (this.browser.family == 'Safari' || this.browser.family == 'Mobile Safari'){
           this.backup_download = false;
         }
-        if (this.browser.family != 'Safari'){
+        if (this.browser.family != 'Safari' && this.browser.family != 'Mobile Safari'){
           this.download_backup_available = true;
         }
 
