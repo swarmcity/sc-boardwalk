@@ -14,7 +14,7 @@
   "sources": [
     "bower.json"
   ],
-  "includeDependencies": [
+  "extraDependencies": [
     "manifest.json",
     "src/contracts/*",
     "bower_components/webcomponentsjs/webcomponents-lite.min.js",
