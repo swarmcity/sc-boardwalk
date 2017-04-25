@@ -7,7 +7,7 @@
 <link rel="import" href="../sc-avatar/sc-avatar.html">
 <link rel="import" href="../sc-itemreplier/sc-itemreplier.html">
 <link rel="import" href="../sc-itemreply/sc-itemreply.html">
-
+<link rel="import" href="../sc-shh/sc-shh.html">
 
 <!--
 `sc-itemdetail`
@@ -154,7 +154,7 @@ This components shows the detailed view of a request.
 
 
     </style>
-    
+    <sc-shh web3="{{shhweb3}}"></sc-shh>
     <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
 
     <div class="totalcontainer paddingsides">
@@ -214,68 +214,42 @@ This components shows the detailed view of a request.
 
       is: 'sc-itemdetail',
 
+      observers: [
+        '_web3(shhweb3)'
+      ],
+
       properties: {
         /**
-       * `itemdata` this is the first property and what it does is described right here.
-       */
-        itemdata: {
-          type: String
+         * `itemdata` this is the first property and what it does is described right here.
+         */
+        itemid: {
+          type: String,
+          observer: '_itemid'
         },
-      animationConfig: {
-        type: Object,
-        value: function() {
-          return {
-            'entry': [{
-              name: 'slide-from-right-animation',
-              node:this.$.itemdetailcontent,
-              toPage: this,
-              timing: {
-                duration: 600
-              }
-            // },{
-            //   name: 'slide-from-right-animation',
-            //   node:this.$.topbar,
-            //   fromPage: this,
-            //   timing: {
-            //     duration: 600
-            //   }
-            // },{
-            //   name: 'fade-in-animation',
-            //   node:this.$.backbtn,
-            //   fromPage: this,
-            //   timing: {
-            //     duration: 200
-            //   }
-            // },{
-            //   name: 'fade-in-animation',
-            //   node:this.$.username,
-            //   fromPage: this,
-            //   timing: {
-            //     duration: 200
-            //   }
-            // }, {
-              // name: 'hero-animation',
-              // id: 'hero',
-              // toPage: this,
-              // timing: {
-              //     duration: 200
-              // }
-            // }, {
-            //   name: 'hero-animation',
-            //   id: 'balance',
-            //   toPage: this,
-            //   timing: {
-            //       duration: 200
-            //   }
-            }],
 
-            'exit': [{
-              name: 'fade-out-animation',
-              node:this.$.itemdetailcontent,
-              fromPage: this,
-              timing: {
-                duration: 125
-              }
+
+
+        animationConfig: {
+          type: Object,
+          value: function() {
+            return {
+              'entry': [{
+                name: 'slide-from-right-animation',
+                node: this.$.itemdetailcontent,
+                toPage: this,
+                timing: {
+                  duration: 600
+                }
+
+              }],
+
+              'exit': [{
+                name: 'fade-out-animation',
+                node: this.$.itemdetailcontent,
+                fromPage: this,
+                timing: {
+                  duration: 125
+                }
               }]
             }
           },
@@ -284,34 +258,77 @@ This components shows the detailed view of a request.
 
       },
 
-      ready: function(){
+
+      _web3: function() {
+        this.startListener();
       },
+
+      _itemid: function() {
+        console.log(this.itemid);
+        console.log('en we gaan nog is luisteren');
+        this.startListener();
+      },
+
+      startListener: function() {
+        if (this.filter || !this.itemid || !this.shhweb3) {
+          return;
+        }
+      
+        var mytopics = [
+        null,null,null,
+          this.shhweb3.fromAscii(this.itemid)
+        ];
+
+        this.filter = this.shhweb3.shh.filter({
+          "topics": mytopics,
+        });
+
+        console.log("sc-itemdetail: start listening to", mytopics);
+        this.filter.watch(this._processmessage.bind(this));
+
+      },
+
+      // processinging of channel setup messages.
+      _processmessage: function(error, result) {
+        var self = this;
+        //debugger;
+        try {
+          var payload = JSON.parse(self.shhweb3.toAscii(result.payload));
+          console.log('incoming in whisperer: web3 ', payload);
+          this.itemdata = payload;
+          //this.dispatch('add', payload);
+          //this.push('deals',payload);
+        } catch (e) {
+          console.log(e);
+        }
+      },
+
+
+      ready: function() {},
 
       /**
-      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
-      * use this to initialize any variables to start the component
-      */
-      onEnter: function(){
-      },
+       * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
+       * use this to initialize any variables to start the component
+       */
+      onEnter: function() {},
 
       /**
-      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage 
-      * use this to reset any variables when leaving this component while it remains loaded.
-      */
-      onExit: function(){
-      },
+       * 'onExit' are the behaviors that occur when the router tells this component to leave the stage 
+       * use this to reset any variables when leaving this component while it remains loaded.
+       */
+      onExit: function() {},
 
-      back: function(){
+      back: function() {
         this.fire('back');
       },
 
       // TEMP FUNCTION
-      fireReplyselected: function(e){
+      fireReplyselected: function(e) {
         var replydata = e.detail;
-        this.fire('reply-selected',replydata);
+        this.fire('reply-selected', replydata);
       },
 
-      firetoItemdetail: function(){
+      firetoItemdetail: function() {
         console.log('WHaaaaaattt???');
         this.fire('reply-to-detail');
       },

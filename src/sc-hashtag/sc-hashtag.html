@@ -269,8 +269,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
     
     <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
 
-    <app-route route="{{route}}" pattern="/:hashtag/:action" data="{{data}}"></app-route>
-
+    <app-route route="{{route}}" pattern="/:hashtag/:action" data="{{data}}" tail="{{subroute}}"></app-route>
+    <app-route route="{{subroute}}" pattern="/:itemid" data="{{datasubroute}}"></app-route>
 
 
     <div class="avatar_username_balance_content totalwidth">
@@ -337,20 +337,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
               </div>
 
             <template is="dom-repeat" items="{{deals}}">
-<!--               <sc-hashtagitem
-                item="[[item]]"
-                offereravatar="{{item.offereravatar}}"
-                offerer="{{item.offerer}}"
-                offererrep="{{item.offererrep}}"
-                offer="{{item.offer}}"
-                offerhashtag="{{item.offerhashtag}}"
-                offertime="{{item.offertime}}"
-                offeramount="{{item.offeramount}}"
-                nrofreplies="{{item.nrofreplies}}"
-                on-tap="hashtag_to_detail">
-              </sc-hashtagitem> -->
-
-
               <sc-hashtagitem
                 item="[[item]]"
                 on-to-detail="hashtag_to_detail">
@@ -371,7 +357,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       <sc-itemdetail
       data-action="detail"
-      itemdata="[[currentitem]]"
+      itemid="[[datasubroute.itemid]]"
       on-back="detail_to_list"
       on-reply-selected="detail_to_reply"
       on-reply-to-detail="reply_to_detail"
@@ -818,9 +804,10 @@ This is the component showing all requests of a certain hashtag. It contains a r
       * 'hashtag_to_detail' fires 'to-itemdetail' to the parent-element, and includes the animationconfig for this action.
       */
       hashtag_to_detail: function(e){
+        //debugger;
         console.log("Dit is de e uit hashtgitem",e.detail);
         this.currentitem = e.detail;
-        this.set('route.path','/'+this.hashtag+'/detail');
+        this.set('route.path','/'+this.hashtag+'/detail/' + e.detail.id );
       },
 
       detail_to_list: function(){
@@ -865,10 +852,14 @@ This is the component showing all requests of a certain hashtag. It contains a r
 //          nrofreplies: '0'
         }
 
-        topics = [
+        var topics = [         
+          // this.web3.fromAscii('sc1-' + this.hashtag + '-' + e.detail.geohash.slice(0,2)),
+          // this.web3.fromAscii('sc1-' + this.hashtag + '-' + e.detail.geohash.slice(0,3)),
+          // this.web3.fromAscii('sc1-' + this.hashtag + '-' + e.detail.geohash.slice(0,4)),
           this.web3.fromAscii(e.detail.geohash.slice(0,2)),
           this.web3.fromAscii(e.detail.geohash.slice(0,3)),
           this.web3.fromAscii(e.detail.geohash.slice(0,4)),
+          this.web3.fromAscii(newrequest.id),
         ];
 
         if (this.web3 && this.hashtag){
@@ -883,6 +874,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
             "ttl": 60*60*24, // is a time for the message to live on the network, specified in seconds. This defaults to 50.
             "priority": 1000
           };
+
+          console.log('posting to topics',topics);
 
           return this.web3.shh.post(options, function(err, res) {
             console.log(err, res);
