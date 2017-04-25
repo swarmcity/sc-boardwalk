@@ -17,10 +17,9 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 -->
 
 <dom-module id="sc-newitem">
-<link rel="import" href="../../bower_components/sc-style/sc-style.css" type="css">
   <template>
    <sc-geohash geohash="{{geohash}}" locate-on-start></sc-geohash>
-    <style>
+    <style include="sc-styles">
       :host {
         display: block;
         min-height: 100%;
