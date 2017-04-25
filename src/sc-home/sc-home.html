@@ -1,6 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
 
+<!-- <link rel="import" href="../../bower_components/sc-style/sc-style.html"> -->
 
 <link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
 
@@ -12,7 +13,7 @@
 <link rel="import" href="../sc-ipfs/sc-ipfs.html">
 <link rel="import" href="../sc-notifications/sc-notificationbadge.html">
 
-<link rel="import" href="../sc-styles/sc-styles.html">
+<!-- <link rel="import" href="../sc-styles/sc-styles.html"> -->
 
 
 <!--
@@ -25,14 +26,29 @@
 <!-- <link rel="import" href="../../bower_components/sc-style/sc-style.css"  type="css"> -->
 
   <template>
-    <style include="sc-styles">
+
+    <style>
+            @font-face {
+                font-family: 'montserratextralight';
+                src: url('montserrat-thin-webfont.ttf') format(truetype);
+
+                font-weight: normal;
+                font-style: normal;
+
+            }   
+
+
       :host {
         display: block;
         @apply(--base-structure);
-/*        height: 100vh;
-        overflow-y: scroll;*/
       }
-/*  
+
+      p {
+/*        color: blue;
+*/                font-family: 'montserratextralight';
+
+      }
+ /* 
       .avatar_username_balance_content {
         box-sizing:border-box;
         padding: 0px 14vw 0px 14vw;
@@ -61,7 +77,10 @@
         min-width: 180px;
       }*/
 
-      sc-avatar {
+
+
+
+/*      sc-avatar {
         margin: 0px 0px 20px 0px;
       }
       
@@ -112,6 +131,7 @@
           height: 35vh;
         }
       }
+*/
 
 
     </style>
@@ -121,6 +141,7 @@
     <div class="avatar_username_balance_content horizont start startjust wrap">
       
       <div class="avatar_username_balance noSelect">
+        <p class="blue">jooooooooo Harrow sir!</p>
         <div class="avatar_username_box vertic centercenter noSelect">
           <sc-avatar
           ipfshash="[[identity.avatarhash]]"

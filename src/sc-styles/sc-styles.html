@@ -2,9 +2,63 @@
 <dom-module id="sc-styles">
     <template>
         <style>
-            :root {
-                /*  BASIC COLOR-MIXINS OF swarm.city  */
-                
+
+            @font-face {
+                font-family: 'montserratultralight';
+                src: url('sc-fonts/Montserrat-UltraLight.otf');
+    font-style: normal;
+
+            }
+            @font-face {
+                font-family: 'montserrathairline';
+                src: url('sc-fonts/Montserrat-Hairline.otf');
+    font-style: normal;
+
+            }
+            @font-face {
+                font-family: 'montserratlight';
+                src: url('sc-fonts/Montserrat-Light.otf');
+    font-style: normal;
+
+            }
+            @font-face {
+                font-family: 'montserrat';
+                src: url('sc-fonts/Montserrat-Regular.otf');
+    font-style: normal;
+
+            }
+
+
+/*            @font-face {
+                font-family: montserratextra;
+                src: url(sc-fonts/Montserrat-ExtraLight.otf);
+            }
+*/
+            @font-face {
+                font-family: 'montserratextralight';
+                src: url('sc-fonts/montserrat-thin-webfont.ttf') format(truetype);
+
+                font-weight: normal;
+                font-style: normal;
+
+            }   
+
+
+            @font-face {
+                font-family: 'montserratsemibold';
+                src: url('sc-fonts/Montserrat-SemiBold.otf');
+     font-style: normal;
+
+            }
+            @font-face {
+                font-family: 'montserratbold';
+                src: url('sc-fonts/Montserrat-Bold.otf');
+     font-style: normal;
+
+            }
+
+/*
+            :root {                
                 --sc-yellow: #EFD96F;
                 --sc-blue: #24B1FF;
                 --sc-darkblue: #0D4D85;
@@ -17,126 +71,42 @@
                 --sc-grey3: #666666;
                 --sc-grey4: #333333;
                 --sc-grey5: #191919;
-            }
-            /*  COLOR-CLASSES of swarm.city  */
-            
-            .yellow {
-                color: var(--sc-yellow);
-            }
-            .blue {
-                color: var(--sc-blue);
-            }
-            .darkblue {
-                color: var(--sc-darkblue);
-            }
-            .green {
-                color: var(--sc-green);
-            }
-            .red {
-                color: var(--sc-red);
-            }
-            .darkblue {
-                color: var(--sc-darkblue);
-            }
-            .white {
-                color: var(--sc-white);
-            }
-            .grey1 {
-                color: var(--sc-grey1);
-            }
-            .grey2 {
-                color: var(--sc-grey2);
-            }
-            .grey3 {
-                color: var(--sc-grey3);
-            }
-            .grey4 {
-                color: var(--sc-grey4);
-            }
-            .grey5 {
-                color: var(--sc-grey5);
-            }
-            .yellowback {
-                background-color: var(--sc-yellow);
-            }
-            .blueback {
-                background-color: var(--sc-blue);
-            }
-            .darkblueback {
-                background-color: var(--sc-darkblue);
-            }
-            .greenback {
-                background-color: var(--sc-green);
-            }
-            .redback {
-                background-color: var(--sc-red);
-            }
-            .darkblueback {
-                background-color: var(--sc-darkblue);
-            }
-            .whiteback {
-                background-color: var(--sc-white);
-            }
-            .grey1back {
-                background-color: var(--sc-grey1);
-            }
-            .grey2back {
-                background-color: var(--sc-grey2);
-            }
-            .grey3back {
-                background-color: var(--sc-grey3);
-            }
-            .grey4back {
-                background-color: var(--sc-grey4);
-            }
-            .grey5back {
-                background-color: var(--sc-grey5);
-            }
-            .lighter {
-                background-color: rgba(255, 255, 255, 0.2);
-            }
-            .lighterer {
-                background-color: rgba(255, 255, 255, 0.4);
-            }
-            .darker {
-                background-color: rgba(0, 0, 0, 0.025);
-            }
-            .darkerer {
-                background-color: rgba(0, 0, 0, 0.05);
-            }
-            @font-face {
-                font-family: montserratultralight;
-                src: url(sc-fonts/Montserrat-UltraLight.otf);
-            }
-            @font-face {
-                font-family: montserrathairline;
-                src: url(sc-fonts/Montserrat-Hairline.otf);
-            }
-            @font-face {
-                font-family: montserratlight;
-                src: url(sc-fonts/Montserrat-Light.otf);
-            }
-            @font-face {
-                font-family: montserrat;
-                src: url(sc-fonts/Montserrat-Regular.otf);
-            }
-            @font-face {
-                font-family: montserratsemibold;
-                src: url(sc-fonts/Montserrat-SemiBold.otf);
-            }
-            @font-face {
-                font-family: montserratbold;
-                src: url(sc-fonts/Montserrat-Bold.otf);
-            }
-            :root {
+
                 --sc-font-nowrap: {
                     white-space: nowrap;
                     overflow: hidden;
                     text-overflow: ellipsis;
                 }
                 ;
-            }
-            :root {
+
+                --sc-font-nowrap: {
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+                ;
+
+
+
+
+                --montserrat-light: {
+                    font-family: montserratlight;
+                    -webkit-font-smoothing: antialiased;
+                    font-size: 26px;
+                    line-height: 24px;
+                    -webkit-margin-before: 0px;
+                    -webkit-margin-after: 0px;
+                    -webkit-margin-start: 0em;
+                    -webkit-margin-end: 0em;
+                    margin: 0px;
+                    font-weight: 100;
+                }
+                ;
+
+
+
+
+
                 --base-shadow: {
                     box-shadow: 0px 1px 2px -1px rgba(0, 0, 0, 0.5);
                     -webkit-box-shadow: 0px 1px 2px -1px rgba(0, 0, 0, 0.5);
@@ -157,23 +127,18 @@
                 ;
                 --base-structure-dark: {
                     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAH0AAAB9CAIAAAAA4vtyAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTExIDc5LjE1ODMyNSwgMjAxNS8wOS8xMC0wMToxMDoyMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MUQzQzU4RkFDRURDMTFFNjg0OURFMDFCQkVGQUQ4RTMiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MUQzQzU4RjlDRURDMTFFNjg0OURFMDFCQkVGQUQ4RTMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKE1hY2ludG9zaCkiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDowRDk5ODREQUNEMDYxMUU2QkRDM0Y4RDc5ODcxMjIxRSIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDowRDk5ODREQkNEMDYxMUU2QkRDM0Y4RDc5ODcxMjIxRSIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PjV05hwAABihSURBVHja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');
-                    */
                 }
                 ;
-                /*  DEFAULT MIXINS FOR PAPER-ELEMENTS OF swarm.city  */
-                /* checkbox - colors */
+            
+
                 
                 --paper-checkbox-unchecked-color: var(--sc-grey4);
                 --paper-checkbox-unchecked-ink-color: var(--sc-grey4);
                 --paper-checkbox-checkmark-color: var(--sc-white);
                 --paper-checkbox-checked-color: var(--sc-blue);
-                --paper-checkbox-checked-ink-color: var(--sc-blue);
-                /* input - colors */
-                
+                --paper-checkbox-checked-ink-color: var(--sc-blue);                
                 --paper-input-container-color: var(--sc-grey4);
                 --paper-input-container-focus-color: var(--sc-blue);
-                /* input - typo */
-                
                 --paper-input-container-label: {
                     font-family: montserratlight;
                     -webkit-font-smoothing: antialiased;
@@ -213,7 +178,6 @@
                     -webkit-margin-start: 0em;
                     -webkit-margin-end: 0em;
                     margin: 0px;
-                    /*@apply(--sc-font-body1);*/
                 }
                 ;
                 --paper-input-prefix: {
@@ -228,7 +192,6 @@
                     -webkit-margin-start: 0em;
                     -webkit-margin-end: 0em;
                     margin: 0px;
-                    /*@apply(--sc-font-body1);*/
                 }
                 ;
                 --paper-input-suffix: {
@@ -243,11 +206,8 @@
                     -webkit-margin-start: 0em;
                     -webkit-margin-end: 0em;
                     margin: 0px;
-                    /*@apply(--sc-font-body1);*/
                 }
-                ;
-                /* item - typo */
-                
+                ;                
                 --paper-item: {
                     font-family: montserrat;
                     -webkit-font-smoothing: antialiased;
@@ -260,9 +220,7 @@
                     -webkit-margin-end: 0em;
                     margin: 0px;
                 }
-                ;
-                /* menu's - typo */
-                
+                ;                
                 --paper-listbox: {
                     font-family: montserratlight;
                     -webkit-font-smoothing: antialiased;
@@ -345,8 +303,7 @@
                     -webkit-margin-end: 0em;
                     margin: 0px;
                     color: red;
-                }
-                ;
+                };
                 --paper-input-container input: {
                     font-family: montserratlight;
                     -webkit-font-smoothing: antialiased;
@@ -360,34 +317,44 @@
                     -webkit-margin-end: 0em;
                     margin: 0px;
                     color: red;
-                }
-                ;
+                };
+
+
+
+
             }
 
+            .yellow { color: var(--sc-yellow); }
+            .blue { color: red;
+            }
 
+            .darkblue { color: var(--sc-darkblue); }
+            .green { color: var(--sc-green); }
+            .red { color: var(--sc-red); }
+            .darkblue { color: var(--sc-darkblue); }
+            .white { color: var(--sc-white); }
+            .grey1 { color: var(--sc-grey1); }
+            .grey2 { color: var(--sc-grey2); }
+            .grey3 { color: var(--sc-grey3); }
+            .grey4 { color: var(--sc-grey4); }
+            .grey5 { color: var(--sc-grey5); }
+            .yellowback { background-color: var(--sc-yellow); }
+            .blueback { background-color: var(--sc-blue); }
+            .darkblueback { background-color: var(--sc-darkblue); }
+            .greenback { background-color: var(--sc-green); }
+            .redback { background-color: var(--sc-red); }
+            .darkblueback { background-color: var(--sc-darkblue); }
+            .whiteback { background-color: var(--sc-white); }
+            .grey1back { background-color: var(--sc-grey1); }
+            .grey2back { background-color: var(--sc-grey2); }
+            .grey3back { background-color: var(--sc-grey3); }
+            .grey4back { background-color: var(--sc-grey4); }
+            .grey5back { background-color: var(--sc-grey5); }
+            .lighter { background-color: rgba(255, 255, 255, 0.2); }
+            .lighterer { background-color: rgba(255, 255, 255, 0.4); }
+            .darker { background-color: rgba(0, 0, 0, 0.025); }
+            .darkerer { background-color: rgba(0, 0, 0, 0.05); }
 
-            paper-dropdown-menu {
-                --paper-input-container-label: {
-                    font-family: montserratlight;
-                    -webkit-font-smoothing: antialiased;
-                    font-weight: 100;
-                    font-size: 18px;
-                    font-weight: 300;
-                    line-height: 24px;
-                };
-                --paper-input-container-input: {
-                    font-family: montserratlight;
-                    -webkit-font-smoothing: antialiased;
-                    font-weight: 100;
-                    font-size: 18px;
-                    font-weight: 300;
-                    line-height: 24px;
-                }
-
-              }
-
-
-            /*  TYPO of swarm.city  */
             
             h1 {
                 font-family: montserrathairline;
@@ -440,21 +407,12 @@
                 padding: 0px;
                 font-size: 20px;
                 line-height: 22px;
-            }
+            }*/
             p {
-                font-family: montserratlight;
-                -webkit-font-smoothing: antialiased;
-                font-weight: 100;
-                font-size: 16px;
-                font-weight: 300;
-                line-height: 24px;
-                -webkit-margin-before: 0px;
-                -webkit-margin-after: 0px;
-                -webkit-margin-start: 0em;
-                -webkit-margin-end: 0em;
-                margin: 0px;
+                font-family: 'montserratextralight';
+                color: green;
             }
-            li {
+/*            li {
                 font-family: montserratlight;
                 -webkit-font-smoothing: antialiased;
                 font-weight: 100;
@@ -476,20 +434,10 @@
                 -webkit-margin-end: 0px;
                 -webkit-padding-start: 30px;
             }
-            /*    --sc-font-body2: {
-      @apply(--opensans-light);
-      font-size: 15px;
-      font-weight: 300;
-      line-height: 20px;
-      -webkit-margin-before:0px;
-      -webkit-margin-after:0px;
-      -webkit-margin-start:0em;
-      -webkit-margin-end:0em;
-      margin: 0px;
-    };*/
+
             
             a {
-                font-family: montserratlight;
+                font-family: 'montserratlight';
                 -webkit-font-smoothing: antialiased;
                 font-weight: 100;
                 font-size: 16px;
@@ -567,98 +515,7 @@
                 -webkit-margin-end: 0em;
                 margin: 0px;
             }
-            /*  COLOR-CLASSES of swarm.city  */
-            
-            .yellow {
-                color: var(--sc-yellow);
-            }
-            .blue {
-                color: var(--sc-blue);
-            }
-            .darkblue {
-                color: var(--sc-darkblue);
-            }
-            .green {
-                color: var(--sc-green);
-            }
-            .red {
-                color: var(--sc-red);
-            }
-            .darkblue {
-                color: var(--sc-darkblue);
-            }
-            .white {
-                color: var(--sc-white);
-            }
-            .grey1 {
-                color: var(--sc-grey1);
-            }
-            .grey2 {
-                color: var(--sc-grey2);
-            }
-            .grey3 {
-                color: var(--sc-grey3);
-            }
-            .grey4 {
-                color: var(--sc-grey4);
-            }
-            .grey5 {
-                color: var(--sc-grey5);
-            }
-            .yellowback {
-                background-color: var(--sc-yellow);
-            }
-            .blueback {
-                background-color: var(--sc-blue);
-            }
-            .darkblueback {
-                background-color: var(--sc-darkblue);
-            }
-            .greenback {
-                background-color: var(--sc-green);
-            }
-            .redback {
-                background-color: var(--sc-red);
-            }
-            .darkblueback {
-                background-color: var(--sc-darkblue);
-            }
-            .whiteback {
-                background-color: var(--sc-white);
-            }
-            .grey1back {
-                background-color: var(--sc-grey1);
-            }
-            .grey2back {
-                background-color: var(--sc-grey2);
-            }
-            .grey3back {
-                background-color: var(--sc-grey3);
-            }
-            .grey4back {
-                background-color: var(--sc-grey4);
-            }
-            .grey5back {
-                background-color: var(--sc-grey5);
-            }
-            .lighter {
-                background-color: rgba(255, 255, 255, 0.2);
-            }
-            .lighterer {
-                background-color: rgba(255, 255, 255, 0.4);
-            }
-            .darker {
-                background-color: rgba(0, 0, 0, 0.025);
-            }
-            .darkerer {
-                background-color: rgba(0, 0, 0, 0.05);
-            }
 
-
-
-            /*  DEFAULT-CLASSES of swarm.city  */
-
-            /* flex-layout-stuff */
             
             .vertic {
                 @apply(--layout-vertical);
@@ -697,7 +554,6 @@
 
 
 
-            /* generic stuff */
 
               neon-animated-pages {
                 height: 100%;
@@ -780,7 +636,6 @@
 
 
 
-            /* effects */
             .txtshadow {
                 text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.045);
             }
@@ -801,7 +656,6 @@
                 overflow-y: scroll;
             }
 
-            /* topbar-stuff */
             .topbar {
                 width: 100%;
                 @apply(--layout-horizontal);
@@ -813,7 +667,6 @@
 
 
 
-            /* avatar-username-balance-content combo -- DESKTOP*/
 
               .avatar_username_balance_content {
                 @apply(--layout-horizontal);
@@ -823,8 +676,6 @@
                 padding: 0px 0px 0px 14vw;   
                 height: 100%;
               }
-
-
               .avatar_username_balance {
                 height: 100%;
                 box-sizing:border-box;
@@ -834,7 +685,6 @@
                 @apply(--layout-center);
                 @apply(--layout-start-justified);
               }
- 
               .balance_box {
                 @apply(--layout-horizontal);
                 @apply(--layout-center-center);
@@ -854,8 +704,32 @@
                 height: 100%;
               }
 
-            /*  SPECIFIC PAPER-ELEMENTS-SKINS of swarm.city  */
             
+
+
+
+            paper-dropdown-menu {
+                --paper-input-container-label: {
+                    font-family: montserratlight;
+                    -webkit-font-smoothing: antialiased;
+                    font-weight: 100;
+                    font-size: 18px;
+                    font-weight: 300;
+                    line-height: 24px;
+                };
+                --paper-input-container-input: {
+                    font-family: montserratlight;
+                    -webkit-font-smoothing: antialiased;
+                    font-weight: 100;
+                    font-size: 18px;
+                    font-weight: 300;
+                    line-height: 24px;
+                }
+
+              }
+
+
+
             paper-button {
                 font-family: montserratbold;
                 -webkit-font-smoothing: antialiased;
@@ -952,7 +826,6 @@
                 -webkit-margin-start: 0em;
                 -webkit-margin-end: 0em;
                 margin: 0px;
-                /*@apply(--sc-font-body1);*/
             }
             paper-dropdown-menu-input {
                 font-family: montserratlight;
@@ -1001,8 +874,6 @@
 
 
 
-
-            /*  MOBILE EXCEPTIONS !!!!!  */
             
             @media all and (min-width: 0) and (max-width: 420px) {
                 .paddingallround {
@@ -1027,8 +898,6 @@
                     padding-bottom: 10vh;
                 }
 
-
-            /* avatar-username-balance-content combo -- MOBILE*/
 
                   #pagecontent {
                     box-sizing:border-box;
@@ -1083,7 +952,6 @@
                     padding-bottom: 20vh;
                 }
             }
-            /* mobile-small */
             
             @media all and (min-width: 0) and (max-width: 420px) {
                 .bigbtn {
@@ -1149,7 +1017,7 @@
                     font-size: 38px;
                     line-height: 38px;
                 }
-            }
+            }*/
         </style>
     </template>
 </dom-module>
