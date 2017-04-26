@@ -357,32 +357,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
   </template>
 
   <script>
-    // const reducer = (state, action) => {
-    //   if (!state) return {
-    //     deals: []
-    //   };
-    //   // copy deals list
-    //   deals = state.deals.slice(0);
-    //   switch (action.type) {
-    //     case 'ADD_ITEM':
-    //       deals.unshift(action.deal);
-    //       break;
-    //     case 'REMOVE_ITEM':
-    //       const idx = deals.indexOf(action.deal)
-    //       if (idx !== -1) {
-    //         deals.splice(idx, 1)
-    //       }
-    //       break;
-    //     case 'REMOVE_ALL':
-    //       deals = [];
-    //       break;
-    //   }
-    //   state.deals = deals;
-    //   return state;
-    // }
-    //const store = Redux.createStore(reducer);
-    //const ReduxBehavior = PolymerRedux(store);
-
+   
     Polymer({
       is: 'sc-hashtag',
 
@@ -401,15 +376,18 @@ This is the component showing all requests of a certain hashtag. It contains a r
             deals: deals
           };
         },
-        
+        reply: function(dealdata,replydata){
+          let deal = this.deals.indexOf(dealData);
+        }
+
       },
 
       observers: [
-      '_web3(web3)',
-      '_routedata(data)',
-      '_log(locationfilterselected)',
-      '_geohash(geohash)'
-    ],
+        '_web3(web3)',
+        '_routedata(data)',
+        '_log(locationfilterselected)',
+        '_geohash(geohash)'
+      ],
       properties: {
 
         route: {
@@ -420,22 +398,22 @@ This is the component showing all requests of a certain hashtag. It contains a r
         identity: {
           type: Object,
           statePath: 'identity',
-        },        
+        },
         deals: {
           type: Array,
           statePath: 'deals',
         },
         /**
-       * `phoneview` is a boolean to determine the viewport.
-       */ 
+         * `phoneview` is a boolean to determine the viewport.
+         */
         phoneview: {
           type: Boolean,
           observer: '_checkSize'
         },
 
         /**
-       * `sharedElements` is used to share elements between components for doing animations.
-       */ 
+         * `sharedElements` is used to share elements between components for doing animations.
+         */
         sharedElements: {
           type: Object,
           value: function() {
@@ -447,15 +425,15 @@ This is the component showing all requests of a certain hashtag. It contains a r
         },
 
         /**
-       * `animationConfig` is used to configure animations.
-       */
+         * `animationConfig` is used to configure animations.
+         */
         animationConfig: {
           type: Object,
           value: function() {
             return {
               'entry': [{
                 name: 'slide-from-bottom-animation',
-                node:this.$.pagecontent,
+                node: this.$.pagecontent,
                 toPage: this,
                 timing: {
                   duration: 700
@@ -465,146 +443,146 @@ This is the component showing all requests of a certain hashtag. It contains a r
                 id: 'hero',
                 toPage: this,
                 timing: {
-                    duration: 600
+                  duration: 600
                 }
               }, {
                 name: 'hero-animation',
                 id: 'balance',
                 toPage: this,
                 timing: {
-                    duration: 600
+                  duration: 600
                 }
               }],
 
               'exit': [{
                 name: 'slide-down-animation',
-                node:this.$.pagecontent,
+                node: this.$.pagecontent,
                 fromPage: this,
                 timing: {
                   duration: 700
                 }
 
-              // },{
-              //   name: 'fade-out-animation',
-              //   node:this.$.backbtn,
-              //   fromPage: this,
-              //   timing: {
-              //     duration: 125
-              //   }
+                // },{
+                //   name: 'fade-out-animation',
+                //   node:this.$.backbtn,
+                //   fromPage: this,
+                //   timing: {
+                //     duration: 125
+                //   }
 
               }, {
                 name: 'hero-animation',
                 id: 'hero',
                 fromPage: this,
                 timing: {
-                    duration: 600
+                  duration: 600
                 }
               }, {
                 name: 'hero-animation',
                 id: 'balance',
                 fromPage: this,
                 timing: {
-                    duration: 600
+                  duration: 600
                 }
-                }]
-              }
-            },
+              }]
+            }
           },
-
         },
 
-      _routedata: function(){
-        if (this.data && this.data.hashtag){
+      },
+
+      _routedata: function() {
+        if (this.data && this.data.hashtag) {
           this.hashtag = this.data.hashtag;
           this._starthastaglistener();
           // this.dispatch('removeall');
         }
-//        debugger;
+        //        debugger;
       },
 
 
 
       ready: function() {
-          this._checkSize();
-        
+        this._checkSize();
 
 
-          this.dispatch('add', {
-            
-              offereravatar: 'QmWA8eaJyZpVT5mUx1qBvbNXYfprSdds1oachxmhV1sDGh',
-              offerer: 'Mr Rogers',
-              offer: 'This is just a test-request!',
-              offerhashtag: 'pioneer',
-              offererrep: '6',
-              offertime: 'a few minutes ago',
-              offeramount: '33.50',
-              // nrofreplies: '2'
-              replies: [
-                {
-                  replyer: {
-                    replyeravatar:'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
-                    replyerusername:'Hank Moovy',
-                    replyerrep: '0'},
-                  reply: 'Well, in that case: this is just a test-responds then.',
-                  replyamount: '33.50',
-                  replytime:'Just now'
-                },
-                {
-                  replyer: {
-                    replyeravatar:'QmRzCWs6F4LiEC4umwLiMB5C6MAo1bKQa4frCC1iKvntme',
-                    replyerusername:'Frank David',
-                    replyerrep: '0'},
-                  reply: 'Oh yeah nice, me too!',
-                  replyamount: '35.00',
-                  replytime:'Just now'
-                }
-              ]
 
-            });
+        // this.dispatch('add', {
+
+        //     offereravatar: 'QmWA8eaJyZpVT5mUx1qBvbNXYfprSdds1oachxmhV1sDGh',
+        //     offerer: 'Mr Rogers',
+        //     offer: 'This is just a test-request!',
+        //     offerhashtag: 'pioneer',
+        //     offererrep: '6',
+        //     offertime: 'a few minutes ago',
+        //     offeramount: '33.50',
+        //     // nrofreplies: '2'
+        //     replies: [
+        //       {
+        //         replyer: {
+        //           replyeravatar:'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
+        //           replyerusername:'Hank Moovy',
+        //           replyerrep: '0'},
+        //         reply: 'Well, in that case: this is just a test-responds then.',
+        //         replyamount: '33.50',
+        //         replytime:'Just now'
+        //       },
+        //       {
+        //         replyer: {
+        //           replyeravatar:'QmRzCWs6F4LiEC4umwLiMB5C6MAo1bKQa4frCC1iKvntme',
+        //           replyerusername:'Frank David',
+        //           replyerrep: '0'},
+        //         reply: 'Oh yeah nice, me too!',
+        //         replyamount: '35.00',
+        //         replytime:'Just now'
+        //       }
+        //     ]
+
+        //   });
 
 
-          // this.deals = [
-          //  {
-          //     offereravatar: 'QmWA8eaJyZpVT5mUx1qBvbNXYfprSdds1oachxmhV1sDGh',
-          //     offerer: 'Mr Rogers',
-          //     offer: 'This is just a test-request!',
-          //     offerhashtag: 'pioneer',
-          //     offererrep: '6',
-          //     offertime: 'a few minutes ago',
-          //     offeramount: '233.50',
-          //     nrofreplies: '2'
-          //   },
-           // {
-           //    offereravatar: 'http://jcket.com/stoneyroads/files/2014/10/600x/Mr-Oizo.jpg',
-           //    offerer: 'Mr Oizo',
-           //    offer: 'Need a ride from 5905 hidden valley trl to 2408 wolf run',
-           //    offerhashtag: '#ridesharing',
-           //    offererrep: '22',
-           //    offertime: 'today at 21:25',
-           //    offeramount: '330.00',
-           //    nrofreplies: '0'
-           //  },
-           // {
-           //    offereravatar: 'http://vignette3.wikia.nocookie.net/southpark/images/c/c2/Butters_(Facebook).jpg/revision/latest?cb=20101010032409',
-           //    offerer: 'Leopold Butters',
-           //    offer: 'I need a pick up from 2795 pleasant vally',
-           //    offerhashtag: '#ridesharing',
-           //    offererrep: '398',
-           //    offertime: 'yesterday at 19:45',
-           //    offeramount: '330.00',
-           //    nrofreplies: '4'
-           //  },          
-           // {
-           //    offereravatar: 'http://jcket.com/stoneyroads/files/2014/10/600x/Mr-Oizo.jpg',
-           //    offerer: 'Mr Oizo',
-           //    offer: 'Need a ride pick up at walmart on ben white and dropped off at 5711 meadow crest',
-           //    offerhashtag: '#ridesharing',
-           //    offererrep: '22',
-           //    offertime: '2 days ago',
-           //    offeramount: '330.00',
-           //    nrofreplies: '0'
-           //  },
-          // ];
+        // this.deals = [
+        //  {
+        //     offereravatar: 'QmWA8eaJyZpVT5mUx1qBvbNXYfprSdds1oachxmhV1sDGh',
+        //     offerer: 'Mr Rogers',
+        //     offer: 'This is just a test-request!',
+        //     offerhashtag: 'pioneer',
+        //     offererrep: '6',
+        //     offertime: 'a few minutes ago',
+        //     offeramount: '233.50',
+        //     nrofreplies: '2'
+        //   },
+        // {
+        //    offereravatar: 'http://jcket.com/stoneyroads/files/2014/10/600x/Mr-Oizo.jpg',
+        //    offerer: 'Mr Oizo',
+        //    offer: 'Need a ride from 5905 hidden valley trl to 2408 wolf run',
+        //    offerhashtag: '#ridesharing',
+        //    offererrep: '22',
+        //    offertime: 'today at 21:25',
+        //    offeramount: '330.00',
+        //    nrofreplies: '0'
+        //  },
+        // {
+        //    offereravatar: 'http://vignette3.wikia.nocookie.net/southpark/images/c/c2/Butters_(Facebook).jpg/revision/latest?cb=20101010032409',
+        //    offerer: 'Leopold Butters',
+        //    offer: 'I need a pick up from 2795 pleasant vally',
+        //    offerhashtag: '#ridesharing',
+        //    offererrep: '398',
+        //    offertime: 'yesterday at 19:45',
+        //    offeramount: '330.00',
+        //    nrofreplies: '4'
+        //  },          
+        // {
+        //    offereravatar: 'http://jcket.com/stoneyroads/files/2014/10/600x/Mr-Oizo.jpg',
+        //    offerer: 'Mr Oizo',
+        //    offer: 'Need a ride pick up at walmart on ben white and dropped off at 5711 meadow crest',
+        //    offerhashtag: '#ridesharing',
+        //    offererrep: '22',
+        //    offertime: '2 days ago',
+        //    offeramount: '330.00',
+        //    nrofreplies: '0'
+        //  },
+        // ];
 
 
         this.locationfilteroptions = [
@@ -621,203 +599,200 @@ This is the component showing all requests of a certain hashtag. It contains a r
       },
 
 
- _web3: function() {
-    
-  
-
-    if (!this.web3){
-      throw new Error('web3 not set while requesting whisper listener');
-    }
-
-   this._starthastaglistener();
-  },
-
-  _geohash: function(){
-        console.log('sc-hashtag -> your geohash is',this.geohash);
-         this._starthastaglistener();
-    },
-
-  _starthastaglistener: function(){
-
-    if (this.filter){
-      return;
-    }
-
-    var self = this;
-     if (this.web3 && this.geohash) {
-
-      var mytopics = [
-        self.web3.fromAscii(this.geohash.slice(0,2)),
-        [self.web3.fromAscii(this.geohash.slice(0,2)),self.web3.fromAscii(this.geohash.slice(0,3))],
-        [self.web3.fromAscii(this.geohash.slice(0,2)),self.web3.fromAscii(this.geohash.slice(0,3)),self.web3.fromAscii(this.geohash.slice(0,4))]
-        ];
-         
-      this.filter = self.web3.shh.filter({
-        "topics": mytopics,
-      });
-
-      console.log("sc-whisperer: channelswitch, start listening to", mytopics);
-      this.filter.watch(this._processmessage.bind(this));
-    }
-  },
-
-  // processinging of channel setup messages.
-  _processmessage: function(error, result) {
-    var self = this;
-    try {
-      var payload = JSON.parse(self.web3.toAscii(result.payload));
-      console.log('incoming in whisperer: web3 ', payload);
-      this.dispatch('add', payload);
-      //this.push('deals',payload);
-    } catch (e) {
-      console.log(e);
-    }
-  },
+      _web3: function() {
 
 
-      /**
-      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
-      * use this to initialize any variables to start the component
-      */
-      onEnter: function(){
+
+        if (!this.web3) {
+          throw new Error('web3 not set while requesting whisper listener');
+        }
+
+        this._starthastaglistener();
       },
 
-      /**
-      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage 
-      * use this to reset any variables when leaving this component while it remains loaded.
-      */
-      onExit: function(){
+      _geohash: function() {
+        console.log('sc-hashtag -> your geohash is', this.geohash);
+        this._starthastaglistener();
       },
 
+      _starthastaglistener: function() {
+
+        if (this.filter) {
+          return;
+        }
+
+        var self = this;
+        if (this.web3 && this.geohash) {
+
+          var mytopics = [
+            self.web3.fromAscii(this.geohash.slice(0, 2)), [self.web3.fromAscii(this.geohash.slice(0, 2)), self.web3.fromAscii(this.geohash.slice(0, 3))],
+            [self.web3.fromAscii(this.geohash.slice(0, 2)), self.web3.fromAscii(this.geohash.slice(0, 3)), self.web3.fromAscii(this.geohash.slice(0, 4))]
+          ];
+
+          this.filter = self.web3.shh.filter({
+            "topics": mytopics,
+          });
+
+          console.log("sc-whisperer: channelswitch, start listening to", mytopics);
+          this.filter.watch(this._processmessage.bind(this));
+        }
+      },
+
+      // processinging of channel setup messages.
+      _processmessage: function(error, result) {
+        var self = this;
+        try {
+          var payload = JSON.parse(self.web3.toAscii(result.payload));
+          console.log('incoming in whisperer: web3 ', payload);
+          this.dispatch('add', payload);
+          //this.push('deals',payload);
+        } catch (e) {
+          console.log(e);
+        }
+      },
+
+
       /**
-      * '_checkSize' responds to the iron-media-query and sets some variables according to the result.
-      */      
+       * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
+       * use this to initialize any variables to start the component
+       */
+      onEnter: function() {},
+
+      /**
+       * 'onExit' are the behaviors that occur when the router tells this component to leave the stage 
+       * use this to reset any variables when leaving this component while it remains loaded.
+       */
+      onExit: function() {},
+
+      /**
+       * '_checkSize' responds to the iron-media-query and sets some variables according to the result.
+       */
       _checkSize: function() {
         if (this.phoneview) {
-        this.visibleclass = 'mobile';
-        this.currentviewmode = "small";
+          this.visibleclass = 'mobile';
+          this.currentviewmode = "small";
         } else {
-        this.visibleclass = 'default';
-        this.currentviewmode = "normal";
+          this.visibleclass = 'default';
+          this.currentviewmode = "normal";
         }
       },
 
       /**
-      * 'leave' fires the 'leave' to the parent-element. (This also contains animation-config for going back to sc-home.)
-      */
-      leave: function(){
+       * 'leave' fires the 'leave' to the parent-element. (This also contains animation-config for going back to sc-home.)
+       */
+      leave: function() {
         this.fire('leave');
       },
 
       /**
-      * 'tonewItem' .
-      */
-      tonewItem: function(){
-          this.sharedElements = {
-              'hero': this.$.hashtagavatar,
-              'balance': this.$.balancebox
-            };
+       * 'tonewItem' .
+       */
+      tonewItem: function() {
+        this.sharedElements = {
+          'hero': this.$.hashtagavatar,
+          'balance': this.$.balancebox
+        };
 
-            this.animationConfig = {
+        this.animationConfig = {
 
-              'entry': [{
-                name: 'slide-from-bottom-animation',
-                node:this.$.pagecontent,
-                toPage: this,
-                timing: {
-                  duration: 700
-                }
-              }, {
-                name: 'hero-animation',
-                id: 'hero',
-                toPage: this,
-                timing: {
-                    duration: 600
-                }
-              }, {
-                name: 'hero-animation',
-                id: 'balance',
-                toPage: this,
-                timing: {
-                    duration: 600
-                }
-              }],
+          'entry': [{
+            name: 'slide-from-bottom-animation',
+            node: this.$.pagecontent,
+            toPage: this,
+            timing: {
+              duration: 700
+            }
+          }, {
+            name: 'hero-animation',
+            id: 'hero',
+            toPage: this,
+            timing: {
+              duration: 600
+            }
+          }, {
+            name: 'hero-animation',
+            id: 'balance',
+            toPage: this,
+            timing: {
+              duration: 600
+            }
+          }],
 
 
-              'exit': [{
-                name: 'slide-down-animation',
-                node:this.$.pagecontent,
-                fromPage: this,
-                timing: {
-                  duration: 700
-                }
+          'exit': [{
+            name: 'slide-down-animation',
+            node: this.$.pagecontent,
+            fromPage: this,
+            timing: {
+              duration: 700
+            }
 
-              },{
-              //   name: 'fade-out-animation',
-              //   node:this.$.backbtn,
-              //   fromPage: this,
-              //   timing: {
-              //     duration: 125
-              //   }
+          }, {
+            //   name: 'fade-out-animation',
+            //   node:this.$.backbtn,
+            //   fromPage: this,
+            //   timing: {
+            //     duration: 125
+            //   }
 
-              // }, {
-                name: 'hero-animation',
-                id: 'hero',
-                fromPage: this,
-                timing: {
-                    duration: 600
-                }
-              }, {
-                name: 'hero-animation',
-                id: 'balance',
-                fromPage: this,
-                timing: {
-                    duration: 600
-                }
-                }]
-              };
+            // }, {
+            name: 'hero-animation',
+            id: 'hero',
+            fromPage: this,
+            timing: {
+              duration: 600
+            }
+          }, {
+            name: 'hero-animation',
+            id: 'balance',
+            fromPage: this,
+            timing: {
+              duration: 600
+            }
+          }]
+        };
 
-        this.set('route.path','/'+this.hashtag+'/newitem');
+        this.set('route.path', '/' + this.hashtag + '/newitem');
       },
 
       /**
-      * 'hashtag_to_detail' fires 'to-itemdetail' to the parent-element, and includes the animationconfig for this action.
-      */
-      hashtag_to_detail: function(e){
+       * 'hashtag_to_detail' fires 'to-itemdetail' to the parent-element, and includes the animationconfig for this action.
+       */
+      hashtag_to_detail: function(e) {
         //debugger;
-        console.log("Dit is de e uit hashtgitem",e.detail);
+        console.log("Dit is de e uit hashtgitem", e.detail);
         this.currentitem = e.detail;
-        this.set('route.path','/'+this.hashtag+'/detail/' + e.detail.id );
+        this.set('route.path', '/' + this.hashtag + '/detail/' + e.detail.id);
       },
 
-      detail_to_list: function(){
-        this.set('route.path','/'+this.hashtag+'/list');
+      detail_to_list: function() {
+        this.set('route.path', '/' + this.hashtag + '/list');
       },
 
-      detail_to_hashtag: function(){
-        this.set('route.path','/'+this.hashtag+'/list');
+      detail_to_hashtag: function() {
+        this.set('route.path', '/' + this.hashtag + '/list');
       },
 
-      detail_to_reply: function(e){
+      detail_to_reply: function(e) {
 
         // THIS IS A TEMP SOLUTION: IT SHOULD WORK ON THE STATE (WITH REDUX)
-        console.log("OUT OF HASHTAG:::::",e.detail)
+        console.log("OUT OF HASHTAG:::::", e.detail)
         this.currentreply = e.detail;
 
-        this.set('route.path','/'+this.hashtag+'/replydetail');
+        this.set('route.path', '/' + this.hashtag + '/replydetail');
       },
 
 
-      reply_to_detail: function(){
-        this.set('route.path','/'+this.hashtag+'/detail');
+      reply_to_detail: function() {
+        this.set('route.path', '/' + this.hashtag + '/detail');
       },
 
 
-      newitem_cancel: function(e){
-        this.set('route.path','/'+this.hashtag+'/list');
+      newitem_cancel: function(e) {
+        this.set('route.path', '/' + this.hashtag + '/list');
       },
 
-      newitem_submitted: function(e){
+      newitem_submitted: function(e) {
         //this.set('route.path','/'+this.hashtag+'/list');
 
         var newrequest = {
@@ -826,24 +801,24 @@ This is the component showing all requests of a certain hashtag. It contains a r
           offerer: this.identity.username,
           offer: e.detail.msg,
           offerhashtag: this.hashtag,
-//          offererrep: '0',
+          //          offererrep: '0',
           offertime: Date.now(),
           offeramount: e.detail.amount,
-//          nrofreplies: '0'
+          //          nrofreplies: '0'
         }
 
-        var topics = [         
+        var topics = [
           // this.web3.fromAscii('sc1-' + this.hashtag + '-' + e.detail.geohash.slice(0,2)),
           // this.web3.fromAscii('sc1-' + this.hashtag + '-' + e.detail.geohash.slice(0,3)),
           // this.web3.fromAscii('sc1-' + this.hashtag + '-' + e.detail.geohash.slice(0,4)),
-          this.web3.fromAscii(e.detail.geohash.slice(0,2)),
-          this.web3.fromAscii(e.detail.geohash.slice(0,3)),
-          this.web3.fromAscii(e.detail.geohash.slice(0,4)),
+          this.web3.fromAscii(e.detail.geohash.slice(0, 2)),
+          this.web3.fromAscii(e.detail.geohash.slice(0, 3)),
+          this.web3.fromAscii(e.detail.geohash.slice(0, 4)),
           this.web3.fromAscii(newrequest.id),
         ];
 
-        if (this.web3 && this.hashtag){
-          if (!this.shhidentity){
+        if (this.web3 && this.hashtag) {
+          if (!this.shhidentity) {
             this.shhidentity = this.web3.shh.newIdentity();
           }
 
@@ -851,11 +826,11 @@ This is the component showing all requests of a certain hashtag. It contains a r
             "from": this.shhidentity,
             "topics": topics,
             "payload": this.web3.fromAscii(JSON.stringify(newrequest)),
-            "ttl": 60*60*24, // is a time for the message to live on the network, specified in seconds. This defaults to 50.
+            "ttl": 60 * 60 * 24, // is a time for the message to live on the network, specified in seconds. This defaults to 50.
             "priority": 1000
           };
 
-          console.log('posting to topics',topics);
+          console.log('posting to topics', topics);
 
           return this.web3.shh.post(options, function(err, res) {
             console.log(err, res);
@@ -864,15 +839,14 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
         // console.log('Yes!', newrequest);
         //this.dispatch('add',newrequest);
-//        this.push('deals',newrequest);
+        //        this.push('deals',newrequest);
 
       },
 
-      _log: function(target){
-        console.log("***************************",target);
+      _log: function(target) {
+        console.log("***************************", target);
       }
 
-  
 
 
     });
