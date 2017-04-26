@@ -6,6 +6,7 @@
 
 <link rel="import" href="../../bower_components/sc-style/sc-style.html">
 <link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
+<link rel="import" href="../sc-loader/sc-loader.html">
 
 <!--
 `sc-balance`
@@ -65,6 +66,10 @@ This component shows the SWT-balance and the reference currency (when in sc-wall
         line-height: 16px;   
       }
 
+      sc-loader {
+        margin-bottom: 4px;
+      }
+
 
       @media all and (min-width: 0) and (max-width: 420px) {
 
@@ -106,8 +111,15 @@ This component shows the SWT-balance and the reference currency (when in sc-wall
       auto>
     </iron-ajax>
 
+
+
+
     <!-- <div class$="arc-balance {{align}}"> -->
       <div class$="horizont end centerjust {{viewmode}}">
+
+         <template is="dom-if" if="{{!balanceloaded}}">
+            <sc-loader small color="grey2"></sc-loader>
+        </template>
         <template is="dom-if" if="{{_is( viewmode, 'small')}}">
           <h1 class="yellow bold">{{formatpong(swtbalance)}}</h1>
         </template>
@@ -136,6 +148,8 @@ This component shows the SWT-balance and the reference currency (when in sc-wall
           </template>
         </div>
       </template>
+
+
 
 
     <!--     <template is="dom-if" if="{{wereinwallet}}">
@@ -190,7 +204,12 @@ This component shows the SWT-balance and the reference currency (when in sc-wall
         wereinwallet: {
           type: Boolean,
           value: false
-        }
+        },
+
+        balanceloaded: {
+          type: Boolean,
+          value: false
+        },
       },
 
       ready: function(){
@@ -245,6 +264,10 @@ This component shows the SWT-balance and the reference currency (when in sc-wall
         var charcount = this.swtbalance.toString().length;
         this.balancesize = charcount * this.basesize;
         this.balanceref = this.convertcurrency(this.swtbalance);
+
+        if (!this.balanceloaded) {
+          this.balanceloaded = true;
+        }
 
         // THIS IS DUMMY, PLEASE REMOVE WHEN THE FUNCTION WORKS
         //this.balanceref = '0,00';

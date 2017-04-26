@@ -27,7 +27,8 @@
     "paper-item": "^1.2.2",
     "paper-listbox": "^1.1.2",
     "uuid-js": "^0.7.5",
-    "moment-js": "^0.7.2"
+    "moment-js": "^0.7.2",
+    "paper-slider": "^1.0.15"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",

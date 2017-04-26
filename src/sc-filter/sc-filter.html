@@ -1,9 +1,11 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-slider/paper-slider.html">
 <link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
 <link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
 
 
 <link rel="import" href="../../bower_components/sc-style/sc-style.html">
@@ -20,7 +22,10 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
     <style include="sc-styles">
       :host {
         display: inline-block;
+        width: 100%;
         margin: 5px 5px 5px 0px;
+        --paper-slider-knob-color: var(--sc-yellow);
+        --paper-slider-active-color: var(--sc-yellow);
       }
 
       .filter_selection {
@@ -38,6 +43,8 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
         width: 8px;
         transition: all 0.075s linear;
         margin-right: 4px;
+        margin-left: 10px;
+
         opacity: 0.75;
       }
 
@@ -79,11 +86,112 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
         z-index: 9;
       }
 
+
+
+
+
+      .slidericon {
+        width: 18px;
+        height: 18px;
+      }
+
+      paper-slider {
+        width: 100%;
+      }
+
+      .locationtotal p {
+        font-size: 11px;
+        line-height: 13px;
+      }
+
+      #sliderbox {
+        width: 100%;
+        margin-top: 10px;
+      }
+
+      .inner_sliderbox {
+        width: 100%;
+        box-sizing:border-box;
+        padding: 6px 12px 6px 12px;
+      }
+
+
+      .location {
+        width: 50%;
+        max-width: 220px;
+      }
+
+      .divider {
+        margin: 0px 13px 0px 13px;
+      }
+
+
       @media all and (max-width: 500px) {
+/*      .locationtotal {
+        width: 100%;
+        @apply(--layout-vertical);
+        @apply(--layout-start);
+        @apply(--layout-start-justified);
+
+      }*/
+/*        paper-slider {
+          width: 150px;
+        }*/
+
+        .leftmargers {
+          margin-left: 14px;
+        }
       }
 
     </style>
 
+    <iron-media-query query="(min-width:0px) and (max-width: 540px)" query-matches="{{phoneview}}"></iron-media-query>
+
+  <template is="dom-if" if="{{location}}">
+    <template is="dom-if" if="{{!phoneview}}">
+      <div class="locationtotal totalwidth horizont center startjust">
+<!--         <div class$="triangle {{collapsestate}}">
+          <svg id="triangle_icon" x="0px" y="0px" viewBox="0 0 50 50" fill="#666666">
+          <polygon points="6.5,4.9 6.5,44.5 42,24.9 "/>
+          </svg>
+        </div> -->
+          <div class="horizont centercenter location">
+            <iron-icon icon="sc-icons:location_edgeless" class="slidericon grey3"></iron-icon>
+            <paper-slider noink id="ratings" max="6" value="{{range}}"></paper-slider>
+            <iron-icon icon="sc-icons:globe_edgeless" class="slidericon grey3"></iron-icon>
+          </div>
+        <p class="light grey2 divider">|</p>
+        <p class="bold grey3">{{distance}}</p>
+      </div>
+    </template>
+
+
+    <template is="dom-if" if="{{phoneview}}">
+      <div class="locationtotal totalwidth vertic start startjust">
+        <div class="horizont center startjust">
+          <div class$="triangle {{collapsestate}}">
+            <svg id="triangle_icon" x="0px" y="0px" viewBox="0 0 50 50" fill="#666666">
+            <polygon points="6.5,4.9 6.5,44.5 42,24.9 "/>
+            </svg>
+          </div>
+          <p class="bold grey3" on-tap="toggleSlider">{{distance}}</p>
+        </div>
+        <iron-collapse id="sliderbox" class="">
+          <div class="inner_sliderbox horizont centercenter totalwidth darker">
+            <div class="horizont centercenter flex">
+              <iron-icon icon="sc-icons:location_edgeless" class="slidericon grey3"></iron-icon>
+              <paper-slider noink id="ratings" max="6" value="{{range}}"></paper-slider>
+              <iron-icon icon="sc-icons:globe_edgeless" class="slidericon grey3"></iron-icon>
+            </div>
+            <paper-icon-button icon="sc-icons:v" on-tap="toggleSlider" class="grey3 leftmargers" noink></paper-icon-button>
+          </div>
+
+        </iron-collapse>
+      </div>
+    </template>
+  </template>
+
+  <template is="dom-if" if="{{!location}}">
     <div class="vertic start startjust">
       <div class="filter_selection horizont center startjust darkerer" on-tap="toggleCollapse">
 
@@ -104,6 +212,8 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
         </div>
       </iron-collapse>
     </div>
+  </template>
+
 
   </template>
 
@@ -130,7 +240,30 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
         filteroptions: {
           type: Array,
           observer: '_filteroptions'
+        },
+
+        /**
+        * Determines the visual form of the element. If location=true, show the location-filter (slider).
+        *
+        * @type {Boolean}
+        */
+        location: {
+          type: Boolean,
+          value: false
+        },
+
+        range: {
+          type: Number,
+          value:2,
+          observer:'_rangetoDistance',
+          notify: true
+        },
+
+        distance: {
+          type: String,
+          observer:'_rangetoDistance'
         }
+
 
       },
 
@@ -140,6 +273,8 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
           'Option 2',
           'Option 3'
         ];
+
+        this.distance = 40;
       },
 
       /**
@@ -185,6 +320,47 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
           this.collapsestate = '';
         }
       },
+
+      toggleSlider: function(){
+        var sliderbox = this.shadowRoot.getElementById('sliderbox');
+        console.log(sliderbox);
+        sliderbox.toggle();
+
+        if (sliderbox.opened){
+          this.collapsestate = 'opened';
+        } else {
+          this.collapsestate = '';
+        }
+
+      },
+
+      _rangetoDistance: function(){
+
+        switch(this.range) {
+            case 0:
+                this.distance = "About 125 m from your location"
+                break;
+            case 1:
+                this.distance = "About 5 km from your location"
+                break;
+            case 2:
+                this.distance = "About 40 km from your location"
+                break;
+            case 3:
+                this.distance = "About 150 km from your location"
+                break;
+            case 4:
+                this.distance = "About 1250 km from your location"
+                break;
+            case 5:
+                this.distance = "About 5000 km from your location"
+                break;
+            case 6:
+                this.distance = "Worldwide"
+                break;
+        }
+
+      }
 
 
     });

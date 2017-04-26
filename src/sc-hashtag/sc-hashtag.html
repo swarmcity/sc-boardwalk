@@ -20,6 +20,7 @@
 <link rel="import" href="../sc-itemreply/sc-itemreply.html">
 <link rel="import" href="../sc-redux/sc-redux.html">
 <link rel="import" href="../sc-filter/sc-filter.html">
+<link rel="import" href="../sc-loader/sc-loader.html">
 
 <script type="text/javascript" src="../../bower_components/uuid-js/lib/uuid.js"></script>
 
@@ -46,8 +47,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
         width: 100%;
         height: 100%;
       }
-
-
 
       .hashtagtitle {
         margin: 0px 0px 5px 0px;
@@ -132,7 +131,13 @@ This is the component showing all requests of a certain hashtag. It contains a r
         @apply(--layout-horizontal);
         @apply(--layout-start);
         @apply(--layout-start-justified);
-        margin: 20px 0px 0px 10px;
+        margin: 15px 10px 10px 10px;
+      }
+
+      .requestsloading {
+    max-width: 600px;
+        min-height: 50vh;
+        background-color: rgba(0, 0, 0, 0.02);
       }
 
 
@@ -153,11 +158,11 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       .filterbox {
         box-sizing:border-box;
-        padding: 15px 10px 0px 5px;
+        padding: 0px;
         @apply(--layout-horizontal);
         @apply(--layout-start);
         @apply(--layout-start-justified);
-        margin: 10px 0px 0px 0px;
+        margin: 10px 0px 15px 0px;
       }
 
       .hashtagtitle {
@@ -311,9 +316,15 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
 
               <div class="filterbox">
-                <sc-filter id="locationfilter" filteroptions="[[locationfilteroptions]]" selecteditem="{{locationfilterselected}}" currentid="locationfilter"></sc-filter>
-                <sc-filter id="statusfilter" filteroptions="[[statusfilteroptions]]" selecteditem="{{statusfilterselected}}" currentid="statusfilter"></sc-filter>
+                <sc-filter id="locationfilter" currentid="locationfilter" location range="{{range}}"></sc-filter>
+                <!-- <sc-filter id="statusfilter" filteroptions="[[statusfilteroptions]]" selecteditem="{{statusfilterselected}}" currentid="statusfilter"></sc-filter> -->
               </div>
+
+              <template is="dom-if" if="{{!requestsloaded}}">
+                <div class="requestsloading horizont centercenter">
+                  <sc-loader small color="grey2" class="grey2">Loading requests</sc-loader>
+                </div>
+              </template>
 
             <template is="dom-repeat" items="{{deals}}">
               <sc-hashtagitem
@@ -321,6 +332,10 @@ This is the component showing all requests of a certain hashtag. It contains a r
                 on-to-detail="hashtag_to_detail">
               </sc-hashtagitem>
             </template>
+            <div class="whitespace"></div>
+            <div class="whitespace"></div>
+            <div class="whitespace"></div>
+            <div class="whitespace"></div>
           </div>
       </neon-animatable>
 
@@ -385,7 +400,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
       observers: [
         '_web3(web3)',
         '_routedata(data)',
-        '_log(locationfilterselected)',
+        '_log(range)',
         '_geohash(geohash)'
       ],
       properties: {
@@ -488,6 +503,13 @@ This is the component showing all requests of a certain hashtag. It contains a r
             }
           },
         },
+        /**
+         * `requestsloaded` is a boolean to determine wether the whisper-msgs are received by this component.
+         */
+        requestsloaded: {
+          type: Boolean,
+          value: false
+        },
 
       },
 
@@ -585,17 +607,17 @@ This is the component showing all requests of a certain hashtag. It contains a r
         // ];
 
 
-        this.locationfilteroptions = [
-          'In your area',
-          'Globally'
-        ];
+        // this.locationfilteroptions = [
+        //   'In your area',
+        //   'Globally'
+        // ];
 
-        this.statusfilteroptions = [
-          'All requests',
-          'My requests',
-          'Requests in deal',
-          'Requests payed out'
-        ];
+        // this.statusfilteroptions = [
+        //   'All requests',
+        //   'My requests',
+        //   'Requests in deal',
+        //   'Requests payed out'
+        // ];
       },
 
 
@@ -644,6 +666,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
         try {
           var payload = JSON.parse(self.web3.toAscii(result.payload));
           console.log('incoming in whisperer: web3 ', payload);
+          this.requestsloaded = true;
           this.dispatch('add', payload);
           //this.push('deals',payload);
         } catch (e) {
