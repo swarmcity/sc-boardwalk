@@ -1,6 +1,8 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
 <link rel="import" href="../../bower_components/neon-animation/neon-animation.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+
 <!-- <link rel="import" href="../../bower_components/polymer-redux/polymer-redux.html"> -->
 
 <link rel="import" href="../../bower_components/sc-style/sc-style.html">
@@ -344,7 +346,7 @@
 
       <div class="topbar">
         <span class="flex"></span>
-        <iron-icon class="grey3" icon="sc-icons:decline" on-tap="leave">back</iron-icon>
+        <paper-icon-button on-tap="leave" icon="sc-icons:decline" noink>back</paper-icon-button>
       </div>
 
       <neon-animated-pages selected="{{datastate}}" attr-for-selected="data-state" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
