@@ -188,9 +188,9 @@ This components shows the detailed view of a request.
           </div>
         </div>
 
-        <sc-itemreplier>
+        <sc-itemreplier itemid="{{itemdata.id}}">
         </sc-itemreplier>
-        
+
         <template is="dom-repeat" items="{{itemdata.replies}}">
           <sc-itemreply
           replydata="{{item}}"

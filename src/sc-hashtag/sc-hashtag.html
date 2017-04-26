@@ -793,7 +793,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
       },
 
       newitem_submitted: function(e) {
-        //this.set('route.path','/'+this.hashtag+'/list');
 
         var newrequest = {
           id: UUIDjs.create().toString(),
@@ -834,6 +833,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
           return this.web3.shh.post(options, function(err, res) {
             console.log(err, res);
+            this.set('route.path','/'+this.hashtag+'/list');
           });
         }
 

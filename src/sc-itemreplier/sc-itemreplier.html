@@ -11,6 +11,9 @@
 <link rel="import" href="../sc-avatar/sc-avatar.html">
 <link rel="import" href="../sc-loader/sc-loader.html">
 <link rel="import" href="../sc-shh/sc-shh.html">
+<link rel="import" href="../sc-redux/sc-redux.html">
+
+<script type="text/javascript" src="../../bower_components/uuid-js/lib/uuid.js"></script>
 
 <!--
 `sc-itemreplier`
@@ -128,7 +131,7 @@ This components allow a Swarm Citizen to reply on a request.
         <template is="dom-if" if="{{_is(replystate,'replying')}}">
 
           <div class="total vertic centercenter">
-            <paper-textarea label="Your reply" class="totalwidth grey2unfocus" autofocus></paper-textarea>
+            <paper-textarea label="Your reply" class="totalwidth grey2unfocus" value="{{replytext}}" autofocus></paper-textarea>
             <div class="totalwidth horizont end startjust">
               <paper-input label="Your offer" class="yourreplyamount swtamount grey2unfocus" value="{{replyamount}}">
               <div suffix class="yellow bold swtwithoffer">SWT</div>
@@ -178,10 +181,6 @@ This components allow a Swarm Citizen to reply on a request.
           </template>                
         </template>
       </div>
-
-
-
-
   </template>
 
   <script>
@@ -191,13 +190,23 @@ This components allow a Swarm Citizen to reply on a request.
 
       properties: {
         /**
-       * `prop1` this is the first property and what it does is described right here.
+       * the ID of the item we're replying to.
        */
-        prop1: {
+        itemid: {
           type: String,
-          value: 'sc-itemreplier',
         },
+        /**
+        * 'identity' the user's identity object - loaded via Redux
+        */
+        identity: {
+          type: Object,
+          statePath: 'identity',
+        },        
       },
+
+      behaviors: [
+        ReduxBehaviour
+      ],
 
       ready: function(){
         this.onEnter();
@@ -248,6 +257,50 @@ This components allow a Swarm Citizen to reply on a request.
             //   console.log("yes dit dus");
             break;
           case 'replying':
+
+            debugger;
+
+            if (!this.shhidentity) {
+              this.shhidentity = this.shhweb3.shh.newIdentity();
+            }
+
+            var message = {
+              type: 'request-reply',
+              id: UUIDjs.create().toString(),
+              replyer: {
+                avatar: this.identity.avatarhash,
+                username: this.identity.username,
+                pubkey: this.identity.pubkey
+              },
+              reply: this.replytext,
+              replyamount: this.replyamount,
+              replytime: Date.now()
+            };
+            var topics = [
+              this.shhweb3.fromAscii(this.itemid),
+            ];
+
+            var options = {
+              "from": this.shhidentity,
+              "topics": topics,
+              "payload": this.shhweb3.fromAscii(JSON.stringify(message)),
+              "ttl": 60 * 60 * 24,
+              "priority": 1000
+            };
+
+            console.log('posting to topics', topics);
+
+            return this.shhweb3.shh.post(options, function(err, res) {
+              if (!err){
+                console.log('sc->itemreplier -> Reply posted');
+              }else{
+                console.log('sc-itemreplier -> whisper error:',err);
+              }
+            });
+
+           
+
+
             this.replystate = 'replygivven'
             this.bgcolor = "basestructure";
             this.borderz = "notopborder";

@@ -681,9 +681,12 @@
 
       actions: {
         update: function(identitydata) {
+          var newidentitydata = Object.assign({}, identitydata, {
+            pubkey: this.currentaccount
+          });
           return {
             type: 'IDENTITY',
-            identity: identitydata
+            identity: newidentitydata
           };
         },
       },
