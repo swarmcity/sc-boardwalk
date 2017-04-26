@@ -386,14 +386,26 @@ This is the component showing all requests of a certain hashtag. It contains a r
         add: function(dealdata) {
           let deals = this.deals.slice(0);
           deals.push(dealdata);
+
           return {
             type: 'DEALS',
             deals: deals
           };
         },
-        reply: function(dealdata,replydata){
-          let deal = this.deals.indexOf(dealData);
-        }
+ 
+        addmydeal: function(mydealdata) {
+          debugger;
+          let mydeals = this.mydeals.slice(0);
+          mydeals.push(mydealdata);
+
+          return {
+            type: 'MYDEALS',
+            mydeals: mydeals
+          };
+        },        
+        // reply: function(dealdata,replydata){
+        //   let deal = this.deals.indexOf(dealData);
+        // }
 
       },
 
@@ -417,6 +429,10 @@ This is the component showing all requests of a certain hashtag. It contains a r
         deals: {
           type: Array,
           statePath: 'deals',
+        },
+        mydeals: {
+          type: Array,
+          statePath: 'mydeals',
         },
         /**
          * `phoneview` is a boolean to determine the viewport.
@@ -646,10 +662,13 @@ This is the component showing all requests of a certain hashtag. It contains a r
         var self = this;
         if (this.web3 && this.geohash) {
 
-          var mytopics = [
-            self.web3.fromAscii(this.geohash.slice(0, 2)), [self.web3.fromAscii(this.geohash.slice(0, 2)), self.web3.fromAscii(this.geohash.slice(0, 3))],
-            [self.web3.fromAscii(this.geohash.slice(0, 2)), self.web3.fromAscii(this.geohash.slice(0, 3)), self.web3.fromAscii(this.geohash.slice(0, 4))]
-          ];
+      var mytopics = [
+        self.web3.encodetopic("request-create"),
+        null,
+        self.web3.encodetopic(this.geohash.slice(0, 2)),
+        null,
+        null
+        ];
 
           this.filter = self.web3.shh.filter({
             "topics": mytopics,
@@ -816,10 +835,12 @@ This is the component showing all requests of a certain hashtag. It contains a r
       },
 
       newitem_submitted: function(e) {
-        //this.set('route.path','/'+this.hashtag+'/list');
+
+        var self = this;
 
         var newrequest = {
           id: UUIDjs.create().toString(),
+          type: 'request-create',
           offereravatar: this.identity.avatarhash,
           offerer: this.identity.username,
           offer: e.detail.msg,
@@ -831,13 +852,11 @@ This is the component showing all requests of a certain hashtag. It contains a r
         }
 
         var topics = [
-          // this.web3.fromAscii('sc1-' + this.hashtag + '-' + e.detail.geohash.slice(0,2)),
-          // this.web3.fromAscii('sc1-' + this.hashtag + '-' + e.detail.geohash.slice(0,3)),
-          // this.web3.fromAscii('sc1-' + this.hashtag + '-' + e.detail.geohash.slice(0,4)),
-          this.web3.fromAscii(e.detail.geohash.slice(0, 2)),
-          this.web3.fromAscii(e.detail.geohash.slice(0, 3)),
-          this.web3.fromAscii(e.detail.geohash.slice(0, 4)),
-          this.web3.fromAscii(newrequest.id),
+          this.web3.encodetopic(newrequest.type),
+          this.web3.encodetopic(newrequest.id),
+          this.web3.encodetopic(e.detail.geohash.slice(0, 2)),
+          this.web3.encodetopic(e.detail.geohash.slice(0, 3)),
+          this.web3.encodetopic(e.detail.geohash.slice(0, 4)),
         ];
 
         if (this.web3 && this.hashtag) {
@@ -857,6 +876,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
           return this.web3.shh.post(options, function(err, res) {
             console.log(err, res);
+             self.dispatch('addmydeal',newrequest);
+            self.set('route.path','/'+self.hashtag+'/list');
           });
         }
 

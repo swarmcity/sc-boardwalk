@@ -2,9 +2,19 @@
 <script src="../../node_modules/redux/dist/redux.min.js"></script>
 
 <script>
+
+
+    function getLS(key){
+        var v = window.localStorage.getItem(key);
+        return JSON.parse(v);
+    }
+    function setLS(key,val){
+        var v = window.localStorage.setItem(key,JSON.stringify(val));
+    }
         
     let initialState = {
         deals: [],
+        mydeals: getLS('sc-mydeals') || [],
         identity: {
             username: 'username',
             avatarhash: 'Qme5k7WUAoo5JwySiYGfhm4umvhUCTqVKPw2yfP7jhiqPT'
@@ -20,6 +30,12 @@
                 let deals = state.deals;
                 deals  = action.deals;
                 return Object.assign({}, state, {deals: deals});
+                break;
+            case 'MYDEALS':
+                let mydeals = state.mydeals;
+                mydeals  = action.mydeals;
+                setLS('sc-mydeals',mydeals);
+                return Object.assign({}, state, {mydeals: mydeals});
                 break;
             case 'IDENTITY':
                 let identity = state.identity;

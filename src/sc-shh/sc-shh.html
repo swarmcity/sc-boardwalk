@@ -4,7 +4,7 @@
 
 <dom-module id="sc-shh">
   <template>
-    <sc-config shhhost="{{host}}"></sc-config>
+    <sc-config shhprefix="{{shhprefix}}" shhhost="{{host}}"></sc-config>
   </template>
   <script>
 
@@ -36,7 +36,12 @@
           console.log('sc-shh -> created Web3');
         }
         this.set('web3',acshh);
+        this.set('web3.encodetopic',this.encodetopic.bind(this));
         this.fire('web3-ready');
+      },
+
+      encodetopic: function(topic){
+        return this.web3.fromAscii(this.shhprefix + topic);
       }
 
     });

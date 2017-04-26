@@ -1,6 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
+<link rel="import" href="../../bower_components/moment-js/moment-js.html">
 
 <link rel="import" href="../../bower_components/sc-style/sc-style.html">
 <link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
@@ -165,7 +166,7 @@ This components shows the detailed view of a request.
         </div>
         <div class="totalwidth detailpadding">
           <div class="totalwidth">
-            <p class="small grey3">{{itemdata.offertime}}</p>
+            <p class="small grey3"><moment-js date="{{item.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
             <div class="minispace"></div>
             <p class="offer light grey4">{{itemdata.offer}}<span class="bold offerhashtag">#{{itemdata.offerhashtag}}</span></p>
           </div>
@@ -188,10 +189,10 @@ This components shows the detailed view of a request.
           </div>
         </div>
 
-        <sc-itemreplier>
+        <sc-itemreplier itemid="{{itemdata.id}}">
         </sc-itemreplier>
-        
-        <template is="dom-repeat" items="{{itemdata.replies}}">
+
+        <template is="dom-repeat" items="{{replies}}">
           <sc-itemreply
           replydata="{{item}}"
           on-to-detail="fireReplyselected"
@@ -269,14 +270,19 @@ This components shows the detailed view of a request.
       },
 
       startListener: function() {
-        if (this.filter || !this.itemid || !this.shhweb3) {
+        if (!this.itemid || !this.shhweb3) {
           return;
+        }
+
+        if (this.filter){
+          this.filter.stopWatching();
         }
       
         var mytopics = [
-        null,null,null,
-          this.shhweb3.fromAscii(this.itemid)
-        ];
+          null,
+//          this.shhweb3.encodetopic("requestmessage"),
+          this.shhweb3.encodetopic(this.itemid)
+        ];        
 
         this.filter = this.shhweb3.shh.filter({
           "topics": mytopics,
@@ -293,8 +299,22 @@ This components shows the detailed view of a request.
         //debugger;
         try {
           var payload = JSON.parse(self.shhweb3.toAscii(result.payload));
-          console.log('incoming in whisperer: web3 ', payload);
-          this.itemdata = payload;
+          console.log('incoming in whisperer: web3 ', result,self.shhweb3.toAscii(result.payload));
+          switch (payload.type){
+            case 'request-create':
+              this.itemdata = payload;
+              break;
+            case 'request-reply':
+              console.log('this is an item reply...');
+              if (!this.replies){
+                this.replies = [];
+              }
+              this.push('replies',payload);
+              break;
+            default:
+              console.log('unknown payload type',payload.type);
+              break;
+          }
           //this.dispatch('add', payload);
           //this.push('deals',payload);
         } catch (e) {
