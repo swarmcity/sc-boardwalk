@@ -21,6 +21,10 @@
           type: String,
           notify:true
         },
+        shhprefix: {
+          type: String,
+          notify:true
+        },
         etherscanroot: {
           type: String,
           notify:true
@@ -67,6 +71,7 @@
 
             this.web3host = 'https://eth.swarm.city/';            
             this.shhhost = 'https://eth.swarm.city/';            
+            this.shhprefix = 'w1-';
             this.etherscanroot = 'https://etherscan.io/';
             this.tokencontractaddress = '0xAc709FcB44a43c35F0DA4e3163b117A17F3770f5';
             this.swtconversioncontractaddress = '0x69e5da6904f73dfa845648e1991ad1dcc780f874';
@@ -80,7 +85,8 @@
               tokencontractaddress: this.tokencontractaddress,
               swtconversioncontractaddress: this.swtconversioncontractaddress,
               swttokencontractaddress: this.swttokencontractaddress,
-              backbonecontractaddress: this.backbonecontractaddress
+              backbonecontractaddress: this.backbonecontractaddress,
+              shhprefix: this.shhprefix
             });
 
             break;

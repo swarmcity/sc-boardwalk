@@ -371,6 +371,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
         add: function(dealdata) {
           let deals = this.deals.slice(0);
           deals.push(dealdata);
+
           return {
             type: 'DEALS',
             deals: deals
@@ -624,10 +625,10 @@ This is the component showing all requests of a certain hashtag. It contains a r
         var self = this;
         if (this.web3 && this.geohash) {
 
-          var mytopics = [
-            self.web3.fromAscii(this.geohash.slice(0, 2)), [self.web3.fromAscii(this.geohash.slice(0, 2)), self.web3.fromAscii(this.geohash.slice(0, 3))],
-            [self.web3.fromAscii(this.geohash.slice(0, 2)), self.web3.fromAscii(this.geohash.slice(0, 3)), self.web3.fromAscii(this.geohash.slice(0, 4))]
-          ];
+      var mytopics = [
+        self.web3.encodetopic(this.geohash.slice(0, 2)), [self.web3.encodetopic(this.geohash.slice(0, 2)), self.web3.encodetopic(this.geohash.slice(0, 3))],
+        [self.web3.encodetopic(this.geohash.slice(0, 2)), self.web3.encodetopic(this.geohash.slice(0, 3)), self.web3.encodetopic(this.geohash.slice(0, 4))]
+      ];
 
           this.filter = self.web3.shh.filter({
             "topics": mytopics,
@@ -794,6 +795,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       newitem_submitted: function(e) {
 
+        var self = this;
+
         var newrequest = {
           id: UUIDjs.create().toString(),
           offereravatar: this.identity.avatarhash,
@@ -810,10 +813,10 @@ This is the component showing all requests of a certain hashtag. It contains a r
           // this.web3.fromAscii('sc1-' + this.hashtag + '-' + e.detail.geohash.slice(0,2)),
           // this.web3.fromAscii('sc1-' + this.hashtag + '-' + e.detail.geohash.slice(0,3)),
           // this.web3.fromAscii('sc1-' + this.hashtag + '-' + e.detail.geohash.slice(0,4)),
-          this.web3.fromAscii(e.detail.geohash.slice(0, 2)),
-          this.web3.fromAscii(e.detail.geohash.slice(0, 3)),
-          this.web3.fromAscii(e.detail.geohash.slice(0, 4)),
-          this.web3.fromAscii(newrequest.id),
+          this.web3.encodetopic(e.detail.geohash.slice(0, 2)),
+          this.web3.encodetopic(e.detail.geohash.slice(0, 3)),
+          this.web3.encodetopic(e.detail.geohash.slice(0, 4)),
+          this.web3.encodetopic(newrequest.id),
         ];
 
         if (this.web3 && this.hashtag) {
@@ -833,7 +836,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
           return this.web3.shh.post(options, function(err, res) {
             console.log(err, res);
-            this.set('route.path','/'+this.hashtag+'/list');
+            self.set('route.path','/'+self.hashtag+'/list');
           });
         }
 

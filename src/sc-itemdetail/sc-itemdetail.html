@@ -274,8 +274,8 @@ This components shows the detailed view of a request.
         }
       
         var mytopics = [
-        null,null,null,
-          this.shhweb3.fromAscii(this.itemid)
+//          [null,null,null,this.shhweb3.fromAscii(this.itemid)],
+          this.shhweb3.encodetopic(this.itemid)
         ];
 
         this.filter = this.shhweb3.shh.filter({
@@ -293,7 +293,7 @@ This components shows the detailed view of a request.
         //debugger;
         try {
           var payload = JSON.parse(self.shhweb3.toAscii(result.payload));
-          console.log('incoming in whisperer: web3 ', payload);
+          console.log('incoming in whisperer: web3 ', result,self.shhweb3.toAscii(result.payload));
           this.itemdata = payload;
           //this.dispatch('add', payload);
           //this.push('deals',payload);

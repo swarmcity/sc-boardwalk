@@ -277,7 +277,7 @@ This components allow a Swarm Citizen to reply on a request.
               replytime: Date.now()
             };
             var topics = [
-              this.shhweb3.fromAscii(this.itemid),
+              this.shhweb3.encodetopic(this.itemid),
             ];
 
             var options = {
