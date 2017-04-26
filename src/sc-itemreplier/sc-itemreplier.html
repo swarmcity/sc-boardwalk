@@ -150,11 +150,11 @@ This components allow a Swarm Citizen to reply on a request.
         </template>
 
 
-        <template is="dom-if" if="{{_is(replystate,'replygivven')}}">
+        <template is="dom-if" if="{{_is(replystate,'sendingreply')}}">
           <template is="dom-if" if="{{loadingreply}}">
             <sc-loader small color="blue" class="blue" on-tap="replyLoaded">Submitting your reply</sc-loader>
           </template>
-          <template is="dom-if" if="{{!loadingreply}}">
+       <!--    <template is="dom-if" if="{{!loadingreply}}">
             <div class="totalwidth vertic centercenter">
               <div class="totalwidth horizont start startjust">
               <ac-avatar
@@ -178,7 +178,7 @@ This components allow a Swarm Citizen to reply on a request.
                 <small class="grey3 small">a few seconds ago</small><br>
                 I'd love to drive you! Pick you up at 14:00?</p>
             </div>
-          </template>                
+          </template>              -->   
         </template>
       </div>
   </template>
@@ -256,9 +256,12 @@ This components allow a Swarm Citizen to reply on a request.
             this.borderz = "greytopborder";
             //   console.log("yes dit dus");
             break;
+
           case 'replying':
 
-            debugger;
+            this.replystate = 'sendingreply'
+            this.bgcolor = "basestructure";
+            this.borderz = "notopborder";
 
             if (!this.shhidentity) {
               this.shhidentity = this.shhweb3.shh.newIdentity();
@@ -277,6 +280,7 @@ This components allow a Swarm Citizen to reply on a request.
               replytime: Date.now()
             };
             var topics = [
+              this.shhweb3.encodetopic(message.type),
               this.shhweb3.encodetopic(this.itemid),
             ];
 
@@ -290,26 +294,23 @@ This components allow a Swarm Citizen to reply on a request.
 
             console.log('posting to topics', topics);
 
-            return this.shhweb3.shh.post(options, function(err, res) {
+            this.shhweb3.shh.post(options, function(err, res) {
               if (!err){
                 console.log('sc->itemreplier -> Reply posted');
               }else{
                 console.log('sc-itemreplier -> whisper error:',err);
               }
+              self.replystate = 'init'
+              self.bgcolor = "whiteback";
+              self.borderz = "lightgreytopborder";
             });
 
-           
-
-
-            this.replystate = 'replygivven'
-            this.bgcolor = "basestructure";
-            this.borderz = "notopborder";
             break;
-          case 'replygivven':
-            this.replystate = 'deletereply'
-            this.borderz = "notopborder";
-            break;
-          default:
+          // case 'replygivven':
+          //   this.replystate = 'deletereply'
+          //   this.borderz = "notopborder";
+          //   break;
+          // default:
         }
     },
 
