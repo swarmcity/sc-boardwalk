@@ -13,6 +13,7 @@
 <link rel="import" href="../sc-loader/sc-loader.html">
 <link rel="import" href="../sc-dealchat/sc-dealchat.html">
 <link rel="import" href="../sc-redux/sc-redux.html">
+<link rel="import" href="../sc-shh/sc-shh.html">
 
 <!--<link rel="import" href="../sc-balance/sc-balance.html"> -->
 
@@ -211,6 +212,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
 
     </style>
+    <sc-shh web3="{{shhweb3}}"></sc-shh>
     <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
 
     <!-- <app-route route="{{route}}" pattern="/:hashtag/:action" data="{{data}}"></app-route> -->
@@ -388,9 +390,11 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       ],
 
       observers: [
+        '_shhweb3(shhweb3)',
       '_checksize(phoneview)',
       '_connectionline(myamount_state,otheramount_state)'
       ],
+
 
       properties: {
         /**
@@ -400,6 +404,12 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           type: Object,
           statePath: 'identity',
         },
+
+        web3: {
+          type: Object,
+          observer: '_web3'
+        },
+
       },
 
       ready: function(){
@@ -484,7 +494,49 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         this.otheramount_state = 'amountconfirmed';
         this.selecteddealpage = 'dealchat';
 
-      }
+      },
+
+
+      _web3: function() {
+      },
+
+
+
+      _shhweb3: function() {
+        if (!this.shhweb3) {
+          throw new Error('shhweb3 not set while requesting whisper listener');
+        }
+
+        this._starthastaglistener();
+      },
+
+
+
+      // _starthastaglistener: function() {
+
+      //   if (this.filter) {
+      //     return;
+      //   }
+
+      //   var self = this;
+      //   if (this.web3 && this.geohash) {
+
+      // var mytopics = [
+      //   self.web3.encodetopic("request-create"),
+      //   null,
+      //   self.web3.encodetopic(this.geohash.slice(0, 2)),
+      //   null,
+      //   null
+      //   ];
+
+      //     this.filter = self.web3.shh.filter({
+      //       "topics": mytopics,
+      //     });
+
+      //     console.log("sc-whisperer: channelswitch, start listening to", mytopics);
+      //     this.filter.watch(this._processmessage.bind(this));
+      //   }
+      // },
 
 
 
