@@ -178,6 +178,9 @@ This components shows the in-app notifications in Swarm City.
             <sc-notificationbadge on-tap="toNotifs" class="noSelect" notifnumber="{{notifnumber}}" dummynotifications="{{notifs}}"></sc-notificationbadge>
           </div>
 
+          <div class="pubk" on-tap="toProfile">
+            <p>{{pubkey}}</p>
+          </div>
 
           <div id="balancebox" class="notifbalance_box" on-tap="toWalletview">
             <sc-balance
@@ -236,7 +239,8 @@ This components shows the in-app notifications in Swarm City.
 
         pubkey: {
           type: Object,
-          statePath: 'pubkey'
+          statePath: 'pubkey',
+          observer: '_pubkey'
         },  
 
         identity: {
@@ -336,6 +340,11 @@ This components shows the in-app notifications in Swarm City.
       */
       leave: function(){
         this.fire('leave');
+      },
+
+
+      _pubkey: function(){
+        console.log("THIS IS pubkeeeeyy. IN NOTIFSSS:", this.pubkey);
       },
 
 

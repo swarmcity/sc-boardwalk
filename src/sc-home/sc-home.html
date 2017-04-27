@@ -47,6 +47,8 @@
         border: 2px solid var(--sc-blue);
       }
 
+
+
     
       @media all and (min-width: 0) and (max-width: 540px) {
   
@@ -95,6 +97,9 @@
               <div class="warningbackup blue vertic centercenter"><p class="bold blue">!</p></div>
             </template>
               <sc-notificationbadge on-tap="toNotifs" class="notifbadge noSelect" notifnumber="{{notifnumber}}" dummynotifications="{{notifs}}"></sc-notificationbadge>
+          </div>
+          <div class="pubk" on-tap="toProfile">
+            <p>{{pubkey}}</p>
           </div>
         </div>
         <div id="homebalance" class="balance_box" on-tap="toWalletview">

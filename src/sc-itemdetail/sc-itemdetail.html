@@ -161,6 +161,7 @@ This components shows the detailed view of a request.
       <div class="scrollcontainer">
       <div id="itemdetailcontent" class="shadow whiteback totalwidth vertic">
         <div class="totalwidth horizont centercenter backbtnarea">
+              <!-- <p>You are owner??{{youareowner}}</p> -->
           <span class="flex"></span>
           <iron-icon class="grey3 backicon" icon="sc-icons:decline" on-tap="back">back</iron-icon>
         </div>
@@ -189,11 +190,14 @@ This components shows the detailed view of a request.
           </div>
         </div>
 
-        <sc-itemreplier itemid="{{itemdata.id}}">
-        </sc-itemreplier>
+        <template is="dom-if" if="{{!youareowner}}">
+          <sc-itemreplier itemid="{{itemdata.id}}">
+          </sc-itemreplier>
+        </template>
 
         <template is="dom-repeat" items="{{replies}}">
           <sc-itemreply
+          btnshow="{{youareowner}}"
           replydata="{{item}}"
           on-to-detail="fireReplyselected"
           on-item-detail="firetoItemdetail">
@@ -215,7 +219,8 @@ This components shows the detailed view of a request.
       is: 'sc-itemdetail',
 
       observers: [
-        '_web3(shhweb3)'
+        '_web3(shhweb3)',
+        '_pubkeyCompare(itemdata)'
       ],
 
       properties: {
@@ -227,7 +232,26 @@ This components shows the detailed view of a request.
           observer: '_itemid'
         },
 
+        /**
+       * `pubkey` is the Swarm Citizen's pubkey.
+       */        
+        pubkey: {
+          type: String,
+          observer: '_pubkey'
+        },
 
+        youareowner: {
+          type: Boolean,
+          value: false
+        },
+
+        /**
+       * `identity` is received from parent-element, as an object containing an IPFS-hash, which is img-source.
+       */
+        identity: {
+          type: Object,
+          statePath: 'identity'
+        },
 
         animationConfig: {
           type: Object,
@@ -351,6 +375,32 @@ This components shows the detailed view of a request.
         console.log('WHaaaaaattt???');
         this.fire('reply-to-detail');
       },
+
+
+      _pubkey: function(){
+          // console.log("HAZ ID??!!!!", this.identity);
+
+
+        // if (this.pubkey == this.identity.pubkey){
+        //   console.log("yaaaaaaaaaaay!!!!", this.pubkey, this.identity.pubkey);
+        // } else {
+        //   console.log("Nay!!!!", this.pubkey, this.identity.pubkey);
+        // }
+      },
+
+      _log: function(target){
+          console.log("HAZ THIS in item-detail??!!!!",target);
+      },
+
+      _pubkeyCompare: function(){
+        if (this.identity.pubkey == this.itemdata.offererpubkey){
+          // console.log("yaaaaaaaaaaay!!!!", this.identity.pubkey,this.itemdata.offererpubkey);
+          this.youareowner = true;          
+        } else {
+          console.log("Nay, NO MATCH!!!!");
+          this.youareowner = false;          
+        }
+      }
 
     });
   </script>

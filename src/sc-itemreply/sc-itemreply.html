@@ -196,19 +196,22 @@ This component shows a reply on a request.
             </div>
           </div>
         </div>
-
-
-
         </div>
+
+      <template is="dom-if" if="{{btnshow}}">
+        <div class="whitespace"></div>
+        <div class="totalwidth horizont center endjust">
+          <paper-icon-button icon="sc-icons:arrowright" class="blue whiteback big shadow">makedeal</paper-icon-button>
+        </div>
+      </template>
+
       </div>
       </template>
 
       <template is="dom-if" if="{{_is(viewmode,'detail')}}">
       <div class="totalcontainer_detail paddingsides">
 
-      <div
-        class="requestself whiteback totalwidth horizont start startjust"
-        on-tap="fireBack">
+      <div class="requestself whiteback totalwidth horizont start startjust" on-tap="fireBack">
         <iron-icon icon="sc-icons:arrowleft" class="blue">arrowleft-icon</iron-icon>
         <p>Hier komt de request zelf en dus ook alle text die daarmee gemoeid is enzo allemaal wete wel</p>
       </div>
@@ -264,11 +267,20 @@ This component shows a reply on a request.
        */
         identity: {
           type: Object
-        }
+        },
+
+        /**
+       * `btnshow` determines wether or not to show the btn to start a deal. sc-itemdetail determines if this is true or false and passes it to this component.
+       */
+        btnshow: {
+          type: Boolean,
+          value: false
+        },
+
       },
 
       listeners: {
-        'tap': 'fireTodetail',
+        // 'tap': 'fireTodetail',
       },
 
 

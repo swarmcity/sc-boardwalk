@@ -283,7 +283,11 @@ This is the component showing all requests of a certain hashtag. It contains a r
               <sc-notificationbadge on-tap="toNotifs" class="notifbadge noSelect" notifnumber="{{notifnumber}}" dummynotifications="{{notifs}}"></sc-notificationbadge>
             </template>
           </div>
-
+          <template is="dom-if" if="{{!phoneview}}">
+            <div class="pubk" on-tap="toProfile">
+              <p>{{pubkey}}</p>
+            </div>
+          </template>
 
           <div id="balancebox" class="balance_box" on-tap="toWalletview">
             <sc-balance
@@ -352,6 +356,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
       <sc-itemdetail
       data-action="detail"
       itemid="[[datasubroute.itemid]]"
+      identity="[[identity]]"
       on-back="detail_to_list"
       on-reply-selected="detail_to_reply"
       on-reply-to-detail="reply_to_detail"
@@ -843,6 +848,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
           type: 'request-create',
           offereravatar: this.identity.avatarhash,
           offerer: this.identity.username,
+          offererpubkey: this.identity.pubkey,
           offer: e.detail.msg,
           offerhashtag: this.hashtag,
           //          offererrep: '0',
