@@ -193,8 +193,17 @@
       pubkey="[[account]]"
       swtbalance="[[swtbalance]]"
       on-leave="hashtag_tohome"
+      on-makedeal="hashtag_makedeal"
       currenthasht="{{currenthasht}}">
     </sc-hashtag>
+
+    <sc-makedeal
+      data-page="makedeal"
+      route="{{pageTail}}"
+      id="makedeal"
+      web3="[[web3]]"
+      on-leave="makedeal_tohome">
+    </sc-makedeal>
     
     <sc-notifications
       data-page="notifications"
@@ -479,8 +488,11 @@
 
       _readNotifs: function(){
         // console.log("Ik heb zeeeeeeee !!!!!!!", this.notifs);
-      }
+      },
 
+      hashtag_makedeal: function(e){
+        this.transitionto('/makedeal/' + e.detail.parentrequestid + '/' + e.detail.id);
+      },
 
 
     });
