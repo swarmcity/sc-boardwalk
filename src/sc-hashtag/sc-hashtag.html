@@ -374,9 +374,11 @@ This is the component showing all requests of a certain hashtag. It contains a r
         replydata="[[currentreply]]"
       ></sc-itemdetail>
 
-
+      <div
+        data-action="makedeal"
+      >OKEE</div>
     <sc-makedeal
-      data-page="makedeal"
+      data-action="wmakedeal"
       route="{{subroute}}"
       id="makedeal"
       web3="[[web3]]"
@@ -940,7 +942,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       toMakeDeal: function(e){
         debugger;
-        this.set('route.path','/'+this.hashtag+'/makedeal/' + e.detail.parentrequestid + '/' + e.detail.id);
+        this.set('route.path','/'+this.hashtag+'/makedeal/' + e.detail.parentrequestid ); //+ '/' + e.detail.id);
       }
 
 
