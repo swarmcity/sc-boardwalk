@@ -47,10 +47,7 @@ This components shows the detailed view of a request.
       border: 2px solid green;
     }
 
-    .paddingsides {
-      padding-left: 4vw;
-      padding-right: 4vw;
-    }
+
 
     #itemdetailcontent {
       width: 100%;
@@ -58,21 +55,16 @@ This components shows the detailed view of a request.
     }
 
     .backbtnarea {
-      padding: 25px 25px 10px 25px;
+      padding: 25px 25px 0px 25px;
     }
 
     .detailpadding {
       box-sizing:border-box;
-      padding-left: 4vw;
-      padding-right: 4vw;
-      padding-bottom: 3vw;
+      padding-left: 40px;
+      padding-right: 40px;
+      padding-bottom: 30px;
     }
 
-
-    .paddingsides {
-      padding-left: 4vw;
-      padding-right: 4vw;
-    }
 
     .offereravatar {
       margin-right: 14px;     
@@ -80,7 +72,7 @@ This components shows the detailed view of a request.
 
 
     .offer {
-      font-size: 18px;
+      font-size: 16px;
       line-height: 22px;
     }
 
@@ -125,7 +117,7 @@ This components shows the detailed view of a request.
 
 
 
-  @media all and (min-width: 0) and (max-width: 420px) { 
+  @media all and (min-width: 0) and (max-width: 540px) { 
 
 
         .totalcontainer {
@@ -138,25 +130,39 @@ This components shows the detailed view of a request.
         }
 
 
-        #itemdetailcontent {
+        .scrollcontainer {
           width: 100%;
+          height: 100%;
+          @apply(--layout-vertical);
+          @apply(--layout-center);   
+          @apply(--layout-start-justified);   
         }
+
+
+        #itemdetailcontent {
+          width: 92%;
+        }
+
+        .backbtnarea {
+          height: 49px;
+        }
+
 
 
         .detailpadding {
           box-sizing:border-box;
-          padding-left: 10vw;
-          padding-right: 10vw;
-          padding-bottom: 8vw;
+          padding-left: 35px;
+          padding-right: 35px;
+          padding-bottom: 30px;
         }
   }
 
 
     </style>
     <sc-shh web3="{{shhweb3}}"></sc-shh>
-    <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
+    <iron-media-query query="(min-width:0px) and (max-width: 540px)" query-matches="{{phoneview}}"></iron-media-query>
 
-    <div class="totalcontainer paddingsides">
+    <div class="totalcontainer">
 
       <div class="scrollcontainer">
       <div id="itemdetailcontent" class="shadow whiteback totalwidth vertic">
