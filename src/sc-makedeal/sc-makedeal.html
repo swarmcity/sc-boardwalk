@@ -14,6 +14,8 @@
 <link rel="import" href="../sc-dealchat/sc-dealchat.html">
 <link rel="import" href="../sc-redux/sc-redux.html">
 <link rel="import" href="../sc-shh/sc-shh.html">
+<link rel="import" href="../sc-config/sc-config.html">
+<link rel="import" href="../sc-helpers/sc-helpers.html">
 
 <!--<link rel="import" href="../sc-balance/sc-balance.html"> -->
 
@@ -213,9 +215,11 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
     </style>
     <sc-shh web3="{{shhweb3}}"></sc-shh>
+    <sc-config config="{{config}}"></sc-config>
+    <sc-helpers id="helpers"></sc-helpers>    
     <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
 
-    <!-- <app-route route="{{route}}" pattern="/:hashtag/:action" data="{{data}}"></app-route> -->
+    <app-route route="{{route}}" pattern="/:requestid/:replyid" data="{{data}}"></app-route>
 
     <div class="topbar">
       <span class="flex"></span>
@@ -257,7 +261,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
             <div class="avatarbox horizont startjust center box">
             <div class="connectionline dotted"></div>
             <sc-avatar
-              ipfshash="{{otherid.avatarhash}}"
+              ipfshash="{{replydata.replyer.avatar}}"
               id="makedeal_otheravatar"
               size="{{avatarsize}}"
               ></sc-avatar>
@@ -265,17 +269,25 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           </div>
           <div class="horizont centercenter totalwidth userinfostrip">
               <div class="vertic centercenter userinfo box" on-tap="toPayout">
-                <sc-username
-                  identity="[[identity]]"
-                  pubkey="[[pubkey]]"
+<!--                 <sc-username
+                  identity="[[requestdata.offerer]]"
+                  pubkey="[[requestdata.offererpubkey]]"
                   size="small"
-                  ></sc-username>
-                <p class="centertxt small bold blue">{{otherid.rep}} REP</p>
+                  ></sc-username> -->
+                <p class="centertxt small bold grey3">{{requestdata.offerer}}</p>
+                <p class="centertxt small">{{requestdata.offer}}</p>
+                <p class="centertxt small bold blue">0 REP</p>
                 <div class="minispace"></div>
                 <div class="minispace"></div>
               </div>
               <div class="vertic centercenter userinfo box">
-                 <p class="centertxt small bold grey3">{{otherid.username}}</p>
+<!--                 <sc-username
+                  identity="[[replydata.replyer.username]]"
+                  pubkey="[[replydata.replyer.pubkey]]"
+                  size="small"
+                  ></sc-username>   -->            
+                <p class="centertxt small bold grey3">{{replydata.replyer.username}}</p>
+                <p class="centertxt small">{{replydata.reply}}</p>
                 <p class="centertxt small bold blue">0 REP</p>
                 <div class="minispace"></div>
                 <div class="minispace"></div>
@@ -285,7 +297,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         <template is="dom-if" if="{{!phoneview}}">
           <template is="dom-if" if="{{_is(otheramount_state,'amountwaiting')}}">
             <div class="dealamountio amountwaiting" on-tap="dummyClick">
-              <p class="centertxt small bold grey3">{{dealamount}} <span class="SWTletters">SWT</span></p>
+              <p class="centertxt small bold grey3">{{replydata.replyamount}} <span class="SWTletters">SWT</span></p>
             </div>
           </template>
           <template is="dom-if" if="{{_is(otheramount_state,'amountloading')}}">
@@ -305,7 +317,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         <div class="middlepiece totalwidth horizont centerjust start">
           <template is="dom-if" if="{{_is(myamount_state,'amountwaiting')}}">
             <div class="dealamountio amountwaiting">
-              <p class="centertxt small bold grey3">{{dealamount}} <span class="SWTletters">SWT</span></p>
+              <p class="centertxt small bold grey3">{{replydata.replyamount}} <span class="SWTletters">SWT</span></p>
             </div>
           </template>
           <template is="dom-if" if="{{_is(myamount_state,'amountloading')}}">
@@ -321,7 +333,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           <div class="flexer"></div>
           <template is="dom-if" if="{{_is(otheramount_state,'amountwaiting')}}">
             <div class="dealamountio amountwaiting"  on-tap="dummyClick">
-              <p class="centertxt small bold grey3">{{dealamount}} <span class="SWTletters">SWT</span></p>
+              <p class="centertxt small bold grey3">{{replydata.replyamount}} <span class="SWTletters">SWT</span></p>
             </div>
           </template>
           <template is="dom-if" if="{{_is(otheramount_state,'amountloading')}}">
@@ -342,7 +354,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         <neon-animated-pages id="hashpages" attr-for-selected="data-action" selected="{{selecteddealpage}}" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
           <neon-animatable data-action="init">
           <div class="totalwidth vertic centercenter blueback fullheight">
-            <paper-button noink class$="darkerer white {{sendbtnsize}} shadow" on-tap="sendmytokens">Send {{dealamount}} SWT</paper-button>
+            <paper-button noink class$="darkerer white {{sendbtnsize}} shadow" on-tap="sendmytokens">Send {{replydata.replyamount}} SWT</paper-button>
             <div class="fivespace"></div>
             <a class="getoutlink bold white whitelink">get out of this deal</a>
           </div>
@@ -350,7 +362,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           <neon-animatable data-action="waiting">
           <div class="totalwidth vertic centercenter darkerer fullheight paddingsides">
 <!--             <sc-loader small color="grey3">Waiting for the other party to send  {{dealamount}} SWT</sc-loader> -->
-            <p class="grey3 centertxt">Waiting for the other party to send  {{dealamount}} SWT to the deal</p>
+            <p class="grey3 centertxt">Waiting for the other party to send {{replydata.replyamount}} SWT to the deal</p>
           </div>
           </neon-animatable>
 
@@ -376,7 +388,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
     </div>
 
 
-    <app-route route="{{route}}" pattern="/:requestid/:replyid" data="{{data}}" tail="{{subroute}}"></app-route> 
+    <!-- <app-route route="{{route}}" pattern="/:requestid/:replyid" data="{{data}}" tail="{{subroute}}"></app-route>  -->
 
   </template>
 
@@ -530,10 +542,10 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         var self = this;
         if (this.shhweb3 && this.replyid) {
 
-      var mytopics = [
-        null,
-        self.shhweb3.encodetopic(this.requestid),
-        self.shhweb3.encodetopic(this.replyid),
+        var mytopics = [
+          null, [self.shhweb3.encodetopic(this.requestid),
+            self.shhweb3.encodetopic(this.replyid)
+          ]
         ];
 
           this.filter = self.shhweb3.shh.filter({
@@ -551,6 +563,16 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         try {
           var payload = JSON.parse(self.shhweb3.toAscii(result.payload));
           console.log('incoming in whisperer: web3 ', result,self.shhweb3.toAscii(result.payload));
+
+          if (payload.id == this.requestid){
+            //debugger;
+            this.requestdata = payload;            
+          }
+          if (payload.id == this.replyid){
+            //debugger;
+            this.replydata = payload; 
+          }
+
           // switch (payload.type){
           //   case 'request-create':
           //     this.itemdata = payload;
