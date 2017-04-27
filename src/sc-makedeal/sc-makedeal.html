@@ -376,7 +376,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
     </div>
 
 
-    <app-route route="{{route}}" pattern="/:replyid" data="{{data}}" tail="{{subroute}}"></app-route> 
+    <app-route route="{{route}}" pattern="/:requestid/:replyid" data="{{data}}" tail="{{subroute}}"></app-route> 
 
   </template>
 
@@ -394,7 +394,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       observers: [
         '_shhweb3(shhweb3)',
       '_checksize(phoneview)',
-      '_connectionline(myamount_state,otheramount_state)'
+      '_connectionline(myamount_state,otheramount_state)',
+      '_data(data)'
       ],
 
 
@@ -427,6 +428,12 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         }
 
         this.selecteddealpage = 'init';
+      },
+
+      _data: function(){
+        this.requestid = this.data.requestid;
+        this.replyid = this.data.replyid;
+        this._starthastaglistener();
       },
 
       /**
@@ -514,33 +521,57 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
 
 
-      // _starthastaglistener: function() {
+      _starthastaglistener: function() {
 
-      //   if (this.filter) {
-      //     return;
-      //   }
+        if (this.filter) {
+          return;
+        }
 
-      //   var self = this;
-      //   if (this.web3 && this.geohash) {
+        var self = this;
+        if (this.shhweb3 && this.replyid) {
 
-      // var mytopics = [
-      //   self.web3.encodetopic("request-create"),
-      //   null,
-      //   self.web3.encodetopic(this.geohash.slice(0, 2)),
-      //   null,
-      //   null
-      //   ];
+      var mytopics = [
+        null,
+        self.shhweb3.encodetopic(this.requestid),
+        self.shhweb3.encodetopic(this.replyid),
+        ];
 
-      //     this.filter = self.web3.shh.filter({
-      //       "topics": mytopics,
-      //     });
+          this.filter = self.shhweb3.shh.filter({
+            "topics": mytopics,
+          });
 
-      //     console.log("sc-whisperer: channelswitch, start listening to", mytopics);
-      //     this.filter.watch(this._processmessage.bind(this));
-      //   }
-      // },
+          console.log("sc-makedeal: channelswitch, start listening to", mytopics);
+          this.filter.watch(this._processmessage.bind(this));
+        }
+      },
 
-
+  _processmessage: function(error, result) {
+        var self = this;
+        //debugger;
+        try {
+          var payload = JSON.parse(self.shhweb3.toAscii(result.payload));
+          console.log('incoming in whisperer: web3 ', result,self.shhweb3.toAscii(result.payload));
+          // switch (payload.type){
+          //   case 'request-create':
+          //     this.itemdata = payload;
+          //     break;
+          //   case 'request-reply':
+          //     console.log('this is an item reply...');
+          //     if (!this.replies){
+          //       this.replies = [];
+          //     }
+          //     this.push('replies',payload);
+          //     break;
+          //   default:
+          //     console.log('unknown payload type',payload.type);
+          //     break;
+          // }
+          //this.dispatch('add', payload);
+          //this.push('deals',payload);
+        } catch (e) {
+          console.log(e);
+        }
+      },
 
 
     });

@@ -206,7 +206,8 @@ This components shows the detailed view of a request.
           btnshow="{{youareowner}}"
           replydata="{{item}}"
           on-to-detail="fireReplyselected"
-          on-item-detail="firetoItemdetail">
+          on-item-detail="firetoItemdetail"
+          on-to-makedeal="toMakeDeal">
           </sc-itemreply>
         </template>
       </div>
@@ -310,7 +311,6 @@ This components shows the detailed view of a request.
       
         var mytopics = [
           null,
-//          this.shhweb3.encodetopic("requestmessage"),
           this.shhweb3.encodetopic(this.itemid)
         ];        
 
@@ -406,6 +406,10 @@ This components shows the detailed view of a request.
           console.log("Nay, NO MATCH!!!!");
           this.youareowner = false;          
         }
+      },
+
+      toMakeDeal: function(e){
+        this.fire('to-makedeal',e.detail);
       }
 
     });

@@ -270,6 +270,7 @@ This components allow a Swarm Citizen to reply on a request.
             var message = {
               type: 'request-reply',
               id: UUIDjs.create().toString(),
+              parentrequestid: this.itemid,
               replyer: {
                 avatar: this.identity.avatarhash,
                 username: this.identity.username,
@@ -282,6 +283,7 @@ This components allow a Swarm Citizen to reply on a request.
             var topics = [
               this.shhweb3.encodetopic(message.type),
               this.shhweb3.encodetopic(this.itemid),
+              this.shhweb3.encodetopic(message.id),
             ];
 
             var options = {

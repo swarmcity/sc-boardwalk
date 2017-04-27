@@ -201,7 +201,7 @@ This component shows a reply on a request.
       <template is="dom-if" if="{{btnshow}}">
         <div class="whitespace"></div>
         <div class="totalwidth horizont center endjust">
-          <paper-icon-button icon="sc-icons:arrowright" class="blue whiteback big shadow">makedeal</paper-icon-button>
+          <paper-icon-button icon="sc-icons:arrowright" class="blue whiteback big shadow" on-tap="toMakedeal">makedeal</paper-icon-button>
         </div>
       </template>
 
@@ -323,6 +323,11 @@ This component shows a reply on a request.
       fireTodetail: function(){
         this.fire('to-detail',this.replydata);
       },
+
+      toMakedeal: function(){
+        //debugger;
+        this.fire('to-makedeal',this.replydata);
+      }
 
 
 

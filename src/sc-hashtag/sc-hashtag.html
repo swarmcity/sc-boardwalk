@@ -23,6 +23,7 @@
 <link rel="import" href="../sc-loader/sc-loader.html">
 <link rel="import" href="../sc-config/sc-config.html">
 <link rel="import" href="../sc-helpers/sc-helpers.html">
+<link rel="import" href="../sc-makedeal/sc-makedeal.html">
 
 <script type="text/javascript" src="../../bower_components/uuid-js/lib/uuid.js"></script>
 
@@ -357,20 +358,32 @@ This is the component showing all requests of a certain hashtag. It contains a r
       </sc-newitem>
 
       <sc-itemdetail
-      data-action="detail"
-      itemid="[[datasubroute.itemid]]"
-      identity="[[identity]]"
-      on-back="detail_to_list"
-      on-reply-selected="detail_to_reply"
-      on-reply-to-detail="reply_to_detail"
+        data-action="detail"
+        itemid="[[datasubroute.itemid]]"
+        identity="[[identity]]"
+        on-back="detail_to_list"
+        on-reply-selected="detail_to_reply"
+        on-reply-to-detail="reply_to_detail"
+        on-to-makedeal="toMakeDeal"
       ></sc-itemdetail>
 
 
       <sc-itemreply
-      data-action="replydetail"
-      viewmode="detail"
-      replydata="[[currentreply]]"
+        data-action="replydetail"
+        viewmode="detail"
+        replydata="[[currentreply]]"
       ></sc-itemdetail>
+
+
+    <sc-makedeal
+      data-page="makedeal"
+      route="{{subroute}}"
+      id="makedeal"
+      web3="[[web3]]"
+      on-leave="makedeal_tohome">
+    </sc-makedeal>
+
+
 
 
     </neon-animated-pages>
@@ -402,7 +415,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
         },
  
         addmydeal: function(mydealdata) {
-          debugger;
+         // debugger;
           let mydeals = this.mydeals.slice(0);
           mydeals.push(mydealdata);
 
@@ -653,14 +666,14 @@ This is the component showing all requests of a certain hashtag. It contains a r
       },
 
       _web3: function() {
-        debugger;
+//        debugger;
         var self = this;
         this.$.helpers.getjson('../contracts/Hashtag.json', function(err, contractmetadata) {
           var contract = self.web3.eth.contract(contractmetadata.abi);
           self.HashtagInstance = contract.at(self.config.hashtagcontracts["pioneer"]);
           self.HashtagInstance.commission((function(e,v) {
-            debugger;
-            self.checkreadystate();
+//            debugger;
+            //self.checkreadystate();
           }));
         });
 
@@ -695,6 +708,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       var mytopics = [
         self.shhweb3.encodetopic("request-create"),
+        null,
         null,
         self.shhweb3.encodetopic(this.geohash.slice(0, 2)),
         null,
@@ -886,6 +900,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
         var topics = [
           this.shhweb3.encodetopic(newrequest.type),
           this.shhweb3.encodetopic(newrequest.id),
+          this.shhweb3.encodetopic(''),
           this.shhweb3.encodetopic(e.detail.geohash.slice(0, 2)),
           this.shhweb3.encodetopic(e.detail.geohash.slice(0, 3)),
           this.shhweb3.encodetopic(e.detail.geohash.slice(0, 4)),
@@ -921,6 +936,11 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       _log: function(target) {
         console.log("***************************", target);
+      },
+
+      toMakeDeal: function(e){
+        debugger;
+        this.set('route.path','/'+this.hashtag+'/makedeal/' + e.detail.parentrequestid + '/' + e.detail.id);
       }
 
 
