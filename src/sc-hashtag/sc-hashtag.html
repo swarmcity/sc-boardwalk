@@ -21,6 +21,8 @@
 <link rel="import" href="../sc-redux/sc-redux.html">
 <link rel="import" href="../sc-filter/sc-filter.html">
 <link rel="import" href="../sc-loader/sc-loader.html">
+<link rel="import" href="../sc-config/sc-config.html">
+<link rel="import" href="../sc-helpers/sc-helpers.html">
 
 <script type="text/javascript" src="../../bower_components/uuid-js/lib/uuid.js"></script>
 
@@ -248,8 +250,9 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
     </style>
  
-    <sc-shh web3="{{web3}}"></sc-shh>
-
+    <sc-shh web3="{{shhweb3}}"></sc-shh>
+    <sc-config config="{{config}}"></sc-config>
+    <sc-helpers id="helpers"></sc-helpers>
     
     <iron-media-query query="(min-width:0px) and (max-width: 540px)" query-matches="{{phoneview}}"></iron-media-query>
 
@@ -415,12 +418,17 @@ This is the component showing all requests of a certain hashtag. It contains a r
       },
 
       observers: [
-        '_web3(web3)',
+        '_shhweb3(shhweb3)',
         '_routedata(data)',
         '_log(range)',
         '_geohash(geohash)'
       ],
       properties: {
+
+        web3: {
+          type: Object,
+          observer: '_web3'
+        },
 
         route: {
           type: Object,
@@ -641,13 +649,31 @@ This is the component showing all requests of a certain hashtag. It contains a r
         // ];
       },
 
+      attached: function(){
+      },
 
       _web3: function() {
+        debugger;
+        var self = this;
+        this.$.helpers.getjson('../contracts/Hashtag.json', function(err, contractmetadata) {
+          var contract = self.web3.eth.contract(contractmetadata.abi);
+          self.HashtagInstance = contract.at(self.config.hashtagcontracts["pioneer"]);
+          self.HashtagInstance.commission((function(e,v) {
+            debugger;
+            self.checkreadystate();
+          }));
+        });
+
+
+      },
+
+
+      _shhweb3: function() {
 
 
 
-        if (!this.web3) {
-          throw new Error('web3 not set while requesting whisper listener');
+        if (!this.shhweb3) {
+          throw new Error('shhweb3 not set while requesting whisper listener');
         }
 
         this._starthastaglistener();
@@ -665,17 +691,17 @@ This is the component showing all requests of a certain hashtag. It contains a r
         }
 
         var self = this;
-        if (this.web3 && this.geohash) {
+        if (this.shhweb3 && this.geohash) {
 
       var mytopics = [
-        self.web3.encodetopic("request-create"),
+        self.shhweb3.encodetopic("request-create"),
         null,
-        self.web3.encodetopic(this.geohash.slice(0, 2)),
+        self.shhweb3.encodetopic(this.geohash.slice(0, 2)),
         null,
         null
         ];
 
-          this.filter = self.web3.shh.filter({
+          this.filter = self.shhweb3.shh.filter({
             "topics": mytopics,
           });
 
@@ -688,8 +714,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
       _processmessage: function(error, result) {
         var self = this;
         try {
-          var payload = JSON.parse(self.web3.toAscii(result.payload));
-          console.log('incoming in whisperer: web3 ', payload);
+          var payload = JSON.parse(self.shhweb3.toAscii(result.payload));
+          console.log('incoming in whisperer: shhweb3 ', payload);
           this.requestsloaded = true;
           this.dispatch('add', payload);
           //this.push('deals',payload);
@@ -858,29 +884,29 @@ This is the component showing all requests of a certain hashtag. It contains a r
         }
 
         var topics = [
-          this.web3.encodetopic(newrequest.type),
-          this.web3.encodetopic(newrequest.id),
-          this.web3.encodetopic(e.detail.geohash.slice(0, 2)),
-          this.web3.encodetopic(e.detail.geohash.slice(0, 3)),
-          this.web3.encodetopic(e.detail.geohash.slice(0, 4)),
+          this.shhweb3.encodetopic(newrequest.type),
+          this.shhweb3.encodetopic(newrequest.id),
+          this.shhweb3.encodetopic(e.detail.geohash.slice(0, 2)),
+          this.shhweb3.encodetopic(e.detail.geohash.slice(0, 3)),
+          this.shhweb3.encodetopic(e.detail.geohash.slice(0, 4)),
         ];
 
-        if (this.web3 && this.hashtag) {
+        if (this.shhweb3 && this.hashtag) {
           if (!this.shhidentity) {
-            this.shhidentity = this.web3.shh.newIdentity();
+            this.shhidentity = this.shhweb3.shh.newIdentity();
           }
 
           var options = {
             "from": this.shhidentity,
             "topics": topics,
-            "payload": this.web3.fromAscii(JSON.stringify(newrequest)),
+            "payload": this.shhweb3.fromAscii(JSON.stringify(newrequest)),
             "ttl": 60 * 60 * 24, // is a time for the message to live on the network, specified in seconds. This defaults to 50.
             "priority": 1000
           };
 
           console.log('posting to topics', topics);
 
-          return this.web3.shh.post(options, function(err, res) {
+          return this.shhweb3.shh.post(options, function(err, res) {
             console.log(err, res);
              self.dispatch('addmydeal',newrequest);
             self.set('route.path','/'+self.hashtag+'/list');
