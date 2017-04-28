@@ -1,0 +1,98 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../sc-config/sc-config.html">
+<link rel="import" href="../sc-web3/sc-web3.html">
+<link rel="import" href="../sc-helpers/sc-helpers.html">
+
+<dom-module id="sc-hashtagcontract">
+  <template>
+    <sc-config config="{{config}}"></sc-config>    
+    <sc-web3 id="web3" web3="{{web3}}"></sc-web3>
+    <sc-helpers id="helpers"></sc-helpers>
+  </template>
+  <script>
+    var schashtagrep_contract;
+    var schashtagrep_ready;
+//    var acweb3_customproviderset = false;
+
+    Polymer({
+      is: 'sc-hashtagcontract',
+      properties: {
+        web3: {
+          type: Object,
+          observer: '_init'
+        },
+        hashtagname: {
+          type: String,
+          observer: '_init'
+        },
+        hashtagcontract: {
+          type: String,
+          observer: '_init'          
+        }
+      },
+
+      ready: function(){
+        console.log('sc-hashtagcontract -> ready');
+      },
+     
+     
+      _init: function(){
+        if (schashtagrep_ready){
+          return;
+        }
+
+        if (!this.config){
+          return;
+        }
+
+        if (!this.web3){
+          return;
+        }
+
+        if (this.hashtagname){
+          this.hashtagcontract = this.config.hashtagcontracts[this.hashtagname];
+          if (!this.hashtagcontract){
+            console.log('sc-hashtagcontract -> ERROR hashtag \''+this.hashtagname+'\' not found');
+          }
+          console.log('sc-hashtagcontract -> hashtag \''+this.hashtagname+'\' => ' + this.hashtagcontract);
+        }
+
+        if (!this.hashtagname && !this.hashtagcontract){
+          return;
+        }
+
+
+        var self = this;
+
+        schashtagrep_ready = new Promise(function(resolve, reject) {
+
+          if ( /* everything turned out fine */ ) {
+            resolve("Stuff worked!");
+          } else {
+            reject(new Error("It broke"));
+          }
+        });
+
+
+          self.$.helpers.getjson('../contracts/Hashtag.json', function(err, contractmetadata) {
+            var contract = self.web3.eth.contract(contractmetadata.abi);
+            self.HashtagInstance = contract.at(self.config.hashtagcontracts["pioneer"]);
+            //self.HashtagInstance.commission((function(e,v) {
+            //  console.log()
+  //            debugger;
+              //self.checkreadystate();
+            //});
+          });
+        }
+
+      },
+
+      getCommission: function(cb){
+          schashtagrep_ready.then(function(){
+            
+          });
+      }
+
+    });
+  </script>
+</dom-module>

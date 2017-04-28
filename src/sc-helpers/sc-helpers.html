@@ -111,7 +111,7 @@
           url,
           function(e) {
             console.log('lazyload --> ', url , 'loaded & added to DOM');
-            if (cb) {
+            if (cb && self.$) {
               cb(null,self.$[elementid]);
             }
             var t1 = performance.now();
