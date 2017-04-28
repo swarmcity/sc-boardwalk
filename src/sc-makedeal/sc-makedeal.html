@@ -50,11 +50,11 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       .totalbox {
 /*        background-color: red;*/
         width: 100%;
-        height: 92%;
+        height: 90%;
       }
 
       .tophalf {
-        height: 40%;
+        height: 55%;
         padding-top: 8vh;
         padding-bottom: 3vh;
       }
@@ -70,15 +70,9 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
       .connectionline {
         height: 2px;
-        width: 28%;
-        margin: 1px;
-      }
-
-      .dotted {
-        border-top: 2px dotted var(--sc-blue);
-      }
-      .solid {
-        border-top: 1px solid var(--sc-blue);
+        width: 18%;
+        margin: -1px;
+        border-top: 2px solid var(--sc-blue);
       }
 
       sc-avatar {
@@ -124,7 +118,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
 
       .bottomhalf {
-        height: 60%;
+        height: 45%;
       }
 
       .dealamountio {
@@ -152,6 +146,27 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       }
 
 
+
+/*      .announce {
+        max-width: 500px;
+      }
+*/
+
+      .request_msg {
+        font-size: 24px;
+        line-height: 36px;
+      }
+
+      .replyer_username {
+        border-bottom: 1px dotted var(--sc-blue);
+      }
+
+      .announce_amount {
+        font-size: 12px;
+        line-height: 16px;
+      }
+
+
     @media all and (min-width: 0) and (max-width: 420px) { 
 
       sc-avatar {
@@ -161,11 +176,11 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         min-height: 75px;          
       }
 
-      .connectionline {
+/*      .connectionline {
         height: 2px;
         width: 25%;
         margin: 1px;
-      }
+      }*/
 /*      .strips {
         width: 75vw;
         max-width: 300px;
@@ -221,6 +236,11 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
     <app-route route="{{route}}" pattern="/:requestid/:replyid" data="{{data}}"></app-route>
 
+
+
+        <neon-animated-pages id="hashpages" attr-for-selected="data-action" selected="{{selecteddealpage}}" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
+          <neon-animatable data-action="init">
+
     <div class="topbar">
       <span class="flex"></span>
         <paper-icon-button on-tap="leave" icon="sc-icons:decline" noink>back</paper-icon-button>
@@ -228,136 +248,43 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
     <div class="totalbox vertic center startjust totalwidth">
 
-      <div class="tophalf horizont start centerjust totalwidth">
-        <template is="dom-if" if="{{!phoneview}}">
-          <template is="dom-if" if="{{_is(myamount_state,'amountwaiting')}}">
-            <div class="dealamountio amountwaiting">
-              <p class="centertxt small bold grey3">{{dealamount}} <span class="SWTletters">SWT</span></p>
-            </div>
-          </template>
-          <template is="dom-if" if="{{_is(myamount_state,'amountloading')}}">
-            <div class$="dealamountio amountloading">
-              <sc-loader color="grey3"></sc-loader>
-            </div>
-          </template>
-          <template is="dom-if" if="{{_is(myamount_state,'amountconfirmed')}}">
-            <div class="dealamountio amountconfirmed">
-              <iron-icon class="medium green" icon="sc-icons:v">checked</iron-icon>
-            </div>
-          </template>
-        </template>
-        <div class="vertic center endjust strips">
-          <div class="horizont centercenter totalwidth avatarstrip">
-            <div class="avatarbox horizont endjust center box">
+        <div class="tophalf vertic center startjust totalwidth">
+          <div class="horizont centercenter strips">
               <sc-avatar
                 ipfshash="[[identity.avatarhash]]"
                 pubkey="[[pubkey]]"
                 id="makedeal_myavatar"
                 size="{{avatarsize}}"
                 ></sc-avatar>
-            <div class="connectionline dotted"></div>
-            </div>
-
-            <div class="avatarbox horizont startjust center box">
-            <div class="connectionline dotted"></div>
-            <sc-avatar
-              ipfshash="{{replydata.replyer.avatar}}"
-              id="makedeal_otheravatar"
-              size="{{avatarsize}}"
-              ></sc-avatar>
-            </div>
+              <div class="connectionline"></div>
+              <sc-avatar
+                ipfshash="{{replydata.replyer.avatar}}"
+                id="makedeal_otheravatar"
+                size="{{avatarsize}}"
+                ></sc-avatar>
           </div>
-          <div class="horizont centercenter totalwidth userinfostrip">
-              <div class="vertic centercenter userinfo box" on-tap="toPayout">
-<!--                 <sc-username
-                  identity="[[requestdata.offerer]]"
-                  pubkey="[[requestdata.offererpubkey]]"
-                  size="small"
-                  ></sc-username> -->
-                <p class="centertxt small bold grey3">{{requestdata.offerer}}</p>
-                <p class="centertxt small">{{requestdata.offer}}</p>
-                <p class="centertxt small bold blue">0 REP</p>
-                <div class="minispace"></div>
-                <div class="minispace"></div>
-              </div>
-              <div class="vertic centercenter userinfo box">
-<!--                 <sc-username
-                  identity="[[replydata.replyer.username]]"
-                  pubkey="[[replydata.replyer.pubkey]]"
-                  size="small"
-                  ></sc-username>   -->            
-                <p class="centertxt small bold grey3">{{replydata.replyer.username}}</p>
-                <p class="centertxt small">{{replydata.reply}}</p>
-                <p class="centertxt small bold blue">0 REP</p>
-                <div class="minispace"></div>
-                <div class="minispace"></div>
-              </div>
+
+          <div class="announce flex vertic centercenter">
+            <p class="bold blue centertxt">You're about to make a deal with <span class="replyer_username">Markymark 44</span> over:</p>
+            <div class="minispace"></div>
+            <p class="grey3 ultralight centertxt request_msg">"I want a ride to funkytown. Who can take me?"</p>
+            <!-- <div class="whitespace"></div> -->
+            <div class="minispace"></div>
+            <p class="bold grey3 centertxt announce_amount">The dealamount is <span class="">44 SWT</span>. <!-- <a href="" class="moredetails">More details</a> --></p>
           </div>
         </div>
-        <template is="dom-if" if="{{!phoneview}}">
-          <template is="dom-if" if="{{_is(otheramount_state,'amountwaiting')}}">
-            <div class="dealamountio amountwaiting" on-tap="dummyClick">
-              <p class="centertxt small bold grey3">{{replydata.replyamount}} <span class="SWTletters">SWT</span></p>
-            </div>
-          </template>
-          <template is="dom-if" if="{{_is(otheramount_state,'amountloading')}}">
-            <div class$="dealamountio amountloading">
-              <sc-loader color="grey3"></sc-loader>
-            </div>
-          </template>
-          <template is="dom-if" if="{{_is(otheramount_state,'amountconfirmed')}}">
-            <div class="dealamountio amountconfirmed">
-              <iron-icon class="medium green" icon="sc-icons:v">checked</iron-icon>
-            </div>
-          </template>
-        </template>
-      </div>
-
-      <template is="dom-if" if="{{phoneview}}">
-        <div class="middlepiece totalwidth horizont centerjust start">
-          <template is="dom-if" if="{{_is(myamount_state,'amountwaiting')}}">
-            <div class="dealamountio amountwaiting">
-              <p class="centertxt small bold grey3">{{replydata.replyamount}} <span class="SWTletters">SWT</span></p>
-            </div>
-          </template>
-          <template is="dom-if" if="{{_is(myamount_state,'amountloading')}}">
-            <div class$="dealamountio amountloading">
-              <sc-loader color="grey3"></sc-loader>
-            </div>
-          </template>
-          <template is="dom-if" if="{{_is(myamount_state,'amountconfirmed')}}">
-            <div class="dealamountio amountconfirmed">
-              <iron-icon class="medium green" icon="sc-icons:v">checked</iron-icon>
-            </div>
-          </template>
-          <div class="flexer"></div>
-          <template is="dom-if" if="{{_is(otheramount_state,'amountwaiting')}}">
-            <div class="dealamountio amountwaiting"  on-tap="dummyClick">
-              <p class="centertxt small bold grey3">{{replydata.replyamount}} <span class="SWTletters">SWT</span></p>
-            </div>
-          </template>
-          <template is="dom-if" if="{{_is(otheramount_state,'amountloading')}}">
-            <div class$="dealamountio amountloading">
-              <sc-loader color="grey3"></sc-loader>
-            </div>
-          </template>
-          <template is="dom-if" if="{{_is(otheramount_state,'amountconfirmed')}}">
-            <div class="dealamountio amountconfirmed">
-              <iron-icon class="medium green" icon="sc-icons:v">checked</iron-icon>
-            </div>
-          </template>
-        </div>
-      </template>
 
       <div class="bottomhalf totalwidth">
 
-        <neon-animated-pages id="hashpages" attr-for-selected="data-action" selected="{{selecteddealpage}}" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
-          <neon-animatable data-action="init">
           <div class="totalwidth vertic centercenter blueback fullheight">
-            <paper-button noink class$="darkerer white {{sendbtnsize}} shadow" on-tap="sendmytokens">Send {{replydata.replyamount}} SWT</paper-button>
+            <paper-button noink class$="darkerer white {{sendbtnsize}} shadow" on-tap="sendmytokens">Engage in deal for {{replydata.replyamount}} SWT</paper-button>
             <div class="fivespace"></div>
             <a class="getoutlink bold white whitelink">get out of this deal</a>
           </div>
+
+      </div>
+    </div>
+
           </neon-animatable>
           <neon-animatable data-action="waiting">
           <div class="totalwidth vertic centercenter darkerer fullheight paddingsides">
@@ -383,9 +310,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           </neon-animatable>
 
         </neon-animated-pages>
-      </div>
 
-    </div>
 
 
     <!-- <app-route route="{{route}}" pattern="/:requestid/:replyid" data="{{data}}" tail="{{subroute}}"></app-route>  -->
@@ -406,7 +331,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       observers: [
         '_shhweb3(shhweb3)',
       '_checksize(phoneview)',
-      '_connectionline(myamount_state,otheramount_state)',
+      // '_connectionline(myamount_state,otheramount_state)',
       '_data(data)'
       ],
 
@@ -498,13 +423,13 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         this.myamount_state = 'amountconfirmed';  
       },
 
-      _connectionline: function(){
-        if(this.myamount_state=='amountconfirmed' && this.otheramount_state=='amountconfirmed') {
+      // _connectionline: function(){
+      //   if(this.myamount_state=='amountconfirmed' && this.otheramount_state=='amountconfirmed') {
 
-        } else {
+      //   } else {
 
-        }
-      },
+      //   }
+      // },
 
 
       toPayout: function(){

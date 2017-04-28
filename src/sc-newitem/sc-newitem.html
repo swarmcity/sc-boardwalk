@@ -44,7 +44,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
       #newitemcontent {
         width: 100%;
-        max-width: 700px;
+        max-width: 600px;
       }
 
       #avatarimg {
@@ -55,6 +55,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         padding-left: 4vw;
         padding-right: 4vw;
       }
+
 
 
       .avatar-box {
@@ -125,7 +126,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         z-index: 2;
         margin-top: -40px;   
         width: 100%;
-        max-width: 700px;
+        max-width: 600px;
         @apply(--layout-horizontal);
         @apply(--layout-start);
         @apply(--layout-end-justified);
@@ -143,7 +144,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       }
 
       .backbtnarea {
-        padding: 25px;
+        padding: 25px 25px 0px 25px;
 
       }
 
@@ -180,7 +181,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       }
 
     </style>
-    <div class="totalcontainer paddingsides">
+    <div class="totalcontainer">
       <div id="newitemcontent" class="whiteback shadow">
 
       <div class="totalwidth horizont centercenter backbtnarea">
@@ -190,8 +191,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
         <div class="totalwidth vertic centercenter newitempadding">
           <div class="totalwidth vertic start centerjust">
-            <div class="whitespace"></div>
-            <paper-textarea label="Description" class="totalwidth offermsg" autofocus value="{{offermsg}}">
+            <paper-textarea label="Describe your request" class="totalwidth offermsg" autofocus value="{{offermsg}}">
             </paper-textarea>
             <div class="totalwidth horizont center endjust alignedhashtag">
               <p class="bold"><span>#</span>{{selectedhashtag}}</p>
@@ -199,7 +199,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
           </div>
 
           <div class="horizont start startjust totalwidth">
-            <paper-input class="offeramount swtamount" value="{{replyamount}}" type="number">
+            <paper-input label="Enter what you want to pay" class="offeramount swtamount" value="{{replyamount}}" type="number">
             <div suffix class="yellow bold swtwithoffer">SWT</div>
             </paper-input>
           </div>
