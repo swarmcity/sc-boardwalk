@@ -37,6 +37,7 @@
         this.initweb3();        
       },
       initweb3: function(){
+        // If web3 doesn't exist yet - initialize it.
         if (!scweb3_web3){
           if (!this.host){
             return;
@@ -44,6 +45,7 @@
           scweb3_web3 = new Web3(new Web3.providers.HttpProvider(this.host));
           console.log('sc-web3 -> created Web3 (',this.host,')');
         }
+        // If no HookedWeb3Provider was assigned yet - assign it using the given keystore.
         if (scweb3_web3 && this.keystore && this.host && !acweb3_customproviderset){
           console.log('sc-web3 -> Creating new HookedWeb3Provider');
           this.web3Provider = new HookedWeb3Provider({

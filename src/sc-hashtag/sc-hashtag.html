@@ -655,15 +655,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       _web3: function() {
 //        debugger;
-        var self = this;
-        this.$.helpers.getjson('../contracts/Hashtag.json', function(err, contractmetadata) {
-          var contract = self.web3.eth.contract(contractmetadata.abi);
-          self.HashtagInstance = contract.at(self.config.hashtagcontracts["pioneer"]);
-          self.HashtagInstance.commission((function(e,v) {
-//            debugger;
-            //self.checkreadystate();
-          }));
-        });
+      
 
 
       },

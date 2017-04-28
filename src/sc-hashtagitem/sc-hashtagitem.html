@@ -7,6 +7,7 @@
 <link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
 
 <link rel="import" href="../sc-avatar/sc-avatar.html">
+<link rel="import" href="../sc-hashtagcontract/sc-hashtagrep.html">
 
 
 <!--
@@ -154,7 +155,7 @@ This components is the representation of a request in the requests-list on sc-ha
           </sc-avatar>
           <div class="flex vertic centercenter">
             <p class="totalwidth offerer small bold grey3">{{item.offerer}}</p>
-            <p class="totalwidth yourrep small bold blue">{{item.offererrep}} REP</p>
+            <p class="totalwidth yourrep small bold blue"><sc-hashtagrep pubkey="{{item.offererpubkey}}" hashtagname="{{item.offerhashtag}}"></sc-hashtagrep> REP</p>
           </div>
 
 <!--         <div class="totalwidth horizont centercenter">
