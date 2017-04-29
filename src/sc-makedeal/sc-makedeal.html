@@ -16,6 +16,7 @@
 <link rel="import" href="../sc-shh/sc-shh.html">
 <link rel="import" href="../sc-config/sc-config.html">
 <link rel="import" href="../sc-helpers/sc-helpers.html">
+<link rel="import" href="../sc-hashtagcontract/sc-hashtagcontract.html">
 
 <!--<link rel="import" href="../sc-balance/sc-balance.html"> -->
 
@@ -232,10 +233,10 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
     <sc-shh web3="{{shhweb3}}"></sc-shh>
     <sc-config config="{{config}}"></sc-config>
     <sc-helpers id="helpers"></sc-helpers>    
+    <sc-hashtagcontract id="hashtagcontract" hashtagname="{{data.hashtag}}"></sc-hashtagcontract>    
     <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
 
-    <app-route route="{{route}}" pattern="/:requestid/:replyid" data="{{data}}"></app-route>
-
+    <app-route route="{{route}}" pattern="/:hashtag/:requestid/:replyid" data="{{data}}"></app-route>
 
 
         <neon-animated-pages id="hashpages" attr-for-selected="data-action" selected="{{selecteddealpage}}" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
@@ -265,19 +266,19 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           </div>
 
           <div class="announce flex vertic centercenter">
-            <p class="bold blue centertxt">You're about to make a deal with <span class="replyer_username">Markymark 44</span> over:</p>
+            <p class="bold blue centertxt">You're about to make a deal with <span class="replyer_username">{{replydata.replyer.username}}</span> over:</p>
             <div class="minispace"></div>
-            <p class="grey3 ultralight centertxt request_msg">"I want a ride to funkytown. Who can take me?"</p>
+            <p class="grey3 ultralight centertxt request_msg">"{{replydata.reply}}"</p>
             <!-- <div class="whitespace"></div> -->
             <div class="minispace"></div>
-            <p class="bold grey3 centertxt announce_amount">The dealamount is <span class="">44 SWT</span>. <!-- <a href="" class="moredetails">More details</a> --></p>
+            <p class="bold grey3 centertxt announce_amount">The dealamount is <span class="">{{replydata.replyamount}} SWT</span>. <!-- <a href="" class="moredetails">More details</a> --></p>
           </div>
         </div>
 
       <div class="bottomhalf totalwidth">
 
           <div class="totalwidth vertic centercenter blueback fullheight">
-            <paper-button noink class$="darkerer white {{sendbtnsize}} shadow" on-tap="sendmytokens">Engage in deal for {{replydata.replyamount}} SWT</paper-button>
+            <paper-button noink class$="darkerer white {{sendbtnsize}} shadow" on-tap="createDeal">Engage in deal for {{replydata.replyamount}} SWT</paper-button>
             <div class="fivespace"></div>
             <a class="getoutlink bold white whitelink">get out of this deal</a>
           </div>
@@ -350,6 +351,10 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           observer: '_web3'
         },
 
+        hashtagname: {
+          type: String
+        }
+
       },
 
       ready: function(){
@@ -357,12 +362,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
         this.myamount_state = 'amountwaiting';
         this.otheramount_state = 'amountwaiting';
-
-        this.otherid = {
-          avatarhash: 'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
-          username: 'Hank Moovy',
-          rep: '0'
-        }
 
         this.selecteddealpage = 'init';
       },
@@ -418,7 +417,15 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         return a === b;
       },
 
-      sendmytokens: function(){
+      createDeal: function(){
+
+        // TODO : 
+        // 1.deploy a SimpleDeal
+        // 2.call this.$.hashtagcontract(simpledealaddress,pubkey of counterparty)
+        // 3.do allowance
+        // 4.call fund() on SimpleDeal
+        // and then continue...
+
         this.selecteddealpage = 'waiting';
         this.myamount_state = 'amountconfirmed';  
       },
