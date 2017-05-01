@@ -50,18 +50,20 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       .totalbox {
 /*        background-color: red;*/
         width: 100%;
-        height: 90%;
       }
 
       .tophalf {
-        height: 55%;
-        padding-top: 8vh;
-        padding-bottom: 3vh;
+        min-height: 45vh;
+/*        padding-top: 8vh;
+        padding-bottom: 3vh;*/
+        @apply(--layout-vertical);
+        @apply(--layout-start);        
+        @apply(--layout-start-justified);  
+        box-sizing:border-box;
+        padding: 8vh 14vw 3vh 14vw; 
       }
 
-      .strips {
-        width: 75vw;
-        max-width: 380px;
+      .avatars {
         box-sizing:border-box;
 /*        padding-top: 18vh;
         */
@@ -118,7 +120,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
 
       .bottomhalf {
-        height: 45%;
+        height: 45vh;
       }
 
       .dealamountio {
@@ -145,25 +147,30 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         height: 100%;
       }
 
-
-
-/*      .announce {
-        max-width: 500px;
+      .announce h1 {
+        font-size: 30px;
+        line-height: 32px;
       }
-*/
 
-      .request_msg {
+      .announce {
+        max-width: 600px;
+      }
+
+
+/*      .request_msg {
         font-size: 24px;
         line-height: 36px;
       }
-
+*/
       .replyer_username {
         border-bottom: 1px dotted var(--sc-blue);
       }
 
-      .announce_amount {
+      .show_details {
         font-size: 12px;
         line-height: 16px;
+
+        border-bottom: 1px dotted var(--sc-grey4);
       }
 
 
@@ -181,7 +188,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         width: 25%;
         margin: 1px;
       }*/
-/*      .strips {
+/*      .avatars {
         width: 75vw;
         max-width: 300px;
         box-sizing:border-box;
@@ -190,7 +197,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       }*/
 
 
-      .strips {
+      .avatars {
         width: 75vw;
         max-width: 300px;
         box-sizing:border-box;
@@ -235,60 +242,47 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
     <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
 
     <app-route route="{{route}}" pattern="/:requestid/:replyid" data="{{data}}"></app-route>
+      <neon-animated-pages id="hashpages" attr-for-selected="data-action" selected="{{selecteddealpage}}" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
+        <neon-animatable data-action="init">
 
-
-
-        <neon-animated-pages id="hashpages" attr-for-selected="data-action" selected="{{selecteddealpage}}" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
-          <neon-animatable data-action="init">
-
-    <div class="topbar">
-      <span class="flex"></span>
-        <paper-icon-button on-tap="leave" icon="sc-icons:decline" noink>back</paper-icon-button>
-    </div>
-
-    <div class="totalbox vertic center startjust totalwidth">
-
-        <div class="tophalf vertic center startjust totalwidth">
-          <div class="horizont centercenter strips">
-              <sc-avatar
-                ipfshash="[[identity.avatarhash]]"
-                pubkey="[[pubkey]]"
-                id="makedeal_myavatar"
-                size="{{avatarsize}}"
-                ></sc-avatar>
-              <div class="connectionline"></div>
-              <sc-avatar
-                ipfshash="{{replydata.replyer.avatar}}"
-                id="makedeal_otheravatar"
-                size="{{avatarsize}}"
-                ></sc-avatar>
+          <div class="topbar">
+            <span class="flex"></span>
+              <paper-icon-button on-tap="leave" icon="sc-icons:decline" noink>back</paper-icon-button>
           </div>
 
-          <div class="announce flex vertic centercenter">
-            <p class="bold blue centertxt">You're about to make a deal with <span class="replyer_username">Markymark 44</span> over:</p>
-            <div class="minispace"></div>
-            <p class="grey3 ultralight centertxt request_msg">"I want a ride to funkytown. Who can take me?"</p>
-            <!-- <div class="whitespace"></div> -->
-            <div class="minispace"></div>
-            <p class="bold grey3 centertxt announce_amount">The dealamount is <span class="">44 SWT</span>. <!-- <a href="" class="moredetails">More details</a> --></p>
+          <div class="totalbox vertic center startjust totalwidth">
+            <div class="tophalf totalwidth">
+              <div class="announce vertic centercenter">
+                <h1 class="ultralight blue">You're about to make a deal in #pioneer with <span class="replyer_username reg">Markymark 44</span> for <span class="reply_amount reg">33 SWT</span>.</h1>
+              </div>
+              <div class="horizont centercenter avatars">
+                <sc-avatar
+                  ipfshash="[[identity.avatarhash]]"
+                  pubkey="[[pubkey]]"
+                  id="makedeal_myavatar"
+                  size="{{avatarsize}}"
+                  ></sc-avatar>
+                <sc-avatar
+                  ipfshash="{{replydata.replyer.avatar}}"
+                  id="makedeal_otheravatar"
+                  size="{{avatarsize}}"
+                  ></sc-avatar>
+              </div>
+            </div>
+
+            <div class="bottomhalf totalwidth">
+              <div class="totalwidth vertic centercenter blueback fullheight">
+                <paper-button noink class$="darkerer white {{sendbtnsize}} shadow" on-tap="sendmytokens">Engage in deal for {{replydata.replyamount}} SWT</paper-button>
+                <div class="fivespace"></div>
+                <a class="getoutlink bold white whitelink">get out of this deal</a>
+              </div>
+            </div>
+
           </div>
-        </div>
-
-      <div class="bottomhalf totalwidth">
-
-          <div class="totalwidth vertic centercenter blueback fullheight">
-            <paper-button noink class$="darkerer white {{sendbtnsize}} shadow" on-tap="sendmytokens">Engage in deal for {{replydata.replyamount}} SWT</paper-button>
-            <div class="fivespace"></div>
-            <a class="getoutlink bold white whitelink">get out of this deal</a>
-          </div>
-
-      </div>
-    </div>
 
           </neon-animatable>
           <neon-animatable data-action="waiting">
           <div class="totalwidth vertic centercenter darkerer fullheight paddingsides">
-<!--             <sc-loader small color="grey3">Waiting for the other party to send  {{dealamount}} SWT</sc-loader> -->
             <p class="grey3 centertxt">Waiting for the other party to send {{replydata.replyamount}} SWT to the deal</p>
           </div>
           </neon-animatable>
