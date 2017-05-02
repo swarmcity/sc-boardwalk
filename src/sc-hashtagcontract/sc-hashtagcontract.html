@@ -12,7 +12,6 @@
   <script>
     var schashtagrep_contract;
     var schashtagrep_ready;
-//    var acweb3_customproviderset = false;
 
     Polymer({
       is: 'sc-hashtagcontract',
@@ -34,7 +33,7 @@
       ready: function(){
         console.log('sc-hashtagcontract -> ready');
       },
-     
+
      
       _init: function(){
         if (schashtagrep_ready){
@@ -65,33 +64,28 @@
         var self = this;
 
         schashtagrep_ready = new Promise(function(resolve, reject) {
-
-          if ( /* everything turned out fine */ ) {
-            resolve("Stuff worked!");
-          } else {
-            reject(new Error("It broke"));
-          }
-        });
-
-
           self.$.helpers.getjson('../contracts/Hashtag.json', function(err, contractmetadata) {
-            var contract = self.web3.eth.contract(contractmetadata.abi);
-            self.HashtagInstance = contract.at(self.config.hashtagcontracts["pioneer"]);
-            //self.HashtagInstance.commission((function(e,v) {
-            //  console.log()
-  //            debugger;
-              //self.checkreadystate();
-            //});
+            var hashtagcontract = self.web3.eth.contract(contractmetadata.abi);
+            self.HashtagInstance = hashtagcontract.at(self.config.hashtagcontracts["pioneer"]);
+            self.$.helpers.getjson('../contracts/MiniMeToken.json', function(err, contractmetadata) {
+              var reptokencontract = self.web3.eth.contract(contractmetadata.abi);
+              self.HashtagInstance.getRepTokenAddress.call(function(err, address) {
+                self.HashtagRepInstance = reptokencontract.at(address);
+                resolve();
+              });
+            });
           });
-        }
+        });
 
       },
 
-      getCommission: function(cb){
-          schashtagrep_ready.then(function(){
-            
-          });
+      getRep: function(pubkey){
+        var self = this;
+        return schashtagrep_ready.then(function(){
+          return self.HashtagRepInstance.balanceOf(pubkey);
+        })
       }
+
 
     });
   </script>

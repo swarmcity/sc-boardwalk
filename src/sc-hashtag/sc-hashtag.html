@@ -367,12 +367,12 @@ This is the component showing all requests of a certain hashtag. It contains a r
         on-to-makedeal="toMakeDeal"
       ></sc-itemdetail>
 
-
+<!-- 
       <sc-itemreply
         data-action="replydetail"
         viewmode="detail"
         replydata="[[currentreply]]"
-      ></sc-itemdetail>
+      ></sc-itemdetail> -->
 
     </neon-animated-pages>
     </div>
@@ -918,8 +918,9 @@ This is the component showing all requests of a certain hashtag. It contains a r
         console.log("***************************", target);
       },
 
-      toMakeDeal: function(e){       
-        this.fire('makedeal',e.detail);
+      toMakeDeal: function(e){  
+        debugger;
+        this.fire('makedeal',Object.assign({}, e.detail, {hashtag: this.data.hashtag}));
       }
 
 

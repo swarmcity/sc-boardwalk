@@ -1,9 +1,9 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-<!-- <link rel="import" href="./sc-hashtagcontract.html"> -->
+<link rel="import" href="../sc-hashtagcontract/sc-hashtagcontract.html">
 
 <dom-module id="sc-hashtagrep">
   <template>
-    <!-- <sc-hashtagcontract hashtagname="{{hashtagname}}"></sc-config>     -->
+    <sc-hashtagcontract id="hashtagcontract" pubkey="{{pubkey}}" hashtagname="{{hashtagname}}"></sc-hashtagcontract>
     <span>{{rep}}</span>
   </template>
   <script>
@@ -15,11 +15,9 @@
       properties: {
         pubkey: {
           type: String,
-          observer: '_pubkey'
         },
         hashtagname: {
           type: String,
-          observer: '_hashtagname'
         }
       },
       observers: [
@@ -27,16 +25,11 @@
 
       ready: function(){
         console.log('sc-hashtagrep -> ready');
+        var self=this;
+        this.$.hashtagcontract.getRep(this.pubkey).then(function(rep){
+          self.rep = rep;
+        });
       },
-
-      _pubkey: function(){
-        // TODO : init hashtag contract + read out...
-        this.rep = Math.floor(Math.random()*100);
-      },
-
-      _hashtagname: function(){
-        // TODO : here we'd initiate the contract....
-      }
      
     });
   </script>
