@@ -5,6 +5,7 @@
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
+<link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
 <link rel="import" href="../../bower_components/sc-style/sc-style.html">
 <link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
 <link rel="import" href="../sc-payout/sc-payout.html">
@@ -54,7 +55,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
       .totalbox {
         width: 100%;
-        height: 90%;
       }
 
       .tophalf {
@@ -69,6 +69,10 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         font-size: 40px;
         line-height: 44px;
         max-width: 700px;
+      }
+
+      .withconfirmq {
+        min-height: 50vh;
       }
 
       sc-avatar {
@@ -144,8 +148,29 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         @apply(--layout-start-justified);
       }
 
-      .announce a { 
-        margin-left: 10px;        
+
+      .details_toggler { 
+        margin-left: 10px;
+        /*text-decoration: underline;*/        
+        border-bottom: 1px dotted var(--sc-blue);
+      }
+
+
+      #details_collapser {
+        width: 100%;   
+      }
+
+
+      .details_collapser_inner {
+        width: 100%;
+        @apply(--layout-vertical);
+        @apply(--layout-start);
+        @apply(--layout-start-justified);
+        border-top: 1px dotted var(--sc-grey2);
+        border-bottom: 1px dotted var(--sc-grey2); 
+        box-sizing:border-box;
+        padding: 15px 0px;
+        margin-bottom: 25px;       
       }
 
       .announce paper-button{ 
@@ -161,13 +186,87 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       }
 
       paper-icon-button.confirmbtn {
-          margin-top: -28px;
+          margin-top: -40px;
           margin-right: 6vw;
           width: 80px;
           height: 80px;
-          padding: 7px 7px 9px 9px;
-          background-color: #36B7FF;
       }
+
+      paper-icon-button.confirmbtn.blue {
+          background-color: #36B7FF;
+          box-sizing:border-box;
+          padding: 7px 7px 9px 9px;
+      } 
+
+      paper-icon-button.confirmbtn.green {
+          background-color: #8ADEA9;
+      }
+
+
+      .dealid {
+        font-size: 36px;
+        line-height: 40px;        
+      }
+
+      .avatars_funding {
+        box-sizing:border-box;
+        padding: 0px;
+        @apply(--layout-vertical);
+        @apply(--layout-start);
+        @apply(--layout-start-justified); 
+        margin-top: 3vw;
+       
+      }
+
+
+      .avatar_funding {
+        box-sizing:border-box;
+        padding: 0px;
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        @apply(--layout-start-justified);
+        margin-bottom: 10px;
+        
+      }
+
+
+      .funding {
+        margin-left: 12px;
+      }
+
+      .funding p {
+        font-size: 32px;
+        line-height: 36px;
+      }
+
+      .swtletters {
+        font-size: 16px;
+        line-height: 20px;       
+      }
+
+      .v_icon {
+        margin: 12px 0px 0px 6px;
+      }
+
+      .v_init {
+        opacity: 0.25;
+        color: var(--sc-grey2);
+      }
+
+      .confirmation_question {
+        min-height: 15vh;
+        box-sizing:border-box;
+        padding: 20px 0px  20px 0px;
+        border-top: 1px dotted var(--sc-grey2);
+      }
+
+
+      .confirmation_question p {
+        font-size: 20px;
+        line-height: 22px;            
+      }
+
+
 
 /*      .request_msg {
         font-size: 24px;
@@ -257,7 +356,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
     <app-route route="{{route}}" pattern="/:hashtag/:requestid/:replyid" data="{{data}}"></app-route>
 
 
-        <neon-animated-pages id="hashpages" attr-for-selected="data-action" selected="{{selecteddealpage}}" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
+        <neon-animated-pages id="hashpages" attr-for-selected="data-action" selected="{{selecteddealpage}}" entry-animation="slide-from-right-animation" exit-animation="slide-left-animation">
           <neon-animatable data-action="init">
 
             <div class="topbar">
@@ -267,14 +366,9 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
             <div class="totalbox vertic center startjust totalwidth">
               <div class="tophalf totalwidth">
-                <h1 class="">You're about to make a deal with <span class="light replyer_username">{{replydata.replyer.username}}</span> in <span class="light">#pioneer</span> for <span class="light">{{replydata.replyamount}} SWT</span>.</h1>
-        <!--             <p class="bold blue centertxt">You're about to make a deal with <span class="replyer_username">{{replydata.replyer.username}}</span> over:</p>
-                    <div class="minispace"></div>
-                    <p class="grey3 ultralight centertxt request_msg">"{{replydata.reply}}"</p>
-                    <div class="minispace"></div>
-                    <p class="bold grey3 centertxt announce_amount">The dealamount is <span class="">{{replydata.replyamount}} SWT</span>. </p> -->
+                <h1 class="">You're about to make a deal with <span class="light blue replyer_username">{{replydata.replyer.username}}</span> in <span class="light">#pioneer</span> for <span class="light">{{replydata.replyamount}} SWT</span>.</h1>
+  
                 <div class="announce">
-
                   <div class="avatars">
                       <sc-avatar
                         ipfshash="[[identity.avatarhash]]"
@@ -288,21 +382,93 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                         size="{{avatarsize}}"
                         ></sc-avatar>
                   </div>
-                  <a href="" class="bold">Show details</a>
-<!--                   <paper-button class="darker shadow blue">Show details</paper-button> -->
+                  <p class="bold blue details_toggler" on-tap="showDetails">Show details</p>
                 </div>
+
+
+                <iron-collapse id="details_collapser">
+<!--             <p class="bold blue centertxt">You're about to make a deal with <span class="replyer_username">{{replydata.replyer.username}}</span> over:</p>
+                    <div class="minispace"></div>
+                    <p class="grey3 ultralight centertxt request_msg">"{{replydata.reply}}"</p>
+                    <div class="minispace"></div>
+                    <p class="bold grey3 centertxt announce_amount">The dealamount is <span class="">{{replydata.replyamount}} SWT</span>. </p> -->
+                    <div class="details_collapser_inner">
+                      <small>At ... , ... posted a request in #pioneer for:</small>
+                      <div class="initial_request">
+                        <p>Blabla initial request</p>
+                      </div>
+                      <div class="minispace"></div>
+                      <div class="minispace"></div>
+                      <small>At ... , ... replied to this request:</small>
+                      <div class="initial_request">
+                        <p>Blabla reply</p>
+                      </div>
+                    </div>
+                </iron-collapse>
+
+                <template is="dom-if" if="{{!phoneview}}">
+                  <div class="tenspace"></div>
+                </template>
               </div>
 
               <div class="bottomhalf blueback totalwidth">
-
-                  <div class="confirmer">
-                    <paper-icon-button icon="sc-icons:arrowright" noink class="confirmbtn big white shadow"></paper-icon-button>
-                  </div>
-
+                <div class="confirmer">
+                  <paper-icon-button icon="sc-icons:arrowright" noink class="confirmbtn blue big white shadow" on-tap="toDodeal"></paper-icon-button>
+                </div>
               </div>
             </div>
 
           </neon-animatable>
+
+          <neon-animatable data-action="dodeal">
+
+            <div class="topbar">
+              <span class="flex"></span>
+                <paper-icon-button on-tap="leave" icon="sc-icons:decline" noink>back</paper-icon-button>
+            </div>
+
+            <div class="totalbox vertic center startjust totalwidth">
+              <div class="tophalf totalwidth withconfirmq">
+                <h1 class="">Deal <span class="light">778901152</span> is created.</h1>
+                <div class="avatars_funding">
+                  <div class="avatar_funding">
+                    <sc-avatar
+                      ipfshash="[[identity.avatarhash]]"
+                      pubkey="[[pubkey]]"
+                      id="makedeal_myavatar"
+                      size="{{avatarsize}}"
+                      ></sc-avatar>
+                    <div class="funding">
+                      <p class="bold yellow">{{replydata.replyamount}} + 0.5 <span class="swtletters">SWT</span></p>
+                    </div>
+                    <iron-icon class$="v_icon {{vclass}} {{vsize}}" icon="sc-icons:v"></iron-icon>
+                  </div>
+                  <div class="avatar_funding">
+                    <sc-avatar
+                      ipfshash="{{replydata.replyer.avatar}}"
+                      id="makedeal_otheravatar"
+                      size="{{avatarsize}}"
+                      ></sc-avatar>
+                   <div class="funding">
+                      <p class="bold yellow">{{replydata.replyamount}}<span class="swtletters">SWT</span></p>
+                    </div>
+                    <iron-icon class$="v_icon {{vclass}} {{vsize}}" icon="sc-icons:v"></iron-icon>
+                  </div>
+                </div>
+              </div>
+              <div class="confirmation_question horizont centercenter totalwidth">
+                <p class="bold green centertxt">Do you want to fund this deal for {{replydata.replyamount}} SWT?</p>
+              </div>
+              <div class="bottomhalf greenback totalwidth">
+                <div class="confirmer">
+                  <paper-icon-button icon="sc-icons:v" noink class="confirmbtn green big white shadow" on-tap="startDeal"></paper-icon-button>
+                </div>
+              </div>
+            </div>
+
+          </neon-animatable>
+
+
           <neon-animatable data-action="waiting">
           <div class="totalwidth vertic centercenter darkerer fullheight paddingsides">
 <!--             <sc-loader small color="grey3">Waiting for the other party to send  {{dealamount}} SWT</sc-loader> -->
@@ -383,10 +549,12 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       ready: function(){
         this.dealamount = 44;
 
-        this.myamount_state = 'amountwaiting';
-        this.otheramount_state = 'amountwaiting';
+        // this.myamount_state = 'amountwaiting';
+        // this.otheramount_state = 'amountwaiting';
 
         this.selecteddealpage = 'init';
+
+        this.vclass = "v_init";
       },
 
       _data: function(){
@@ -421,10 +589,14 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         // console.log('Jooooooooo phoneview?', this.phoneview);
         if (this.phoneview) {
           this.avatarsize = "medium";
+          this.avatarfundingsize = "medium";
+          this.vsize = "medium";
           this.sendbtnsize = "";
         } else {
           this.avatarsize = "medium";
+          this.avatarfundingsize = "more";
           this.sendbtnsize = "bigbtn";
+          this.vsize = "medium";
         }
       },
 
@@ -549,6 +721,20 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           console.log(e);
         }
       },
+
+      showDetails: function(){
+        var details = this.shadowRoot.getElementById('details_collapser');
+        details.toggle();
+        // console.log(details);
+      },
+
+      toDodeal: function(){
+        this.selecteddealpage = 'dodeal';
+      },
+
+      startDeal: function(){
+        alert("Sponnetrakket, JONGE!");
+      }
 
 
     });
