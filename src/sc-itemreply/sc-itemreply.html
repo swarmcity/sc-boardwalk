@@ -1,5 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
+
 <link rel="import" href="../sc-ipfs/sc-ipfs.html">
 <link rel="import" href="../../bower_components/moment-js/moment-js.html">
 
@@ -130,6 +132,11 @@ This component shows a reply on a request.
         border-top: 2px dotted rgba(0,0,0,0.05);
       }
 
+      .replyerusername_inbtn {
+        /*border-bottom: 1px dotted var(--sc-white);*/
+        margin-left: 5px;
+      }
+
       @media all and (min-width: 0) and (max-width: 420px) { 
 
 
@@ -161,21 +168,34 @@ This component shows a reply on a request.
 
     </style>
       
-
+    <iron-media-query query="(min-width:0px) and (max-width: 540px)" query-matches="{{phoneview}}"></iron-media-query>
     <template is="dom-if" if="{{_is(viewmode,'normal')}}">
 
       <div class="responditem totalwidth vertic centercenter darker">
         <div class="totalwidth vertic start centerjust">
 
+            <template is="dom-if" if="{{!phoneview}}">
 
-        <div class="vertic start centerjust totalwidth">
+        <div class="totalwidth horizont start centerjust">
+
+        <div class="vertic start centerjust totalwidth flex">
           <p class="grey3 small"><moment-js date="{{replydata.replytime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
           <p class="reply grey4">{{replydata.reply}}</p>
         </div>
-        <div class="minispace"></div>
-        <div class="minispace"></div>
-        <div class="totalwidth horizont end centerjust">
-          <div class="horizont startjust center flex">
+
+
+          <div class="horizont start startjust">
+            <div class="horizont end endjust acceptsfor">
+              <p class="bold grey4 replyamount">{{replydata.replyamount}} <span class="replySWT">SWT</span></p>
+              <iron-icon class="grey4 small" icon="sc-icons:v">checked</iron-icon>
+            </div>
+          </div>
+        </div>
+
+<!--         <div class="minispace"></div>
+        <div class="minispace"></div> -->
+        <div class="totalwidth horizont end startjust">
+          <div class="horizont startjust center">
             <sc-avatar
               class="replyeravatar"
               ipfshash="[[replydata.replyer.avatar]]"
@@ -189,22 +209,67 @@ This component shows a reply on a request.
           </div>
 
 
+            <template is="dom-if" if="{{btnshow}}">
+              <div class="totalwidth horizont center endjust">
+                <paper-button class="blueback white" on-tap="toMakedeal"><iron-icon icon="sc-icons:arrowright" class="white"></iron-icon>Make a deal with {{replydata.replyer.username}}</paper-button>
+              </div>
+            </template>
+        </div>
+
+            </template>
+
+
+
+            <template is="dom-if" if="{{phoneview}}">
+
+
+        <div class="vertic start centerjust totalwidth">
+          <p class="grey3 small"><moment-js date="{{replydata.replytime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
+          <p class="reply grey4">{{replydata.reply}}</p>
+        </div>
+
+
+
+
+        <div class="minispace"></div>
+        <div class="minispace"></div>
+        <div class="totalwidth horizont start startjust">
+          <div class="horizont startjust center flex">
+            <sc-avatar
+              class="replyeravatar"
+              ipfshash="[[replydata.replyer.avatar]]"
+              size="verysmall">
+            </sc-avatar>
+
+            <div class="vertic centercenter replyer">
+              <p class="totalwidth replyername small bold grey3">{{replydata.replyer.username}}</p>
+              <p class="totalwidth replyerrep small bold blue">{{replydata.replyer.replyerrep}} REP</p>
+            </div>
+          </div>
           <div class="horizont start startjust">
             <div class="horizont end endjust acceptsfor">
               <p class="bold grey4 replyamount">{{replydata.replyamount}} <span class="replySWT">SWT</span></p>
               <iron-icon class="grey4 small" icon="sc-icons:v">checked</iron-icon>
             </div>
           </div>
-        </div>
+
         </div>
 
-      <template is="dom-if" if="{{btnshow}}">
-<!--         <div class="whitespace"></div> -->
-        <div class="totalwidth horizont center endjust">
-          <paper-button class="blueback white" on-tap="toMakedeal">Make a deal with {{replydata.replyer.username}}</paper-button>
-<!--           <paper-icon-button icon="sc-icons:arrowright" class="blue whiteback big shadow" on-tap="toMakedeal">makedeal</paper-icon-button> -->
+            <template is="dom-if" if="{{btnshow}}">
+                <div class="whitespace"></div>
+
+              <div class="totalwidth horizont centercenter">
+                <paper-button class="blueback white small totalwidth" on-tap="toMakedeal"><iron-icon icon="sc-icons:arrowright" class="white"></iron-icon>Make a deal with {{replydata.replyer.username}}</paper-button>
+              </div>
+            </template>
+            </template>
+
+
+
+
+
         </div>
-      </template>
+
 
       </div>
       </template>

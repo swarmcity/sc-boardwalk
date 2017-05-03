@@ -59,12 +59,13 @@
 
       createDeal: function() {
         this.dealID = UUIDjs.create().toString();
-
+        var self = this;
+        
         this.fire('status-update', {
           step: 'deal-created',
           dealID: self.dealID
         });
-        var self = this;
+
 
         var debug_delay = 3;
 
