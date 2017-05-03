@@ -206,6 +206,7 @@ This components shows the detailed view of a request.
         <div class="whiteback totalwidth">
         <template is="dom-repeat" items="{{replies}}">
           <sc-itemreply
+          itemdata="{{itemdata}}"
           btnshow="{{youareowner}}"
           replydata="{{item}}"
           on-to-detail="fireReplyselected"

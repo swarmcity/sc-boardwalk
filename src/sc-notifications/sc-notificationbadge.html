@@ -5,6 +5,8 @@
 <link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
 <link rel="import" href="../sc-redux/sc-redux.html">
 
+<link rel="import" href="../sc-shh/sc-shh.html">
+
 <!--<link rel="import" href="../sc-balance/sc-balance.html"> -->
 
 
@@ -22,6 +24,7 @@ This components simple shows the number of in-app notifications in a badge-icon.
     <style include="sc-styles">
       :host {
         display: inline-block;
+        border: 1px solid red;
 
       }
 
@@ -72,14 +75,14 @@ This components simple shows the number of in-app notifications in a badge-icon.
 
 
     </style>
-  
+        <sc-shh web3="{{shhweb3}}"></sc-shh>
         <div class$="havemsg horizont centercenter {{paddings}} {{backgr}} {{animclass}}">
-          <template is="dom-if" if="{{!_is(notifnumber,0)}}">
-            <p class="white bold">{{notifnumber}}</p>
-          </template>
-          <template is="dom-if" if="{{_is(notifnumber,0)}}">
+          <!-- <template is="dom-if" if="{{!_is(notificationscounter,0)}}"> -->
+            <p class="red bold">{{notificationscounter}}</p>
+          <!-- </template> -->
+<!--           <template is="dom-if" if="{{_is(notificationscounter,0)}}">
               <iron-icon icon="sc-icons:babble" class="grey3 babbleicon">reply-icon</iron-icon>
-          </template>
+          </template> -->
         </div>
   
 
@@ -97,7 +100,8 @@ This components simple shows the number of in-app notifications in a badge-icon.
       ],
 
       observers: [
-        '_watch(notifnumber)'
+        '_watch(notifnumber)',
+        '_starthastaglistener(shhweb3,identity)',        
       ],
 
       properties: {
@@ -109,16 +113,22 @@ This components simple shows the number of in-app notifications in a badge-icon.
           value: 0,
         },
 
-        dummynotifications: {
+        notifications: {
           type: Array,
-          notify: true
+          statePath: 'notifications',
+          observer: 'countnotifications'
         },
 
-        mydeals: {
-          type: Array,
-          statePath: 'mydeals',
-          observer: '_mydeals'
-        },   
+        identity: {
+          type: Object,
+          statePath: 'identity',
+        },  
+
+        // mydeals: {
+        //   type: Array,
+        //   statePath: 'mydeals',
+        //   observer: '_mydeals'
+        // },   
 
       },
 
@@ -126,15 +136,37 @@ This components simple shows the number of in-app notifications in a badge-icon.
         // 'tap':'change'
       },
 
-      _mydeals: function(){
-        console.log(this.mydeals);
-        //debugger;
+      actions: {
+        add: function(notification) {
+          let newnotifications = this.notifications.slice(0);
+          newnotifications.push(notification);
+
+          return {
+            type: 'NOTIFICATIONS',
+            notifications: newnotifications
+          };
+        },
       },
+
+      countnotifications: function(){
+        if (!this.notifications){
+          this.notificationscounter =  0;
+        }
+        this.notificationscounter = this.notifications.length;
+      },
+
+      // _mydeals: function(){
+      //   console.log(this.mydeals);
+      //   //debugger;
+      // },
 
 
       ready: function(){
+        this.notificationscounter = 0;
         this.animclass = "defaultclass";
           this.dummyNotif();
+
+
 
 
         // var self = this;
@@ -145,31 +177,84 @@ This components simple shows the number of in-app notifications in a badge-icon.
       },
 
 
-      dummyNotif: function(){
+      dummyNotif: function() {
+        var self = this;
 
-          this.dummynotifications = [
-            {
-              subjectavatar:'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
-              subjectpub:'0x4458...',
-              subjectusername:'Hank Moovy',
-              timestamp: 'today at 19:45',
-              dealhashtag: 'needaride',
-              msg: 'has replied to your request: "Hi Faffy Dee, I can come and pick you up! Im around to corner, so Ill be there in 5!"'
-            },
+        // setTimeout(function() {
 
-            {
-              subjectavatar:'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
-              subjectpub:'0x4458...',
-              subjectusername:'Hank Moovy',
-              timestamp: 'Just now',
-              dealhashtag: 'needaride',
-              msg: 'send his 45 SWT to your deal "Need a ride from here to there"'
-            }
+        //   self.dispatch('add', {
+        //     subjectavatar: 'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
+        //     subjectpub: '0x4458...',
+        //     subjectusername: 'Hank Moovy',
+        //     timestamp: 'today at 19:45',
+        //     dealhashtag: 'needaride',
+        //     msg: 'has replied to your request: "Hi Faffy Dee, I can come and pick you up! Im around to corner, so Ill be there in 5!"'
+        //   });
+
+        // }, 2000);
+
+        // setTimeout(function() {
+
+        //   self.dispatch('add', {
+        //     subjectavatar: 'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
+        //     subjectpub: '0x4458...',
+        //     subjectusername: 'Hank Moovy',
+        //     timestamp: 'today at 19:45',
+        //     dealhashtag: 'needaride',
+        //     msg: 'has replied to your request: "Hi Faffy Dee, I can come and pick you up! Im around to corner, so Ill be there in 5!"'
+        //   });
+
+        // }, 4000);
+
+      },
+
+
+      // _shhweb3: function() {
+
+      //   if (!this.shhweb3) {
+      //     throw new Error('shhweb3 not set while requesting whisper listener');
+      //   }
+
+      //   this._starthastaglistener();
+      // },
+
+
+      _starthastaglistener: function() {
+
+        if (this.filter) {
+          return;
+        }
+
+        var self = this;
+        if (this.shhweb3 && this.identity) {
+
+          var mytopics = [
+            self.shhweb3.encodetopic("notification"),
+            [self.shhweb3.encodetopic('broadcast'),self.shhweb3.encodetopic(this.identity.pubkey)],
           ];
 
-        
-        this.notifnumber = this.dummynotifications.length;
+          this.filter = self.shhweb3.shh.filter({
+            "topics": mytopics,
+          });
+
+          console.log("sc-notificationbadge: start listening to", mytopics);
+          this.filter.watch(this._processmessage.bind(this));
+        }
       },
+
+      _processmessage: function(error, result) {
+        var self = this;
+        try {
+          var payload = JSON.parse(self.shhweb3.toAscii(result.payload));
+          console.log('incoming in whisperer: shhweb3 ', payload);
+
+          this.dispatch('add', payload);
+          //this.push('deals',payload);
+        } catch (e) {
+          console.log(e);
+        }
+      },
+
 
       /**
       * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 

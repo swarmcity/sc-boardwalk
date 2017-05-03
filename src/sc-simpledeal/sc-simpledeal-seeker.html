@@ -227,6 +227,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         @apply(--layout-center);
         @apply(--layout-start-justified);
         margin-bottom: 10px;
+        
       }
 
       .divider {
@@ -239,9 +240,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
       .funding {
         margin-left: 12px;
-        @apply(--layout-horizontal);
-        @apply(--layout-center-center);
-        @apply(--layout-wrap);
       }
 
       .funding p {
@@ -309,7 +307,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
 
       .tophalf {
-        min-height: 44vh;
+        min-height: 65vh;
         padding: 6vh 12vw 0px 12vw;
         @apply(--layout-vertical);
         @apply(--layout-start-justified);
@@ -344,50 +342,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           width: 86px;
           height: 86px;
           padding: 14px;
-      }
-
-
-
-      .confirmation_question {
-        min-height: 26vh;
-        box-sizing:border-box;
-        padding: 20px 12vw 6vh 12vw;
-        border-top: 1px dotted var(--sc-grey2);
-      }
-
-      .bottomhalf {
-        height: 20vh;
-      }
-
-
-      .avatars_funding {
-        width: 100%;        
-      }
-
-
-      .avatar_funding {
-        width: 100%;        
-        box-sizing:border-box;
-        padding: 0px;
-        @apply(--layout-horizontal);
-        @apply(--layout-start);
-        @apply(--layout-start-justified);
-        margin-bottom: 10px;
-      }
-
-
-      .funding {
-        margin-left: 5px;
-      }
-
-      .funding p {
-        font-size: 28px;
-        line-height: 28px;
-      }
-
-
-      .v_icon {
-        margin: 0px 0px 0px 2px;
       }
 
 /*
@@ -497,14 +451,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                       size="{{avatarfundingsize}}"
                       ></sc-avatar>
                     <div class="funding">
-
-                    <template is="dom-if" if="{{phoneview}}">
-                      <p class="bold yellow">{{replydata.replyamount}} + 0.5 SWT</p>
-                    </template>
-
-                    <template is="dom-if" if="{{!phoneview}}">
                       <p class="bold yellow">{{replydata.replyamount}} + 0.5 <span class="swtletters">SWT</span></p>
-                    </template>
                     </div>
                     <iron-icon class$="v_icon {{vclass}} {{vsize}}" icon="sc-icons:v"></iron-icon>
                   </div>
@@ -517,13 +464,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                       size="{{avatarfundingsize}}"
                       ></sc-avatar>
                    <div class="funding">
-                    <template is="dom-if" if="{{phoneview}}">
-                      <p class="bold yellow">{{replydata.replyamount}} SWT</p>
-                    </template>
-
-                    <template is="dom-if" if="{{!phoneview}}">
-                      <p class="bold yellow">{{replydata.replyamount}} <span class="swtletters">SWT</span></p>
-                    </template>
+                      <p class="bold yellow">{{replydata.replyamount}}<span class="swtletters">SWT</span></p>
                     </div>
                     <iron-icon class$="v_icon {{vclass}} {{vsize}}" icon="sc-icons:v"></iron-icon>
                   </div>
@@ -540,15 +481,15 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
               </div>
               <div class="confirmation_question horizont centercenter totalwidth">
                 <template is="dom-if" if="{{!dealactivated}}">
-                  <p class="bold blue centertxt">Fund a deal for {{replydata.replyamount}},5 SWT in #pioneer ?</p>
+                  <p class="bold green centertxt">Fund a deal in #pioneer for {{replydata.replyamount}},5 SWT?</p>
                 </template>
 
               </div>
-              <div class="bottomhalf blueback totalwidth">
+              <div class="bottomhalf greenback totalwidth">
                 <template is="dom-if" if="{{!dealactivated}}">
 
                 <div class="confirmer">
-                  <paper-icon-button icon="sc-icons:v" noink class="confirmbtn blue big white shadow" on-tap="startDeal"></paper-icon-button>
+                  <paper-icon-button icon="sc-icons:v" noink class="confirmbtn green big white shadow" on-tap="startDeal"></paper-icon-button>
                 </div>
                                 </template>
 
@@ -683,7 +624,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         // console.log('Jooooooooo phoneview?', this.phoneview);
         if (this.phoneview) {
           this.avatarsize = "medium";
-          this.avatarfundingsize = "small";
+          this.avatarfundingsize = "medium";
           this.vsize = "medium";
           this.sendbtnsize = "";
         } else {
@@ -761,13 +702,13 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         }
 
         var self = this;
-        if (this.shhweb3 && this.replyid) {
+        if (this.shhweb3 && this.replyid && this.requestid) {
 
-        var mytopics = [
-          null, [self.shhweb3.encodetopic(this.requestid),
-            self.shhweb3.encodetopic(this.replyid)
-          ]
-        ];
+          var mytopics = [
+            null, [self.shhweb3.encodetopic(this.requestid),
+              self.shhweb3.encodetopic(this.replyid)
+            ]
+          ];
 
           this.filter = self.shhweb3.shh.filter({
             "topics": mytopics,
@@ -780,6 +721,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
       _processmessage: function(error, result) {
         var self = this;
+        //debugger;
         try {
           var payload = JSON.parse(self.shhweb3.toAscii(result.payload));
           console.log('incoming in whisperer: web3 ', result,self.shhweb3.toAscii(result.payload));

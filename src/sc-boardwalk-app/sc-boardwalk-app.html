@@ -199,9 +199,11 @@
       currenthasht="{{currenthasht}}">
     </sc-hashtag>
 
+    <app-route route="{{route}}" pattern="/simpledealseeker" tail="{{pageTail2}}"></app-route>
+
     <sc-simpledeal-seeker
       data-page="simpledealseeker"
-      route="{{pageTail}}"
+      route="{{pageTail2}}"
       id="simpledealseeker"
       web3="[[web3]]"
       on-leave="simpledeal_tohome">
