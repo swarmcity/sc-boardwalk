@@ -196,7 +196,10 @@
       swtbalance="[[swtbalance]]"
       on-leave="hashtag_tohome"
       on-simpledeal="hashtag_simpledeal"
-      currenthasht="{{currenthasht}}">
+      currenthasht="{{currenthasht}}"
+      on-to-notifications="hashtag_tonotifications"
+      on-to-profile="hashtag_toProfile"
+      >
     </sc-hashtag>
 
     <app-route route="{{route}}" pattern="/simpledealseeker" tail="{{pageTail2}}"></app-route>
@@ -455,6 +458,16 @@
       hashtag_tohome: function(){
         this.transitionto('/home');
       },
+
+      hashtag_tonotifications: function(){
+        this.transitionto('/notifications');
+      },
+
+      hashtag_toProfile: function(){
+        this.transitionto('/profile');
+      },
+
+
 
       simpledeal_tohome: function(){
         this.transitionto('/home');

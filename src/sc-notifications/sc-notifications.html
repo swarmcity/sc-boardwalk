@@ -175,13 +175,13 @@ This components shows the in-app notifications in Swarm City.
             pubkey="[[pubkey]]"
             size="small"
             ></sc-username>
-            <sc-notificationbadge on-tap="tonotifications" class="noSelect" notifnumber="{{notifnumber}}" dummynotifications="{{notifications}}"></sc-notificationbadge>
+            <sc-notificationbadge on-tap="tonotifications" class="notifbadge noSelect" notifnumber="{{notifnumber}}" dummynotifications="{{notifications}}"></sc-notificationbadge>
           </div>
 
-          <div class="pubk" on-tap="toProfile">
+<!--           <div class="pubk" on-tap="toProfile">
             <p>{{pubkey}}</p>
           </div>
-
+ -->
           <div id="balancebox" class="notifbalance_box" on-tap="toWalletview">
             <sc-balance
               refcur="EUR"
@@ -292,6 +292,7 @@ This components shows the in-app notifications in Swarm City.
       * 'leave' fires the 'leave' to the parent-element. (This also contains animation-config for going back to sc-home.)
       */
       leave: function(){
+        debugger;
         this.fire('leave');
       },
 
@@ -338,13 +339,6 @@ This components shows the in-app notifications in Swarm City.
         }
 
        console.log("yep ----------------",this.web3);
-      },
-
-      /**
-      * 'leave' fires the 'leave' to the parent-element. (This also contains animation-config for going back to sc-home.)
-      */
-      leave: function(){
-        this.fire('leave');
       },
 
 
