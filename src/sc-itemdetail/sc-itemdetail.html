@@ -167,7 +167,6 @@ This components shows the detailed view of a request.
     <iron-media-query query="(min-width:0px) and (max-width: 540px)" query-matches="{{phoneview}}"></iron-media-query>
 
     <div class="totalcontainer">
-
       <div class="scrollcontainer">
       <div id="itemdetailcontent" class="shadow whiteback totalwidth vertic">
         <div class="totalwidth horizont centercenter backbtnarea">
@@ -404,6 +403,7 @@ This components shows the detailed view of a request.
       },
 
       _pubkeyCompare: function(){
+//        debugger;
         if (this.identity.pubkey == this.itemdata.offererpubkey){
           // console.log("yaaaaaaaaaaay!!!!", this.identity.pubkey,this.itemdata.offererpubkey);
           this.youareowner = true;          

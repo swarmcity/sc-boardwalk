@@ -307,8 +307,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
     <neon-animated-pages id="hashpages" attr-for-selected="data-action" selected="[[data.action]]">
 
       <neon-animatable data-action="list">
-        <paper-icon-button id="addbtn" icon="sc-icons:plus" class="left whiteback shadow medium addbtn" on-tap="tonewItem" noink>+ new offer</paper-icon-button>
-
+          <paper-icon-button disabled="{{!hasgeohash}}" id="addbtn" icon="sc-icons:plus" class="left whiteback shadow medium addbtn" on-tap="tonewItem" noink>+ new offer</paper-icon-button>
           <div id="pagecontent" class="pagecontent totalwidth">
             <div id="{{item}}" class="hashtagtotal totalwidth horizont centercenter">
 
@@ -651,6 +650,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
       },
 
       attached: function(){
+        this.hasgeohash = false;
       },
 
       _web3: function() {
@@ -674,6 +674,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       _geohash: function() {
         console.log('sc-hashtag -> your geohash is', this.geohash);
+        this.hasgeohash = true;
         this._starthastaglistener();
       },
 
@@ -919,7 +920,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
       },
 
       toMakeDeal: function(e){  
-        debugger;
+//        debugger;
         this.fire('simpledeal',Object.assign({}, e.detail, {hashtag: this.data.hashtag}));
       }
 

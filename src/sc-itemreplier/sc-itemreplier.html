@@ -151,34 +151,7 @@ This components allow a Swarm Citizen to reply on a request.
 
 
         <template is="dom-if" if="{{_is(replystate,'sendingreply')}}">
-          <template is="dom-if" if="{{loadingreply}}">
-            <sc-loader small color="blue" class="blue" on-tap="replyLoaded">Submitting your reply</sc-loader>
-          </template>
-       <!--    <template is="dom-if" if="{{!loadingreply}}">
-            <div class="totalwidth vertic centercenter">
-              <div class="totalwidth horizont start startjust">
-              <ac-avatar
-                identity="{{identity}}"
-                pubkey="{{account}}"
-                mode="imgonly"
-                size="verysmall"
-                on-tap="exit"
-                class="youravatar">
-              </ac-avatar>
-                <div class="flex vertic centercenter">
-                  <p class="totalwidth yourname small bold grey4">You</p>
-                  <p class="totalwidth yourrep small bold blue">12 REP</p>
-                </div>
-              <div class="horizont end endjust acceptsfor">
-                <p class="bold grey4">1300.00 <span class="replySWT">SWT</span></p>
-                <iron-icon class="grey4 small" icon="sc-icons:v">checked</iron-icon>
-              </div>
-              </div>
-              <p class="totalwidth yourtxt grey4">
-                <small class="grey3 small">a few seconds ago</small><br>
-                I'd love to drive you! Pick you up at 14:00?</p>
-            </div>
-          </template>              -->   
+            <sc-loader small color="blue" class="blue" on-tap="replyLoaded">Submitting your reply</sc-loader> 
         </template>
       </div>
   </template>
@@ -218,7 +191,7 @@ This components allow a Swarm Citizen to reply on a request.
       */
       onEnter: function(){
         this.replystate = 'init';
-        this.loadingreply = true;
+        this.submittingreply = false;
         this.bgcolor = "whiteback";
         this.borderz = "lightgreytopborder";
       },
@@ -248,6 +221,7 @@ This components allow a Swarm Citizen to reply on a request.
       * When the action is trigger, 'replystateChanger' checks the replystate and does a certain action accordingly
       */
     replystateChanger: function(){
+        var self= this;
 
         switch (this.replystate) {
           case 'init':
@@ -297,12 +271,13 @@ This components allow a Swarm Citizen to reply on a request.
             console.log('posting to topics', topics);
 
             this.shhweb3.shh.post(options, function(err, res) {
+              debugger;
               if (!err){
                 console.log('sc->itemreplier -> Reply posted');
+                self.replystate = 'init';
               }else{
                 console.log('sc-itemreplier -> whisper error:',err);
               }
-              self.replystate = 'init'
               self.bgcolor = "whiteback";
               self.borderz = "lightgreytopborder";
             });
@@ -324,7 +299,7 @@ This components allow a Swarm Citizen to reply on a request.
     },
 
     replyLoaded: function(){
-      this.loadingreply = false;
+      //this.submittingreply = false;
     },
 
     });

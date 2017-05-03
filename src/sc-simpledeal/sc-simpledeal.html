@@ -35,26 +35,27 @@
         });
       },
 
-      getGasPrice: function(){
-         var self = this;
+      getGasPrice: function() {
+        var self = this;
         return new Promise(function(resolve, reject) {
-        self.web3.eth.getGasPrice(function(err, result) {
-          self.gasPrice = result;
-          console.log('nonce=',result);
-          resolve();
+          self.web3.eth.getGasPrice(function(err, result) {
+            self.gasPrice = result;
+            console.log('nonce=', result);
+            resolve();
+          })
         });
       },
 
-      getNonce: function(account){
+      getNonce: function(account) {
         var self = this;
         return new Promise(function(resolve, reject) {
-          self.web3.eth.getTransactionCount(account,null,function(err,res){
+          self.web3.eth.getTransactionCount(account, null, function(err, res) {
             this.nonce = res;
-            console.log('nonce=',res);
+            console.log('nonce=', res);
             resolve();
           });
         });
-      }
+      },
 
 
       createDeal: function() {

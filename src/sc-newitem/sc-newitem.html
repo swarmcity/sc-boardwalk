@@ -364,10 +364,12 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
       _geohash: function(){
         console.log('sc-newitem -> your geohash is',this.geohash);
+        this.hasgeohash = true;
       },
 
       ready: function(){
         this.onEnter();
+        this.hasgeohash = false;
       },
 
       /**
