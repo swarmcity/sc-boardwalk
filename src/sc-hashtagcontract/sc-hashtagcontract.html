@@ -82,6 +82,9 @@
       getRep: function(pubkey){
         var self = this;
         return schashtagrep_ready.then(function(){
+          if (!self.HashtagRepInstance){
+            return 0;
+          }
           return self.HashtagRepInstance.balanceOf(pubkey);
         })
       }
