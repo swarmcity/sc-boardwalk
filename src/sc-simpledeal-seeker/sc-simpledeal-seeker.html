@@ -18,19 +18,20 @@
 <link rel="import" href="../sc-config/sc-config.html">
 <link rel="import" href="../sc-helpers/sc-helpers.html">
 <link rel="import" href="../sc-hashtagcontract/sc-hashtagcontract.html">
+<link rel="import" href="../sc-simpledeal/sc-simpledeal.html">
 
 <!--<link rel="import" href="../sc-balance/sc-balance.html"> -->
 
 
 <!--
-`sc-makedeal`
+`sc-simpledeal-seeker`
 
 This components allows 2 Swarm Citizens to make a deal with eachother, based on the request of the service-seeker.
 
-@demo src/sc-makedeal/demo/index.html 
+@demo src/sc-simpledeal-seeker/demo/index.html 
 -->
 
-<dom-module id="sc-makedeal">
+<dom-module id="sc-simpledeal-seeker">
 
   <template>
     <style include="sc-styles">
@@ -214,7 +215,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         @apply(--layout-vertical);
         @apply(--layout-start);
         @apply(--layout-start-justified); 
-        margin-top: 3vw;
+        margin-bottom: 2vw;
        
       }
 
@@ -227,6 +228,13 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         @apply(--layout-start-justified);
         margin-bottom: 10px;
         
+      }
+
+      .divider {
+        height: 100%;
+        width: 2px;
+        border-left: 2px dotted var(--sc-grey2);
+        margin: 0px 50px;
       }
 
 
@@ -285,6 +293,13 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       .acceptbtn {
         padding: 18px 22px 18px 34px;
         margin-right: 30px; 
+      }
+
+      .dealmsg {
+        box-sizing:border-box;
+        padding: 10px 0px;
+
+
       }
 
 
@@ -366,35 +381,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
             <div class="totalbox vertic center startjust totalwidth">
               <div class="tophalf totalwidth">
-                <h1 class="">Do you want to make a deal with <span class="light blue replyer_username">{{replydata.replyer.username}}</span> in <span class="light">#pioneer</span> for <span class="light">{{replydata.replyamount}} SWT</span>?</h1>
-                  <div class="avatars_funding">
-                  <div class="avatar_funding">
-                    <sc-avatar
-                      ipfshash="[[identity.avatarhash]]"
-                      pubkey="[[pubkey]]"
-                      id="makedeal_myavatar"
-                      size="{{avatarsize}}"
-                      ></sc-avatar>
-                    <div class="funding">
-                      <p class="bold yellow">{{replydata.replyamount}} + 0.5 <span class="swtletters">SWT</span></p>
-                    </div>
-                    <iron-icon class$="v_icon {{vclass}} {{vsize}}" icon="sc-icons:v"></iron-icon>
-                  </div>
-                  <div class="avatar_funding">
-                    <sc-avatar
-                      ipfshash="{{replydata.replyer.avatar}}"
-                      id="makedeal_otheravatar"
-                      size="{{avatarsize}}"
-                      ></sc-avatar>
-                   <div class="funding">
-                      <p class="bold yellow">{{replydata.replyamount}}<span class="swtletters">SWT</span></p>
-                    </div>
-                    <iron-icon class$="v_icon {{vclass}} {{vsize}}" icon="sc-icons:v"></iron-icon>
-                  </div>
-                </div>
-
-
-  <!-- 
+                <h1 class="">You're about to make a deal with <span class="light blue replyer_username">{{replydata.replyer.username}}</span> in <span class="light">#pioneer</span> for <span class="light">{{replydata.replyamount}} SWT</span>.</h1>
                 <div class="announce">
                   <div class="avatars">
                       <sc-avatar
@@ -411,7 +398,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                   </div>
                   <p class="bold blue details_toggler" on-tap="showDetails">Show details</p>
                 </div>
- -->
+
 
                 <iron-collapse id="details_collapser">
 <!--             <p class="bold blue centertxt">You're about to make a deal with <span class="replyer_username">{{replydata.replyer.username}}</span> over:</p>
@@ -441,10 +428,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                 </div>
               </div>
             </div>
-
           </neon-animatable>
-
-
 
 
 
@@ -458,25 +442,26 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
             <div class="totalbox vertic center startjust totalwidth">
               <div class="tophalf totalwidth withconfirmq">
-                <p class="reg grey2">Both parties have to fund a deal <!--  <span class="light">778901152</span>  -->to create one.</p>
                 <div class="avatars_funding">
                   <div class="avatar_funding">
                     <sc-avatar
                       ipfshash="[[identity.avatarhash]]"
                       pubkey="[[pubkey]]"
                       id="makedeal_myavatar"
-                      size="{{avatarsize}}"
+                      size="{{avatarfundingsize}}"
                       ></sc-avatar>
                     <div class="funding">
                       <p class="bold yellow">{{replydata.replyamount}} + 0.5 <span class="swtletters">SWT</span></p>
                     </div>
                     <iron-icon class$="v_icon {{vclass}} {{vsize}}" icon="sc-icons:v"></iron-icon>
                   </div>
+                  <!-- <div class="divider"></div> -->
+
                   <div class="avatar_funding">
                     <sc-avatar
                       ipfshash="{{replydata.replyer.avatar}}"
                       id="makedeal_otheravatar"
-                      size="{{avatarsize}}"
+                      size="{{avatarfundingsize}}"
                       ></sc-avatar>
                    <div class="funding">
                       <p class="bold yellow">{{replydata.replyamount}}<span class="swtletters">SWT</span></p>
@@ -484,17 +469,34 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                     <iron-icon class$="v_icon {{vclass}} {{vsize}}" icon="sc-icons:v"></iron-icon>
                   </div>
                 </div>
-                
+                <div class="dealmsg horizont center startjust">
+                <template is="dom-if" if="{{!dealactivated}}">
+                  <p class="reg grey2">Both parties have to fund a deal to create one.</p>
+                </template>
+                <template is="dom-if" if="{{!dealactivated}}">
+                  <p class="reg grey2">{{dealmsg}}</p>
+                </template>
+                </div>
+
               </div>
               <div class="confirmation_question horizont centercenter totalwidth">
-                <p class="bold green centertxt">Fund a deal in #pioneer for {{replydata.replyamount}},5 SWT?</p>
+                <template is="dom-if" if="{{!dealactivated}}">
+                  <p class="bold green centertxt">Fund a deal in #pioneer for {{replydata.replyamount}},5 SWT?</p>
+                </template>
+
               </div>
               <div class="bottomhalf greenback totalwidth">
+                <template is="dom-if" if="{{!dealactivated}}">
+
                 <div class="confirmer">
                   <paper-icon-button icon="sc-icons:v" noink class="confirmbtn green big white shadow" on-tap="startDeal"></paper-icon-button>
                 </div>
+                                </template>
+
               </div>
             </div>
+
+            <sc-simpledeal id="simpledeal" on-status-update="handle"></sc-simpledeal>
 
           </neon-animatable>
 
@@ -541,7 +543,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
     Polymer({
 
-      is: 'sc-makedeal',
+      is: 'sc-simpledeal-seeker',
 
       behaviors: [
         Polymer.NeonSharedElementAnimatableBehavior,
@@ -585,6 +587,9 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         this.selecteddealpage = 'dodeal';
 
         this.vclass = "v_init";
+
+            this.dealactivated = false;
+
       },
 
       _data: function(){
@@ -709,7 +714,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
             "topics": mytopics,
           });
 
-          console.log("sc-makedeal: channelswitch, start listening to", mytopics);
+          console.log("sc-simpledeal-seeker: channelswitch, start listening to", mytopics);
           this.filter.watch(this._processmessage.bind(this));
         }
       },
@@ -763,8 +768,46 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       },
 
       startDeal: function(){
-        alert("Sponnetrakket, JONGE!");
+        // alert("Sponnetrakket, JONGE!");
+        this.$.simpledeal.createDeal();
+      },
+
+
+      handle: function(e) {
+        // debugger;
+        var deal = e.detail;
+        console.log('DealID=', deal.dealID);
+            this.dealactivated = true;
+
+        switch (deal.step) {
+          case 'deal-created':
+            this.dealmsg
+            break;
+          case 'deal-deploy-start':
+            console.log(deal.txhash);
+            break;
+          case 'deal-deploy-end':
+            break;
+          case 'deal-register-start':
+            console.log(deal.txhash);
+            break;
+          case 'deal-register-end':
+            break;
+          case 'deal-myallowance-start':
+            console.log(deal.txhash);
+            break;
+          case 'deal-myallowance-start':
+            break;
+          case 'deal-fund-start':
+            console.log(deal.txhash);
+            break;
+          case 'deal-fund-end':
+            // nu zou er een SHH message n/d andere moeten gaan om te zeggen : nu gij funden JONGE
+            break;
+        }
       }
+
+
 
 
     });

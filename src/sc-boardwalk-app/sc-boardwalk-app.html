@@ -11,6 +11,8 @@
 
 <link rel="import" href="../sc-intro/sc-intro.html">
 <link rel="import" href="../sc-home/sc-home.html">
+<link rel="import" href="../sc-simpledeal/sc-simpledeal-seeker.html">
+<link rel="import" href="../sc-simpledeal/sc-simpledeal-provider.html">
 
 
 
@@ -193,17 +195,17 @@
       pubkey="[[account]]"
       swtbalance="[[swtbalance]]"
       on-leave="hashtag_tohome"
-      on-makedeal="hashtag_makedeal"
+      on-simpledeal="hashtag_simpledeal"
       currenthasht="{{currenthasht}}">
     </sc-hashtag>
 
-    <sc-makedeal
-      data-page="makedeal"
+    <sc-simpledeal-seeker
+      data-page="simpledealseeker"
       route="{{pageTail}}"
-      id="makedeal"
+      id="simpledealseeker"
       web3="[[web3]]"
-      on-leave="makedeal_tohome">
-    </sc-makedeal>
+      on-leave="simpledeal_tohome">
+    </sc-simpledeal-seeker>
     
     <sc-notifications
       data-page="notifications"
@@ -452,7 +454,7 @@
         this.transitionto('/home');
       },
 
-      makedeal_tohome: function(){
+      simpledeal_tohome: function(){
         this.transitionto('/home');
       },
 
@@ -490,8 +492,8 @@
         // console.log("Ik heb zeeeeeeee !!!!!!!", this.notifs);
       },
 
-      hashtag_makedeal: function(e){
-        this.transitionto('/makedeal/' + e.detail.hashtag + '/' + e.detail.parentrequestid + '/' + e.detail.id);
+      hashtag_simpledeal: function(e){
+        this.transitionto('/simpledealseeker/' + e.detail.hashtag + '/' + e.detail.parentrequestid + '/' + e.detail.id);
       },
 
 
