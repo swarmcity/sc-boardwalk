@@ -114,7 +114,11 @@ This components shows the detailed view of a request.
     border-top: 1px solid rgba(0,0,0,0.075);
 
   }
-
+/*
+  sc-itemreply {
+    margin: 15px;
+  }
+*/
 
 
   @media all and (min-width: 0) and (max-width: 540px) { 
@@ -200,7 +204,7 @@ This components shows the detailed view of a request.
           <sc-itemreplier itemid="{{itemdata.id}}">
           </sc-itemreplier>
         </template>
-
+        <div class="whiteback totalwidth">
         <template is="dom-repeat" items="{{replies}}">
           <sc-itemreply
           btnshow="{{youareowner}}"
@@ -210,6 +214,7 @@ This components shows the detailed view of a request.
           on-to-makedeal="toMakeDeal">
           </sc-itemreply>
         </template>
+        </div>
       </div>
       <div class="fivespace"></div>
       </div>
