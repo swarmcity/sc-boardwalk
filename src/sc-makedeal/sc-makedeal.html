@@ -366,8 +366,35 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
             <div class="totalbox vertic center startjust totalwidth">
               <div class="tophalf totalwidth">
-                <h1 class="">You're about to make a deal with <span class="light blue replyer_username">{{replydata.replyer.username}}</span> in <span class="light">#pioneer</span> for <span class="light">{{replydata.replyamount}} SWT</span>.</h1>
-  
+                <h1 class="">Do you want to make a deal with <span class="light blue replyer_username">{{replydata.replyer.username}}</span> in <span class="light">#pioneer</span> for <span class="light">{{replydata.replyamount}} SWT</span>?</h1>
+                  <div class="avatars_funding">
+                  <div class="avatar_funding">
+                    <sc-avatar
+                      ipfshash="[[identity.avatarhash]]"
+                      pubkey="[[pubkey]]"
+                      id="makedeal_myavatar"
+                      size="{{avatarsize}}"
+                      ></sc-avatar>
+                    <div class="funding">
+                      <p class="bold yellow">{{replydata.replyamount}} + 0.5 <span class="swtletters">SWT</span></p>
+                    </div>
+                    <iron-icon class$="v_icon {{vclass}} {{vsize}}" icon="sc-icons:v"></iron-icon>
+                  </div>
+                  <div class="avatar_funding">
+                    <sc-avatar
+                      ipfshash="{{replydata.replyer.avatar}}"
+                      id="makedeal_otheravatar"
+                      size="{{avatarsize}}"
+                      ></sc-avatar>
+                   <div class="funding">
+                      <p class="bold yellow">{{replydata.replyamount}}<span class="swtletters">SWT</span></p>
+                    </div>
+                    <iron-icon class$="v_icon {{vclass}} {{vsize}}" icon="sc-icons:v"></iron-icon>
+                  </div>
+                </div>
+
+
+  <!-- 
                 <div class="announce">
                   <div class="avatars">
                       <sc-avatar
@@ -384,7 +411,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                   </div>
                   <p class="bold blue details_toggler" on-tap="showDetails">Show details</p>
                 </div>
-
+ -->
 
                 <iron-collapse id="details_collapser">
 <!--             <p class="bold blue centertxt">You're about to make a deal with <span class="replyer_username">{{replydata.replyer.username}}</span> over:</p>
@@ -405,20 +432,22 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                       </div>
                     </div>
                 </iron-collapse>
-
-                <template is="dom-if" if="{{!phoneview}}">
-                  <div class="tenspace"></div>
-                </template>
               </div>
 
               <div class="bottomhalf blueback totalwidth">
                 <div class="confirmer">
-                  <paper-icon-button icon="sc-icons:arrowright" noink class="confirmbtn blue big white shadow" on-tap="toDodeal"></paper-icon-button>
+                  <paper-button icon="sc-icons:v" noink class="blue bigbtn white shadow" on-tap="toDodeal">Fund this deal <iron-icon class="white" icon="sc-icons:v"></iron-icon>
+                  </paper-button>
                 </div>
               </div>
             </div>
 
           </neon-animatable>
+
+
+
+
+
 
           <neon-animatable data-action="dodeal">
 
@@ -429,7 +458,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
             <div class="totalbox vertic center startjust totalwidth">
               <div class="tophalf totalwidth withconfirmq">
-                <h1 class="">Deal <span class="light">778901152</span> is created.</h1>
+                <p class="reg grey2">Both parties have to fund a deal <!--  <span class="light">778901152</span>  -->to create one.</p>
                 <div class="avatars_funding">
                   <div class="avatar_funding">
                     <sc-avatar
@@ -455,9 +484,10 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                     <iron-icon class$="v_icon {{vclass}} {{vsize}}" icon="sc-icons:v"></iron-icon>
                   </div>
                 </div>
+                
               </div>
               <div class="confirmation_question horizont centercenter totalwidth">
-                <p class="bold green centertxt">Do you want to fund this deal for {{replydata.replyamount}} SWT?</p>
+                <p class="bold green centertxt">Fund a deal in #pioneer for {{replydata.replyamount}},5 SWT?</p>
               </div>
               <div class="bottomhalf greenback totalwidth">
                 <div class="confirmer">
@@ -552,7 +582,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         // this.myamount_state = 'amountwaiting';
         // this.otheramount_state = 'amountwaiting';
 
-        this.selecteddealpage = 'init';
+        this.selecteddealpage = 'dodeal';
 
         this.vclass = "v_init";
       },
