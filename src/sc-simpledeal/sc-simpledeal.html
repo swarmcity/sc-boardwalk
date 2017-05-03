@@ -1,10 +1,13 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../sc-config/sc-config.html">
 <script src="../../bower_components/browser-builds/dist/ethereumjs-tx.js"></script>
+<link rel="import" href="../sc-web3/sc-web3.html">
+
 <script type="text/javascript" src="../../bower_components/uuid-js/lib/uuid.js"></script>
 
 <dom-module id="sc-simpledeal">
   <template>
+    <sc-web3 id="web3" web3="{{web3}}"></sc-web3>
     <sc-config config="{{config}}"></sc-config>
   </template>
   <!-- Creates the element's prototype and registers it -->
@@ -15,9 +18,44 @@
         
       },
 
+      observers: [
+        '_getready(web3)',
+      ],
+
       ready: function(){
-        
+
       },
+
+      _getready: function(){
+        if (!this.web){
+          return;
+        }
+        Promise.all([getGasPrice(), getNonce()]).then(values => { 
+          console.log('Klaar! poep afvegen !');
+        });
+      },
+
+      getGasPrice: function(){
+         var self = this;
+        return new Promise(function(resolve, reject) {
+        self.web3.eth.getGasPrice(function(err, result) {
+          self.gasPrice = result;
+          console.log('nonce=',result);
+          resolve();
+        });
+      },
+
+      getNonce: function(account){
+        var self = this;
+        return new Promise(function(resolve, reject) {
+          self.web3.eth.getTransactionCount(account,null,function(err,res){
+            this.nonce = res;
+            console.log('nonce=',res);
+            resolve();
+          });
+        });
+      }
+
 
       createDeal: function() {
         this.dealID = UUIDjs.create().toString();
