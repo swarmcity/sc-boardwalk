@@ -1,0 +1,135 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../sc-config/sc-config.html">
+<script src="../../bower_components/browser-builds/dist/ethereumjs-tx.js"></script>
+<script type="text/javascript" src="../../bower_components/uuid-js/lib/uuid.js"></script>
+
+<dom-module id="sc-simpledeal">
+  <template>
+    <sc-config config="{{config}}"></sc-config>
+  </template>
+  <!-- Creates the element's prototype and registers it -->
+  <script>
+    Polymer({
+      is: 'sc-simpledeal',
+      properties: {
+        
+      },
+
+      ready: function(){
+        
+      },
+
+      createDeal: function() {
+        this.dealID = UUIDjs.create().toString();
+
+        this.fire('status-update', {
+          step: 'deal-created',
+          dealID: self.dealID
+        });
+        var self = this;
+
+        var debug_delay = 3;
+
+        // starting to deploy the deal
+        setTimeout(function() {
+          self.fire('status-update', {
+            dealID: self.dealID,
+            step: 'deal-deploy-start',
+            txhash: '0x1',
+          });
+        }, debug_delay * 1 * 1000);
+
+        // finished deploying the deal
+        setTimeout(function() {
+          self.fire('status-update', {
+            dealID: self.dealID,
+            step: 'deal-deploy-end',
+            dealcontractaddress: '0x2' 
+          });
+        }, debug_delay * 2 * 1000);
+
+        // start registering the deal in the hashtagcontract
+        setTimeout(function() {
+          self.fire('status-update', {
+            dealID: self.dealID,
+            step: 'deal-register-start',
+            txhash: '0x3',
+          });
+        }, debug_delay * 3 * 1000);
+
+        // start registering the deal in the hashtagcontract
+        setTimeout(function() {
+          self.fire('status-update', {
+            dealID: self.dealID,
+            step: 'deal-register-end',
+          });
+        }, debug_delay * 4 * 1000);
+
+        // start registering the deal in the hashtagcontract
+        setTimeout(function() {
+          self.fire('status-update', {
+            dealID: self.dealID,
+            step: 'deal-myallowance-start',
+            txhash: '0x4',
+          });
+        }, debug_delay * 5 * 1000);
+
+
+        // start registering the deal in the hashtagcontract
+        setTimeout(function() {
+          self.fire('status-update', {
+            dealID: self.dealID,
+            step: 'deal-myallowance-end',
+          });
+        }, debug_delay * 6 * 1000);
+
+        setTimeout(function() {
+          self.fire('status-update', {
+            dealID: self.dealID,
+            step: 'deal-fund-start',
+            txhash: '0x5',            
+          });
+        }, debug_delay * 7 * 1000);
+
+        setTimeout(function() {
+          self.fire('status-update', {
+            dealID: self.dealID,
+            step: 'deal-fund-end',       
+          });
+        }, debug_delay * 8 * 1000);
+
+      }
+
+      // handle: function() {
+      //   console.log('DealID=', deal.dealID);
+
+      //   switch (deal.step) {
+      //     case 'deal-created':
+      //       break;
+      //     case 'deal-deploy-start':
+      //       console.log(deal.txhash);
+      //       break;
+      //     case 'deal-deploy-end':
+      //       break;
+      //     case 'deal-register-start':
+      //       console.log(deal.txhash);
+      //       break;
+      //     case 'deal-register-end':
+      //       break;
+      //     case 'deal-myallowance-start':
+      //       console.log(deal.txhash);
+      //       break;
+      //     case 'deal-myallowance-start':
+      //       break;
+      //     case 'deal-fund-start':
+      //       console.log(deal.txhash);
+      //       break;
+      //     case 'deal-fund-end':
+      //       // nu zou er een SHH message n/d andere moeten gaan om te zeggen : nu gij funden JONGE
+      //       break;
+      //   }
+      // }
+
+    });
+  </script>
+</dom-module>
