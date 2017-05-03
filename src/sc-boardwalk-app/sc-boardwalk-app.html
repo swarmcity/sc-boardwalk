@@ -219,7 +219,9 @@
       identity="[[identity]]"
       pubkey="[[account]]"
       swtbalance="[[swtbalance]]"
-      on-leave="notifications_tohome">
+      on-leave="notifications_tohome"
+      on-jump-to="notifications_jumpto"
+      >
     </sc-notifications>
 
 
@@ -497,6 +499,11 @@
       hashtag_simpledeal: function(e){
         this.transitionto('/simpledealseeker/' + e.detail.hashtag + '/' + e.detail.parentrequestid + '/' + e.detail.id);
       },
+
+      notifications_jumpto: function(e){
+//        debugger;
+        this.transitionto(e.detail.target);
+      }
 
 
     });

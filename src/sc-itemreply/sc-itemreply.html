@@ -418,7 +418,10 @@ This component shows a reply on a request.
           subjectusername: this.identity.username, //'Hank Moovy',
           timestamp: Date.now(),
           dealhashtag: this.itemdata.offerhashtag,
-          msg: 'wants to engage in a deal with you: ' + this.itemdata.offer //"Hi Faffy Dee, I can come and pick you up! Im around to corner, so Ill be there in 5!"'
+          msg: 'wants to engage in a deal with you: ' + this.itemdata.offer,
+          // now the specific fields for this type
+          dealid: this.itemdata.id,
+          replyid: this.replydata.id
         };
 
 

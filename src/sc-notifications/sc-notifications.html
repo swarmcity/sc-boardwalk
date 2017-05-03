@@ -199,7 +199,7 @@ This components shows the in-app notifications in Swarm City.
             </div>
           </template>
             <template is="dom-repeat" items="{{notifications}}">
-            <div class="notif_item horizont start startjust">
+            <div on-tap="notificationTapHandler" class="notif_item horizont start startjust">
               <sc-avatar
               class="subjectavatar"
               ipfshash="[[item.subjectavatar]]"
@@ -352,6 +352,11 @@ This components shows the in-app notifications in Swarm City.
         console.log("THIS IS pubkeeeeyy. IN notificationsSS:", this.pubkey);
       },
 
+      notificationTapHandler: function(e) {
+        this.fire('jump-to', {
+          target: '/simpledealprovider/pioneer/' + e.model.item.dealid + '/' + e.model.item.replyid
+        });
+      },
 
 
     });
