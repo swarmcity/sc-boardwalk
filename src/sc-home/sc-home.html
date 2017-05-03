@@ -96,11 +96,11 @@
             <template is="dom-if" if="{{!lastbackup}}">
               <div class="warningbackup blue vertic centercenter"><p class="bold blue">!</p></div>
             </template>
-              <sc-notificationbadge on-tap="toNotifs" class="notifbadge noSelect" notifnumber="{{notifnumber}}" dummynotifications="{{notifs}}"></sc-notificationbadge>
+              <sc-notificationbadge on-to-notifications="toNotifs" class="notifbadge noSelect" notifnumber="{{notifnumber}}" dummynotifications="{{notifs}}"></sc-notificationbadge>
           </div>
-          <div class="pubk" on-tap="toProfile">
+<!--           <div class="pubk" on-tap="toProfile">
             <p>{{pubkey}}</p>
-          </div>
+          </div> -->
         </div>
         <div id="homebalance" class="balance_box" on-tap="toWalletview">
           <sc-balance

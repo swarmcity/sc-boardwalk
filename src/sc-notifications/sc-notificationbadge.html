@@ -24,8 +24,6 @@ This components simple shows the number of in-app notifications in a badge-icon.
     <style include="sc-styles">
       :host {
         display: inline-block;
-        border: 1px solid red;
-
       }
 
       .havemsg {
@@ -38,7 +36,9 @@ This components simple shows the number of in-app notifications in a badge-icon.
 
       .havepaddings {
         padding: 0px 5px 0px 5px; 
-        margin-left: 4px;
+        margin-left: 8px;
+        border: 1px solid var(--sc-grey4);
+
       }
 
       .nopaddings {
@@ -77,12 +77,12 @@ This components simple shows the number of in-app notifications in a badge-icon.
     </style>
         <sc-shh web3="{{shhweb3}}"></sc-shh>
         <div class$="havemsg horizont centercenter {{paddings}} {{backgr}} {{animclass}}">
-          <!-- <template is="dom-if" if="{{!_is(notificationscounter,0)}}"> -->
-            <p class="red bold">{{notificationscounter}}</p>
-          <!-- </template> -->
-<!--           <template is="dom-if" if="{{_is(notificationscounter,0)}}">
+          <template is="dom-if" if="{{!_is(notificationscounter,0)}}">
+            <p class="grey4 bold">{{notificationscounter}}</p>
+          </template>
+          <template is="dom-if" if="{{_is(notificationscounter,0)}}">
               <iron-icon icon="sc-icons:babble" class="grey3 babbleicon">reply-icon</iron-icon>
-          </template> -->
+          </template>
         </div>
   
 
@@ -133,7 +133,7 @@ This components simple shows the number of in-app notifications in a badge-icon.
       },
 
       listeners: {
-        // 'tap':'change'
+        'tap':'fireMe'
       },
 
       actions: {
@@ -309,6 +309,10 @@ This components simple shows the number of in-app notifications in a badge-icon.
 
 
       },
+
+      fireMe: function(){
+        this.fire('to-notifications');
+      }
 
 
     });

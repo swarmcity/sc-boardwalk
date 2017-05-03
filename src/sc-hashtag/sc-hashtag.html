@@ -284,15 +284,15 @@ This is the component showing all requests of a certain hashtag. It contains a r
               <div class="warningbackup blue vertic centercenter"><p class="bold blue">!</p></div>
             </template> -->
             <template is="dom-if" if="{{!phoneview}}">
-              <sc-notificationbadge on-tap="toNotifs" class="notifbadge noSelect" notifnumber="{{notifnumber}}" dummynotifications="{{notifs}}"></sc-notificationbadge>
+              <sc-notificationbadge on-to-notifications="toNotifs" class="notifbadge noSelect" notifnumber="{{notifnumber}}" dummynotifications="{{notifs}}"></sc-notificationbadge>
             </template>
           </div>
-          <template is="dom-if" if="{{!phoneview}}">
+<!--           <template is="dom-if" if="{{!phoneview}}">
             <div class="pubk" on-tap="toProfile">
               <p>{{pubkey}}</p>
             </div>
           </template>
-
+ -->
           <div id="balancebox" class="balance_box" on-tap="toWalletview">
             <sc-balance
               refcur="EUR"
@@ -915,7 +915,15 @@ This is the component showing all requests of a certain hashtag. It contains a r
       toMakeDeal: function(e){  
         //debugger;
         this.fire('simpledeal',Object.assign({}, e.detail, {hashtag: this.data.hashtag}));
-      }
+      },
+
+      
+      toNotifs: function(){
+          this.fire('to-notifications');
+      },
+
+
+
 
 
 
