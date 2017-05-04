@@ -163,9 +163,9 @@ This components allow a Swarm Citizen to reply on a request.
 
       properties: {
         /**
-       * the ID of the item we're replying to.
+       * the data of the item we're replying to.
        */
-        itemid: {
+        itemdata: {
           type: String,
         },
         /**
@@ -241,10 +241,10 @@ This components allow a Swarm Citizen to reply on a request.
               this.shhidentity = this.shhweb3.shh.newIdentity();
             }
 
-            var message = {
+            var offer_reply = {
               type: 'request-reply',
               id: UUIDjs.create().toString(),
-              parentrequestid: this.itemid,
+              parentrequestid: this.itemdata.id,
               replyer: {
                 avatar: this.identity.avatarhash,
                 username: this.identity.username,
@@ -255,15 +255,15 @@ This components allow a Swarm Citizen to reply on a request.
               replytime: Date.now()
             };
             var topics = [
-              this.shhweb3.encodetopic(message.type),
-              this.shhweb3.encodetopic(this.itemid),
-              this.shhweb3.encodetopic(message.id),
+              this.shhweb3.encodetopic(offer_reply.type),
+              this.shhweb3.encodetopic(this.itemdata.id),
+              this.shhweb3.encodetopic(offer_reply.id),
             ];
 
             var options = {
               "from": this.shhidentity,
               "topics": topics,
-              "payload": this.shhweb3.fromAscii(JSON.stringify(message)),
+              "payload": this.shhweb3.fromAscii(JSON.stringify(offer_reply)),
               "ttl": 60 * 60 * 24,
               "priority": 1000
             };
@@ -281,6 +281,57 @@ This components allow a Swarm Citizen to reply on a request.
               self.bgcolor = "whiteback";
               self.borderz = "lightgreytopborder";
             });
+
+            // // send notification
+            // if (!this.shhidentity) {
+            //   this.shhidentity = this.shhweb3.shh.newIdentity();
+            // }
+
+            debugger;
+
+            var reply_to_deal_notification = {
+              type: 'reply-to-deal',
+              subjectavatar: this.identity.avatarhash, //'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
+              subjectpub: this.identity.pubkey, //'0x4458...',
+              subjectusername: this.identity.username, //'Hank Moovy',
+              timestamp: Date.now(),
+              dealhashtag: this.itemdata.offerhashtag,
+              msg: 'replied to your deal: ' + this.replytext,
+              // now the specific fields for this type
+              dealid: this.itemdata.id,
+              replyid: offer_reply.id
+             
+            };
+
+
+            var topics = [
+              this.shhweb3.encodetopic('notification'),
+              this.shhweb3.encodetopic(this.itemdata.offererpubkey)
+            ];
+
+            var options = {
+              "from": this.shhidentity,
+              "topics": topics,
+              "payload": this.shhweb3.fromAscii(JSON.stringify(reply_to_deal_notification)),
+              "ttl": 60 * 60 * 24,
+              "priority": 1000
+            };
+
+            console.log('posting to topics', topics);
+
+            this.shhweb3.shh.post(options, function(err, res) {
+              debugger;
+              if (!err) {
+                console.log('sc->itemreplier -> Reply posted');
+
+              } else {
+                console.log('sc-itemreplier -> whisper error:', err);
+              }
+
+            });
+
+
+
 
             break;
           // case 'replygivven':

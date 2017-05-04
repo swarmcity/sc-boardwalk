@@ -1245,6 +1245,16 @@
         });
       },
 
+      exportPrivateKey: function(cb){
+        var self = this;
+        this._getpwDerivedKey(function(err, pwDerivedKey) {
+          if (err){
+            return cb(err);
+          }
+          cb(null,self.keystore.exportPrivateKey(self.currentaccount, pwDerivedKey));
+        });
+      },
+
       saveVault: function(){
 
           var serializedKeystore = this.keystore.serialize();

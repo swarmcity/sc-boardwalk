@@ -199,7 +199,7 @@ This components shows the detailed view of a request.
         </div>
 
         <template is="dom-if" if="{{!youareowner}}">
-          <sc-itemreplier itemid="{{itemdata.id}}">
+          <sc-itemreplier itemdata="{{itemdata}}">
           </sc-itemreplier>
         </template>
         <div class="whiteback totalwidth">
