@@ -156,71 +156,20 @@ This components simple shows the number of in-app notifications in a badge-icon.
         if (!this.notifications){
           this.notificationscounter =  0;
         }
-        this.notificationscounter = this.notifications.length;
+        var unread = 0;
+        for (var i = 0; i < this.notifications.length; i++) {
+            if (this.notifications[i].read != true){
+              unread++;
+            }
+        }
+        this.notificationscounter = unread;
       },
-
-      // _mydeals: function(){
-      //   console.log(this.mydeals);
-      //   //debugger;
-      // },
-
 
       ready: function(){
         this.notificationscounter = 0;
         this.animclass = "defaultclass";
-          this.dummyNotif();
-
-
-
-
-        // var self = this;
-        //  setTimeout(function(){
-        //   self.dummyNotif();
-        //  }, 5000);
-
       },
 
-
-      dummyNotif: function() {
-        var self = this;
-
-        // setTimeout(function() {
-
-        //   self.dispatch('add', {
-        //     subjectavatar: 'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
-        //     subjectpub: '0x4458...',
-        //     subjectusername: 'Hank Moovy',
-        //     timestamp: 'today at 19:45',
-        //     dealhashtag: 'needaride',
-        //     msg: 'has replied to your request: "Hi Faffy Dee, I can come and pick you up! Im around to corner, so Ill be there in 5!"'
-        //   });
-
-        // }, 2000);
-
-        // setTimeout(function() {
-
-        //   self.dispatch('add', {
-        //     subjectavatar: 'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
-        //     subjectpub: '0x4458...',
-        //     subjectusername: 'Hank Moovy',
-        //     timestamp: 'today at 19:45',
-        //     dealhashtag: 'needaride',
-        //     msg: 'has replied to your request: "Hi Faffy Dee, I can come and pick you up! Im around to corner, so Ill be there in 5!"'
-        //   });
-
-        // }, 4000);
-
-      },
-
-
-      // _shhweb3: function() {
-
-      //   if (!this.shhweb3) {
-      //     throw new Error('shhweb3 not set while requesting whisper listener');
-      //   }
-
-      //   this._starthastaglistener();
-      // },
 
 
       _starthastaglistener: function() {

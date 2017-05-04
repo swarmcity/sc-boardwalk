@@ -261,15 +261,15 @@ READ={{item.read}}
           statePath: 'identity'
         },  
 
-        notifications: {
-          type: Object,
-          observer: '_notifications'
-        },
+        // notifications: {
+        //   type: Object,
+        //   observer: '_notifications'
+        // },
 
         notifications: {
           type: Array,
           statePath: 'notifications',
-          observer: 'countnotifications'
+          //observer: 'countnotifications'
         },
         /**
        * `phoneview` is a boolean to determine the viewport.
@@ -334,9 +334,6 @@ READ={{item.read}}
         }
       },
 
-      _notifications: function(){
-        console.log("THIS IS IN notificationsSS:", this.notifications);
-      },
 
       gotoUserprofile: function(e){
         // console.log("yep ----------------",e);
