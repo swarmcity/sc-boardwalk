@@ -9,6 +9,7 @@
   <script>
 
     var acshh;
+    var acshh_filters = [];
 
     Polymer({
       is: 'sc-shh',
@@ -33,15 +34,24 @@
             return;
           }
           acshh = new Web3(new Web3.providers.HttpProvider(this.host));
+          acshh.shh._filter = acshh.shh.filter;
           console.log('sc-shh -> created Web3');
         }
         this.set('web3',acshh);
         this.set('web3.encodetopic',this.encodetopic.bind(this));
+        this.set('web3.shh.filter',this.filter.bind(this));
         this.fire('web3-ready');
       },
 
       encodetopic: function(topic){
         return this.web3.fromAscii(this.shhprefix + topic);
+      },
+
+      filter: function(){
+        //console.log('maak is een filter');
+        var filter =  acshh.shh._filter(arguments);
+        acshh_filters.push[filter];
+        return filter;
       }
 
     });

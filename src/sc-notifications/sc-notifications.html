@@ -207,7 +207,7 @@ This components shows the in-app notifications in Swarm City.
               size="verysmall"
               ></sc-avatar>
               <div class="flex vertic start startjust">
-
+READ={{item.read}}
                 <p class="timestamp grey3"><moment-js date="{{item.timestamp}}" format="HH:mm:ss.SSS" from-now></moment-js> | #{{item.dealhashtag}}</p>
                 <div class="totalwidth horizont start startjust">
                 <p class="msg grey4 flex"><span class="reg" on-tap="gotoUserprofile">{{item.subjectusername}} </span>{{item.msg}}</p>
@@ -239,6 +239,15 @@ This components shows the in-app notifications in Swarm City.
 
       ],
 
+      actions: {
+        update: function(notification) {
+          return {
+            type: 'NOTIFICATIONS',
+            identity: identitydata
+          };
+        },
+      },
+
       properties: {
 
         pubkey: {
@@ -252,15 +261,15 @@ This components shows the in-app notifications in Swarm City.
           statePath: 'identity'
         },  
 
-        notifications: {
-          type: Object,
-          observer: '_notifications'
-        },
+        // notifications: {
+        //   type: Object,
+        //   observer: '_notifications'
+        // },
 
         notifications: {
           type: Array,
           statePath: 'notifications',
-          observer: 'countnotifications'
+          //observer: 'countnotifications'
         },
         /**
        * `phoneview` is a boolean to determine the viewport.
@@ -325,9 +334,6 @@ This components shows the in-app notifications in Swarm City.
         }
       },
 
-      _notifications: function(){
-        console.log("THIS IS IN notificationsSS:", this.notifications);
-      },
 
       gotoUserprofile: function(e){
         // console.log("yep ----------------",e);

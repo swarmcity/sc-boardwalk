@@ -764,39 +764,21 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         }
       },
 
-  _processmessage: function(error, result) {
+      _processmessage: function(error, result) {
         var self = this;
         //debugger;
         try {
           var payload = JSON.parse(self.shhweb3.toAscii(result.payload));
-          console.log('incoming in whisperer: web3 ', result,self.shhweb3.toAscii(result.payload));
+          console.log('incoming in whisperer: web3 ', result, self.shhweb3.toAscii(result.payload));
 
-          if (payload.id == this.requestid){
+          if (payload.id == this.requestid) {
             //debugger;
-            this.requestdata = payload;            
+            this.requestdata = payload;
           }
-          if (payload.id == this.replyid){
+          if (payload.id == this.replyid) {
             //debugger;
-            this.replydata = payload; 
+            this.replydata = payload;
           }
-
-          // switch (payload.type){
-          //   case 'request-create':
-          //     this.itemdata = payload;
-          //     break;
-          //   case 'request-reply':
-          //     console.log('this is an item reply...');
-          //     if (!this.replies){
-          //       this.replies = [];
-          //     }
-          //     this.push('replies',payload);
-          //     break;
-          //   default:
-          //     console.log('unknown payload type',payload.type);
-          //     break;
-          // }
-          //this.dispatch('add', payload);
-          //this.push('deals',payload);
         } catch (e) {
           console.log(e);
         }
