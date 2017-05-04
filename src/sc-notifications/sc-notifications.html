@@ -351,16 +351,16 @@ This components shows the in-app notifications in Swarm City.
       },
 
       notificationTapHandler: function(e) {
-        debugger;
+        //debugger;
         switch (e.model.item.type) {
           case 'reply-to-deal':
             this.fire('jump-to', {
-              target: '/hashtag/pioneer/detail/' + e.model.item.dealid
+              target: '/hashtag/' + e.model.item.dealhashtag + '/detail/' + e.model.item.dealid
             });
             break;
           case 'engage-in-deal':
             this.fire('jump-to', {
-              target: '/simpledealprovider/pioneer/' + e.model.item.dealid + '/' + e.model.item.replyid
+              target: '/simpledealprovider/' + e.model.item.dealhashtag + '/' + e.model.item.dealid + '/' + e.model.item.replyid
             });
             break;
 
@@ -368,9 +368,6 @@ This components shows the in-app notifications in Swarm City.
             console.log('unknown notification-type to handle', e.model.item);
             break;
         }
-
-
-
       },
 
     });
