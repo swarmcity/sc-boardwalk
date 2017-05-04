@@ -29,16 +29,20 @@ This components simple shows the number of in-app notifications in a badge-icon.
       .havemsg {
         min-width: 16px;
         height: 16px;
+        /*border: 1px solid var(--sc-grey4);*/
         border-radius: 8px;
         box-sizing:border-box;
         transition: all 0.1s linear;
       }
 
+      .havemsg:hover {
+          cursor: pointer;
+      }
+
+
       .havepaddings {
         padding: 0px 5px 0px 5px; 
-        margin-left: 8px;
-        border: 1px solid var(--sc-grey4);
-
+        margin-left: 4px;
       }
 
       .nopaddings {
@@ -78,7 +82,7 @@ This components simple shows the number of in-app notifications in a badge-icon.
         <sc-shh web3="{{shhweb3}}"></sc-shh>
         <div class$="havemsg horizont centercenter {{paddings}} {{backgr}} {{animclass}}">
           <template is="dom-if" if="{{!_is(notificationscounter,0)}}">
-            <p class="grey4 bold">{{notificationscounter}}</p>
+            <p class="white bold">{{notificationscounter}}</p>
           </template>
           <template is="dom-if" if="{{_is(notificationscounter,0)}}">
               <iron-icon icon="sc-icons:babble" class="grey3 babbleicon">reply-icon</iron-icon>
@@ -100,7 +104,7 @@ This components simple shows the number of in-app notifications in a badge-icon.
       ],
 
       observers: [
-        '_watch(notifnumber)',
+        '_watch(notificationscounter)',
         '_starthastaglistener(shhweb3,identity)',        
       ],
 
@@ -291,7 +295,7 @@ This components simple shows the number of in-app notifications in a badge-icon.
 
 
       _watch: function(){
-        if (this.notifnumber>0){
+        if (this.notificationscounter>0){
           this.paddings = "havepaddings";
           this.backgr = "grey4back";
           this.animclass = "newclass";
