@@ -88,6 +88,7 @@ This components shows the in-app notifications in Swarm City.
       .msg {
         font-size: 14px;
         line-height: 18px;
+        margin-right: 15px;
       }
 
       .timestamp {
@@ -208,7 +209,10 @@ This components shows the in-app notifications in Swarm City.
               <div class="flex vertic start startjust">
 
                 <p class="timestamp grey3"><moment-js date="{{item.timestamp}}" format="HH:mm:ss.SSS" from-now></moment-js> | #{{item.dealhashtag}}</p>
-                <p class="msg grey4"><span class="reg" on-tap="gotoUserprofile">{{item.subjectusername}} </span>{{item.msg}}</p>
+                <div class="totalwidth horizont start startjust">
+                <p class="msg grey4 flex"><span class="reg" on-tap="gotoUserprofile">{{item.subjectusername}} </span>{{item.msg}}</p>
+                <iron-icon icon="sc-icons:arrowright" class="blue"></iron-icon>
+                </div>
               </div>
             </div>
           </template>
