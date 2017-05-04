@@ -259,15 +259,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         opacity: 0.35;
         color: var(--sc-grey2);
       }
-/*
-      .confirmation_question {
-        min-height: 15vh;
-        box-sizing:border-box;
-        padding: 20px 0px  20px 0px;
-        border-top: 1px dotted var(--sc-grey2);
-      }
-*/
-
 
 
 
@@ -302,6 +293,12 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         margin-right: 10px;
       }
 
+      .confirmation_question {
+        font-size: 24px;
+        line-height: 26px; 
+        font-family: montserratultralight;
+
+      }
 
     @media all and (min-width: 0) and (max-width: 420px) { 
 
@@ -362,8 +359,10 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       .confirmation_question {
         margin: 40px 0px 30px 0px;
         font-size: 18px;
-        line-height: 20px; 
-        width: 80%;           
+        line-height: 22px; 
+        width: 80%; 
+        font-family: montserratlight;
+
       }
 
 
@@ -461,12 +460,12 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                       ></sc-avatar>
                       <template is="dom-if" if="{{phoneview}}">
                         <div class="funding">
-                          <p class$="bold {{fundclass}}">{{replydata.replyamount}} + 0.5 SWT</p>
+                          <p class$="bold {{fundclass}}">{{replydata.replyamount}} + {{hashtagfee}} SWT</p>
                         </div>
                       </template>
                       <template is="dom-if" if="{{!phoneview}}">
                         <div class="funding">
-                          <p class$="bold {{fundclass}}">{{replydata.replyamount}} + 0.5 <span class="swtletters">SWT</span></p>
+                          <p class$="bold {{fundclass}}">{{replydata.replyamount}} + {{hashtagfee}} <span class="swtletters">SWT</span></p>
                         </div>
                       </template>
                     <iron-icon class$="v_icon {{fundclass}} {{vsize}}" icon="sc-icons:v"></iron-icon>
@@ -494,9 +493,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                 <!-- HIEROOOOOOOOOO! -->
                 <div class="dealmsg horizont center startjust">
                 <template is="dom-if" if="{{!dealactivated}}">
-                  <p class="reg grey2">Both parties have to fund a deal to create one.</p>
-                </template>
-                <template is="dom-if" if="{{!dealactivated}}">
                   <p class="reg grey2">{{dealmsg}}</p>
                 </template>
                 </div>
@@ -510,8 +506,10 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
               </div> -->
               <div class="bottomhalf blueback totalwidth">
                 <!-- <template is="dom-if" if="{{!dealactivated}}"> -->
-                <p class="bold white centertxt confirmation_question">Fund a deal with {{replydata.replyer.username}} for {{replydata.replyamount}} SWT?</p>
-
+                <p class="white centertxt confirmation_question">Make a deal with {{replydata.replyer.username}} for <span class="bold">{{replydata.replyamount}} SWT</span>?</p>
+                <template is="dom-if" if="{{!phoneview}}">
+                  <div class="flex"></div>
+                </template>
                 <div class="confirmbtns">
                   <iron-icon icon="sc-icons:decline" class="decliner medium white" on-tap="cancelDeal"></iron-icon>
                   <paper-icon-button icon="sc-icons:v" noink class="confirmbtn blue big white shadow" on-tap="startDeal"></paper-icon-button>
@@ -608,12 +606,12 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
         // this.myamount_state = 'amountwaiting';
         // this.otheramount_state = 'amountwaiting';
-
         this.selecteddealpage = 'dodeal';
-
         this.fundclass = "fund_init";
+        this.dealactivated = false;
 
-            this.dealactivated = false;
+        this.dealmsg = "Both parties have to agree to create a new deal.";
+        this.hashtagfee = "0.5"
 
       },
 
