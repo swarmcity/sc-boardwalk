@@ -757,24 +757,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
             //debugger;
             this.replydata = payload; 
           }
-
-          // switch (payload.type){
-          //   case 'request-create':
-          //     this.itemdata = payload;
-          //     break;
-          //   case 'request-reply':
-          //     console.log('this is an item reply...');
-          //     if (!this.replies){
-          //       this.replies = [];
-          //     }
-          //     this.push('replies',payload);
-          //     break;
-          //   default:
-          //     console.log('unknown payload type',payload.type);
-          //     break;
-          // }
-          //this.dispatch('add', payload);
-          //this.push('deals',payload);
         } catch (e) {
           console.log(e);
         }
@@ -791,8 +773,52 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       },
 
       startDeal: function(){
-        // alert("Sponnetrakket, JONGE!");
-        this.$.simpledeal.createDeal();
+
+
+
+            if (!this.shhidentity) {
+              this.shhidentity = this.shhweb3.shh.newIdentity();
+            }
+
+            var seeker_acceptdealmessage = {
+              type: 'seeker-acceptdeal',
+              requestid: this.requestdata.id,
+              replyid: this.replydata.id,
+              timestamp: Date.now()
+            };
+
+            var topics = [
+              this.shhweb3.encodetopic(seeker_acceptdealmessage.type),
+              this.shhweb3.encodetopic(this.requestdata.hashtag),
+              //this.shhweb3.encodetopic(this.itemdata.id),
+              //this.shhweb3.encodetopic(seeker_acceptdealmessage.id),
+            ];
+
+            var options = {
+              "from": this.shhidentity,
+              "topics": topics,
+              "payload": this.shhweb3.fromAscii(JSON.stringify(seeker_acceptdealmessage)),
+              "ttl": 60 * 60 * 24,
+              "priority": 1000
+            };
+
+            console.log('posting to topics', topics);
+
+            this.shhweb3.shh.post(options, function(err, res) {
+              if (!err){
+                //console.log('sc->itemreplier -> Reply posted');
+                //self.replystate = 'init';
+              }else{
+                console.log('sc-itemreplier -> whisper error:',err);
+              }
+              //self.bgcolor = "whiteback";
+              //elf.borderz = "lightgreytopborder";
+            });
+
+//        this.$.simpledeal.createDeal();
+
+
+
       },
 
 

@@ -271,7 +271,6 @@ This components allow a Swarm Citizen to reply on a request.
             console.log('posting to topics', topics);
 
             this.shhweb3.shh.post(options, function(err, res) {
-//              debugger;
               if (!err){
                 console.log('sc->itemreplier -> Reply posted');
                 self.replystate = 'init';
@@ -282,13 +281,7 @@ This components allow a Swarm Citizen to reply on a request.
               self.borderz = "lightgreytopborder";
             });
 
-            // // send notification
-            // if (!this.shhidentity) {
-            //   this.shhidentity = this.shhweb3.shh.newIdentity();
-            // }
-
-            debugger;
-
+            // send notification
             var reply_to_deal_notification = {
               type: 'reply-to-deal',
               subjectavatar: this.identity.avatarhash, //'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',

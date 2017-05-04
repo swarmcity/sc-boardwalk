@@ -681,10 +681,11 @@ This is the component showing all requests of a certain hashtag. It contains a r
         if (this.shhweb3 && this.geohash) {
 
       var mytopics = [
-        self.shhweb3.encodetopic("request-create"),
+        null, // self.shhweb3.encodetopic("request-create"),
+        self.shhweb3.encodetopic(this.hashtag),
         null,
         null,
-        self.shhweb3.encodetopic(this.geohash.slice(0, 2)),
+        [null,self.shhweb3.encodetopic(this.geohash.slice(0, 2))],
         null,
         null
         ];
@@ -700,16 +701,34 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       // processinging of channel setup messages.
       _processmessage: function(error, result) {
+        //debugger;
+        var payload;
         var self = this;
         try {
-          var payload = JSON.parse(self.shhweb3.toAscii(result.payload));
+          payload = JSON.parse(self.shhweb3.toAscii(result.payload));
           console.log('incoming in whisperer: shhweb3 ', payload);
-          this.requestsloaded = true;
-          this.dispatch('add', payload);
+          
           //this.push('deals',payload);
         } catch (e) {
           console.log(e);
         }
+
+        switch(payload.type){
+          case 'request-create':
+            this.dispatch('add', payload);
+            this.requestsloaded = true;
+            break;
+          case 'request-reply':
+          case 'engage-in-deal':
+          case 'reply-to-deal':
+          case 'seeker-acceptdeal':
+            break;
+          default:
+          debugger;
+            console.log('unknown message:',payload);
+            break;
+        }
+
       },
 
 
@@ -873,6 +892,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
         var topics = [
           this.shhweb3.encodetopic(newrequest.type),
+          this.shhweb3.encodetopic(newrequest.offerhashtag),
           this.shhweb3.encodetopic(newrequest.id),
           this.shhweb3.encodetopic(''),
           this.shhweb3.encodetopic(e.detail.geohash.slice(0, 2)),
