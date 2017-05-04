@@ -34,7 +34,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 <dom-module id="sc-simpledeal-seeker">
 
   <template>
-    <style include="sc-styles">
+<style include="sc-styles">
       :host {
         display: block;
         height: 100%;
@@ -60,9 +60,9 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
       .tophalf {
         min-height: 55vh;
-        padding: 0px 10vw;
+        padding: 8vh 10vw 0px 10vw;
         @apply(--layout-vertical);
-        @apply(--layout-center-justified);
+        @apply(--layout-start-justified);
         @apply(--layout-start);  
       }
 
@@ -151,9 +151,11 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
 
       .details_toggler { 
-        margin-left: 10px;
+        margin-top: 5px;
         /*text-decoration: underline;*/        
         border-bottom: 1px dotted var(--sc-blue);
+        font-size: 14px;
+        line-height: 14px;   
       }
 
 
@@ -195,7 +197,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       paper-icon-button.confirmbtn.blue {
           background-color: #36B7FF;
           box-sizing:border-box;
-          padding: 7px 7px 9px 9px;
+          padding: 8px;
       } 
 
       paper-icon-button.confirmbtn.green {
@@ -242,8 +244,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       }
 
       .funding p {
-        font-size: 32px;
-        line-height: 36px;
+        font-size: 40px;
+        line-height: 42px;
       }
 
       .swtletters {
@@ -261,6 +263,10 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       }
 
 
+      .fund_accepted {
+        opacity: 1;
+        color: var(--sc-green);
+      }
 
 /*      .request_msg {
         font-size: 24px;
@@ -289,7 +295,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       }
 
       .decliner {
-        opacity: 0.75;
+        opacity: 0.65;
         margin-right: 10px;
       }
 
@@ -338,10 +344,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       }
 
       paper-icon-button.confirmbtn {
-          /*margin-top: -30px;*/
-          /*margin-right: 5vw;*/
-          width: 86px;
-          height: 86px;
+          width: 72px;
+          height: 72px;
           padding: 14px;
       }
 
@@ -367,6 +371,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
 
     }
+
 
 
     </style>
@@ -491,11 +496,33 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                 </div>
 
                 <!-- HIEROOOOOOOOOO! -->
-                <div class="dealmsg horizont center startjust">
+                <div class="dealmsg vertic start startjust">
                 <template is="dom-if" if="{{!dealactivated}}">
                   <p class="reg grey2">{{dealmsg}}</p>
+                  <p class="bold blue details_toggler" on-tap="showDetails">Show more details</p>
+
                 </template>
                 </div>
+
+                <iron-collapse id="details_collapser">
+                  <p class="bold blue centertxt">You're about to make a deal with <span class="replyer_username">{{replydata.replyer.username}}</span> over:</p>
+                    <div class="minispace"></div>
+                    <p class="grey3 ultralight centertxt request_msg">"{{replydata.reply}}"</p>
+                    <div class="minispace"></div>
+                    <p class="bold grey3 centertxt announce_amount">The dealamount is <span class="">{{replydata.replyamount}} SWT</span>. </p>
+                    <div class="details_collapser_inner">
+                      <small>At ... , ... posted a request in #pioneer for:</small>
+                      <div class="initial_request">
+                        <p>Blabla initial request</p>
+                      </div>
+                      <div class="minispace"></div>
+                      <div class="minispace"></div>
+                      <small>At ... , ... replied to this request:</small>
+                      <div class="initial_request">
+                        <p>Blabla reply</p>
+                      </div>
+                    </div>
+                </iron-collapse>
 
 
               </div>
@@ -577,7 +604,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         '_shhweb3(shhweb3)',
       '_checksize(phoneview)',
       // '_connectionline(myamount_state,otheramount_state)',
-      '_data(data)'
+      '_data(data)',
+      '_replydata(replydata)'
       ],
 
 
@@ -609,8 +637,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         this.selecteddealpage = 'dodeal';
         this.fundclass = "fund_init";
         this.dealactivated = false;
-
-        this.dealmsg = "Both parties have to agree to create a new deal.";
         this.hashtagfee = "0.5"
 
       },
@@ -853,6 +879,19 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           case 'deal-fund-end':
             // nu zou er een SHH message n/d andere moeten gaan om te zeggen : nu gij funden JONGE
             break;
+        }
+      },
+
+      _log: function(target){
+        console.log("***** log==",target);
+      },
+
+      _replydata: function(target){
+        // this.dealmsg = "At payout, the funds will be received by " + this.replydata.replyer.username + ".";
+        if (this.replydata.replyer.username == this.identity.username){
+          this.dealmsg = "At payout, you will receive the funds.";
+        } else {
+          this.dealmsg = "At payout, the funds will be received by " + this.replydata.replyer.username + ".";
         }
       }
 
