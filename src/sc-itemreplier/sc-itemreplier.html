@@ -116,7 +116,7 @@ This components allow a Swarm Citizen to reply on a request.
 
     </style>
     
-      <div class$="{{bgcolor}} {{borderz}} yourrespond totalwidth vertic centercenter">
+      <div class$=" {{borderz}} yourrespond totalwidth vertic centercenter">
 
         <template is="dom-if" if="{{_is(replystate,'init')}}">
           <div class="minispace"></div>
@@ -132,11 +132,15 @@ This components allow a Swarm Citizen to reply on a request.
 
           <div class="total vertic centercenter">
             <paper-textarea label="Your reply" class="totalwidth grey2unfocus" value="{{replytext}}" autofocus></paper-textarea>
-            <div class="totalwidth horizont end startjust">
+            <div class=" totalwidth horizont center startjust">
+            <p>Hank Moovy is offering 1 SWT.</p>
+            <a href="">Make a counteroffer</a>
+            </div>
+<!--             <div class="totalwidth horizont end startjust">
               <paper-input label="Your offer" class="yourreplyamount swtamount grey2unfocus" value="{{replyamount}}">
               <div suffix class="yellow bold swtwithoffer">SWT</div>
               </paper-input>
-            </div>
+            </div> -->
             <div class="whitespace"></div>
 
 

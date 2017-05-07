@@ -23,6 +23,7 @@
 <link rel="import" href="../sc-loader/sc-loader.html">
 <link rel="import" href="../sc-config/sc-config.html">
 <link rel="import" href="../sc-helpers/sc-helpers.html">
+<link rel="import" href="../sc-dealitem/sc-dealitem.html">
 
 
 <script type="text/javascript" src="../../bower_components/uuid-js/lib/uuid.js"></script>
@@ -97,6 +98,12 @@ This is the component showing all requests of a certain hashtag. It contains a r
         width: 100%;
         max-width: 600px;
         margin: 10px 0px;
+      }
+
+      sc-dealitem {
+        width: 100%;
+        max-width: 600px;
+        margin: 0px;        
       }
 
 
@@ -320,12 +327,19 @@ This is the component showing all requests of a certain hashtag. It contains a r
               </div>
               <div class="flex"></div>
             </div>
+<!--               <div class="whitespace"></div>
 
+              <div class="minispace"></div>
+              <sc-dealitem></sc-dealitem>
+              <div class="whitespace"></div>
+              <div class="whitespace"></div> -->
 
               <div class="filterbox">
                 <sc-filter id="locationfilter" currentid="locationfilter" location range="{{range}}"></sc-filter>
                 <!-- <sc-filter id="statusfilter" filteroptions="[[statusfilteroptions]]" selecteditem="{{statusfilterselected}}" currentid="statusfilter"></sc-filter> -->
               </div>
+
+
 
               <template is="dom-if" if="{{!requestsloaded}}">
                 <div class="requestsloading horizont centercenter">

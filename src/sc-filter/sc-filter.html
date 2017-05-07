@@ -149,12 +149,40 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
 
   <template is="dom-if" if="{{location}}">
     <template is="dom-if" if="{{!phoneview}}">
+      <div class="locationtotal totalwidth vertical center startjust">
+        <div class="horizont center startjust">
+          <div class$="triangle {{collapsestate}}">
+            <svg id="triangle_icon" x="0px" y="0px" viewBox="0 0 50 50" fill="#666666">
+            <polygon points="6.5,4.9 6.5,44.5 42,24.9 "/>
+            </svg>
+          </div>
+          <p class="bold grey3" on-tap="toggleSlider">{{distance}}</p>
+        </div>
+        <iron-collapse id="sliderbox" class="">
+          <div class="inner_sliderbox horizont centercenter">
+            <div class="horizont centercenter flex">
+              <iron-icon icon="sc-icons:location_edgeless" class="slidericon grey3"></iron-icon>
+              <paper-slider noink id="ratings" max="6" value="{{range}}"></paper-slider>
+              <iron-icon icon="sc-icons:globe_edgeless" class="slidericon grey3"></iron-icon>
+            </div>
+            <paper-icon-button icon="sc-icons:v" on-tap="toggleSlider" class="grey3 leftmargers" noink></paper-icon-button>
+
+
+            <p class="bold grey3">{{distance_n}}</p>
+
+          </div>
+
+        </iron-collapse>
+      </div>
+
+
+<!-- 
       <div class="locationtotal totalwidth horizont center startjust">
-<!--         <div class$="triangle {{collapsestate}}">
+        <div class$="triangle {{collapsestate}}">
           <svg id="triangle_icon" x="0px" y="0px" viewBox="0 0 50 50" fill="#666666">
           <polygon points="6.5,4.9 6.5,44.5 42,24.9 "/>
           </svg>
-        </div> -->
+        </div> 
           <div class="horizont centercenter location">
             <iron-icon icon="sc-icons:location_edgeless" class="slidericon grey3"></iron-icon>
             <paper-slider noink id="ratings" max="6" value="{{range}}"></paper-slider>
@@ -162,7 +190,8 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
           </div>
         <p class="light grey2 divider">|</p>
         <p class="bold grey3">{{distance}}</p>
-      </div>
+       
+      </div> -->
     </template>
 
 
@@ -184,8 +213,8 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
               <iron-icon icon="sc-icons:globe_edgeless" class="slidericon grey3"></iron-icon>
             </div>
             <paper-icon-button icon="sc-icons:v" on-tap="toggleSlider" class="grey3 leftmargers" noink></paper-icon-button>
+        <p class="bold grey3">{{distance_n}}</p>
           </div>
-
         </iron-collapse>
       </div>
     </template>
@@ -274,7 +303,7 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
           'Option 3'
         ];
 
-        this.distance = 40;
+        // this.distance = 40;
       },
 
       /**
@@ -338,25 +367,32 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
 
         switch(this.range) {
             case 0:
-                this.distance = "About 125 m from your location"
+                this.distance = "In your area"
+                this.distance_n = "(+/-125m)";
                 break;
             case 1:
-                this.distance = "About 5 km from your location"
+                this.distance = "In your area"
+                this.distance_n = "(+/-5km)";
                 break;
             case 2:
-                this.distance = "About 40 km from your location"
+                this.distance = "In your area"
+                this.distance_n = "(+/-40km)";
                 break;
             case 3:
-                this.distance = "About 150 km from your location"
+                this.distance = "In your area"
+                this.distance_n = "(+/-150km)";
                 break;
             case 4:
-                this.distance = "About 1250 km from your location"
+                this.distance = "In your area"
+                this.distance_n = "(+/-150km)";
                 break;
             case 5:
-                this.distance = "About 5000 km from your location"
+                this.distance = "In your area"
+                this.distance_n = "(+/-5000km)";
                 break;
             case 6:
                 this.distance = "Worldwide"
+                this.distance_n = "Worldwide";
                 break;
         }
 

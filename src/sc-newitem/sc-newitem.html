@@ -55,8 +55,18 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         padding-left: 4vw;
         padding-right: 4vw;
       }
+/*
+      .newitempadding {
+        padding-left: 4vw;
+        padding-right: 4vw;
+        padding-bottom: 8vh;
+      }
 
 
+      .newitemofferpadding {
+        padding: 8vh 4vw;
+      }
+*/
 
       .avatar-box {
         z-index: 2;
@@ -78,8 +88,8 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
 
       paper-input.swtamount {
-        max-width: 200px;
-/*        width: 100%;*/
+/*        max-width: 200px;*/
+        width: 100%;
         --paper-input-container-input: {
           font-family: montserratbold;
           font-size: 24px;
@@ -113,8 +123,10 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       }
 
       .swtwithoffer {
+        color: var(--sc-yellow);
         font-size: 12px;
         line-height: 12px;
+        margin:0px 0px 6px 12px;
       }
 
 
@@ -147,7 +159,10 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         padding: 25px 25px 0px 25px;
 
       }
-
+/*        .dottedbottom {
+          border-bottom: 1px dotted var(--sc-grey2);
+        }
+*/
       @media all and (min-width: 0) and (max-width: 420px) { 
 
 
@@ -174,8 +189,20 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         }
 
         .newitempadding {
+          padding-bottom: 10vh;
+        }
+
+        .newitemofferpadding {
+          padding: 5vh 10vw;
+        }
+
+        .paddingsides {
           padding-left: 10vw;
           padding-right: 10vw;
+        }
+
+        .dottedbottom {
+          border-bottom: 1px dotted var(--sc-grey2);
         }
 
       }
@@ -189,24 +216,24 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         <paper-icon-button on-tap="back" icon="sc-icons:decline" noink>back</paper-icon-button>
       </div>
 
-        <div class="totalwidth vertic centercenter newitempadding">
-          <div class="totalwidth vertic start centerjust">
-            <paper-textarea label="Describe your request" class="totalwidth offermsg" autofocus value="{{offermsg}}">
+        <div class="totalwidth vertic centercenter">
+          <div class="totalwidth vertic start centerjust paddingsides newitempadding dottedbottom">
+            <paper-textarea label="What are you looking for?" class="totalwidth offermsg" autofocus value="{{offermsg}}">
             </paper-textarea>
             <div class="totalwidth horizont center endjust alignedhashtag">
               <p class="bold"><span>#</span>{{selectedhashtag}}</p>
             </div>
           </div>
 
-          <div class="horizont start startjust totalwidth">
-            <paper-input label="Enter what you want to pay" class="offeramount swtamount" value="{{replyamount}}" type="number">
-            <div suffix class="yellow bold swtwithoffer">SWT</div>
+          <div class="horizont end startjust totalwidth paddingsides newitemofferpadding dottedbottom">
+            <paper-input label="What do you offer?" class="swtamount flex" value="{{replyamount}}" type="number">
             </paper-input>
+            <p class="swtwithoffer bold">SWT</p>
           </div>
 
           <div class="whitespace"></div>
           <div class="whitespace"></div>
-          <div class="totalwidth horizont centercenter">
+          <div class="totalwidth horizont centercenter paddingsides">
             <div class="avatar-box">
               <sc-avatar
                 id="avatarimg"

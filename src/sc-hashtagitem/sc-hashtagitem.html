@@ -77,6 +77,7 @@ This components is the representation of a request in the requests-list on sc-ha
 
       sc-avatar { 
         margin-right: 10px;
+        height: 28px;
       }
 
 
@@ -127,7 +128,7 @@ This components is the representation of a request in the requests-list on sc-ha
 
       <div class="totalwidth vertic start startjust" on-tap="toDetail">
 
-        <small class="small grey3 light margbot">
+        <small class="small grey3 light">
           <moment-js date="{{item.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js>
         </small>
         <p class="totalwidth offer grey4"> {{item.offer}} <span class="semibold"> 
@@ -145,12 +146,13 @@ This components is the representation of a request in the requests-list on sc-ha
           </div>
         </template>
 
-        <div class="whitespace"></div>
+        <div class="minispace"></div>
+        <div class="minispace"></div>
 
         <div class="totalwidth horizont start startjust">
           <sc-avatar
             ipfshash="[[item.offereravatar]]"
-            size="small">
+            size="verysmall">
           </sc-avatar>
           <div class="flex vertic centercenter">
             <p class="totalwidth offerer small bold grey3">{{item.offerer}}</p>
