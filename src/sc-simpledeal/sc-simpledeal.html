@@ -9,6 +9,7 @@
   <template>
     <sc-web3 id="web3" web3="{{web3}}"></sc-web3>
     <sc-config config="{{config}}"></sc-config>
+
   </template>
   <!-- Creates the element's prototype and registers it -->
   <script>
@@ -23,6 +24,8 @@
       ],
 
       ready: function(){
+
+
 
       },
 
@@ -46,13 +49,22 @@
         });
       },
 
+      getContractAddress(account) {
+        var self = this;
+        return new Promise(function(resolve, reject) {
+          self.getNonce(account).then(function(nonce) {
+            resolve(window.EthJS.Util.bufferToHex(window.EthJS.Util.generateAddress(account, nonce)));
+          });
+        });
+      },
+
       getNonce: function(account) {
         var self = this;
         return new Promise(function(resolve, reject) {
           self.web3.eth.getTransactionCount(account, null, function(err, res) {
-            this.nonce = res;
-            console.log('nonce=', res);
-            resolve();
+            var nonce = res || 0;
+            console.log('nonce=', nonce);
+            resolve(nonce);
           });
         });
       },

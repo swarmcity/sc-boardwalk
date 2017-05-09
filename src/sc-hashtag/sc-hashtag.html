@@ -398,9 +398,38 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       actions: {
 
-        add: function(dealdata) {
+        request_create: function(dealdata) {
+
+          var foundDeal = this.deals.findIndex(function(item){
+            return item.id === dealdata.id;
+          });
+
           let deals = this.deals.slice(0);
-          deals.push(dealdata);
+
+          if (foundDeal > -1){
+            //deals[foundDeal] = dealdata;
+          }else{
+            //debugger;
+            var newDeal = {
+              id: dealdata.id,
+              offer: dealdata.offer,
+              offeramount: dealdata.offeramount,
+              hashtag: dealdata.offerhashtag,
+              offerer: {
+                avatarhash: dealdata.offereravatar,
+                username: dealdata.offerer,
+                pubkey: dealdata.offererpubkey
+              },
+              created: dealdata.offertime,
+              dealstate: 'open'
+
+            };
+            deals.push(dealdata);
+          }
+
+          deals.sort(function(a, b) {
+            return b.offertime - a.offertime;
+          });
 
           return {
             type: 'DEALS',
@@ -729,7 +758,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
         switch(payload.type){
           case 'request-create':
-            this.dispatch('add', payload);
+            this.dispatch('request_create', payload);
             this.requestsloaded = true;
             break;
           case 'request-reply':

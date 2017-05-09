@@ -13,7 +13,7 @@
     }
         
     let initialState = {
-        deals: [],
+        deals: [], //getLS('sc-deals') || [],
         notifications: [],
         mydeals: getLS('sc-mydeals') || [],
         identity: {
@@ -35,6 +35,8 @@
             case 'DEALS':
                 let deals = state.deals;
                 deals  = action.deals;
+                setLS('sc-deals',deals);
+                setLS('sc-deals-len',deals.length);
                 return Object.assign({}, state, {deals: deals});
                 break;
             case 'MYDEALS':

@@ -7,6 +7,8 @@
 <link rel="import" href="../../bower_components/sc-style/sc-style.html">
 <link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
 <link rel="import" href="../sc-geohash/sc-geohash.html">
+<link rel="import" href="../sc-simpledeal/sc-simpledeal.html">
+<link rel="import" href="../sc-redux/sc-redux.html">
 
 <!--
 `sc-newitem`
@@ -18,7 +20,8 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
 <dom-module id="sc-newitem">
   <template>
-   <sc-geohash geohash="{{geohash}}" locate-on-start></sc-geohash>
+    <sc-geohash geohash="{{geohash}}" locate-on-start></sc-geohash>
+    <sc-simpledeal id="simpledeal"></sc-simpledeal>   
     <style include="sc-styles">
       :host {
         display: block;
@@ -174,16 +177,6 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
           padding-top: 4vh; 
         }
 
-/*        #newitemcontent {
-          background-color: white;
-          margin: 5vh 5vw 2vh 5vw;
-          box-sizing:border-box;    
-          padding: 0px;
-          width: 100%;
-        }
-*/
-
-
         #newitemcontent {
           width: 100%;
         }
@@ -273,116 +266,40 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       is: 'sc-newitem',
 
       behaviors: [
-        Polymer.NeonSharedElementAnimatableBehavior
+        Polymer.NeonSharedElementAnimatableBehavior,
+        ReduxBehaviour
       ],
 
       properties: {
-        /**
-       * `prop1` this is the first property and what it does is described right here.
-       */
-        // sharedElements: {
-        //   type: Object,
-        //   value: function() {
-        //     return {
-        //       'hero': this.$.avatarimg,
-        //       // 'balance': this.$.balancebox
-        //     }
-        //   }
-        // },
-
-      animationConfig: {
-        type: Object,
-        value: function() {
-          return {
-            'entry': [{
-              name: 'slide-from-bottom-animation',
-              node:this.$.newitemcontent,
-              toPage: this,
-              timing: {
-                duration: 600
-              }
-            // },{
-            //   name: 'slide-from-right-animation',
-            //   node:this.$.topbar,
-            //   fromPage: this,
-            //   timing: {
-            //     duration: 600
-            //   }
-            // },{
-            //   name: 'fade-in-animation',
-            //   node:this.$.backbtn,
-            //   fromPage: this,
-            //   timing: {
-            //     duration: 200
-            //   }
-            // },{
-            //   name: 'fade-in-animation',
-            //   node:this.$.username,
-            //   fromPage: this,
-            //   timing: {
-            //     duration: 200
-            //   }
-            // }, {
-              // name: 'hero-animation',
-              // id: 'hero',
-              // toPage: this,
-              // timing: {
-              //     duration: 200
-              // }
-            // }, {
-            //   name: 'hero-animation',
-            //   id: 'balance',
-            //   toPage: this,
-            //   timing: {
-            //       duration: 200
-            //   }
-            }],
-
-            'exit': [{
-              name: 'fade-out-animation',
-              node:this.$.newitemcontent,
-              fromPage: this,
-              timing: {
-                duration: 125
-              }
-
-            // },{
-            //   name: 'fade-out-animation',
-            //   node:this.$.backbtn,
-            //   fromPage: this,
-            //   timing: {
-            //     duration: 125
-            //   }
-
-            // },{
-            //   name: 'fade-out-animation',
-            //   node:this.$.topbar,
-            //   fromPage: this,
-            //   timing: {
-            //     duration: 125
-            //   }
-            // }, {
-            //   name: 'hero-animation',
-            //   id: 'hero',
-            //   fromPage: this,
-            //   timing: {
-            //       duration: 600
-            //   }
-
-            // }, {
-            //   name: 'hero-animation',
-            //   id: 'balance',
-            //   fromPage: this,
-            //   timing: {
-            //       duration: 600
-            //   }
-              }]
-            }
-          },
-        }
-
-
+        identity: {
+          type: Object,
+          statePath: 'identity',
+        },
       },
+
+      // animationConfig: {
+      //   type: Object,
+      //   value: function() {
+      //     return {
+      //       'entry': [{
+      //         name: 'slide-from-bottom-animation',
+      //         node: this.$.newitemcontent,
+      //         toPage: this,
+      //         timing: {
+      //           duration: 600
+      //         }
+      //       }],
+
+      //       'exit': [{
+      //         name: 'fade-out-animation',
+      //         node: this.$.newitemcontent,
+      //         fromPage: this,
+      //         timing: {
+      //           duration: 125
+      //         }
+      //       }]
+      //     }
+      //   },
 
       observers: [
         '_btnable(offermsg,replyamount)',
@@ -397,6 +314,12 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       ready: function(){
         this.onEnter();
         this.hasgeohash = false;
+      },
+
+      attached: function(){
+        this.$.simpledeal.getContractAddress(this.identity.pubkey,function(err,res){
+          console.log(err,res);
+        })
       },
 
       /**
