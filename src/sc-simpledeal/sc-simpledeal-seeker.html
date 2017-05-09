@@ -11,12 +11,12 @@
 <link rel="import" href="../sc-payout/sc-payout.html">
 <link rel="import" href="../sc-avatar/sc-avatar.html">
 <link rel="import" href="../sc-username/sc-username.html">
-<link rel="import" href="../sc-loader/sc-loader.html">
 <link rel="import" href="../sc-dealchat/sc-dealchat.html">
 <link rel="import" href="../sc-redux/sc-redux.html">
 <link rel="import" href="../sc-shh/sc-shh.html">
 <link rel="import" href="../sc-config/sc-config.html">
 <link rel="import" href="../sc-helpers/sc-helpers.html">
+<link rel="import" href="../sc-loader/sc-loader.html">
 <link rel="import" href="../sc-hashtagcontract/sc-hashtagcontract.html">
 <link rel="import" href="../sc-simpledeal/sc-simpledeal.html">
 
@@ -69,16 +69,16 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       .tophalf h1 {
         font-size: 40px;
         line-height: 44px;
-        max-width: 700px;
+        max-width: 800px;
       }
 
       .withconfirmq {
         min-height: 50vh;
       }
-
+/*
       sc-avatar {
         margin-right: 10px;         
-      }
+      }*/
 
       .bottomhalf {
         height: 35vh;
@@ -151,9 +151,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
 
       .details_toggler { 
-        margin-top: 5px;
         /*text-decoration: underline;*/        
-        border-bottom: 1px dotted var(--sc-blue);
+        border-bottom: 1px dotted var(--sc-grey3);
         font-size: 14px;
         line-height: 14px;   
       }
@@ -184,7 +183,9 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       .confirmbtns {
         @apply(--layout-horizontal);
         @apply(--layout-center);
-        @apply(--layout-end-justified);        
+        @apply(--layout-end-justified);  
+        margin-left: 2vw;        
+      
       }
 
       paper-icon-button.confirmbtn {
@@ -204,6 +205,10 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           background-color: #8ADEA9;
       }
 
+      paper-button.blue {
+          background-color: #36B7FF;
+      } 
+
 
       .dealid {
         font-size: 36px;
@@ -213,8 +218,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       .avatars_funding {
         box-sizing:border-box;
         padding: 0px;
-        @apply(--layout-vertical);
-        @apply(--layout-start);
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
         @apply(--layout-start-justified); 
         margin-bottom: 2vw;
        
@@ -227,8 +232,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         @apply(--layout-horizontal);
         @apply(--layout-center);
         @apply(--layout-start-justified);
-        margin-bottom: 10px;
-        
+        margin-right: 10px;        
       }
 
       .divider {
@@ -253,9 +257,9 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         line-height: 20px;       
       }
 
-      .v_icon {
+/*      .v_icon {
         margin: 12px 0px 0px 6px;
-      }
+      }*/
 
       .fund_init p {
         opacity: 0.35;
@@ -312,9 +316,45 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       .confirmation_question {
         font-size: 24px;
         line-height: 26px; 
-        font-family: montserratultralight;
-
+        text-align: right;
       }
+      .dealcreate_steps {
+/*        background-color: rgba(36,177,255,0.1);*/
+
+        box-sizing:border-box;
+        padding: 10px 10px 10px 0px;
+        max-width: 300px;
+
+/*        border-top: 2px dotted rgba(0,0,0,0.05);
+        border-bottom: 2px dotted rgba(0,0,0,0.05);*/
+
+        border-top: 2px dotted rgba(36,177,255,0.5);
+        border-bottom: 2px dotted rgba(36,177,255,0.5);
+
+        color: var(--sc-blue);
+      }
+
+
+      .triangle {
+        width: 10px;
+        transition: all 0.075s linear;
+        margin-right: 8px;
+        margin-left: 4px;
+        margin-bottom: 3px;
+
+        opacity: 1;
+      }
+
+      .triangle svg {
+        width: 100%;
+      }
+
+      .opened {
+        transform: rotate(90deg);
+        opacity: 0.75;
+      }
+
+
 
     @media all and (min-width: 0) and (max-width: 420px) { 
 
@@ -375,10 +415,18 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         font-size: 18px;
         line-height: 22px; 
         width: 80%; 
-        font-family: montserratlight;
-
+        text-align: center;
       }
 
+      .avatars_funding {
+        box-sizing:border-box;
+        padding: 0px;
+/*        @apply(--layout-vertical);
+        @apply(--layout-start);
+        @apply(--layout-start-justified); */
+        margin-bottom: 2vw;
+       
+      }
 
     }
 
@@ -465,6 +513,46 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
             <div class="totalbox vertic center startjust totalwidth">
               <div class="tophalf totalwidth">
+
+                <template is="dom-if" if="{{_is(dealstatus,'init')}}">
+                  <h1 class="">Do you accept a deal with <span class="light blue replyer_username">{{replydata.replyer.username}}</span> in <span class="light">#pioneer</span> for <span class="light">{{replydata.replyamount}} SWT</span>?</h1>
+                </template>
+
+                <template is="dom-if" if="{{_is(dealstatus,'seekeraccepted')}}">
+                  <h1 class=""><span class="bold">You accepted! </span><template is="dom-if" if="{{!phoneview}}"><br></template> Waiting for <span class="light blue replyer_username">{{replydata.replyer.username}}</span> to accept.</h1>
+                </template>
+                
+                <template is="dom-if" if="{{_is(dealstatus,'provideraccepted')}}">
+                  <h1 class="">Do you accept a deal with <span class="light blue replyer_username">{{replydata.replyer.username}}</span> in <span class="light">#pioneer</span> for <span class="light">{{replydata.replyamount}} SWT</span>?</h1>
+                  <div class="whitespace"></div>
+                  <p class="reg grey3"><span>{{replydata.replyer.username}}</span> has already accepted.</p>
+                </template>
+                
+                
+                <template is="dom-if" if="{{_is(dealstatus,'bothaccepted')}}">
+                  <h1 class=""><span class="bold">You both accepted!</span></h1>
+                  <div class="whitespace"></div>
+                  <div class="dealcreate_steps">
+                    <div class="horizont end startjust">
+                      <div class$="triangle {{collapsestate}}" on-tap="showSteps">
+                        <svg id="triangle_icon" x="0px" y="0px" viewBox="0 0 50 50" fill="#24B1FF">
+                        <polygon points="6.5,4.9 6.5,44.5 42,24.9 "/>
+                        </svg>
+                      </div>
+                      <p class="reg" on-tap="showSteps">A deal is being created <span class="bold"> ({{stepscount}}/4)</span></p>
+                      <sc-loader color="green" small on-tap="showSteps"></sc-loader>
+                      <!-- <p on-tap="showSteps"></p> -->
+                    </div>
+                    <iron-collapse id="steps_collapser">
+                      <p class="">Joooo stepperz</p>
+                    </iron-collapse>
+                  </div>
+
+                </template>
+
+              <div class="whitespace"></div>
+              <div class="whitespace"></div>
+
                 <div class="avatars_funding">
                   <div class$="avatar_funding {{seekerfundclass}}">
                     <sc-avatar
@@ -473,16 +561,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                       id="makedeal_myavatar"
                       size="{{avatarfundingsize}}"
                       ></sc-avatar>
-                      <template is="dom-if" if="{{phoneview}}">
-                        <div class="funding">
-                          <p class="bold">{{replydata.replyamount}} + {{hashtagfee}} SWT</p>
-                        </div>
-                      </template>
-                      <template is="dom-if" if="{{!phoneview}}">
-                        <div class="funding">
-                          <p class="bold">{{replydata.replyamount}} + {{hashtagfee}} <span class="swtletters">SWT</span></p>
-                        </div>
-                      </template>
                     <iron-icon class$="v_icon {{vsize}}" icon="sc-icons:v"></iron-icon>
                   </div>
                   <div class$="avatar_funding {{providerfundclass}}">
@@ -492,28 +570,15 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                       size="{{avatarfundingsize}}"
                       on-tap="tempTap"
                       ></sc-avatar>
-                      <template is="dom-if" if="{{phoneview}}">
-                        <div class="funding">
-                          <p class="bold">{{replydata.replyamount}} SWT</p>
-                        </div>
-                      </template>
-                      <template is="dom-if" if="{{!phoneview}}">
-                        <div class="funding">
-                          <p class="bold">{{replydata.replyamount}} <span class="swtletters">SWT</span></p>
-                        </div>
-                      </template>
                     <iron-icon class$="v_icon {{vsize}}" icon="sc-icons:v"></iron-icon>
                   </div>
-                </div>
-
-                <!-- HIEROOOOOOOOOO! -->
-                <div class="dealmsg vertic start startjust">
-                <template is="dom-if" if="{{!dealactivated}}">
-                  <p class="reg grey2">{{dealmsg}}</p>
-                  <p class="bold blue details_toggler" on-tap="showDetails">Show more details</p>
-
+                <template is="dom-if" if="{{!phoneview}}">
+                  <p class="bold grey3 details_toggler" on-tap="showDetails">More details</p>
                 </template>
                 </div>
+                <template is="dom-if" if="{{phoneview}}">
+                  <p class="bold grey3 details_toggler" on-tap="showDetails">More details</p>
+                </template>
 
                 <iron-collapse id="details_collapser">
                   <p class="bold blue centertxt">You're about to make a deal with <span class="replyer_username">{{replydata.replyer.username}}</span> over:</p>
@@ -534,27 +599,23 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                       </div>
                     </div>
                 </iron-collapse>
-
-
               </div>
-<!--               <div class="confirmation_question horizont centercenter totalwidth">
-                <template is="dom-if" if="{{!dealactivated}}">
-                </template>
 
-              </div> -->
               <div class="bottomhalf blueback totalwidth">
-                <!-- <template is="dom-if" if="{{!dealactivated}}"> -->
-                <p class="white centertxt confirmation_question">Make a deal with {{replydata.replyer.username}} for <span class="bold">{{replydata.replyamount}} SWT </span>?</p>
-                <template is="dom-if" if="{{!phoneview}}">
-                  <div class="flex"></div>
+                <template is="dom-if" if="{{!seekeraccept}}">
+                  <p class="confirmation_question yellow bold">- {{replydata.replyamount}} SWT</p>
+                  <div class="confirmbtns">
+                    <iron-icon icon="sc-icons:decline" class="decliner medium white" on-tap="cancelDeal"></iron-icon>
+                    <paper-icon-button icon="sc-icons:v" noink class="confirmbtn blue big white shadow" on-tap="startDeal"></paper-icon-button>
+                  </div>
                 </template>
-                <div class="confirmbtns">
-                  <iron-icon icon="sc-icons:decline" class="decliner medium white" on-tap="cancelDeal"></iron-icon>
-                  <paper-icon-button icon="sc-icons:v" noink class="confirmbtn blue big white shadow" on-tap="startDeal"></paper-icon-button>
-                </div>
-                <!-- </template> -->
-
+                <template is="dom-if" if="{{_is(dealstatus,'seekeraccepted')}}">
+                  <paper-button class="blue white shadow" noink>Get out of this deal
+                    <iron-icon icon="sc-icons:decline" class="decliner medium white" on-tap="cancelDeal"></iron-icon>
+                  </paper-button>
+                </template>
               </div>
+
             </div>
 
             <sc-simpledeal id="simpledeal" on-status-update="handle"></sc-simpledeal>
@@ -617,8 +678,9 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       // '_connectionline(myamount_state,otheramount_state)',
       '_data(data)',
       '_replydata(replydata)',
-      '_seekeraccept(seekeraccept)',
-      '_provideraccept(provideraccept)'
+      '_whoaccepted(seekeraccept,provideraccept)'
+      // '_seekeraccept(seekeraccept)',
+      // '_provideraccept(provideraccept)'
       ],
 
 
@@ -663,6 +725,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         this.dealactivated = false;
         this.hashtagfee = "0.5"
 
+        this.dealstatus = "init";
+
       },
 
       _data: function(){
@@ -702,7 +766,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           this.sendbtnsize = "";
         } else {
           this.avatarsize = "medium";
-          this.avatarfundingsize = "more";
+          this.avatarfundingsize = "small";
           this.sendbtnsize = "bigbtn";
           this.vsize = "medium";
         }
@@ -818,13 +882,26 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         // console.log(details);
       },
 
+
+      showSteps: function(){
+        var steps = this.shadowRoot.getElementById('steps_collapser');
+        steps.toggle();
+
+        if (steps.opened){
+          this.collapsestate = 'opened';
+        } else {
+          this.collapsestate = '';
+        }
+
+        // console.log(details);
+      },
+
+
       toDodeal: function(){
         this.selecteddealpage = 'dodeal';
       },
 
       startDeal: function(){
-
-        this.seekeraccept = true;
 
 //             if (!this.shhidentity) {
 //               this.shhidentity = this.shhweb3.shh.newIdentity();
@@ -864,11 +941,9 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 //               //self.bgcolor = "whiteback";
 //               //elf.borderz = "lightgreytopborder";
 //             });
-
-// //        this.$.simpledeal.createDeal();
-
-
-
+      
+        this.seekeraccept = true;
+        this.$.simpledeal.createDeal();
       },
 
 
@@ -880,24 +955,28 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
         switch (deal.step) {
           case 'deal-created':
-            this.dealmsg
+            // this.dealmsg
             break;
           case 'deal-deploy-start':
             console.log(deal.txhash);
+            this.stepscount = "1"
             break;
           case 'deal-deploy-end':
             break;
           case 'deal-register-start':
-            console.log(deal.txhash);
+            this.stepscount = "2"
+            // console.log(deal.txhash);
             break;
           case 'deal-register-end':
             break;
           case 'deal-myallowance-start':
+            this.stepscount = "3"
             console.log(deal.txhash);
             break;
-          case 'deal-myallowance-start':
+          case 'deal-myallowance-end':
             break;
           case 'deal-fund-start':
+            this.stepscount = "4"
             console.log(deal.txhash);
             break;
           case 'deal-fund-end':
@@ -911,27 +990,82 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       },
 
       _replydata: function(target){
-        // this.dealmsg = "At payout, the funds will be received by " + this.replydata.replyer.username + ".";
-        if (this.replydata.replyer.username == this.identity.username){
-          this.dealmsg = "At payout, you will receive the funds.";
-        } else {
-          this.dealmsg = "At payout, the funds will be received by " + this.replydata.replyer.username + ".";
-        }
+        // if (this.replydata.replyer.username == this.identity.username){
+        //   this.dealmsg = "At payout, you will receive the funds.";
+        // } else {
+        //   this.dealmsg = "At payout, the funds will be received by " + this.replydata.replyer.username + ".";
+        // }
       },
 
-      _seekeraccept: function(){
-        if (this.seekeraccept){
-          this.seekerfundclass = "fund_accepted";
-        } else {
+      // _seekeraccept: function(){
+
+      //   if (this.seekeraccept){
+      //     this.seekerfundclass = "fund_accepted";
+      //     this.dealstatus = "seekeraccepted";
+      //   } else {
+      //     this.seekerfundclass = "fund_init";
+      //     this.dealstatus = "init";
+      //   }
+      // },
+
+      // _provideraccept: function(){
+      //   if (this.provideraccept){
+      //     this.providerfundclass = "fund_accepted";
+      //   } else {
+      //     this.providerfundclass = "fund_init";
+      //   }
+      // },
+
+
+      // _dealstatus: function(target) {
+
+      //   switch (target) {
+
+      //     case 'init':
+      //       this.seekerfundclass = "fund_init";
+      //       this.providerfundclass = "fund_init";
+      //       break;
+
+      //     case 'seekeraccept':
+      //       this.seekerfundclass = "fund_accepted";
+      //       this.providerfundclass = "fund_init";
+      //       break;
+
+      //     case 'provideraccept':
+      //       this.seekerfundclass = "fund_init";
+      //       this.providerfundclass = "fund_accepted";
+      //       break;
+
+      //     case 'provideraccept':
+      //       this.seekerfundclass = "fund_init";
+      //       this.providerfundclass = "fund_accepted";
+      //       break;
+      //   }
+
+      // },
+
+
+      _whoaccepted: function(){
+
+        if (!this.seekeraccept && !this.provideraccept){
           this.seekerfundclass = "fund_init";
-        }
-      },
-
-      _provideraccept: function(){
-        if (this.provideraccept){
-          this.providerfundclass = "fund_accepted";
-        } else {
           this.providerfundclass = "fund_init";
+          this.dealstatus = "init";
+        }
+        if (this.seekeraccept && !this.provideraccept){
+          this.seekerfundclass = "fund_accepted";
+          this.providerfundclass = "fund_init";
+          this.dealstatus = "seekeraccepted";
+        }        
+        if (!this.seekeraccept && this.provideraccept){
+          this.seekerfundclass = "fund_init";
+          this.providerfundclass = "fund_accepted";
+          this.dealstatus = "provideraccepted";
+        }
+        if (this.seekeraccept && this.provideraccept){
+          this.seekerfundclass = "fund_accepted";
+          this.providerfundclass = "fund_accepted";
+          this.dealstatus = "bothaccepted";
         }
       },
 
