@@ -12,8 +12,11 @@
         var v = window.localStorage.setItem(key,JSON.stringify(val));
     }
         
+    // debug state - remove me.
+    //setLS('sc-deals',[]);
+
     let initialState = {
-        deals: [], //getLS('sc-deals') || [],
+        deals: getLS('sc-deals') || [],
         notifications: [],
         mydeals: getLS('sc-mydeals') || [],
         identity: {
@@ -37,6 +40,7 @@
                 deals  = action.deals;
                 setLS('sc-deals',deals);
                 setLS('sc-deals-len',deals.length);
+                //debugger;
                 return Object.assign({}, state, {deals: deals});
                 break;
             case 'MYDEALS':

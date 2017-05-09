@@ -177,36 +177,36 @@ This components shows the detailed view of a request.
           <div class="totalwidth">
             <p class="small grey3"><moment-js date="{{item.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
             <div class="minispace"></div>
-            <p class="offer light grey4">{{itemdata.offer}}<span class="bold offerhashtag">#{{itemdata.offerhashtag}}</span></p>
+            <p class="offer light grey4">{{itemdata.msg}}<span class="bold offerhashtag">#{{itemdata.hashtag}}</span></p>
           </div>
           <div class="whitespace"></div>
           <div class="totalwidth horizont centercenter">
             <sc-avatar
               class="offereravatar"
-              ipfshash="[[itemdata.offereravatar]]"
+              ipfshash="[[itemdata.seeker.avatar]]"
               size="medium">
             </sc-avatar>
             <div class="vertic start startjust offertxt flex">
-              <p class="bold grey3">{{itemdata.offerer}}</p>
-              <p class="bold rep blue">{{itemdata.offererrep}} REP</p>
+              <p class="bold grey3">{{itemdata.seeker.username}}</p>
+              <p class="bold rep blue"><sc-hashtagrep pubkey="{{itemdata.seeker.pubkey}}" hashtagname="{{itemdata.hashtag}}"></sc-hashtagrep> REP</p>
             </div>  
           </div>
           <div class="whitespace"></div>
           <div class="totalwidth horizont centercenter">
             <div class="flex"></div>
-            <p class="bold yellow amount">{{itemdata.offeramount}} <span class="swt">SWT</span></p>
+            <p class="bold yellow amount">{{itemdata.amount}} <span class="swt">SWT</span></p>
           </div>
         </div>
 
-        <template is="dom-if" if="{{!youareowner}}">
+        <template is="dom-if" if="{{!youareowner(itemdata.seeker.pubkey)}}">
           <sc-itemreplier itemdata="{{itemdata}}">
           </sc-itemreplier>
         </template>
         <div class="whiteback totalwidth">
-        <template is="dom-repeat" items="{{replies}}">
+        <template is="dom-repeat" items="{{itemdata.replies}}">
           <sc-itemreply
           itemdata="{{itemdata}}"
-          btnshow="{{youareowner}}"
+          btnshow="{{youareowner(itemdata.seeker.pubkey)}}"
           replydata="{{item}}"
           on-to-detail="fireReplyselected"
           on-item-detail="firetoItemdetail"
@@ -224,14 +224,15 @@ This components shows the detailed view of a request.
     Polymer({
 
       behaviors: [
-        Polymer.NeonSharedElementAnimatableBehavior
+        Polymer.NeonSharedElementAnimatableBehavior,
+        ReduxBehaviour
       ],
 
       is: 'sc-itemdetail',
 
       observers: [
-        '_web3(shhweb3)',
-        '_pubkeyCompare(itemdata)'
+        //'_web3(shhweb3)',
+        //'_pubkeyCompare(itemdata)'
       ],
 
       properties: {
@@ -240,21 +241,19 @@ This components shows the detailed view of a request.
          */
         itemid: {
           type: String,
-          observer: '_itemid'
+          observer: '_getitemdata'
         },
 
-        /**
-       * `pubkey` is the Swarm Citizen's pubkey.
-       */        
-        pubkey: {
-          type: String,
-          observer: '_pubkey'
+        deals: {
+          type: Array,
+          statePath: 'deals',
+          observer: '_getitemdata'
         },
 
-        youareowner: {
-          type: Boolean,
-          value: false
-        },
+        // youareowner: {
+        //   type: Boolean,
+        //   value: false
+        // },
 
         /**
        * `identity` is received from parent-element, as an object containing an IPFS-hash, which is img-source.
@@ -295,66 +294,82 @@ This components shows the detailed view of a request.
 
 
       _web3: function() {
-        this.startListener();
+       // this.startListener();
       },
 
-      _itemid: function() {
-        console.log(this.itemid);
-        console.log('en we gaan nog is luisteren');
-        this.startListener();
+      youareowner: function(pubkey){
+        //debugger;
+        return (this.identity.pubkey == pubkey);
       },
 
-      startListener: function() {
-        if (!this.itemid || !this.shhweb3) {
+      _getitemdata: function() {
+        if (!this.itemid || !this.deals){
           return;
         }
-
-        if (this.filter){
-          this.filter.stopWatching();
-        }
-      
-        var mytopics = [
-          null,
-          this.shhweb3.encodetopic(this.itemid)
-        ];        
-
-        this.filter = this.shhweb3.shh.filter({
-          "topics": mytopics,
-        });
-
-        console.log("sc-itemdetail: start listening to", mytopics);
-        this.filter.watch(this._processmessage.bind(this));
-
-      },
-
-      // processinging of channel setup messages.
-      _processmessage: function(error, result) {
+        console.log(this.itemid);
+        console.log('en we gaan nog is luisteren');
         var self = this;
         //debugger;
-        try {
-          var payload = JSON.parse(self.shhweb3.toAscii(result.payload));
-          console.log('incoming in whisperer: web3 ', result,self.shhweb3.toAscii(result.payload));
-          switch (payload.type){
-            case 'request-create':
-              this.itemdata = payload;
-              break;
-            case 'request-reply':
-              console.log('this is an item reply...');
-              if (!this.replies){
-                this.replies = [];
-              }
-              this.push('replies',payload);
-              break;
-            default:
-              console.log('unknown payload type',payload.type);
-              break;
-          }
-          //this.dispatch('add', payload);
-          //this.push('deals',payload);
-        } catch (e) {
-          console.log(e);
-        }
+        var foundDeal = this.deals.find(function(item){
+            return item.id === self.itemid;
+        });
+//debugger;
+        this.itemdata = foundDeal;
+
+        //this.startListener();
       },
+
+      // startListener: function() {
+      //   if (!this.itemid || !this.shhweb3) {
+      //     return;
+      //   }
+
+      //   if (this.filter){
+      //     this.filter.stopWatching();
+      //   }
+      
+      //   var mytopics = [
+      //     null,
+      //     this.shhweb3.encodetopic(this.itemid)
+      //   ];        
+
+      //   this.filter = this.shhweb3.shh.filter({
+      //     "topics": mytopics,
+      //   });
+
+      //   console.log("sc-itemdetail: start listening to", mytopics);
+      //   this.filter.watch(this._processmessage.bind(this));
+
+      // },
+
+      // // processinging of channel setup messages.
+      // _processmessage: function(error, result) {
+      //   var self = this;
+      //   //debugger;
+      //   try {
+      //     var payload = JSON.parse(self.shhweb3.toAscii(result.payload));
+      //     console.log('incoming in whisperer: web3 ', result,self.shhweb3.toAscii(result.payload));
+      //     switch (payload.type){
+      //       case 'request-create':
+      //         this.itemdata = payload;
+      //         break;
+      //       case 'request-reply':
+      //         console.log('this is an item reply...');
+      //         if (!this.replies){
+      //           this.replies = [];
+      //         }
+      //         this.push('replies',payload);
+      //         break;
+      //       default:
+      //         console.log('unknown payload type',payload.type);
+      //         break;
+      //     }
+      //     //this.dispatch('add', payload);
+      //     //this.push('deals',payload);
+      //   } catch (e) {
+      //     console.log(e);
+      //   }
+      // },
 
 
       ready: function() {},
@@ -386,32 +401,20 @@ This components shows the detailed view of a request.
         this.fire('reply-to-detail');
       },
 
-
-      _pubkey: function(){
-          // console.log("HAZ ID??!!!!", this.identity);
-
-
-        // if (this.pubkey == this.identity.pubkey){
-        //   console.log("yaaaaaaaaaaay!!!!", this.pubkey, this.identity.pubkey);
-        // } else {
-        //   console.log("Nay!!!!", this.pubkey, this.identity.pubkey);
-        // }
-      },
-
       _log: function(target){
           console.log("HAZ THIS in item-detail??!!!!",target);
       },
 
-      _pubkeyCompare: function(){
-//        debugger;
-        if (this.identity.pubkey == this.itemdata.offererpubkey){
-          // console.log("yaaaaaaaaaaay!!!!", this.identity.pubkey,this.itemdata.offererpubkey);
-          this.youareowner = true;          
-        } else {
-          console.log("Nay, NO MATCH!!!!");
-          this.youareowner = false;          
-        }
-      },
+//       _pubkeyCompare: function(){
+// //        debugger;
+//         if (this.identity.pubkey == this.itemdata.offererpubkey){
+//           // console.log("yaaaaaaaaaaay!!!!", this.identity.pubkey,this.itemdata.offererpubkey);
+//           this.youareowner = true;          
+//         } else {
+//           console.log("Nay, NO MATCH!!!!");
+//           this.youareowner = false;          
+//         }
+//       },
 
       toMakeDeal: function(e){
         this.fire('to-makedeal',e.detail);

@@ -170,7 +170,7 @@ This components allow a Swarm Citizen to reply on a request.
        * the data of the item we're replying to.
        */
         itemdata: {
-          type: String,
+          type: Object,
         },
         /**
         * 'identity' the user's identity object - loaded via Redux
@@ -317,7 +317,7 @@ This components allow a Swarm Citizen to reply on a request.
             console.log('posting to topics', topics);
 
             this.shhweb3.shh.post(options, function(err, res) {
-              debugger;
+              //debugger;
               if (!err) {
                 console.log('sc->itemreplier -> Reply posted');
 

@@ -32,13 +32,17 @@
 
       ready: function(){
         console.log('sc-hashtagcontract -> ready');
+        var self = this;
+        this.schashtagrep_ready = new Promise(function(resolve, reject) {
+          self.schashtagrep_ready_resolve = resolve;
+        });
       },
 
      
       _init: function(){
-        if (schashtagrep_ready){
-          return;
-        }
+        // if (schashtagrep_ready){
+        //   return;
+        // }
 
         if (!this.config){
           return;
@@ -63,7 +67,7 @@
 
         var self = this;
 
-        schashtagrep_ready = new Promise(function(resolve, reject) {
+      
           self.$.helpers.getjson('../contracts/Hashtag.json', function(err, contractmetadata) {
             var hashtagcontract = self.web3.eth.contract(contractmetadata.abi);
             self.HashtagInstance = hashtagcontract.at(self.config.hashtagcontracts["pioneer"]);
@@ -71,17 +75,17 @@
               var reptokencontract = self.web3.eth.contract(contractmetadata.abi);
               self.HashtagInstance.getRepTokenAddress.call(function(err, address) {
                 self.HashtagRepInstance = reptokencontract.at(address);
-                resolve();
+                self.schashtagrep_ready_resolve();
               });
             });
           });
-        });
+ 
 
       },
 
       getRep: function(pubkey){
         var self = this;
-        return schashtagrep_ready.then(function(){
+        return this.schashtagrep_ready.then(function(){
           if (!self.HashtagRepInstance){
             return 0;
           }

@@ -341,7 +341,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
 
 
-              <template is="dom-if" if="{{!requestsloaded}}">
+              <template is="dom-if" if="{{!hasdeals(deals)}}">
                 <div class="requestsloading horizont centercenter">
                   <sc-loader small color="grey2" class="grey2">Loading requests</sc-loader>
                 </div>
@@ -412,19 +412,19 @@ This is the component showing all requests of a certain hashtag. It contains a r
             //debugger;
             var newDeal = {
               id: dealdata.id,
-              offer: dealdata.offer,
-              offeramount: dealdata.offeramount,
-              hashtag: dealdata.offerhashtag,
-              offerer: {
-                avatarhash: dealdata.offereravatar,
+              seeker: {
+                avatar: dealdata.offereravatar,
                 username: dealdata.offerer,
                 pubkey: dealdata.offererpubkey
               },
-              created: dealdata.offertime,
+              msg: dealdata.offer,
+              amount: dealdata.offeramount,
+              hashtag: dealdata.offerhashtag,
+              offertime: dealdata.offertime,
               dealstate: 'open'
-
             };
-            deals.push(dealdata);
+
+            deals.push(newDeal);
           }
 
           deals.sort(function(a, b) {
@@ -436,20 +436,57 @@ This is the component showing all requests of a certain hashtag. It contains a r
             deals: deals
           };
         },
- 
-        addmydeal: function(mydealdata) {
-         // debugger;
-          let mydeals = this.mydeals.slice(0);
-          mydeals.push(mydealdata);
+         request_reply: function(replydata) {
 
-          return {
-            type: 'MYDEALS',
-            mydeals: mydeals
+          var foundDeal = this.deals.findIndex(function(item){
+            return item.id === replydata.parentrequestid;
+          });
+
+          let deals = this.deals.slice(0);
+
+          var reply = {
+            id: replydata.id,
+            msg: replydata.reply,
+            provider : replydata.replyer,
+            replytime: replydata.replytime,
           };
-        },        
-        // reply: function(dealdata,replydata){
-        //   let deal = this.deals.indexOf(dealData);
-        // }
+
+          if (foundDeal > -1){
+            var deal = deals[foundDeal];
+            if (deal.replies){
+              var foundDeal = deal.replies.findIndex(function(item){
+                return item.id === replydata.id;
+              });
+              deal.replies[foundDeal] = reply; 
+            }else{
+              deal.replies = [reply];
+            }
+
+          }else{
+            // unknown deal
+            debugger;
+          }
+
+          deals.sort(function(a, b) {
+            return b.offertime - a.offertime;
+          });
+//debugger;
+          return {
+            type: 'DEALS',
+            deals: deals
+          };
+        },
+        // addmydeal: function(mydealdata) {
+        //  // debugger;
+        //   let mydeals = this.mydeals.slice(0);
+        //   mydeals.push(mydealdata);
+
+        //   return {
+        //     type: 'MYDEALS',
+        //     mydeals: mydeals
+        //   };
+        // },        
+
 
       },
 
@@ -587,7 +624,13 @@ This is the component showing all requests of a certain hashtag. It contains a r
         //        debugger;
       },
 
-
+      hasdeals: function(deals){
+        if (!deals || deals.length === 0){
+          return false
+        }else{
+          return true;
+        }
+      },
 
       ready: function() {
         this._checkSize();
@@ -762,6 +805,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
             this.requestsloaded = true;
             break;
           case 'request-reply':
+            this.dispatch('request_reply', payload);
           case 'engage-in-deal':
           case 'reply-to-deal':
           case 'seeker-acceptdeal':
@@ -960,7 +1004,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
           return this.shhweb3.shh.post(options, function(err, res) {
             console.log(err, res);
-             self.dispatch('addmydeal',newrequest);
+             //self.dispatch('addmydeal',newrequest);
             self.set('route.path','/'+self.hashtag+'/list');
           });
         }

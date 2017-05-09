@@ -201,8 +201,8 @@ This component shows a reply on a request.
             </sc-avatar>
 
             <div class="vertic centercenter replyer">
-              <p class="totalwidth replyername small bold grey3">{{replydata.replyer.username}}</p>
-              <p class="totalwidth replyerrep small bold blue">{{replydata.replyer.replyerrep}} REP</p>
+              <p class="totalwidth replyername small bold grey3">{{replydata.supplier.username}}</p>
+              <p class="totalwidth replyerrep small bold blue">{{replydata.supplier.replyerrep}} REP</p>
             </div>
           </div>
 
@@ -235,13 +235,13 @@ This component shows a reply on a request.
           <div class="horizont startjust center flex">
             <sc-avatar
               class="replyeravatar"
-              ipfshash="[[replydata.replyer.avatar]]"
+              ipfshash="[[replydata.provider.avatar]]"
               size="verysmall">
             </sc-avatar>
 
             <div class="vertic centercenter replyer">
-              <p class="totalwidth replyername small bold grey3">{{replydata.replyer.username}}</p>
-              <p class="totalwidth replyerrep small bold blue">{{replydata.replyer.replyerrep}} REP</p>
+              <p class="totalwidth replyername small bold grey3">{{replydata.provider.username}}</p>
+              <p class="totalwidth replyerrep small bold blue">{{replydata.provider.pubkey}} REP</p>
             </div>
           </div>
           <div class="horizont start startjust">
@@ -257,7 +257,7 @@ This component shows a reply on a request.
                 <div class="whitespace"></div>
 
               <div class="totalwidth horizont centercenter">
-                <paper-button class="blueback white small totalwidth" on-tap="toMakedeal"><iron-icon icon="sc-icons:arrowright" class="white"></iron-icon>Make a deal with {{replydata.replyer.username}}</paper-button>
+                <paper-button class="blueback white small totalwidth" on-tap="toMakedeal"><iron-icon icon="sc-icons:arrowright" class="white"></iron-icon>Make a deal with {{replydata.provider.username}}</paper-button>
               </div>
             </template>
             </template>
@@ -282,7 +282,7 @@ This component shows a reply on a request.
       <div id="responditemcontent" class="shadow totalwidth vertic centercenter">
         <p class="centertxt small replytime_detail grey3">{{replydata.replytime}}</p>
 
-        <p class="centertxt replymsg_detail ultralight">{{replydata.reply}}</p>
+        <p class="centertxt replymsg_detail ultralight">{{replydata.msg}}</p>
         <div class="horizont centercenter totalwidth">
           <p class="bold grey4 replyamount">{{replydata.replyamount}} <span class="replySWT">SWT</span></p>
           <iron-icon class="grey4 small" icon="sc-icons:v">checked</iron-icon>
@@ -294,12 +294,12 @@ This component shows a reply on a request.
         <div class="horizont centercenter">
           <sc-avatar
             class="replyeravatar_detail"
-            ipfshash="[[replydata.replyer.replyeravatar]]"
+            ipfshash="[[replydata.provider.avatar]]"
             size="medium">
           </sc-avatar>
           <div class="vertic start centerjust">
-            <p class="replyerusername_detail bold centertxt grey3">{{replydata.replyer.replyerusername}}</p>
-            <p class="replyerrep_detail bold centertxt blue">{{replydata.replyer.replyerrep}} REP</p>
+            <p class="replyerusername_detail bold centertxt grey3">{{replydata.provider.username}}</p>
+            <p class="replyerrep_detail bold centertxt blue">{{replydata.provider.pubkey}} REP</p>
           </div>
         </div>
       </div>
@@ -347,7 +347,8 @@ This component shows a reply on a request.
         },
 
         replydata: {
-          type: Object
+          type: Object,
+          observer: '_replydata'
         }
 
 
@@ -361,6 +362,11 @@ This component shows a reply on a request.
       behaviors: [
         ReduxBehaviour
       ],
+
+
+      _replydata: function(){
+        //debugger;
+      },
 
       ready: function(){
       },
@@ -427,7 +433,7 @@ This component shows a reply on a request.
 
         var topics = [
           this.shhweb3.encodetopic('engage-in-deal'),
-          this.shhweb3.encodetopic(this.replydata.replyer.pubkey)
+          this.shhweb3.encodetopic(this.replydata.provider.pubkey)
         ];
 
         var options = {
