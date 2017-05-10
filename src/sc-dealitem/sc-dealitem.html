@@ -25,12 +25,38 @@ This components is the representation of a request in the requests-list on sc-ha
       :host {
         display: block;
         width: 100%;
-        box-sizing:border-box;
-        padding: 10px 20px 10px 20px;
         @apply(--base-shadow); 
-        background-color: rgba(255,255,255,0.35);
+/*        background-color: rgba(255,255,255,0.35);*/
       }
 
+      .dealstate_open {
+        box-sizing:border-box;
+        padding: 15px 20px 15px 20px;
+        background-color: white;
+        @apply(--layout-horizontal);
+        @apply(--layout-start);
+        @apply(--layout-start-justified);
+        margin: 4px 0px;
+      }
+
+      .dealstate_open sc-avatar {
+        width: 28px;
+        height: 28px;
+        min-width: 28px;
+        min-height: 28px;        
+      }
+
+
+      .dealstate_open p {
+        margin-top: 4px;     
+        margin-left: 10px;     
+      }
+
+/*
+      .offer {
+
+      }
+*/
 
       .dealstatusmsg {
         font-size: 14px;
@@ -53,65 +79,59 @@ This components is the representation of a request in the requests-list on sc-ha
     </style>
  
 
-      <div class="totalwidth horizont center startjust" on-tap="toDetail">
 
+    <template is="dom-if" if="{{_is(item.dealstate,'open')}}">
+      <div class="dealstate_open">
+
+          <sc-avatar
+            ipfshash="[[item.seeker.avatar]]"
+            size="verysmall">
+          </sc-avatar>
+
+<!--         <p class="totalwidth offer grey4"> {{item.msg}} <span class="semibold"> 
+          #{{item.hashtag}}</span></p> -->
+          <div class="offer flex">
+        <p class="totalwidth offer grey4"> {{item.msg}}</p>
+      </div>
+
+
+<!--           <div class="flex vertic centercenter">
+            <p class="totalwidth offerer small bold grey3">{{item.seeker.username}}</p>
+            <p class="totalwidth yourrep small bold blue"><sc-hashtagrep pubkey="{{item.seeker.pubkey}}" hashtagname="{{item.hashtag}}"></sc-hashtagrep> REP</p>
+          </div> -->
+          <p class="bold blue">{{msgcount}}</p>
+
+
+          <p class="offeramount bold yellow">{{item.amount}}<span class="offeramountSWT">SWT</span></p>
+
+
+
+
+      </div>
+    </template>
+
+
+
+
+<!--     <template is="dom-if" if="{{_is(dealstate,'')}}">
+      <div class="totalwidth horizont center startjust" on-tap="toDetail">
         <div class="horizont center startjust flex">
           <p class="dealstatusmsg bold blue">{{dealstatusmsg}}</p>
         </div>
-
-
         <div class="horizont center endjust">
-
           <sc-avatar
             ipfshash="[[identity.avatarhash]]"
             size="verysmall">
           </sc-avatar>
           <iron-icon icon="sc-icons:v" class$="{{vstatus}} medium rightmarg"></iron-icon>
-
           <sc-avatar
             ipfshash="[[item.offereravatar]]"
             size="verysmall">
           </sc-avatar>
           <iron-icon icon="sc-icons:v" class$="{{vstatus}} medium"></iron-icon>
-
         </div>
-
-
-        <!-- <p>Jooo</p> -->
-
-   <!--      <small class="small grey3 light margbot">
-          <moment-js date="{{item.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js>
-        </small>
-        <p class="totalwidth offer grey4"> {{item.offer}} <span class="semibold"> 
-          #{{item.offerhashtag}}</span></p>
-        <template is="dom-if" if="{{showreplies}}">
-          <div class="nrofreplies horizont start startjust">
-            <p class="small reg grey3">{{item.nrofreplies}}</p>
-            <iron-icon icon="sc-icons:babble" class="grey3">replies</iron-icon>
-          </div>
-        </template>
-        <template is="dom-if" if="{{!showreplies}}">
-          <div class="nrofreplies noneyet horizont start startjust">
-            <p class="small reg grey2">0</p>
-            <iron-icon icon="sc-icons:babble" class="grey2">replies</iron-icon>
-          </div>
-        </template>
-
-        <div class="whitespace"></div>
-
-        <div class="totalwidth horizont start startjust">
-          <sc-avatar
-            ipfshash="[[item.offereravatar]]"
-            size="small">
-          </sc-avatar>
-          <div class="flex vertic centercenter">
-            <p class="totalwidth offerer small bold grey3">{{item.offerer}}</p>
-            <p class="totalwidth yourrep small bold blue"><sc-hashtagrep pubkey="{{item.offererpubkey}}" hashtagname="{{item.offerhashtag}}"></sc-hashtagrep> REP</p>
-          </div>
-          <p class="offeramount bold yellow">{{item.offeramount}}<span class="offeramountSWT">SWT</span></p>
-
-        </div> -->
-      </div>
+      </div> 
+    </template> -->
 
 
 
@@ -125,6 +145,10 @@ This components is the representation of a request in the requests-list on sc-ha
 
       behaviors: [
         ReduxBehaviour
+      ],
+
+      observers: [
+        '_item(item)'
       ],
 
       properties: {
@@ -142,9 +166,9 @@ This components is the representation of a request in the requests-list on sc-ha
       },
 
       ready: function(){
-        this.dealstatus = "";
-        this.dealstatusmsg = "Making a deal with " + " for " + "SWT."
-        this.vstatus = "status_init";
+        // this.dealstatus = "";
+        // this.dealstatusmsg = "Making a deal with " + " for " + "SWT."
+        // this.vstatus = "status_init";
       },
 
       /**
@@ -161,6 +185,31 @@ This components is the representation of a request in the requests-list on sc-ha
       onExit: function(){
       },
 
+
+      /**
+      * '_is', a function to bind a template to a certain value of a variable.
+      */
+      _is: function(a, b) {
+        if (b === undefined){
+          b = true;
+        }
+        return a === b;
+      },
+
+
+      _log: function(target) {
+        console.log("*************************** in dealitem", target);
+      },
+
+      _item: function(){
+        // this.msgcount = this.item.replies.length;
+        if (this.item.replies){
+          console.log("HAHAHAHAHAHA", this.item.replies.length);        
+          this.msgcount = this.item.replies.length;
+        } else {
+          this.msgcount = 0;
+        }
+      }
 
     });
   </script>
