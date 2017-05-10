@@ -167,6 +167,8 @@
       on-backup="toBackup"
       on-logout="logout"
       on-deletevault="deletevault"
+      on-show-pk="doThis"
+      pk="{{ditissem}}"
       >
 
     </sc-profile>
@@ -530,7 +532,16 @@
       notifications_jumpto: function(e){
 //        debugger;
         this.transitionto(e.detail.target);
-      }
+      },
+
+
+      doThis: function(){
+        var self = this;
+        this.$.vault.exportPrivateKey(function(err,pk){
+          self.ditissem = pk;
+        });
+      },
+
 
 
     });

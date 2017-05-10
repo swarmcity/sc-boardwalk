@@ -157,6 +157,7 @@
       .pubkey {
         margin-top: 6px;
       }
+
       .pubkey p {
         font-size: 13px;
         line-height: 15px;
@@ -185,14 +186,32 @@
 
       .pubshown p {
         word-break: break-all;
-        color: var(--sc-grey3);
+      }
+
+      .pk {
+        width: 100%;
+        box-sizing:border-box;
+        padding: 0px; 
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        @apply(--layout-start-justified);
+      }
+
+      .pk p {
+        word-break: break-all;
+        font-size: 12px;
+        line-height: 14px;
+      }
+
+      .showmypk {
+        border-bottom: 1px dotted var(--sc-blue);
       }
 
       paper-button.logoutbtn {
         min-width: 120px;
         box-sizing:border-box;
-        margin-bottom: 0px
-        /*@apply(--base-shadow);*/
+        margin-bottom: 0px;
+        /* @apply(--base-shadow); */
       }
 
       .hidden {
@@ -333,6 +352,19 @@
         .pubkey p {
           text-align: center;
         } 
+
+        .pk {
+          width: 100%;
+          @apply(--layout-vertical);
+          @apply(--layout-center-center);
+          box-sizing:border-box;
+          padding: 22px 0px 12px 0px;
+        }
+
+        .pk p {
+          word-break: break-all;
+        }
+
       }
 
 
@@ -405,10 +437,49 @@
 
 
               <template is="dom-if" if="{{_is(pubwhat,'pubshown')}}">
-                <div class="pubkey pubshown">
-                  <p>{{pubkey}}</p>
-                  <iron-icon on-tap="togglePub" icon="sc-icons:decline" class="verysmall"></iron-icon>
-                </div>
+
+                <template is="dom-if" if="{{phoneview}}">
+
+                  <div class="pubkey pubshown">
+                    <p class="grey3">{{pubkey}}</p>
+                    <div class="pk">
+                      <template is="dom-if" if="{{!pkshown}}">
+                        <p class="showmypk reg blue" on-tap="togglePk">Show my private key</p>
+                      </template>
+                      <template is="dom-if" if="{{pkshown}}">
+                        <p class="reg blue">{{pk}}</p>
+                      </template>
+                    </div>
+                    <iron-icon on-tap="togglePub" icon="sc-icons:decline" class="verysmall"></iron-icon>
+                  </div>
+
+                </template>
+
+
+                <template is="dom-if" if="{{!phoneview}}">
+
+                  <div class="totalwidth vertic start startjust">
+                  <div class="pubkey pubshown">
+                    <p class="grey3">{{pubkey}}</p>
+                    <iron-icon on-tap="togglePub" icon="sc-icons:decline" class="verysmall"></iron-icon>
+                  </div>
+
+                    <div class="pk">
+                      <template is="dom-if" if="{{!pkshown}}">
+                        <p class="showmypk reg blue" on-tap="togglePk">Show my private key</p>
+                      </template>
+                      <template is="dom-if" if="{{pkshown}}">
+                        <p class="reg blue">{{pk}}</p>
+                        <iron-icon on-tap="togglePk" icon="sc-icons:decline" class="blue verysmall"></iron-icon>
+
+                      </template>
+                    </div>
+
+
+                </template>
+
+
+
               </template>
 
               <template is="dom-if" if="{{_is(pubwhat,'pubhidden')}}">
@@ -542,6 +613,15 @@
           type: String
         },
 
+
+        /**
+       * `pubkey` is received from parent-element.
+       */
+        pk: {
+          type: String
+        },
+
+
         /**
        * `lastbackup` is received from parent-element.
        */
@@ -555,6 +635,12 @@
         pubwhat: {
           type: String,
           value: 'pubhidden'
+        },
+
+
+        pkshown: {
+          type: Boolean,
+          value: false
         },
 
         /**
@@ -652,13 +738,6 @@
               }
             },
           },
-
-        /**
-       * `pubkey` is the Swarm Citizen's pubkey.
-       */        
-        pubkey: {
-          type: String
-        },
 
       },
 
@@ -955,8 +1034,22 @@
           this.pubwhat = "pubshown";
         } else {
           this.pubwhat = "pubhidden";
+          this.pkshown = false;
         }
       },
+
+
+
+      togglePk: function(){
+        if(!this.pkshown){
+          this.fire('show-pk');
+          this.pkshown = true;
+        } else {
+          this.pkshown = false;
+        }
+        console.log(this.pkshown);
+      },
+
 
 
       /**
@@ -981,6 +1074,7 @@
           //console.log('dit komt van username', newVal, oldVal);
         }
       },
+
 
 
     });
