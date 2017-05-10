@@ -99,7 +99,10 @@ This components is the representation of a request in the requests-list on sc-ha
             <p class="totalwidth offerer small bold grey3">{{item.seeker.username}}</p>
             <p class="totalwidth yourrep small bold blue"><sc-hashtagrep pubkey="{{item.seeker.pubkey}}" hashtagname="{{item.hashtag}}"></sc-hashtagrep> REP</p>
           </div> -->
-          <p class="bold blue">{{msgcount}}</p>
+          <div class="horizont centercenter">
+            <p class="bold">{{msgcount}}</p>
+            <iron-icon icon="sc-icons:babble" class="small">replies</iron-icon>
+          </div>
 
 
           <p class="offeramount bold yellow">{{item.amount}}<span class="offeramountSWT">SWT</span></p>
