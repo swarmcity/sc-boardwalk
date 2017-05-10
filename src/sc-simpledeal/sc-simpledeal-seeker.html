@@ -515,7 +515,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
               <div class="tophalf totalwidth">
 
                 <template is="dom-if" if="{{_is(dealstatus,'init')}}">
-                  <h1 class="">Do you accept a deal with <span class="light blue replyer_username">{{replydata.replyer.username}}</span> in <span class="light">#pioneer</span> for <span class="light">{{replydata.replyamount}} SWT</span>?</h1>
+                  <h1 class="">Do you accept a deal with <span class="light blue replyer_username">{{replydata.provider.username}}</span> in <span class="light">#pioneer</span> for <span class="light">{{requestdata.amount}} SWT</span>?</h1>
                 </template>
 
                 <template is="dom-if" if="{{_is(dealstatus,'seekeraccepted')}}">
@@ -523,9 +523,9 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                 </template>
                 
                 <template is="dom-if" if="{{_is(dealstatus,'provideraccepted')}}">
-                  <h1 class="">Do you accept a deal with <span class="light blue replyer_username">{{replydata.replyer.username}}</span> in <span class="light">#pioneer</span> for <span class="light">{{replydata.replyamount}} SWT</span>?</h1>
+                  <h1 class="">Do you accept a deal with <span class="light blue replyer_username">{{replydata.provider.username}}</span> in <span class="light">#pioneer</span> for <span class="light">{{requestdata.amount}} SWT</span>?</h1>
                   <div class="whitespace"></div>
-                  <p class="reg grey3"><span>{{replydata.replyer.username}}</span> has already accepted.</p>
+                  <p class="reg grey3"><span>{{replydata.providert.username}}</span> has already accepted.</p>
                 </template>
                 
                 
@@ -557,7 +557,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                   <div class$="avatar_funding {{seekerfundclass}}">
                     <sc-avatar
                       ipfshash="[[identity.avatarhash]]"
-                      pubkey="[[pubkey]]"
+                      pubkey="[[identity.pubkey]]"
                       id="makedeal_myavatar"
                       size="{{avatarfundingsize}}"
                       ></sc-avatar>
@@ -565,7 +565,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                   </div>
                   <div class$="avatar_funding {{providerfundclass}}">
                     <sc-avatar
-                      ipfshash="{{replydata.replyer.avatar}}"
+                      ipfshash="[[replydata.provider.avatar]]"
+                      pubkey="[[replydata.provider.pubkey]]"
                       id="makedeal_otheravatar"
                       size="{{avatarfundingsize}}"
                       on-tap="tempTap"
@@ -581,11 +582,11 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                 </template>
 
                 <iron-collapse id="details_collapser">
-                  <p class="bold blue centertxt">You're about to make a deal with <span class="replyer_username">{{replydata.replyer.username}}</span> over:</p>
+                  <p class="bold blue centertxt">You're about to make a deal with <span class="replyer_username">{{replydata.provider.username}}</span> over:</p>
                     <div class="minispace"></div>
-                    <p class="grey3 ultralight centertxt request_msg">"{{replydata.reply}}"</p>
+                    <p class="grey3 ultralight centertxt request_msg">"{{replydata.msg}}"</p>
                     <div class="minispace"></div>
-                    <p class="bold grey3 centertxt announce_amount">The dealamount is <span class="">{{replydata.replyamount}} SWT</span>. </p>
+                    <p class="bold grey3 centertxt announce_amount">The dealamount is <span class="">{{requestdata.amount}} SWT</span>. </p>
                     <div class="details_collapser_inner">
                       <small>At ... , ... posted a request in #pioneer for:</small>
                       <div class="initial_request">
@@ -710,7 +711,13 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         provideraccept: {
           type: Boolean,
           value: false  
-        }
+        },
+
+        deals: {
+          type: Array,
+          statePath: 'deals',
+          observer: '_getdata'
+        },
 
       },
 
@@ -732,7 +739,34 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       _data: function(){
         this.requestid = this.data.requestid;
         this.replyid = this.data.replyid;
-        this._starthastaglistener();
+        //this._starthastaglistener();
+        this._getdata();
+      },
+
+      _getdata: function(){
+        //debugger;
+        var self = this;
+        if (!this.deals || !this.requestid || !this.replyid){
+          return;
+        }
+        var request = this.deals.find(function(item){
+            return item.id === self.requestid;
+        });
+
+        this.requestdata = request;
+
+        if (request){
+          var reply = request.replies.find(function(item){
+            return item.id === self.replyid;
+          });
+          this.replydata = reply;
+        }else{
+          debugger;
+          // what now.. ?
+        }
+
+
+
       },
 
       /**
@@ -827,54 +861,54 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           throw new Error('shhweb3 not set while requesting whisper listener');
         }
 
-        this._starthastaglistener();
+        //this._starthastaglistener();
       },
 
 
 
-      _starthastaglistener: function() {
+      //_starthastaglistener: function() {
 
-        if (this.filter) {
-          return;
-        }
+        // if (this.filter) {
+        //   return;
+        // }
 
-        var self = this;
-        if (this.shhweb3 && this.replyid && this.requestid) {
+        // var self = this;
+        // if (this.shhweb3 && this.replyid && this.requestid) {
 
-          var mytopics = [
-            null, [self.shhweb3.encodetopic(this.requestid),
-              self.shhweb3.encodetopic(this.replyid)
-            ]
-          ];
+        //   var mytopics = [
+        //     null, [self.shhweb3.encodetopic(this.requestid),
+        //       self.shhweb3.encodetopic(this.replyid)
+        //     ]
+        //   ];
 
-          this.filter = self.shhweb3.shh.filter({
-            "topics": mytopics,
-          });
+        //   this.filter = self.shhweb3.shh.filter({
+        //     "topics": mytopics,
+        //   });
 
-          console.log("sc-simpledeal-seeker: channelswitch, start listening to", mytopics);
-          this.filter.watch(this._processmessage.bind(this));
-        }
-      },
+        //   console.log("sc-simpledeal-seeker: channelswitch, start listening to", mytopics);
+        //   this.filter.watch(this._processmessage.bind(this));
+        // }
+      //},
 
-      _processmessage: function(error, result) {
-        var self = this;
-        //debugger;
-        try {
-          var payload = JSON.parse(self.shhweb3.toAscii(result.payload));
-          console.log('incoming in whisperer: web3 ', result,self.shhweb3.toAscii(result.payload));
+      // _processmessage: function(error, result) {
+      //   var self = this;
+      //   //debugger;
+      //   try {
+      //     var payload = JSON.parse(self.shhweb3.toAscii(result.payload));
+      //     console.log('incoming in whisperer: web3 ', result,self.shhweb3.toAscii(result.payload));
 
-          if (payload.id == this.requestid){
-            //debugger;
-            this.requestdata = payload;            
-          }
-          if (payload.id == this.replyid){
-            //debugger;
-            this.replydata = payload; 
-          }
-        } catch (e) {
-          console.log(e);
-        }
-      },
+      //     if (payload.id == this.requestid){
+      //       //debugger;
+      //       this.requestdata = payload;            
+      //     }
+      //     if (payload.id == this.replyid){
+      //       //debugger;
+      //       this.replydata = payload; 
+      //     }
+      //   } catch (e) {
+      //     console.log(e);
+      //   }
+      // },
 
       showDetails: function(){
         var details = this.shadowRoot.getElementById('details_collapser');
@@ -917,7 +951,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 //             var topics = [
 //               this.shhweb3.encodetopic(seeker_acceptdealmessage.type),
 //               this.shhweb3.encodetopic(this.requestdata.hashtag),
-//               //this.shhweb3.encodetopic(this.itemdata.id),
+//               //this.shhweb3.encodetopic(this.requestdata.id),
 //               //this.shhweb3.encodetopic(seeker_acceptdealmessage.id),
 //             ];
 
