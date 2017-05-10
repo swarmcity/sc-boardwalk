@@ -37,18 +37,18 @@
                 break;
             case 'DEALS':
                 //let deals = state.deals;
-                //deals  = action.deals;
+                var deals  = action.deals;
                
                 //debugger;
                 var mydeals = [];
-                var deals = [];
+                var otherdeals = [];
 
                 if (state.identity && state.identity.pubkey) {
                     for (var i = 0; i < action.deals.length; i++) {
                         if (state.identity.pubkey === action.deals[i].seeker.pubkey) {
                             mydeals.push(Object.assign({}, action.deals[i]));
                         }else{
-                            deals.push(Object.assign({}, action.deals[i]));
+                            otherdeals.push(Object.assign({}, action.deals[i]));
                         }
                     }
                 }
@@ -58,7 +58,8 @@
 
                 var newstate = Object.assign({}, state, {
                     deals: deals,
-                    mydeals: mydeals
+                    mydeals: mydeals,
+                    otherdeals: otherdeals
                 });
                 return newstate;
 
