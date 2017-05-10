@@ -18,7 +18,7 @@
     let initialState = {
         deals: getLS('sc-deals') || [],
         notifications: [],
-        mydeals: getLS('sc-mydeals') || [],
+        mydeals: [],
         identity: {
             username: 'username',
             avatarhash: 'Qme5k7WUAoo5JwySiYGfhm4umvhUCTqVKPw2yfP7jhiqPT'
@@ -41,14 +41,29 @@
                 setLS('sc-deals',deals);
                 setLS('sc-deals-len',deals.length);
                 //debugger;
-                return Object.assign({}, state, {deals: deals});
+                var mydeals = [];
+
+                if (state.identity && state.identity.pubkey) {
+                    for (var i = 0; i < deals.length; i++) {
+                        if (state.identity.pubkey === deals[i].seeker.pubkey) {
+                            mydeals.push(Object.assign({}, deals[i]));
+                        }
+                    }
+                }
+            
+                var newstate = Object.assign({}, state, {
+                    deals: deals,
+                    mydeals: mydeals
+                });
+                return newstate;
+
                 break;
-            case 'MYDEALS':
-                let mydeals = state.mydeals;
-                mydeals  = action.mydeals;
-                setLS('sc-mydeals',mydeals);
-                return Object.assign({}, state, {mydeals: mydeals});
-                break;
+            // case 'MYDEALS':
+            //     let mydeals = state.mydeals;
+            //     mydeals  = action.mydeals;
+            //     setLS('sc-mydeals',mydeals);
+            //     return Object.assign({}, state, {mydeals: mydeals});
+            //     break;
             case 'IDENTITY':
                 let identity = state.identity;
                 identity  = action.identity;

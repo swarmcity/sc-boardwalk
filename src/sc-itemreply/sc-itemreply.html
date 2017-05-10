@@ -8,6 +8,8 @@
 <link rel="import" href="../sc-avatar/sc-avatar.html">
 <link rel="import" href="../sc-redux/sc-redux.html">
 <link rel="import" href="../sc-shh/sc-shh.html">
+<link rel="import" href="../sc-hashtag/sc-hashtagrep.html">
+
 <!--
 `sc-itemreply`
 
@@ -241,7 +243,7 @@ This component shows a reply on a request.
 
             <div class="vertic centercenter replyer">
               <p class="totalwidth replyername small bold grey3">{{replydata.provider.username}}</p>
-              <p class="totalwidth replyerrep small bold blue">{{replydata.provider.pubkey}} REP</p>
+              <p class="totalwidth replyerrep small bold blue"><sc-hashtagrep pubkey="{{replydata.provider.pubkey}}" hashtagname="{{itemdata.hashtag}}"></sc-hashtagrep> REP</p>
             </div>
           </div>
           <div class="horizont start startjust">
@@ -299,7 +301,7 @@ This component shows a reply on a request.
           </sc-avatar>
           <div class="vertic start centerjust">
             <p class="replyerusername_detail bold centertxt grey3">{{replydata.provider.username}}</p>
-            <p class="replyerrep_detail bold centertxt blue">{{replydata.provider.pubkey}} REP</p>
+            <p class="replyerrep_detail bold centertxt blue"><sc-hashtagrep pubkey="{{replydata.provider.pubkey}}" hashtagname="{{itemdata.hashtag}}"></sc-hashtagrep> REP</p>
           </div>
         </div>
       </div>
