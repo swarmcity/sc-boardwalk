@@ -209,7 +209,7 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
           <div class="inner_sliderbox horizont centercenter totalwidth darker">
             <div class="horizont centercenter flex">
               <iron-icon icon="sc-icons:location_edgeless" class="slidericon grey3"></iron-icon>
-              <paper-slider noink id="ratings" max="6" value="{{range}}"></paper-slider>
+              <paper-slider noink id="ratings" max="6" value="{{range}}" immediate-value="{{range}}"></paper-slider>
               <iron-icon icon="sc-icons:globe_edgeless" class="slidericon grey3"></iron-icon>
             </div>
             <paper-icon-button icon="sc-icons:v" on-tap="toggleSlider" class="grey3 leftmargers" noink></paper-icon-button>

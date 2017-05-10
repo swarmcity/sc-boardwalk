@@ -36,21 +36,26 @@
                 return Object.assign({}, state, {notifications: notifications});
                 break;
             case 'DEALS':
-                let deals = state.deals;
-                deals  = action.deals;
-                setLS('sc-deals',deals);
-                setLS('sc-deals-len',deals.length);
+                //let deals = state.deals;
+                //deals  = action.deals;
+               
                 //debugger;
                 var mydeals = [];
+                var deals = [];
 
                 if (state.identity && state.identity.pubkey) {
-                    for (var i = 0; i < deals.length; i++) {
-                        if (state.identity.pubkey === deals[i].seeker.pubkey) {
-                            mydeals.push(Object.assign({}, deals[i]));
+                    for (var i = 0; i < action.deals.length; i++) {
+                        if (state.identity.pubkey === action.deals[i].seeker.pubkey) {
+                            mydeals.push(Object.assign({}, action.deals[i]));
+                        }else{
+                            deals.push(Object.assign({}, action.deals[i]));
                         }
                     }
                 }
             
+                setLS('sc-deals',deals);
+                setLS('sc-deals-len',deals.length);
+
                 var newstate = Object.assign({}, state, {
                     deals: deals,
                     mydeals: mydeals
