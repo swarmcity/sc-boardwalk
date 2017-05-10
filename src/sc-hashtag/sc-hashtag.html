@@ -330,7 +330,13 @@ This is the component showing all requests of a certain hashtag. It contains a r
               <div class="whitespace"></div>
 
               <div class="minispace"></div>
-              <sc-dealitem></sc-dealitem>
+            <template is="dom-repeat" items="{{mydeals}}">
+              <sc-dealitem
+                item="[[item]]"
+                on-to-detail="hashtag_to_detail">
+              </sc-dealitem>
+            </template>
+
               <div class="whitespace"></div>
               <div class="whitespace"></div>
 
@@ -1016,9 +1022,9 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       },
 
-      _log: function(target) {
-        console.log("***************************", target);
-      },
+      // _log: function(target) {
+      //   console.log("***************************", target);
+      // },
 
       toMakeDeal: function(e){  
         //debugger;
