@@ -353,7 +353,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
                 </div>
               </template>
 
-            <template is="dom-repeat" items="{{deals}}">
+            <template is="dom-repeat" items="{{otherdeals}}">
               <sc-hashtagitem
                 item="[[item]]"
                 on-to-detail="hashtag_to_detail">
@@ -527,6 +527,10 @@ This is the component showing all requests of a certain hashtag. It contains a r
           type: Array,
           statePath: 'mydeals',
         },
+        otherdeals: {
+          type: Array,
+          statePath: 'otherdeals',
+        },        
         /**
          * `phoneview` is a boolean to determine the viewport.
          */
