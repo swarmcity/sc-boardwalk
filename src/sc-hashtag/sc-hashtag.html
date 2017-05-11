@@ -413,16 +413,15 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
         request_create: function(dealdata) {
 
-          var foundDeal = this.deals.findIndex(function(item){
+          var foundDeal = this.deals.findIndex(function(item) {
             return item.id === dealdata.id;
           });
 
           let deals = this.deals.slice(0);
 
-          if (foundDeal > -1){
+          if (foundDeal > -1) {
             //deals[foundDeal] = dealdata;
-          }else{
-            //debugger;
+          } else {
             var newDeal = {
               id: dealdata.id,
               seeker: {
@@ -431,13 +430,14 @@ This is the component showing all requests of a certain hashtag. It contains a r
                 pubkey: dealdata.offererpubkey
               },
               msg: dealdata.offer,
+              offercreationtx: dealdata.offercreationtx,
               amount: dealdata.offeramount,
               hashtag: dealdata.offerhashtag,
               offertime: dealdata.offertime,
               dealstate: 'open'
             };
-
             deals.push(newDeal);
+            this.watchtx(dealdata.id,dealdata.offercreationtx);
           }
 
           deals.sort(function(a, b) {
@@ -449,59 +449,64 @@ This is the component showing all requests of a certain hashtag. It contains a r
             deals: deals
           };
         },
-         request_reply: function(replydata) {
 
-          var foundDeal = this.deals.findIndex(function(item){
+        request_reply: function(replydata) {
+
+          var foundDeal = this.deals.findIndex(function(item) {
             return item.id === replydata.parentrequestid;
           });
 
           let deals = this.deals.slice(0);
-//debugger;
+          //debugger;
           var reply = {
             id: replydata.id,
             msg: replydata.reply,
-            provider : replydata.replyer,
+            provider: replydata.replyer,
             replytime: replydata.replytime,
             parentrequestid: replydata.parentrequestid
           };
 
-          if (foundDeal > -1){
+          if (foundDeal > -1) {
             var deal = deals[foundDeal];
-            if (deal.replies){
-              var foundDeal = deal.replies.findIndex(function(item){
+            if (deal.replies) {
+              var foundDeal = deal.replies.findIndex(function(item) {
                 return item.id === replydata.id;
               });
-              deal.replies[foundDeal] = reply; 
-            }else{
+              deal.replies[foundDeal] = reply;
+            } else {
               deal.replies = [reply];
             }
-
-          }else{
-//            debugger;
-            console.error('no deal found for reply with ID=',replydata.id)
+          } else {
+            console.error('no deal found for reply with ID=', replydata.id)
           }
 
           deals.sort(function(a, b) {
             return b.offertime - a.offertime;
           });
-//debugger;
+         
           return {
             type: 'DEALS',
             deals: deals
           };
         },
-        // addmydeal: function(mydealdata) {
-        //  // debugger;
-        //   let mydeals = this.mydeals.slice(0);
-        //   mydeals.push(mydealdata);
 
-        //   return {
-        //     type: 'MYDEALS',
-        //     mydeals: mydeals
-        //   };
-        // },        
+        request_setaddress: function(params) {
+debugger;
+          var foundDeal = this.deals.findIndex(function(item) {
+            return item.id === params.dealid;
+          });
 
+          let deals = this.deals.slice(0);
 
+          deals[foundDeal] = Object.assign({}, deals[foundDeal], {
+            dealaddress: params.address
+          });
+          return {
+            type: 'DEALS',
+            deals: deals
+          };
+
+        },
       },
 
       observers: [
@@ -633,6 +638,51 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       },
 
+      watchtx: function(dealid,tx){
+        
+        if (!tx){
+          return;
+        }
+        var self = this;
+        this.helper_getDealAddressFromTx(tx,function(err,address){
+          debugger;
+          self.dispatch('request_setaddress',{dealid:dealid,address:address});
+        });
+      },
+
+
+
+      helper_getDealAddressFromTx(tx, cb) {
+        var self = this;
+        this.web3.eth.getTransaction(tx, function(err, res) {
+          if (res.blockNumber) {
+            self.contracturl = self.resolveUrl('../contracts/DealForTwoFactory.json');
+            self.importHref(self.contracturl, function(e) {
+              var contractjson = JSON.parse(e.target.import.body.innerText);
+              var DealForTwoFactoryContract = self.web3.eth.contract(contractjson.abi);
+              var DealForTwoFactoryContractInstance = DealForTwoFactoryContract.at(self.config.dealfortwofactory);
+              var myEvent = DealForTwoFactoryContractInstance.NewSimpleDeal(null, {
+                fromBlock: res.blockNumber,
+                toBlock: res.blockNumber
+              });
+              myEvent.get(function(error, result) {
+                var myEvent = result.find(function(item) {
+                  return item.transactionHash === tx;
+                });
+                if (!myEvent || !myEvent.args || !myEvent.args.simpleDealAddress){
+                  return cb('event not found');
+                }
+                var address = myEvent.args.simpleDealAddress;
+                return cb(null, address);
+              });
+            });
+          } else {
+            return cb('not yet mined');
+          }
+        });
+      },
+
+
       _routedata: function() {
         if (this.data && this.data.hashtag) {
           this.hashtag = this.data.hashtag;
@@ -652,9 +702,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
           return true;
         }
       },
-
-
-
 
       hasmydeals: function(mydeals){
           // return false;

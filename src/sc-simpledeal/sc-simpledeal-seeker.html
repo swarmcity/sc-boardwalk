@@ -759,8 +759,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           });
           this.replydata = reply;
         }else{
-          debugger;
-          // what now.. ?
+          //debugger;
+          console.error('what now.. ?');
         }
 
 
@@ -850,6 +850,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
 
       _web3: function() {
+        this.startDeal();
       },
 
 
@@ -933,7 +934,80 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         this.selecteddealpage = 'dodeal';
       },
 
+
+ assignDeal: function(provideraddress,seekeramount,provideramount,cb) {
+        var self = this;
+    
+        this.contracturl = this.resolveUrl('../contracts/DealForTwoFactory.json');
+        this.importHref(this.contracturl, function(e) {
+          this.contractjson = JSON.parse(e.target.import.body.innerText);
+          self.web3.eth.getGasPrice(function(err, result) {
+            var gasPrice = result.toNumber(10);
+            // console.log('gasprice: ', gasPrice);
+            var DealForTwoFactoryContract = self.web3.eth.contract(self.contractjson.abi);
+            var DealForTwoFactoryContractInstance = DealForTwoFactoryContract.at(self.config.dealfortwofactory);
+            //address _hashtag, address _counterparty,uint _counterpartyThreshold, bytes32 _dealID
+            //console.log('doing transfer of ', amount, ' LC to: ', pubkey, 'from: ', self.account);
+            DealForTwoFactoryContractInstance.makeDealForTwo.sendTransaction(self.config.hashtagcontracts[self.selectedhashtag],1, {
+              from: self.identity.pubkey,
+              gasPrice: gasPrice,
+              gas: 1000000
+            }, function(err, result) {
+              if (err){
+                if (cb) {
+                  return cb(err);
+                }
+              }
+              cb(null,result);
+              console.log(err, result);
+              console.log('waiting for TX to happen');
+              //self.currenttxhash = result;
+
+            });
+          });
+        });
+      },
+
+      helper_getSWTBalanceFromAddress(address,cb) {
+        var self = this;
+        self.contracturl = self.resolveUrl('../contracts/MiniMeToken.json');
+        self.importHref(self.contracturl, function(e) {
+          var contractjson = JSON.parse(e.target.import.body.innerText);
+          var SWTTokenContract = self.web3.eth.contract(contractjson.abi);
+          var SWTTokenContractInstance = SWTTokenContract.at(self.config.swttokencontractaddress);
+          SWTTokenContractInstance.balanceOf(address, function(err, swtbalance) {
+            return cb(null, swtbalance);
+          });
+        });
+      },
+
+
+
+
       startDeal: function(){
+        // var self = this;
+        // var tx = '0x2abd79640d815db1e3f052b12a376bc05f0f5ff0b345c45385518698b5275b38'; //this.requestdata.offercreationtx
+        // this.helper_getDealAddressFromTx(tx,function(err,address){
+        //   if (address){
+        //     self.helper_getSWTBalanceFromAddress(address,function(err,balance){
+        //       debugger;
+        //     })
+        //   }
+        //   debugger;
+        // });
+       
+      
+
+        
+
+          // this.assignDeal(this.replydata.provider.pubkey,this.requestdata.amount,this.requestdata.amount,function(err,res){
+          //   // do your THANG
+          // });
+
+
+
+
+//        debugger;
 
 //             if (!this.shhidentity) {
 //               this.shhidentity = this.shhweb3.shh.newIdentity();
@@ -974,8 +1048,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 //               //elf.borderz = "lightgreytopborder";
 //             });
       
-        this.seekeraccept = true;
-        this.$.simpledeal.createDeal();
+        //this.seekeraccept = true;
+        //this.$.simpledeal.createDeal();
       },
 
 
