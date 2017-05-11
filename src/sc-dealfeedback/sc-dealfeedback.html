@@ -76,7 +76,7 @@ This components is the representation of a request in the requests-list on sc-ha
 
      <template is="dom-if" if="{{compact}}">
       <template is="dom-if" if="{{_is(showsteps,'create')}}">
-        <p class="small grey2 semibold">Creating your request ({{createsteps}})</p>
+        <p class="small grey2 semibold">{{createstep}}</p>
       </template>
     </template>
 
@@ -163,7 +163,7 @@ This components is the representation of a request in the requests-list on sc-ha
                         <polygon points="6.5,4.9 6.5,44.5 42,24.9 "/>
                         </svg>
                       </div>
-                      <p class="bold blue" on-tap="collapseSteps">Creating your request - {{createsteps}}</p>
+                      <p class="bold blue" on-tap="collapseSteps">Creating your request - {{createstep}}</p>
                       <!-- <sc-loader color="green" small on-tap="collapseSteps"></sc-loader> -->
                       <!-- <p on-tap="showSteps"></p> -->
                     </div>
@@ -255,6 +255,9 @@ This components is the representation of a request in the requests-list on sc-ha
       },
 
       ready: function(){
+          this.dealstate = "dealinit";
+
+
         this.steponestate = "init";
         this.steponemsg = "Create dealcontract";
 
@@ -282,18 +285,18 @@ This components is the representation of a request in the requests-list on sc-ha
         setTimeout(function() {
           self.steptwostate = "done";
         }, 12000);
-        setTimeout(function() {
-          self.stepthreestate = "doing";
-        }, 14000);
-        setTimeout(function() {
-          self.stepthreestate = "done";
-        }, 16000);
-        setTimeout(function() {
-          self.stepfourstate = "doing";
-        }, 18000);
-        setTimeout(function() {
-          self.stepfourstate = "done";
-        }, 20000);
+        // setTimeout(function() {
+        //   self.stepthreestate = "doing";
+        // }, 14000);
+        // setTimeout(function() {
+        //   self.stepthreestate = "done";
+        // }, 16000);
+        // setTimeout(function() {
+        //   self.stepfourstate = "doing";
+        // }, 18000);
+        // setTimeout(function() {
+        //   self.stepfourstate = "done";
+        // }, 20000);
       },
 
       /**
@@ -393,17 +396,17 @@ This components is the representation of a request in the requests-list on sc-ha
         if (this.steponestate=='init' && this.steptwostate=='init' && this.stepthreestate=='init' && this.stepfourstate=='init') {
           this.dealstate = "dealinit";
           this.allsteps = "0/4";
-          this.createsteps = "0/2";
+          this.createstep = "Creating request (0/2)";
         }
-        if (this.steponestate=='done' && this.steptwostate=='init' && this.stepthreestate=='init' && this.stepfourstate=='init') {
+        if (this.steponestate=='done' && this.steptwostate=='doing' && this.stepthreestate=='init' && this.stepfourstate=='init') {
           this.dealstate = "dealcreated";
           this.allsteps = "1/4";
-          this.createsteps = "1/2";
+          this.createstep = "Creating request (1/2)";
         }
         if (this.steponestate=='done' && this.steptwostate=='done' && this.stepthreestate=='init' && this.stepfourstate=='init') {
           this.dealstate = "dealfundedbyseeker";
           this.allsteps = "2/4";
-          this.createsteps = "2/2";
+          this.createstep = "";
           this.assignsteps = "0/2";
         }
         if (this.steponestate=='done' && this.steptwostate=='done' && this.stepthreestate=='done' && this.stepfourstate=='init') {

@@ -8,6 +8,7 @@
 
 <link rel="import" href="../sc-avatar/sc-avatar.html">
 <link rel="import" href="../sc-hashtagcontract/sc-hashtagrep.html">
+<link rel="import" href="../sc-dealfeedback/sc-dealfeedback.html">
 
 
 <!--
@@ -114,6 +115,17 @@ This components is the representation of a request in the requests-list on sc-ha
         margin-bottom: 2px;
       }
 
+      sc-dealfeedback {
+        visibility: hidden;
+      }
+
+      .half {
+        opacity: 0.75;
+      }
+
+      .full {
+        opacity: 1;
+      }
       @media all and (min-width: 0) and (max-width: 420px) { 
       
         .smalltxt {
@@ -128,9 +140,12 @@ This components is the representation of a request in the requests-list on sc-ha
 
       <div class="totalwidth vertic start startjust" on-tap="toDetail">
 
-        <small class="small grey3 light">
+        <sc-dealfeedback compact dealstate="{{dealstate}}" showsteps="create"></sc-dealfeedback>
+        <small class="small grey3 light flex">
           <moment-js date="{{item.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js>
+          <span class="grey2">{{dealstatusmsg}}</span>
         </small>
+
         <p class="totalwidth offer grey4"> {{item.msg}} <span class="semibold"> 
           #{{item.hashtag}}</span></p>
         <template is="dom-if" if="{{showreplies}}">
@@ -161,7 +176,7 @@ This components is the representation of a request in the requests-list on sc-ha
 
 <!--         <div class="totalwidth horizont centercenter">
           <div class="flex"></div> -->
-          <p class="offeramount bold yellow">{{item.amount}}<span class="offeramountSWT">SWT</span></p>
+          <p class$="offeramount bold yellow {{amountopacity}}">{{item.amount}}<span class="offeramountSWT">SWT</span></p>
 <!--         </div> -->
 
 
@@ -179,6 +194,10 @@ This components is the representation of a request in the requests-list on sc-ha
     Polymer({
 
       is: 'sc-hashtagitem',
+
+      observers: [
+        '_dealstate(dealstate)'
+      ],
 
       properties: {
         /**
@@ -213,7 +232,19 @@ This components is the representation of a request in the requests-list on sc-ha
       toLocaltime: function(target){
         // console.log("HEY MISTER? got the tiiiimmmmmeeeeee",target);
 
-      }
+      },
+
+
+      // DIT MOET UIT DE REDUX KOMEN !!!!!!!!!!!!!!!!
+      _dealstate: function(target){
+        if (target=='dealinit' || target=='dealcreated') {
+          this.dealstatusmsg = "- Request is being created";  
+          this.amountopacity = "half"; 
+        } else {
+          this.dealstatusmsg = "";
+          this.amountopacity = "full"; 
+        }
+      },
 
     });
   </script>
