@@ -491,7 +491,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
         },
 
         request_setaddress: function(params) {
-debugger;
+
           var foundDeal = this.deals.findIndex(function(item) {
             return item.id === params.dealid;
           });
@@ -507,6 +507,31 @@ debugger;
           };
 
         },
+
+     request_updatebalance: function(params) {
+debugger;
+
+          var foundDeal = this.deals.findIndex(function(item) {
+            return item.id === params.dealid;
+          });
+
+          let deals = this.deals.slice(0);
+
+          deals[foundDeal] = Object.assign({}, deals[foundDeal], {
+            dealbalance: params.balance
+          });
+          return {
+            type: 'DEALS',
+            deals: deals
+          };
+
+        },
+
+
+
+
+
+
       },
 
       observers: [
@@ -644,12 +669,41 @@ debugger;
           return;
         }
         var self = this;
-        this.helper_getDealAddressFromTx(tx,function(err,address){
-          debugger;
+        this.helper_getDealAddressFromTx(tx,function(err,address,blocknumber){
           self.dispatch('request_setaddress',{dealid:dealid,address:address});
+          self.helper_watchbalance(address,blocknumber);
         });
       },
 
+      helper_watchbalance(address,startblock){
+        // var self = this;
+        // self.contracturl = self.resolveUrl('../contracts/MiniMeToken.json');
+        // self.importHref(self.contracturl, function(e) {
+        //   var contractjson = JSON.parse(e.target.import.body.innerText);
+        //   var SWTTokenContract = self.web3.eth.contract(contractjson.abi);
+        //   var SWTTokenContractInstance = SWTTokenContract.at(self.config.swttokencontractaddress);
+
+        //   var myEvent = SWTTokenContractInstance.Transfer(null, {
+        //         fromBlock: startblock,
+        //       });
+        //       myEvent.get(function(error, result) {
+        //         var myEvent = result.find(function(item) {
+        //           return item.transactionHash === tx;
+        //         });
+        //         if (!myEvent || !myEvent.args || !myEvent.args.simpleDealAddress){
+        //           return cb('event not found');
+        //         }
+        //         var address = myEvent.args.simpleDealAddress;
+        //         return cb(null, address,res.blockNumber);
+        //       });
+
+
+
+        //   SWTTokenContractInstance.balanceOf(address, function(err, swtbalance) {
+        //     return cb(null, swtbalance);
+        //   });
+        // });
+      },
 
 
       helper_getDealAddressFromTx(tx, cb) {
@@ -673,7 +727,7 @@ debugger;
                   return cb('event not found');
                 }
                 var address = myEvent.args.simpleDealAddress;
-                return cb(null, address);
+                return cb(null, address,res.blockNumber);
               });
             });
           } else {
