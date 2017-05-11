@@ -9,6 +9,8 @@
 <link rel="import" href="../sc-geohash/sc-geohash.html">
 <link rel="import" href="../sc-simpledeal/sc-simpledeal.html">
 <link rel="import" href="../sc-redux/sc-redux.html">
+<link rel="import" href="../sc-web3/sc-web3.html">
+<link rel="import" href="../sc-config/sc-config.html">
 
 <!--
 `sc-newitem`
@@ -21,7 +23,9 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 <dom-module id="sc-newitem">
   <template>
     <sc-geohash geohash="{{geohash}}" locate-on-start></sc-geohash>
-    <sc-simpledeal id="simpledeal"></sc-simpledeal>   
+    <sc-simpledeal id="simpledeal"></sc-simpledeal> 
+    <sc-web3 id="web3" web3="{{web3}}"></sc-web3>
+    <sc-config config="{{config}}"></sc-config>
     <style include="sc-styles">
       :host {
         display: block;
@@ -365,17 +369,51 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         }
       },
 
-      confirmRequest: function(){
-        var totalnew = {
-          msg: this.offermsg,
-          amount: this.replyamount,
-          geohash: this.geohash,
-        }
-        this.fire('new-submitted',totalnew);
-        
+      confirmRequest: function() {
+        var self = this;
+        this.makeDeal(function() {
+          var totalnew = {
+            msg: self.offermsg,
+            amount: self.replyamount,
+            geohash: self.geohash,
+          }
+          self.fire('new-submitted', totalnew);
+
+        });
+
       },
 
+      makeDeal: function(cb) {
+        var self = this;
+    debugger;
+        this.contracturl = this.resolveUrl('../contracts/SimpleDealFactory.json');
+        this.importHref(this.contracturl, function(e) {
+          this.contractjson = JSON.parse(e.target.import.body.innerText);
+          self.web3.eth.getGasPrice(function(err, result) {
+            var gasPrice = result.toNumber(10);
+            // console.log('gasprice: ', gasPrice);
+            var SimpleDealFactoryContract = self.web3.eth.contract(self.contractjson.abi);
+            var SimpleDealFactoryContractInstance = SimpleDealFactoryContract.at(self.config.simpledealfactory);
+            //address _hashtag, address _counterparty,uint _counterpartyThreshold, bytes32 _dealID
+            //console.log('doing transfer of ', amount, ' LC to: ', pubkey, 'from: ', self.account);
+            SimpleDealFactoryContractInstance.makeSimpleDeal.sendTransaction(self.config.hashtagcontracts[self.selectedhashtag], '0x0033788d4AC1a01e06C8a0a7300CF4F92a6f33Fd',1,'0x0', {
+              from: self.identity.pubkey,
+              gasPrice: gasPrice,
+              gas: 1000000
+            }, function(err, result) {
+              if (err){
+                if (cb) {
+                  return cb(err);
+                }
+              }
+              console.log(err, result);
+              console.log('waiting for TX to happen');
+              self.currenttxhash = result;
 
+            });
+          });
+        });
+      },
 
 
 
