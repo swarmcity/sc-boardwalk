@@ -371,11 +371,13 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
       confirmRequest: function() {
         var self = this;
-        this.makeDeal(function() {
+        this.makeDeal(function(err,txhash) {
+          debugger;
           var totalnew = {
             msg: self.offermsg,
             amount: self.replyamount,
             geohash: self.geohash,
+            txhash: txhash
           }
           self.fire('new-submitted', totalnew);
 
@@ -386,17 +388,17 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       makeDeal: function(cb) {
         var self = this;
     debugger;
-        this.contracturl = this.resolveUrl('../contracts/SimpleDealFactory.json');
+        this.contracturl = this.resolveUrl('../contracts/DealForTwoFactory.json');
         this.importHref(this.contracturl, function(e) {
           this.contractjson = JSON.parse(e.target.import.body.innerText);
           self.web3.eth.getGasPrice(function(err, result) {
             var gasPrice = result.toNumber(10);
             // console.log('gasprice: ', gasPrice);
-            var SimpleDealFactoryContract = self.web3.eth.contract(self.contractjson.abi);
-            var SimpleDealFactoryContractInstance = SimpleDealFactoryContract.at(self.config.simpledealfactory);
+            var DealForTwoFactoryContract = self.web3.eth.contract(self.contractjson.abi);
+            var DealForTwoFactoryContractInstance = DealForTwoFactoryContract.at(self.config.dealfortwofactory);
             //address _hashtag, address _counterparty,uint _counterpartyThreshold, bytes32 _dealID
             //console.log('doing transfer of ', amount, ' LC to: ', pubkey, 'from: ', self.account);
-            SimpleDealFactoryContractInstance.makeSimpleDeal.sendTransaction(self.config.hashtagcontracts[self.selectedhashtag], '0x0033788d4AC1a01e06C8a0a7300CF4F92a6f33Fd',1,'0x0', {
+            DealForTwoFactoryContractInstance.makeDealForTwo.sendTransaction(self.config.hashtagcontracts[self.selectedhashtag],1, {
               from: self.identity.pubkey,
               gasPrice: gasPrice,
               gas: 1000000
@@ -406,9 +408,10 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
                   return cb(err);
                 }
               }
+              cb(null,result);
               console.log(err, result);
               console.log('waiting for TX to happen');
-              self.currenttxhash = result;
+              //self.currenttxhash = result;
 
             });
           });
