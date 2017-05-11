@@ -137,6 +137,11 @@ This component shows a reply on a request.
         margin-left: 5px;
       }
 
+      paper-button.makedealbtn {
+        padding: 14px 20px 14px 20px;
+
+      }
+
       @media all and (min-width: 0) and (max-width: 420px) { 
 
 
@@ -180,7 +185,7 @@ This component shows a reply on a request.
 
         <div class="vertic start centerjust totalwidth flex">
           <p class="grey3 small"><moment-js date="{{replydata.replytime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
-          <p class="reply grey4">{{replydata.reply}}</p>
+          <p class="reply grey4">{{replydata.msg}}</p>
         </div>
 
 
@@ -191,27 +196,27 @@ This component shows a reply on a request.
             </div>
           </div>
         </div>
-
-<!--         <div class="minispace"></div>
+<div class="minispace"></div>
+<!--         
         <div class="minispace"></div> -->
-        <div class="totalwidth horizont end startjust">
-          <div class="horizont startjust center">
+        <div class="totalwidth horizont center startjust">
+          <div class="horizont startjust center flex">
             <sc-avatar
               class="replyeravatar"
-              ipfshash="[[replydata.replyer.avatar]]"
+              ipfshash="[[replydata.provider.avatar]]"
               size="verysmall">
             </sc-avatar>
 
             <div class="vertic centercenter replyer">
-              <p class="totalwidth replyername small bold grey3">{{replydata.supplier.username}}</p>
-              <p class="totalwidth replyerrep small bold blue">{{replydata.supplier.replyerrep}} REP</p>
+              <p class="totalwidth replyername small bold grey3">{{replydata.provider.username}}</p>
+              <p class="totalwidth replyerrep small bold blue">{{replydata.provider.replyerrep}} REP</p>
             </div>
           </div>
 
 
             <template is="dom-if" if="{{btnshow}}">
-              <div class="totalwidth horizont center endjust">
-                <paper-button class="blueback white" on-tap="toMakedeal"><iron-icon icon="sc-icons:arrowright" class="white"></iron-icon>Make a deal with {{replydata.replyer.username}}</paper-button>
+              <div class="horizont center endjust">
+                <paper-button class="blueback white makedealbtn" on-tap="toMakedeal"><iron-icon icon="sc-icons:arrowright" class="white"></iron-icon>Make a deal with {{replydata.provider.username}}</paper-button>
               </div>
             </template>
         </div>
@@ -225,7 +230,7 @@ This component shows a reply on a request.
 
         <div class="vertic start centerjust totalwidth">
           <p class="grey3 small"><moment-js date="{{replydata.replytime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
-          <p class="reply grey4">{{replydata.reply}}</p>
+          <p class="reply grey4">{{replydata.msg}}</p>
         </div>
 
 
@@ -320,6 +325,9 @@ This component shows a reply on a request.
 
       is: 'sc-itemreply',
 
+      observers: [
+        '_log(replydata)'
+      ],
       properties: {
         /**
        * `size` can be 'verysmall' (28px), 'small' (40px), 'medium' (50px), 'normal' (100px) or 'big' (115px).
@@ -345,6 +353,11 @@ This component shows a reply on a request.
         },
 
         itemdata: {
+          type: Object
+        },
+
+
+        item: {
           type: Object
         },
 
@@ -461,7 +474,11 @@ This component shows a reply on a request.
 
 
         this.fire('to-makedeal', this.replydata);
-      }
+      },
+
+      _log: function(target) {
+        console.log("*************************** in itemreplyzzzz", target);
+      },
 
 
 

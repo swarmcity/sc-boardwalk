@@ -10,6 +10,7 @@
 <link rel="import" href="../sc-itemreply/sc-itemreply.html">
 <link rel="import" href="../sc-shh/sc-shh.html">
 <link rel="import" href="../sc-hashtag/sc-hashtagrep.html">
+<link rel="import" href="../sc-dealfeedback/sc-dealfeedback.html">
 
 
 <!--
@@ -96,34 +97,12 @@ This components shows the detailed view of a request.
       cursor: pointer;
     }
 
+    .offertxt p {
+      line-height: 20px;
+    }
 
 
-/*
-  .rep {
-    font-size: 14px;
-  }*/
-
-
-/*  YOU ARE USER ???*/
-
-  .detailtotal_yau {
-/*    box-sizing:border-box;
-    padding-top: 50px;*/
-
-  }
-
-  .responds_yau {
-    border-top: 1px solid rgba(0,0,0,0.075);
-
-  }
-/*
-  sc-itemreply {
-    margin: 15px;
-  }
-*/
-
-
-  @media all and (min-width: 0) and (max-width: 540px) { 
+    @media all and (min-width: 0) and (max-width: 540px) { 
 
 
         .totalcontainer {
@@ -153,15 +132,13 @@ This components shows the detailed view of a request.
           height: 49px;
         }
 
-
-
         .detailpadding {
           box-sizing:border-box;
           padding-left: 35px;
           padding-right: 35px;
           padding-bottom: 30px;
         }
-  }
+    }
 
 
     </style>
@@ -182,23 +159,47 @@ This components shows the detailed view of a request.
             <p class="offer light grey4">{{itemdata.msg}}<span class="bold offerhashtag">#{{itemdata.hashtag}}</span></p>
           </div>
           <div class="whitespace"></div>
-          <div class="totalwidth horizont centercenter">
-            <sc-avatar
-              class="offereravatar"
-              ipfshash="[[itemdata.seeker.avatar]]"
-              size="medium">
-            </sc-avatar>
-            <div class="vertic start startjust offertxt flex">
-              <p class="bold grey3">{{itemdata.seeker.username}}</p>
-              <p class="bold rep blue"><sc-hashtagrep pubkey="{{itemdata.seeker.pubkey}}" hashtagname="{{itemdata.hashtag}}"></sc-hashtagrep> REP</p>
-            </div>  
+
+          <template is="dom-if" if="{{phoneview}}">
+            <div class="totalwidth horizont centercenter">
+              <sc-avatar
+                class="offereravatar"
+                ipfshash="[[itemdata.seeker.avatar]]"
+                size="medium">
+              </sc-avatar>
+              <div class="vertic start startjust offertxt flex">
+                <p class="bold grey3">{{itemdata.seeker.username}}</p>
+                <p class="bold rep blue"><sc-hashtagrep pubkey="{{itemdata.seeker.pubkey}}" hashtagname="{{itemdata.hashtag}}"></sc-hashtagrep> REP</p>
+              </div>  
+            </div>
+            <div class="whitespace"></div>
+            <div class="totalwidth horizont centercenter">
+              <div class="flex"></div>
+              <p class="bold yellow amount">{{itemdata.amount}} <span class="swt">SWT</span></p>
+            </div>
+          </template>
+
+
+          <template is="dom-if" if="{{!phoneview}}">
+          <div class="totalwidth horizont end centerjust">
+            <div class="totalwidth horizont centercenter flex">
+              <sc-avatar
+                class="offereravatar"
+                ipfshash="[[itemdata.seeker.avatar]]"
+                size="medium">
+              </sc-avatar>
+              <div class="vertic start startjust offertxt flex">
+                <p class="bold grey3">{{itemdata.seeker.username}}</p>
+                <p class="bold rep blue"><sc-hashtagrep pubkey="{{itemdata.seeker.pubkey}}" hashtagname="{{itemdata.hashtag}}"></sc-hashtagrep> REP</p>
+              </div>  
+            </div>
+              <p class="bold yellow amount">{{itemdata.amount}} <span class="swt">SWT</span></p>
           </div>
-          <div class="whitespace"></div>
-          <div class="totalwidth horizont centercenter">
-            <div class="flex"></div>
-            <p class="bold yellow amount">{{itemdata.amount}} <span class="swt">SWT</span></p>
-          </div>
+          </template>
+          <sc-dealfeedback></sc-dealfeedback>
         </div>
+
+
 
         <template is="dom-if" if="{{!youareowner(itemdata.seeker.pubkey)}}">
           <sc-itemreplier itemdata="{{itemdata}}">

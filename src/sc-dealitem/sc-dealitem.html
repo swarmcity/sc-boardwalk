@@ -36,7 +36,7 @@ This components is the representation of a request in the requests-list on sc-ha
         @apply(--layout-horizontal);
         @apply(--layout-start);
         @apply(--layout-start-justified);
-        margin: 4px 0px;
+        margin: 8px 0px;
       }
 
       .dealstate_open sc-avatar {
@@ -48,15 +48,24 @@ This components is the representation of a request in the requests-list on sc-ha
 
 
       .dealstate_open p {
-        margin-top: 4px;     
-        margin-left: 10px;     
+        @apply(--sc-font-nowrap);
+        margin-top: 4px;      
       }
 
-/*
-      .offer {
-
+      .replyicon {   
+        margin-top: 4px;            
+        margin-left: 5px;            
       }
-*/
+
+      .mymsg {
+        margin-bottom: 4px;        
+        margin-left: 10px;        
+        margin-right: 10px;        
+      }
+
+      .myoffer {
+        margin-right: 10px;
+      }
 
       .dealstatusmsg {
         font-size: 14px;
@@ -81,37 +90,41 @@ This components is the representation of a request in the requests-list on sc-ha
 
 
     <template is="dom-if" if="{{_is(item.dealstate,'open')}}">
-      <div class="dealstate_open">
-
+      <div class="dealstate_open" on-tap="toDetail">
           <sc-avatar
             ipfshash="[[item.seeker.avatar]]"
             size="verysmall">
           </sc-avatar>
+        <p class="mymsg grey4 flex"> {{item.msg}}</p>
 
-<!--         <p class="totalwidth offer grey4"> {{item.msg}} <span class="semibold"> 
-          #{{item.hashtag}}</span></p> -->
-          <div class="offer flex">
-        <p class="totalwidth offer grey4"> {{item.msg}}</p>
-      </div>
-
-
-<!--           <div class="flex vertic centercenter">
-            <p class="totalwidth offerer small bold grey3">{{item.seeker.username}}</p>
-            <p class="totalwidth yourrep small bold blue"><sc-hashtagrep pubkey="{{item.seeker.pubkey}}" hashtagname="{{item.hashtag}}"></sc-hashtagrep> REP</p>
-          </div> -->
-          <div class="horizont centercenter">
-            <p class="bold">{{msgcount}}</p>
-            <iron-icon icon="sc-icons:babble" class="small">replies</iron-icon>
+          <p class="myoffer bold yellow">{{item.amount}} SWT</p>
+          <div class="horizont center endjust">
+            <p class="bold">{{replycount}}</p>
+            <iron-icon icon="sc-icons:babble" class="small replyicon">replies</iron-icon>
           </div>
-
-
-          <p class="offeramount bold yellow">{{item.amount}}<span class="offeramountSWT">SWT</span></p>
-
-
-
-
       </div>
     </template>
+
+<!-- 
+    <template is="dom-if" if="{{_is(item.dealstate,'open')}}">
+      <div class="dealstate_open" on-tap="toDetail">
+          <sc-avatar
+            ipfshash="[[item.seeker.avatar]]"
+            size="verysmall">
+          </sc-avatar>
+        <p class="mymsg grey4 flex"> {{item.msg}}</p>
+
+          <p class="myoffer bold yellow">{{item.amount}} SWT</p>
+          <div class="horizont center endjust">
+            <p class="bold">{{replycount}}</p>
+            <iron-icon icon="sc-icons:babble" class="small replyicon">replies</iron-icon>
+          </div>
+      </div>
+    </template>
+ -->
+
+
+
 
 
 
@@ -205,14 +218,21 @@ This components is the representation of a request in the requests-list on sc-ha
       },
 
       _item: function(){
-        // this.msgcount = this.item.replies.length;
+        // this.replycount = this.item.replies.length;
         if (this.item.replies){
           console.log("HAHAHAHAHAHA", this.item.replies.length);        
-          this.msgcount = this.item.replies.length;
+          this.replycount = this.item.replies.length;
         } else {
-          this.msgcount = 0;
+          this.replycount = 0;
         }
-      }
+      },
+
+
+      toDetail: function(){
+        this.fire('to-detail',this.item);
+      },
+
+
 
     });
   </script>

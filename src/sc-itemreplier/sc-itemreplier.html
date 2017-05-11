@@ -32,34 +32,25 @@ This components allow a Swarm Citizen to reply on a request.
       :host {
         display: block;
       }
-
-
       .yourrespond {
         box-sizing:border-box;
-        padding: 0vw 4vw 1vw 4vw;
+        padding: 2vw 40px 2vw 40px;
         transition: all 0.5s linear;
       }
-
       .lightgreytopborder {
         border-top: 1px solid var(--sc-grey1);
         border-bottom: 1px solid var(--sc-grey1);
-
       }
-
-
       .greytopborder {
         border-top: 1px solid var(--sc-grey1);
         border-bottom: 1px solid var(--sc-grey2);
       }
-
       .notopborder {
         border-top: none;
       }
-
       .bluebottomborder {
         border-bottom: 2px solid var(--sc-blue);
       }  
-
       paper-input.swtamount {
         --paper-input-container-input: {
           @apply(--montserrat-bold);
@@ -70,26 +61,12 @@ This components allow a Swarm Citizen to reply on a request.
         --paper-input-container-focus-color: var(--sc-darkblue);
       }
 
-      .confirmbtns {
-        @apply(--layout-horizontal);
-        @apply(--layout-center);
-        @apply(--layout-end-justified);
+      .addreplybtn iron-icon {
+        margin-left: 10px;
       }
-      .confirmbtns paper-icon-button {
-        margin-left: 5px;
+      .addreplybtn sc-avatar {
+        margin-right: 10px;
       }
-
-      .replybtn {
-        border-bottom: 2px dotted var(--sc-blue);
-        box-sizing:border-box;
-        padding-top: 8px;
-        padding-bottom: 4px;
-      }
-
-      .replybtn iron-icon {
-        margin-right: 5px;
-      }
-
       .replybtn:hover {
         cursor: pointer;
       }
@@ -97,6 +74,21 @@ This components allow a Swarm Citizen to reply on a request.
         color: var(--sc-blue);
       }
 
+      .inner_replying {
+        /*background-color: red;*/
+        bpx-sizing:border-box;
+        padding: 2vw 40px 2vw 40px;
+      }
+
+      .confirmbtns {
+        margin-top: -20px;
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        @apply(--layout-end-justified);
+      }
+      .confirmbtns paper-icon-button {
+        margin-left: 5px;
+      }
       @media all and (min-width: 0) and (max-width: 420px) { 
 
         .yourrespond {
@@ -111,6 +103,11 @@ This components allow a Swarm Citizen to reply on a request.
         }
 
 
+        paper-button.addreplybtn {
+          width: 100%;
+          font-size: 14px;
+        }
+
       }
 
 
@@ -119,35 +116,39 @@ This components allow a Swarm Citizen to reply on a request.
       <div class$=" {{borderz}} yourrespond totalwidth vertic centercenter">
 
         <template is="dom-if" if="{{_is(replystate,'init')}}">
-          <div class="minispace"></div>
           <!-- <paper-button noink class="darker totalwidth blue shadow respondbtn big" on-tap="replystateChanger">Reply</paper-button> -->
-          <div class="replybtn horizont centercenter" on-tap="replystateChanger">
-            <iron-icon icon="sc-icons:babble" class="blue">reply-icon</iron-icon>
-            <p class="bold">Reply</p>
+          <div class="totalwidth horizont start endjust">
+            <paper-button on-tap="replystateChanger" noink class="addreplybtn grey4 shadow darker"> 
+            <sc-avatar
+              class="replyeravatar"
+              ipfshash="[[identity.avatarhash]]"
+              size="verysmall">
+            </sc-avatar>
+            Reply to this request<iron-icon icon="sc-icons:babble" class="small blue">reply-icon</iron-icon></paper-button>
           </div>
-          <div class="minispace"></div>
         </template>
 
         <template is="dom-if" if="{{_is(replystate,'replying')}}">
 
           <div class="total vertic centercenter">
-            <paper-textarea label="Your reply" class="totalwidth grey2unfocus" value="{{replytext}}" autofocus></paper-textarea>
-            <div class=" totalwidth horizont center startjust">
-            <p>Hank Moovy is offering 1 SWT.</p>
-            <a href="">Make a counteroffer</a>
+
+            <div class="inner_replying totalwidth darker shadow">
+              <paper-textarea label="Your reply" class="totalwidth grey2unfocus" value="{{replytext}}" autofocus></paper-textarea>
+              <div class=" totalwidth horizont center startjust">
+                <p>Hank Moovy is offering 1 SWT.</p>
+                <a href="">Make a counteroffer</a>
+              </div>
+  <!--             <div class="totalwidth horizont end startjust">
+                <paper-input label="Your offer" class="yourreplyamount swtamount grey2unfocus" value="{{replyamount}}">
+                <div suffix class="yellow bold swtwithoffer">SWT</div>
+                </paper-input>
+              </div> -->
             </div>
-<!--             <div class="totalwidth horizont end startjust">
-              <paper-input label="Your offer" class="yourreplyamount swtamount grey2unfocus" value="{{replyamount}}">
-              <div suffix class="yellow bold swtwithoffer">SWT</div>
-              </paper-input>
-            </div> -->
-            <div class="whitespace"></div>
 
-
-          <div class="totalwidth confirmbtns">
-            <iron-icon icon="sc-icons:decline" class="medium blue" on-tap="backtoInit">close collapse</iron-icon>
-            <paper-icon-button icon="sc-icons:v" noink class="white medium blueback shadow confirmbtn" on-tap="replystateChanger"> Reply with offer</paper-icon-button>
-          </div>
+            <div class="totalwidth confirmbtns">
+              <iron-icon icon="sc-icons:decline" class="medium blue" on-tap="backtoInit">close collapse</iron-icon>
+              <paper-icon-button icon="sc-icons:v" noink class="white medium blueback shadow confirmbtn" on-tap="replystateChanger"> Reply with offer</paper-icon-button>
+            </div>
 
 
           </div>
@@ -164,6 +165,10 @@ This components allow a Swarm Citizen to reply on a request.
     Polymer({
 
       is: 'sc-itemreplier',
+
+      observers: [
+        // '_log(identity,replydata)'
+      ],
 
       properties: {
         /**
@@ -349,6 +354,14 @@ This components allow a Swarm Citizen to reply on a request.
     replyLoaded: function(){
       //this.submittingreply = false;
     },
+
+
+
+
+      _log: function(target) {
+        console.log("*************************** in itemreplierzzzz", target);
+      },
+
 
     });
   </script>

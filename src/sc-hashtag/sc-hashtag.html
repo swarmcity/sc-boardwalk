@@ -145,9 +145,15 @@ This is the component showing all requests of a certain hashtag. It contains a r
       }
 
       .requestsloading {
-    max-width: 600px;
+        max-width: 600px;
         min-height: 50vh;
         background-color: rgba(0, 0, 0, 0.02);
+      }
+
+      .mydeals_repeater {
+        width: 100%;
+        box-sizing:border-box;
+        padding: 20px 0px 20px 0px;
       }
 
 
@@ -327,18 +333,19 @@ This is the component showing all requests of a certain hashtag. It contains a r
               </div>
               <div class="flex"></div>
             </div>
-              <div class="whitespace"></div>
 
-              <div class="minispace"></div>
+            <template is="dom-if" if="{{hasmydeals(mydeals)}}">
+
+            <div class="mydeals_repeater">
             <template is="dom-repeat" items="{{mydeals}}">
               <sc-dealitem
                 item="[[item]]"
                 on-to-detail="hashtag_to_detail">
               </sc-dealitem>
             </template>
+            </div>
+            </template>
 
-              <div class="whitespace"></div>
-              <div class="whitespace"></div>
 
               <div class="filterbox">
                 <sc-filter id="locationfilter" currentid="locationfilter" location range="{{range}}"></sc-filter>
@@ -349,7 +356,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
               <template is="dom-if" if="{{!hasdeals(deals)}}">
                 <div class="requestsloading horizont centercenter">
-                  <sc-loader small color="grey2" class="grey2">Loading requests</sc-loader>
+                  <sc-loader small color="grey2" class="grey2">Looking for requests</sc-loader>
                 </div>
               </template>
 
@@ -471,7 +478,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
           }else{
             // unknown deal
-            debugger;
+            // debugger;
           }
 
           deals.sort(function(a, b) {
@@ -636,12 +643,31 @@ This is the component showing all requests of a certain hashtag. It contains a r
       },
 
       hasdeals: function(deals){
+          // return false;
         if (!deals || deals.length === 0){
+          // debugger;
           return false
         }else{
+          //debugger;
           return true;
         }
       },
+
+
+
+
+      hasmydeals: function(mydeals){
+          // return false;
+        if (!mydeals || mydeals.length === 0){
+          // debugger;
+          return false
+        }else{
+          //debugger;
+          return true;
+        }
+      },
+
+
 
       ready: function() {
         this._checkSize();

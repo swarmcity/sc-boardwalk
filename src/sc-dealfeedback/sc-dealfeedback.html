@@ -1,0 +1,233 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+
+<link rel="import" href="../../bower_components/sc-style/sc-style.html">
+<link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
+
+<link rel="import" href="../sc-loader/sc-loader.html">
+<link rel="import" href="../sc-redux/sc-redux.html">
+
+
+<!--
+`sc-dealfeedback`
+
+This components is the representation of a request in the requests-list on sc-hashtag. 
+
+@demo src/sc-dealfeedback/demo/index.html 
+-->
+
+<dom-module id="sc-dealfeedback">
+  <template>
+    <style include="sc-styles">
+      :host {
+        display: block;
+        box-sizing:border-box;
+        padding-top: 20px;
+        padding-bottom: 20px;
+      }
+
+      .feedback_step {
+        margin: 4px 0px;
+      }
+
+      sc-loader {
+        margin-top: 9px;
+      }
+
+
+      @media all and (min-width: 0) and (max-width: 420px) { 
+      }
+
+    </style>
+
+    <div class="feedback_step totalwidth horizont center startjust" on-tap="switchstateOne">
+      <template is="dom-if" if="{{_is(steponestate,'init')}}">
+        <p class="reg grey2">{{steponemsg}}</p>
+        <iron-icon icon="sc-icons:v" class="grey2">not done yet</iron-icon>
+      </template>
+      <template is="dom-if" if="{{_is(steponestate,'doing')}}">
+        <p class="reg grey3">{{steponemsg}}</p>
+        <sc-loader small color="blue"></sc-loader>
+      </template>
+      <template is="dom-if" if="{{_is(steponestate,'done')}}">
+        <p class="reg grey3">{{steponemsg}}</p>
+        <iron-icon icon="sc-icons:v" class="green">done</iron-icon>
+      </template>
+    </div>
+
+
+    <div id="steptwo" class="feedback_step totalwidth horizont center startjust" on-tap="switchstateTwo">
+      <template is="dom-if" if="{{_is(steptwostate,'init')}}">
+        <p class="reg grey2">{{steptwomsg}}</p>
+        <iron-icon icon="sc-icons:v" class="grey2">not done yet</iron-icon>
+      </template>
+      <template is="dom-if" if="{{_is(steptwostate,'doing')}}">
+        <p class="reg grey3">{{steptwomsg}}</p>
+        <sc-loader small color="blue"></sc-loader>
+      </template>
+      <template is="dom-if" if="{{_is(steptwostate,'done')}}">
+        <p class="reg grey3">{{steptwomsg}}</p>
+        <iron-icon icon="sc-icons:v" class="green">done</iron-icon>
+      </template>
+    </div>
+
+
+    <div id="stepthree" class="feedback_step totalwidth horizont center startjust" on-tap="switchstateThree">
+      <template is="dom-if" if="{{_is(stepthreestate,'init')}}">
+        <p class="reg grey2">{{stepthreemsg}}</p>
+        <iron-icon icon="sc-icons:v" class="grey2">not done yet</iron-icon>
+      </template>
+      <template is="dom-if" if="{{_is(stepthreestate,'doing')}}">
+        <p class="reg grey3">{{stepthreemsg}}</p>
+        <sc-loader small color="blue"></sc-loader>
+      </template>
+      <template is="dom-if" if="{{_is(stepthreestate,'done')}}">
+        <p class="reg grey3">{{stepthreemsg}}</p>
+        <iron-icon icon="sc-icons:v" class="green">done</iron-icon>
+      </template>
+    </div>
+    
+ 
+    <div id="stepfour" class="feedback_step totalwidth horizont center startjust" on-tap="switchstateFour">
+      <template is="dom-if" if="{{_is(stepfourstate,'init')}}">
+        <p class="reg grey2">{{stepfourmsg}}</p>
+        <iron-icon icon="sc-icons:v" class="grey2">not done yet</iron-icon>
+      </template>
+      <template is="dom-if" if="{{_is(stepfourstate,'doing')}}">
+        <p class="reg grey3">{{stepfourmsg}}</p>
+        <sc-loader small color="blue"></sc-loader>
+      </template>
+      <template is="dom-if" if="{{_is(stepfourstate,'done')}}">
+        <p class="reg grey3">{{stepfourmsg}}</p>
+        <iron-icon icon="sc-icons:v" class="green">done</iron-icon>
+      </template>
+    </div>
+
+
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'sc-dealfeedback',
+
+      behaviors: [
+        ReduxBehaviour
+      ],
+
+      observers: [
+        // '_log(item)'
+      ],
+
+      properties: {
+      },
+
+      ready: function(){
+        this.steponestate = "init";
+        this.steponemsg = "Create dealcontract";
+
+        this.steptwostate = "init";
+        this.steptwomsg = "Add funds of requester";
+
+        this.stepthreestate = "init";
+        this.stepthreemsg = "Assigned provider";
+
+        this.stepfourstate = "init";
+        this.stepfourmsg = "Add funds of provider";
+
+      },
+
+      /**
+      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
+      * use this to initialize any variables to start the component
+      */
+      onEnter: function(){
+      },
+
+      /**
+      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage 
+      * use this to reset any variables when leaving this component while it remains loaded.
+      */
+      onExit: function(){
+      },
+
+
+      /**
+      * '_is', a function to bind a template to a certain value of a variable.
+      */
+      _is: function(a, b) {
+        if (b === undefined){
+          b = true;
+        }
+        return a === b;
+      },
+
+
+      _log: function(target) {
+        console.log("*************************** in dealitem", target);
+      },
+
+      switchstateOne: function(){
+        switch(this.steponestate){
+          case 'init':
+            this.steponestate = 'doing';
+            break;
+          case 'doing':
+            this.steponestate = 'done';
+            break;
+          case 'done':
+            this.steponestate = 'init';
+            break;
+          }
+      },
+
+
+      switchstateTwo: function(){
+        switch(this.steptwostate){
+          case 'init':
+            this.steptwostate = 'doing';
+            break;
+          case 'doing':
+            this.steptwostate = 'done';
+            break;
+          case 'done':
+            this.steptwostate = 'init';
+            break;
+          }
+      },
+
+
+      switchstateThree: function(){
+        switch(this.stepthreestate){
+          case 'init':
+            this.stepthreestate = 'doing';
+            break;
+          case 'doing':
+            this.stepthreestate = 'done';
+            break;
+          case 'done':
+            this.stepthreestate = 'init';
+            break;
+          }
+      },
+
+
+      switchstateFour: function(){
+        switch(this.stepfourstate){
+          case 'init':
+            this.stepfourstate = 'doing';
+            break;
+          case 'doing':
+            this.stepfourstate = 'done';
+            break;
+          case 'done':
+            this.stepfourstate = 'init';
+            break;
+          }
+      },
+
+
+
+    });
+  </script>
+</dom-module>
