@@ -101,6 +101,21 @@ This components shows the detailed view of a request.
       line-height: 20px;
     }
 
+    .feedbackbox {
+      border-top: 1px dotted var(--sc-grey2);
+      box-sizing:border-box;
+      padding-left: 40px;
+      padding-right: 40px;
+    }
+
+    .halfop {
+      opacity: 0.5;
+    }
+
+    .fullop {
+      opacity: 1;
+    }
+
 
     @media all and (min-width: 0) and (max-width: 540px) { 
 
@@ -138,6 +153,13 @@ This components shows the detailed view of a request.
           padding-right: 35px;
           padding-bottom: 30px;
         }
+
+        .feedbackbox {
+          box-sizing:border-box;
+          padding-left: 35px;
+          padding-right: 35px;
+        }
+
     }
 
 
@@ -153,7 +175,7 @@ This components shows the detailed view of a request.
           <iron-icon class="grey3 backicon" icon="sc-icons:decline" on-tap="back">back</iron-icon>
         </div>
         <div class="totalwidth detailpadding">
-          <div class="totalwidth">
+          <div class$="totalwidth {{totalopacity}}">
             <p class="small grey3"><moment-js date="{{item.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
             <div class="minispace"></div>
             <p class="offer light grey4">{{itemdata.msg}}<span class="bold offerhashtag">#{{itemdata.hashtag}}</span></p>
@@ -161,7 +183,7 @@ This components shows the detailed view of a request.
           <div class="whitespace"></div>
 
           <template is="dom-if" if="{{phoneview}}">
-            <div class="totalwidth horizont centercenter">
+            <div class$="totalwidth horizont centercenter {{totalopacity}}">
               <sc-avatar
                 class="offereravatar"
                 ipfshash="[[itemdata.seeker.avatar]]"
@@ -173,7 +195,7 @@ This components shows the detailed view of a request.
               </div>  
             </div>
             <div class="whitespace"></div>
-            <div class="totalwidth horizont centercenter">
+            <div class$="totalwidth horizont centercenter {{amountopacity}}">
               <div class="flex"></div>
               <p class="bold yellow amount">{{itemdata.amount}} <span class="swt">SWT</span></p>
             </div>
@@ -182,7 +204,7 @@ This components shows the detailed view of a request.
 
           <template is="dom-if" if="{{!phoneview}}">
           <div class="totalwidth horizont end centerjust">
-            <div class="totalwidth horizont centercenter flex">
+            <div class$="totalwidth horizont centercenter flex {{totalopacity}}">
               <sc-avatar
                 class="offereravatar"
                 ipfshash="[[itemdata.seeker.avatar]]"
@@ -193,14 +215,15 @@ This components shows the detailed view of a request.
                 <p class="bold rep blue"><sc-hashtagrep pubkey="{{itemdata.seeker.pubkey}}" hashtagname="{{itemdata.hashtag}}"></sc-hashtagrep> REP</p>
               </div>  
             </div>
-              <p class="bold yellow amount">{{itemdata.amount}} <span class="swt">SWT</span></p>
+              <p class$="bold yellow amount {{amountopacity}}">{{itemdata.amount}} <span class="swt">SWT</span></p>
           </div>
           </template>
-          <sc-dealfeedback></sc-dealfeedback>
         </div>
+<!--           <div class="feedbackbox totalwidth">
+            <sc-dealfeedback showsteps="create" dealstate="{{dealstate}}"></sc-dealfeedback>
+          </div>
 
-
-
+ -->
         <template is="dom-if" if="{{!youareowner(itemdata.seeker.pubkey)}}">
           <sc-itemreplier itemdata="{{itemdata}}">
           </sc-itemreplier>
@@ -234,6 +257,7 @@ This components shows the detailed view of a request.
       is: 'sc-itemdetail',
 
       observers: [
+      '_dealstate(dealstate)'
         //'_web3(shhweb3)',
         //'_pubkeyCompare(itemdata)'
       ],
@@ -421,6 +445,23 @@ This components shows the detailed view of a request.
 
       toMakeDeal: function(e){
         this.fire('to-makedeal',e.detail);
+      },
+
+      _dealstate: function(target) {
+        switch(target){
+          case 'dealinit': 
+            this.totalopacity = 'halfop';
+            this.amountopacity = 'halfop';
+          break;
+          case 'dealcreated': 
+            this.totalopacity = 'fullop';
+            this.amountopacity = 'halfop';
+          break;
+          case 'dealfundedbyseeker': 
+            this.totalopacity = 'fullop';
+            this.amountopacity = 'fullop';
+          break;
+        }
       }
 
     });
