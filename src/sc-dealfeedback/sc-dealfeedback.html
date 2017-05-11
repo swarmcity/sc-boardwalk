@@ -22,8 +22,8 @@ This components is the representation of a request in the requests-list on sc-ha
       :host {
         display: block;
         box-sizing:border-box;
-        padding-top: 20px;
-        padding-bottom: 20px;
+/*        padding-top: 20px;
+        padding-bottom: 20px;*/
       }
 
       .feedback_step {
@@ -34,12 +34,59 @@ This components is the representation of a request in the requests-list on sc-ha
         margin-top: 9px;
       }
 
+      .dealcreate_steps {
+/*        background-color: rgba(36,177,255,0.1);*/
+
+        box-sizing:border-box;
+        padding: 10px 10px 10px 0px;
+
+/*        border-top: 2px dotted rgba(0,0,0,0.05);
+        border-bottom: 2px dotted rgba(0,0,0,0.05);*/
+
+/*        border-top: 2px dotted rgba(36,177,255,0.5);
+        border-bottom: 2px dotted rgba(36,177,255,0.5);*/
+      }
+
+
+      .triangle {
+        width: 10px;
+        transition: all 0.075s linear;
+        margin-right: 8px;
+        margin-left: 4px;
+        margin-bottom: 3px;
+
+        opacity: 1;
+      }
+
+      .triangle svg {
+        width: 100%;
+      }
+
+      .opened {
+        transform: rotate(90deg);
+        opacity: 0.75;
+      }
+
+
 
       @media all and (min-width: 0) and (max-width: 420px) { 
       }
 
     </style>
 
+     <template is="dom-if" if="{{compact}}">
+      <template is="dom-if" if="{{_is(showsteps,'create')}}">
+        <p class="small grey2 semibold">Creating your request ({{createsteps}})</p>
+      </template>
+    </template>
+
+
+
+     <template is="dom-if" if="{{!compact}}">
+
+
+<template is="dom-if" if="{{_is(showsteps,'all')}}">
+  <p>All steps, baby! {{step}}/4</p>
     <div class="feedback_step totalwidth horizont center startjust" on-tap="switchstateOne">
       <template is="dom-if" if="{{_is(steponestate,'init')}}">
         <p class="reg grey2">{{steponemsg}}</p>
@@ -102,6 +149,67 @@ This components is the representation of a request in the requests-list on sc-ha
         <iron-icon icon="sc-icons:v" class="green">done</iron-icon>
       </template>
     </div>
+</template>
+
+
+
+<template is="dom-if" if="{{_is(showsteps,'create')}}">
+<!--   <p>Creating your request</p> -->
+
+                  <div class="dealcreate_steps totalwidth">
+                    <div class="horizont end startjust">
+                      <div class$="triangle {{collapsestate}}" on-tap="collapseSteps">
+                        <svg id="triangle_icon" x="0px" y="0px" viewBox="0 0 50 50" fill="#24B1FF">
+                        <polygon points="6.5,4.9 6.5,44.5 42,24.9 "/>
+                        </svg>
+                      </div>
+                      <p class="bold blue" on-tap="collapseSteps">Creating your request - {{createsteps}}</p>
+                      <!-- <sc-loader color="green" small on-tap="collapseSteps"></sc-loader> -->
+                      <!-- <p on-tap="showSteps"></p> -->
+                    </div>
+                    <iron-collapse id="steps_collapser">
+
+
+                    <div class="feedback_step totalwidth horizont center startjust" on-tap="switchstateOne">
+                      <template is="dom-if" if="{{_is(steponestate,'init')}}">
+                        <p class="reg grey2">{{steponemsg}}</p>
+                        <iron-icon icon="sc-icons:v" class="grey2">not done yet</iron-icon>
+                      </template>
+                      <template is="dom-if" if="{{_is(steponestate,'doing')}}">
+                        <p class="reg grey3">{{steponemsg}}</p>
+                        <sc-loader small color="blue"></sc-loader>
+                      </template>
+                      <template is="dom-if" if="{{_is(steponestate,'done')}}">
+                        <p class="reg grey3">{{steponemsg}}</p>
+                        <iron-icon icon="sc-icons:v" class="green">done</iron-icon>
+                      </template>
+                    </div>
+
+
+                    <div id="steptwo" class="feedback_step totalwidth horizont center startjust" on-tap="switchstateTwo">
+                      <template is="dom-if" if="{{_is(steptwostate,'init')}}">
+                        <p class="reg grey2">{{steptwomsg}}</p>
+                        <iron-icon icon="sc-icons:v" class="grey2">not done yet</iron-icon>
+                      </template>
+                      <template is="dom-if" if="{{_is(steptwostate,'doing')}}">
+                        <p class="reg grey3">{{steptwomsg}}</p>
+                        <sc-loader small color="blue"></sc-loader>
+                      </template>
+                      <template is="dom-if" if="{{_is(steptwostate,'done')}}">
+                        <p class="reg grey3">{{steptwomsg}}</p>
+                        <iron-icon icon="sc-icons:v" class="green">done</iron-icon>
+                      </template>
+                    </div>
+                    </iron-collapse>
+                  </div>
+
+
+    
+
+</template>
+
+
+      </template>
 
 
   </template>
@@ -117,9 +225,33 @@ This components is the representation of a request in the requests-list on sc-ha
 
       observers: [
         // '_log(item)'
+        '_dealstate(steponestate,steptwostate,stepthreestate,stepfourstate)'
       ],
 
       properties: {
+        /**
+       * .
+       */
+        dealstate: {
+          type: String,
+          notify: true
+        },
+
+        showsteps: {
+          type: String,
+          value: 'all'
+        },
+
+        // allsteps: {
+        //   type: Boolean,
+        //   value: false
+        // },
+
+
+        compact: {
+          type: Boolean,
+          value: false
+        }
       },
 
       ready: function(){
@@ -135,6 +267,33 @@ This components is the representation of a request in the requests-list on sc-ha
         this.stepfourstate = "init";
         this.stepfourmsg = "Add funds of provider";
 
+        var self = this;
+        setTimeout(function() {
+          self.steponestate = "doing";
+        }, 6000);
+        var self = this;
+        setTimeout(function() {
+          self.steponestate = "done";
+        }, 8000);
+        setTimeout(function() {
+          self.steptwostate = "doing";
+        }, 10000);
+        var self = this;
+        setTimeout(function() {
+          self.steptwostate = "done";
+        }, 12000);
+        setTimeout(function() {
+          self.stepthreestate = "doing";
+        }, 14000);
+        setTimeout(function() {
+          self.stepthreestate = "done";
+        }, 16000);
+        setTimeout(function() {
+          self.stepfourstate = "doing";
+        }, 18000);
+        setTimeout(function() {
+          self.stepfourstate = "done";
+        }, 20000);
       },
 
       /**
@@ -174,6 +333,7 @@ This components is the representation of a request in the requests-list on sc-ha
             break;
           case 'doing':
             this.steponestate = 'done';
+            this.step = "1";
             break;
           case 'done':
             this.steponestate = 'init';
@@ -189,6 +349,7 @@ This components is the representation of a request in the requests-list on sc-ha
             break;
           case 'doing':
             this.steptwostate = 'done';
+            this.step = "2";
             break;
           case 'done':
             this.steptwostate = 'init';
@@ -226,6 +387,60 @@ This components is the representation of a request in the requests-list on sc-ha
           }
       },
 
+
+      _dealstate: function(){
+
+        if (this.steponestate=='init' && this.steptwostate=='init' && this.stepthreestate=='init' && this.stepfourstate=='init') {
+          this.dealstate = "dealinit";
+          this.allsteps = "0/4";
+          this.createsteps = "0/2";
+        }
+        if (this.steponestate=='done' && this.steptwostate=='init' && this.stepthreestate=='init' && this.stepfourstate=='init') {
+          this.dealstate = "dealcreated";
+          this.allsteps = "1/4";
+          this.createsteps = "1/2";
+        }
+        if (this.steponestate=='done' && this.steptwostate=='done' && this.stepthreestate=='init' && this.stepfourstate=='init') {
+          this.dealstate = "dealfundedbyseeker";
+          this.allsteps = "2/4";
+          this.createsteps = "2/2";
+          this.assignsteps = "0/2";
+        }
+        if (this.steponestate=='done' && this.steptwostate=='done' && this.stepthreestate=='done' && this.stepfourstate=='init') {
+          this.dealstate = "providerassigned";
+          this.allsteps = "3/4";
+          this.assignsteps = "1/2";
+        }
+
+        // KLOPT DEZE? = Provider assigned not niet gemined, maar providertokens al wel gemined?
+        if (this.steponestate=='done' && this.steptwostate=='done' && this.stepthreestate=='init' && this.stepfourstate=='done') {
+          this.dealstate = "dealfundedbyprovider";
+          // this.allsteps = "3/4";
+          // this.assignsteps = "1/2";
+        }
+
+
+        if (this.steponestate=='done' && this.steptwostate=='done' && this.stepthreestate=='done' && this.stepfourstate=='done') {
+          this.dealstate = "dealtopayout";
+          this.allsteps = "3/4";
+          this.assignsteps = "2/2";
+        }
+
+      },
+
+
+      collapseSteps: function(){
+        var steps = this.shadowRoot.getElementById('steps_collapser');
+        steps.toggle();
+
+        if (steps.opened){
+          this.collapsestate = 'opened';
+        } else {
+          this.collapsestate = '';
+        }
+
+        // console.log(details);
+      },
 
 
     });

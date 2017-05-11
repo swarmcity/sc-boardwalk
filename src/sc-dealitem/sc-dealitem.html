@@ -10,6 +10,8 @@
 <link rel="import" href="../sc-hashtagcontract/sc-hashtagrep.html">
 <link rel="import" href="../sc-redux/sc-redux.html">
 
+<link rel="import" href="../sc-dealfeedback/sc-dealfeedback.html">
+
 
 <!--
 `sc-dealitem`
@@ -80,74 +82,55 @@ This components is the representation of a request in the requests-list on sc-ha
         color: var(--sc-grey2);
       }
 
+      sc-dealfeedback {
+        margin: 9px;
+      }
+
       @media all and (min-width: 0) and (max-width: 420px) { 
       
 
       }
 
     </style>
- 
 
+        <template is="dom-if" if="{{_is(appearance,'first')}}">
+          <div class="dealstate_open" on-tap="toDetail">
+              <sc-avatar
+                ipfshash="[[item.seeker.avatar]]"
+                size="verysmall">
+              </sc-avatar>
+            <p class="mymsg grey4 flex"> {{item.msg}} {{dealstate}}</p>
+            <sc-dealfeedback compact dealstate="{{dealstate}}" showsteps="create"></sc-dealfeedback>
 
-    <template is="dom-if" if="{{_is(item.dealstate,'open')}}">
-      <div class="dealstate_open" on-tap="toDetail">
-          <sc-avatar
-            ipfshash="[[item.seeker.avatar]]"
-            size="verysmall">
-          </sc-avatar>
-        <p class="mymsg grey4 flex"> {{item.msg}}</p>
-
-          <p class="myoffer bold yellow">{{item.amount}} SWT</p>
-          <div class="horizont center endjust">
-            <p class="bold">{{replycount}}</p>
-            <iron-icon icon="sc-icons:babble" class="small replyicon">replies</iron-icon>
+              <p class="myoffer bold yellow">{{item.amount}} SWT</p>
+              <div class="horizont center endjust">
+                <p class="bold">{{replycount}}</p>
+                <iron-icon icon="sc-icons:babble" class="small replyicon">replies</iron-icon>
+              </div>
           </div>
-      </div>
-    </template>
-
-<!-- 
-    <template is="dom-if" if="{{_is(item.dealstate,'open')}}">
-      <div class="dealstate_open" on-tap="toDetail">
-          <sc-avatar
-            ipfshash="[[item.seeker.avatar]]"
-            size="verysmall">
-          </sc-avatar>
-        <p class="mymsg grey4 flex"> {{item.msg}}</p>
-
-          <p class="myoffer bold yellow">{{item.amount}} SWT</p>
-          <div class="horizont center endjust">
-            <p class="bold">{{replycount}}</p>
-            <iron-icon icon="sc-icons:babble" class="small replyicon">replies</iron-icon>
-          </div>
-      </div>
-    </template>
- -->
+        </template>
 
 
 
-
-
-
-
-<!--     <template is="dom-if" if="{{_is(dealstate,'')}}">
-      <div class="totalwidth horizont center startjust" on-tap="toDetail">
-        <div class="horizont center startjust flex">
-          <p class="dealstatusmsg bold blue">{{dealstatusmsg}}</p>
-        </div>
-        <div class="horizont center endjust">
-          <sc-avatar
-            ipfshash="[[identity.avatarhash]]"
-            size="verysmall">
-          </sc-avatar>
-          <iron-icon icon="sc-icons:v" class$="{{vstatus}} medium rightmarg"></iron-icon>
-          <sc-avatar
-            ipfshash="[[item.offereravatar]]"
-            size="verysmall">
-          </sc-avatar>
-          <iron-icon icon="sc-icons:v" class$="{{vstatus}} medium"></iron-icon>
-        </div>
-      </div> 
-    </template> -->
+        <template is="dom-if" if="{{_is(appearance,'second')}}">
+          <div class="totalwidth horizont center startjust" on-tap="toDetail">
+            <div class="horizont center startjust flex">
+              <p class="dealstatusmsg bold blue">{{dealstatusmsg}}</p>
+            </div>
+            <div class="horizont center endjust">
+              <sc-avatar
+                ipfshash="[[identity.avatarhash]]"
+                size="verysmall">
+              </sc-avatar>
+              <iron-icon icon="sc-icons:v" class$="{{seekervcolor}} medium rightmarg"></iron-icon>
+              <sc-avatar
+                ipfshash="[[item.offereravatar]]"
+                size="verysmall">
+              </sc-avatar>
+              <iron-icon icon="sc-icons:v" class$="{{providervcolor}} medium"></iron-icon>
+            </div>
+          </div> 
+        </template>
 
 
 
@@ -164,7 +147,8 @@ This components is the representation of a request in the requests-list on sc-ha
       ],
 
       observers: [
-        '_item(item)'
+        '_item(item)',
+        '_dealstate(dealstate)'
       ],
 
       properties: {
@@ -179,12 +163,25 @@ This components is the representation of a request in the requests-list on sc-ha
           type: Object,
           statePath: 'identity',
         },
+
+        seekervcolor: {
+          type: String,
+          value: 'grey2'
+        },
+
+        providervcolor: {
+          type: String,
+          value: 'grey2'
+        }
+
       },
 
       ready: function(){
         // this.dealstatus = "";
         // this.dealstatusmsg = "Making a deal with " + " for " + "SWT."
         // this.vstatus = "status_init";
+          this.appearance = 'first';
+
       },
 
       /**
@@ -218,13 +215,67 @@ This components is the representation of a request in the requests-list on sc-ha
       },
 
       _item: function(){
-        // this.replycount = this.item.replies.length;
-        if (this.item.replies){
-          console.log("HAHAHAHAHAHA", this.item.replies.length);        
+
+        if (this.item.replies){        
           this.replycount = this.item.replies.length;
         } else {
           this.replycount = 0;
         }
+
+        if (this.item.dealstate=='providerassigned' || this.item.dealstate=='dealfundedbyprovider' || this.item.dealstate=='dealtopayout') {
+          this.appearance = 'second';
+        } else {
+          this.appearance = 'first';
+        }
+
+        if (this.item.dealstate=='providerassigned') {
+          this.dealstatusmsg = "You agreed to a deal with " + provider + "for " + this.item.amount + "SWT.";
+          this.seekervcolor = "green";       
+        }
+
+
+        if (this.item.dealstate=='dealfundedbyprovider') {
+          this.dealstatusmsg = "Making a deal with " + provider + "for " + this.item.amount + "SWT.";
+          this.providervcolor = "green";       
+        }
+
+
+        if (this.item.dealstate=='dealtopayout') {
+          this.dealstatusmsg = "You're agreed to a deal with " + provider + "for " + this.item.amount + "SWT.";
+          this.seekervcolor = "green";  
+          this.providervcolor = "green";  
+        }
+
+      },
+
+
+
+      // DEZE FUNCTIE MOET WEG SEBIET, DIT MOET UIT DE REDUX KOMEN !!!!!!!!!!!!!!!!
+      _dealstate: function(target){
+        if (target=='providerassigned' || target=='dealfundedbyprovider' || target=='dealtopayout') {
+          this.appearance = 'second';
+        } else {
+          this.appearance = 'first';
+        }
+
+        if (target=='providerassigned') {
+          this.dealstatusmsg = "You agreed to a deal with " + provider + "for " + this.item.amount + "SWT.";
+          this.seekervcolor = "green";       
+        }
+
+
+        if (target=='dealfundedbyprovider') {
+          this.dealstatusmsg = "Making a deal with " + provider + "for " + this.item.amount + "SWT.";
+          this.providervcolor = "green";       
+        }
+
+
+        if (target=='dealtopayout') {
+          this.dealstatusmsg = "You're agreed to a deal with " + provider + "for " + this.item.amount + "SWT.";
+          this.seekervcolor = "green";  
+          this.providervcolor = "green";  
+        }
+
       },
 
 
