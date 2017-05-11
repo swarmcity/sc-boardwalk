@@ -214,7 +214,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       </div>
 
         <div class="totalwidth vertic centercenter">
-          <div class="totalwidth vertic start centerjust paddingsides newitempadding">
+          <div class="totalwidth vertic start centerjust paddingsides newitempadding dottedbottom">
             <paper-textarea label="What are you looking for?" class="totalwidth offermsg" autofocus value="{{offermsg}}">
             </paper-textarea>
             <div class="totalwidth horizont center endjust alignedhashtag">
@@ -222,12 +222,12 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
             </div>
           </div>
 
-          <div class="horizont end startjust totalwidth paddingsides newitemofferpadding">
+          <div class="horizont end startjust totalwidth paddingsides newitemofferpadding dottedbottom">
             <paper-input label="What do you offer?" class="swtamount flex" value="{{replyamount}}" type="number">
             </paper-input>
             <p class="swtwithoffer bold">SWT</p>
           </div>
-<!-- 
+
           <div class="whitespace"></div>
           <div class="whitespace"></div>
           <div class="totalwidth horizont centercenter paddingsides">
@@ -250,7 +250,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
               <p class="bold rep blue">{{offererrep}} REP</p>
             </div>  
 
-          </div> -->
+          </div>
         </div>
 
         <div class="tenspace"></div>
@@ -281,30 +281,29 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         },
       },
 
-      animationConfig: {
-        type: Object,
-        value: function() {
-          return {
-            'entry': [{
-              name: 'slide-from-bottom-animation',
-              node: this.$.newitemcontent,
-              toPage: this,
-              timing: {
-                duration: 600
-              }
-            }],
+      // animationConfig: {
+      //   type: Object,
+      //   value: function() {
+      //     return {
+      //       'entry': [{
+      //         name: 'slide-from-bottom-animation',
+      //         node: this.$.newitemcontent,
+      //         toPage: this,
+      //         timing: {
+      //           duration: 600
+      //         }
+      //       }],
 
-            'exit': [{
-              name: 'fade-out-animation',
-              node: this.$.newitemcontent,
-              fromPage: this,
-              timing: {
-                duration: 125
-              }
-            }]
-          }
-        },
-      },
+      //       'exit': [{
+      //         name: 'fade-out-animation',
+      //         node: this.$.newitemcontent,
+      //         fromPage: this,
+      //         timing: {
+      //           duration: 125
+      //         }
+      //       }]
+      //     }
+      //   },
 
       observers: [
         '_btnable(offermsg,replyamount)',
@@ -372,11 +371,13 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
       confirmRequest: function() {
         var self = this;
-        this.makeDeal(function() {
+        this.makeDeal(function(err,txhash) {
+          debugger;
           var totalnew = {
             msg: self.offermsg,
             amount: self.replyamount,
             geohash: self.geohash,
+            txhash: txhash
           }
           self.fire('new-submitted', totalnew);
 
@@ -386,18 +387,18 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
       makeDeal: function(cb) {
         var self = this;
-    // debugger;
-        this.contracturl = this.resolveUrl('../contracts/SimpleDealFactory.json');
+    
+        this.contracturl = this.resolveUrl('../contracts/DealForTwoFactory.json');
         this.importHref(this.contracturl, function(e) {
           this.contractjson = JSON.parse(e.target.import.body.innerText);
           self.web3.eth.getGasPrice(function(err, result) {
             var gasPrice = result.toNumber(10);
             // console.log('gasprice: ', gasPrice);
-            var SimpleDealFactoryContract = self.web3.eth.contract(self.contractjson.abi);
-            var SimpleDealFactoryContractInstance = SimpleDealFactoryContract.at(self.config.simpledealfactory);
+            var DealForTwoFactoryContract = self.web3.eth.contract(self.contractjson.abi);
+            var DealForTwoFactoryContractInstance = DealForTwoFactoryContract.at(self.config.dealfortwofactory);
             //address _hashtag, address _counterparty,uint _counterpartyThreshold, bytes32 _dealID
             //console.log('doing transfer of ', amount, ' LC to: ', pubkey, 'from: ', self.account);
-            SimpleDealFactoryContractInstance.makeSimpleDeal.sendTransaction(self.config.hashtagcontracts[self.selectedhashtag], '0x0033788d4AC1a01e06C8a0a7300CF4F92a6f33Fd',1,'0x0', {
+            DealForTwoFactoryContractInstance.makeDealForTwo.sendTransaction(self.config.hashtagcontracts[self.selectedhashtag],1, {
               from: self.identity.pubkey,
               gasPrice: gasPrice,
               gas: 1000000
@@ -407,9 +408,10 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
                   return cb(err);
                 }
               }
+              cb(null,result);
               console.log(err, result);
               console.log('waiting for TX to happen');
-              self.currenttxhash = result;
+              //self.currenttxhash = result;
 
             });
           });
