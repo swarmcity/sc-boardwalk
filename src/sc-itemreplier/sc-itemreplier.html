@@ -4,6 +4,7 @@
 
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-input/paper-textarea.html">
 
 <link rel="import" href="../../bower_components/sc-style/sc-style.html">
 <link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
@@ -53,19 +54,32 @@ This components allow a Swarm Citizen to reply on a request.
       }  
       paper-input.swtamount {
         --paper-input-container-input: {
-          @apply(--montserrat-bold);
+          font-family:montserratbold;
           font-size: 24px;
           line-height: 24px;
-          color: var(--sc-darkblue);
+          color: var(--sc-grey4);
         };
-        --paper-input-container-focus-color: var(--sc-darkblue);
+        --paper-input-container-focus-color: var(--sc-grey4);
+        max-width:100px;
       }
 
+      .swtwithoffer {
+        color: var(--sc-grey4);
+        font-size: 12px;
+        line-height: 12px;
+        margin:0px 0px 6px 12px;
+      }
+
+
+
       .addreplybtn iron-icon {
-        margin-left: 10px;
+            margin-left: 5px;
+    margin-bottom: 2px;
+    width: 22px;
+    height: 22px;
       }
       .addreplybtn sc-avatar {
-        margin-right: 10px;
+        margin-right: 12px;
       }
       .replybtn:hover {
         cursor: pointer;
@@ -81,13 +95,14 @@ This components allow a Swarm Citizen to reply on a request.
       }
 
       .confirmbtns {
-        margin-top: -20px;
         @apply(--layout-horizontal);
         @apply(--layout-center);
         @apply(--layout-end-justified);
       }
-      .confirmbtns paper-icon-button {
+      paper-icon-button.confirmbtn {
         margin-left: 5px;
+        width: 76px;
+        height: 76px;
       }
       @media all and (min-width: 0) and (max-width: 420px) { 
 
@@ -115,10 +130,10 @@ This components allow a Swarm Citizen to reply on a request.
     
       <div class$=" {{borderz}} yourrespond totalwidth vertic centercenter">
 
-        <template is="dom-if" if="{{_is(replystate,'init')}}">
-          <!-- <paper-button noink class="darker totalwidth blue shadow respondbtn big" on-tap="replystateChanger">Reply</paper-button> -->
-          <div class="totalwidth horizont start endjust">
-            <paper-button on-tap="replystateChanger" noink class="addreplybtn grey4 shadow darker"> 
+        <template is="dom-if" if="{{btnvisible}}">
+          <!-- <paper-button noink class="darker totalwidth blue shadow respondbtn big" on-tap="toggleForm">Reply</paper-button> -->
+          <div class="totalwidth horizont start startjust">
+            <paper-button on-tap="toggleForm" noink class="addreplybtn grey4 shadow darker"> 
             <sc-avatar
               class="replyeravatar"
               ipfshash="[[identity.avatarhash]]"
@@ -128,37 +143,51 @@ This components allow a Swarm Citizen to reply on a request.
           </div>
         </template>
 
-        <template is="dom-if" if="{{_is(replystate,'replying')}}">
+        <!-- <template is="dom-if" if="{{_is(replystate,'replying')}}"> -->
 
-          <div class="total vertic centercenter">
+      <iron-collapse id="replyform" class="totalwidth">
+          <div class="totalwidth vertic centercenter">
 
-            <div class="inner_replying totalwidth darker shadow">
               <paper-textarea label="Your reply" class="totalwidth grey2unfocus" value="{{replytext}}" autofocus></paper-textarea>
-              <div class=" totalwidth horizont center startjust">
+<!--               <div class=" totalwidth horizont center startjust">
                 <p>Hank Moovy is offering 1 SWT.</p>
                 <a href="">Make a counteroffer</a>
-              </div>
-  <!--             <div class="totalwidth horizont end startjust">
-                <paper-input label="Your offer" class="yourreplyamount swtamount grey2unfocus" value="{{replyamount}}">
+              </div> -->
+
+
+<!--               <div class="totalwidth horizont end startjust">
+                <paper-input label="What offer would you accept?" class="yourreplyamount swtamount grey2unfocus" value="{{replyamount}}">
                 <div suffix class="yellow bold swtwithoffer">SWT</div>
                 </paper-input>
               </div> -->
-            </div>
+
+
+                <div class="horizont end startjust totalwidth">
+                  <paper-input label="Your counteroffer" class="swtamount" value="{{replyamount}}" type="number">
+                  </paper-input>
+                  <p class="swtwithoffer bold">SWT</p>
+                </div>
+
+
+
+<!--             </div> -->
 
             <div class="totalwidth confirmbtns">
-              <iron-icon icon="sc-icons:decline" class="medium blue" on-tap="backtoInit">close collapse</iron-icon>
-              <paper-icon-button icon="sc-icons:v" noink class="white medium blueback shadow confirmbtn" on-tap="replystateChanger"> Reply with offer</paper-icon-button>
+              <iron-icon icon="sc-icons:decline" class="medium blue" on-tap="toggleForm">close collapse</iron-icon>
+              <paper-icon-button icon="sc-icons:v" noink class="white medium blueback shadow confirmbtn" on-tap="submitReply"> Reply with offer</paper-icon-button>
             </div>
 
 
-          </div>
-        </template>
+        <!-- </template>
 
 
         <template is="dom-if" if="{{_is(replystate,'sendingreply')}}">
             <sc-loader small color="blue" class="blue" on-tap="replyLoaded">Submitting your reply</sc-loader> 
-        </template>
+        </template> -->
       </div>
+
+  <iron-collapse>
+</div>
   </template>
 
   <script>
@@ -167,7 +196,8 @@ This components allow a Swarm Citizen to reply on a request.
       is: 'sc-itemreplier',
 
       observers: [
-        // '_log(identity,replydata)'
+        '_log(replyamount)',
+        '_itemdata(itemdata)'
       ],
 
       properties: {
@@ -183,7 +213,13 @@ This components allow a Swarm Citizen to reply on a request.
         identity: {
           type: Object,
           statePath: 'identity',
-        },        
+        },
+
+        btnvisible: {
+          type: Boolean,
+          value:true
+        },
+          
       },
 
       behaviors: [
@@ -227,23 +263,28 @@ This components allow a Swarm Citizen to reply on a request.
 
 
       /**
-      * When the action is trigger, 'replystateChanger' checks the replystate and does a certain action accordingly
+      * When the action is trigger, 'submitReply' checks the replystate and does a certain action accordingly
       */
-    replystateChanger: function(){
-        var self= this;
 
-        switch (this.replystate) {
-          case 'init':
-            this.replystate = 'replying'
-            this.bgcolor = "whiteback";
-            this.borderz = "greytopborder";
-            break;
 
-          case 'replying':
+    // submitReply: function(){
+    //     var self= this;
 
-            this.replystate = 'sendingreply'
-            this.bgcolor = "basestructure";
-            this.borderz = "notopborder";
+    //     switch (this.replystate) {
+    //       case 'init':
+    //         this.replystate = 'replying'
+    //         this.bgcolor = "whiteback";
+    //         this.borderz = "greytopborder";
+    //         break;
+
+    //       case 'replying':
+
+    //         this.replystate = 'sendingreply'
+    //         this.bgcolor = "basestructure";
+    //         this.borderz = "notopborder";
+
+
+
 
             //debugger;
 
@@ -251,6 +292,20 @@ This components allow a Swarm Citizen to reply on a request.
             //   this.shhidentity = this.shhweb3.shh.newIdentity();
             // }
 
+      _itemdata: function(target){
+        this.replyamount = target.amount;
+      },
+
+
+
+      toggleForm: function(){
+        var replyform = this.shadowRoot.getElementById('replyform');
+        replyform.toggle();
+        this.btnvisible = !this.btnvisible;     
+      },
+
+
+      submitReply: function(){
             var message = {
               type: 'dealfortwo-request-reply',
               id: UUIDjs.create().toString(),
@@ -332,9 +387,9 @@ This components allow a Swarm Citizen to reply on a request.
 
             // console.log('posting to topics', topics);
 
-            break;
+        //     break;
         
-        }
+        // }
     },
 
 

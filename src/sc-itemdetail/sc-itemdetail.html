@@ -227,6 +227,7 @@ This components shows the detailed view of a request.
 
  -->
         <template is="dom-if" if="{{!youareowner(itemdata.seeker.pubkey)}}">
+          <!-- <p>replypossible={{replypossible}}</p> -->
           <template is="dom-if" if="{{replypossible}}">
             <sc-itemreplier itemdata="{{itemdata}}">
             </sc-itemreplier>
@@ -357,11 +358,11 @@ This components shows the detailed view of a request.
           var foundReply = this.itemdata.replies.findIndex(function(item){
             return item.provider.pubkey === self.identity.pubkey;
           });
-          if (foundReply>-1){
-            self.replypossible = false;
-          }else{
-            self.replypossible = true;            
-          }
+          // if (foundReply>-1){
+          //   self.replypossible = false;
+          // }else{
+          //   self.replypossible = true;            
+          // }
         }
 
         console.log('-------> ITEMDATA CHANGED <--------');
@@ -427,7 +428,7 @@ This components shows the detailed view of a request.
 
 
       ready: function() {
-        this.replypossible = false;
+        this.replypossible = true;
       },
 
       /**
