@@ -227,8 +227,10 @@ This components shows the detailed view of a request.
 
  -->
         <template is="dom-if" if="{{!youareowner(itemdata.seeker.pubkey)}}">
-          <sc-itemreplier itemdata="{{itemdata}}">
-          </sc-itemreplier>
+          <template is="dom-if" if="{{replypossible}}">
+            <sc-itemreplier itemdata="{{itemdata}}">
+            </sc-itemreplier>
+          </template>
         </template>
         <div class="whiteback totalwidth">
         <template is="dom-repeat" items="{{itemdata.replies}}">
@@ -343,8 +345,24 @@ This components shows the detailed view of a request.
         var foundDeal = this.deals.find(function(item){
             return item.id === self.itemid;
         });
-//debugger;
+
+        if (!foundDeal){
+          return;
+        }
+
         this.itemdata = foundDeal;
+
+        // check if I have already replied to this deal.
+        if (this.itemdata.replies){
+          var foundReply = this.itemdata.replies.findIndex(function(item){
+            return item.provider.pubkey === self.identity.pubkey;
+          });
+          if (foundReply>-1){
+            self.replypossible = false;
+          }else{
+            self.replypossible = true;            
+          }
+        }
 
         console.log('-------> ITEMDATA CHANGED <--------');
         if (this.itemdata){
@@ -408,7 +426,9 @@ This components shows the detailed view of a request.
       // },
 
 
-      ready: function() {},
+      ready: function() {
+        this.replypossible = false;
+      },
 
       /**
        * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
