@@ -1,0 +1,39 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="sc-dealstate">
+  <script>
+    Polymer({
+      is: 'sc-dealstate',
+      properties: {
+        deal: {
+          type: Object,
+          observer: '_deal'
+        },
+        dealstate: {
+          type: Object,
+          notify: true
+        },
+      },
+
+      _deal: function(){
+        var newdealstate = 'init';
+        if (this.deal.offercreationtx){
+          newdealstate = 'init';
+        }
+        if (this.deal.dealaddress){
+          newdealstate = 'created';
+        }
+        if (this.deal.offerseekerfundingtx){
+          newdealstate = 'seekerfunding';
+        }
+        if (this.deal.amount > 0){
+          newdealstate = 'seekerfunded';
+        }
+
+        this.dealstate = newdealstate;
+
+
+      }
+    });
+  </script>
+</dom-module>

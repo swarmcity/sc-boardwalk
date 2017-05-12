@@ -11,6 +11,7 @@
 <link rel="import" href="../sc-shh/sc-shh.html">
 <link rel="import" href="../sc-hashtag/sc-hashtagrep.html">
 <link rel="import" href="../sc-dealfeedback/sc-dealfeedback.html">
+<link rel="import" href="../sc-dealstate/sc-dealstate.html">
 
 
 <!--
@@ -165,6 +166,7 @@ This components shows the detailed view of a request.
 
     </style>
     <sc-shh web3="{{shhweb3}}"></sc-shh>
+    <sc-dealstate deal="{{itemdata}}" dealstate="{{dealstate}}"></sc-dealstate>
     <iron-media-query query="(min-width:0px) and (max-width: 540px)" query-matches="{{phoneview}}"></iron-media-query>
 
     <div class="totalcontainer">
@@ -178,7 +180,7 @@ This components shows the detailed view of a request.
           <div class$="totalwidth {{totalopacity}}">
             <p class="small grey3"><moment-js date="{{item.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
             <div class="minispace"></div>
-            <p class="offer light grey4">{{itemdata.msg}}<span class="bold offerhashtag">#{{itemdata.hashtag}}</span></p>
+            <p class="offer light grey4">{{itemdata.msg}} (DS={{dealstate}})<span class="bold offerhashtag">#{{itemdata.hashtag}}</span></p>
           </div>
           <div class="whitespace"></div>
 
@@ -186,7 +188,7 @@ This components shows the detailed view of a request.
             <div class$="totalwidth horizont centercenter {{totalopacity}}">
               <sc-avatar
                 class="offereravatar"
-                ipfshash="[[itemdata.seeker.avatar]]"
+                ipfshash="[[itemdata.seeker.avatarhash]]"
                 size="medium">
               </sc-avatar>
               <div class="vertic start startjust offertxt flex">
@@ -207,7 +209,7 @@ This components shows the detailed view of a request.
             <div class$="totalwidth horizont centercenter flex {{totalopacity}}">
               <sc-avatar
                 class="offereravatar"
-                ipfshash="[[itemdata.seeker.avatar]]"
+                ipfshash="[[itemdata.seeker.avatarhash]]"
                 size="medium">
               </sc-avatar>
               <div class="vertic start startjust offertxt flex">
@@ -330,11 +332,12 @@ This components shows the detailed view of a request.
       },
 
       _getitemdata: function() {
+
         if (!this.itemid || !this.deals){
           return;
         }
         console.log(this.itemid);
-        console.log('en we gaan nog is luisteren');
+        
         var self = this;
         //debugger;
         var foundDeal = this.deals.find(function(item){
@@ -342,6 +345,12 @@ This components shows the detailed view of a request.
         });
 //debugger;
         this.itemdata = foundDeal;
+
+        console.log('-------> ITEMDATA CHANGED <--------');
+        if (this.itemdata){
+          console.log('------->',this.itemdata.dealstate,' <--------');
+        }
+
 
         //this.startListener();
       },

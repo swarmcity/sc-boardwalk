@@ -254,13 +254,16 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
           </div>
         </div>
-
+ AANT LAAJE? **<span>{{loading}}</span>**
         <div class="tenspace"></div>
       </div> 
       <div class="confirmbtns">
        <!--  <paper-icon-button noink class="bigbtn blueback white" icon="sc-icons:v">post this offer</paper-icon-button> -->
+      
        <div class="confirmbtn">
           <paper-icon-button icon="sc-icons:v" class="big blueback white" on-tap="confirmRequest" noink disabled="{{!btnable}}">show</paper-icon-button>
+       
+       
         </div>
       </div>
   </div> 
@@ -325,6 +328,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       ready: function(){
         this.onEnter();
         this.hasgeohash = false;
+        this.loading = false;
       },
 
       attached: function(){
@@ -378,76 +382,67 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       confirmRequest: function() {
         var self = this;
 
+        this.loading = true;
 
+        var dealID = UUIDjs.create().toString();
 
-        //this.makeDeal(function(err,txhash) {
-          var txhash='0x12345';
-          debugger;
-          // var totalnew = {
-          //   msg: self.offermsg,
-          //   amount: self.offeramount,
-          //   geohash: self.geohash,
-          //   txhash: txhash
-          // }
-
-        var newrequest = {
-          id: UUIDjs.create().toString(),
-          type: 'dealfortwo-request-create',
-          seeker: {
-            username: self.identity.username,
-            pubkey: self.identity.pubkey,
-            avatarhash: self.identity.avatarhash,
-          },
-          offer: self.offermsg,
-          offerhashtag: self.hashtag,
-          offertime: Date.now(),
-          offeramount: self.offeramount,
-          offercreationtx: txhash
-        };
-
-        var topics = [
-          self.shhweb3.encodetopic("swarmcity-v1"),
-          self.shhweb3.encodetopic(newrequest.type),
-          self.shhweb3.encodetopic(newrequest.offerhashtag),
-          self.shhweb3.encodetopic(newrequest.id),
-          self.shhweb3.encodetopic(self.geohash.slice(0, 1)),
-          self.shhweb3.encodetopic(self.geohash.slice(0, 2)),
-          self.shhweb3.encodetopic(self.geohash.slice(0, 3)),
-          self.shhweb3.encodetopic(self.geohash.slice(0, 4)),
-        ];
-
-        if (self.shhweb3 && self.hashtag) {
+        this.makeDeal(dealID,self.offeramount, function(err, txhash) {
          
-          var options = {
-            "from": self.shhweb3.identity,
-            "topics": topics,
-            "payload": self.shhweb3.fromAscii(JSON.stringify(newrequest)),
-            "ttl": 60 * 60 * 24,
-            "priority": 1000
+          var newrequest = {
+            id: dealID,
+            type: 'dealfortwo-request-create',
+            seeker: {
+              username: self.identity.username,
+              pubkey: self.identity.pubkey,
+              avatarhash: self.identity.avatarhash,
+            },
+            offer: self.offermsg,
+            offerhashtag: self.hashtag,
+            offertime: Date.now(),
+            offeramount: self.offeramount,
+            offercreationtx: txhash
           };
 
-          console.log('posting to topics', topics);
+          var topics = [
+            self.shhweb3.encodetopic("swarmcity-v1"),
+            self.shhweb3.encodetopic(newrequest.type),
+            self.shhweb3.encodetopic(newrequest.offerhashtag),
+            self.shhweb3.encodetopic(newrequest.id),
+            self.shhweb3.encodetopic(self.geohash.slice(0, 1)),
+            self.shhweb3.encodetopic(self.geohash.slice(0, 2)),
+            self.shhweb3.encodetopic(self.geohash.slice(0, 3)),
+            self.shhweb3.encodetopic(self.geohash.slice(0, 4)),
+          ];
 
-          return self.shhweb3.shh.post(options, function(err, res) {
-            console.log(err, res);
-            self.fire('new-submitted', {dealid:newrequest.id});
-          });
-        }
+          if (self.shhweb3 && self.hashtag) {
 
+            var options = {
+              "from": self.shhweb3.identity,
+              "topics": topics,
+              "payload": self.shhweb3.fromAscii(JSON.stringify(newrequest)),
+              "ttl": 60 * 60 * 24,
+              "priority": 1000
+            };
 
+            console.log('posting to topics', topics);
 
-
-
-
-          
-
-       // });
+            return self.shhweb3.shh.post(options, function(err, res) {
+              console.log(err, res);
+              self.loading = false;
+              self.offermsg = '';
+              self.offeramount = '';
+              self.fire('new-submitted', {
+                dealid: newrequest.id
+              });
+            });
+          }
+        });
 
       },
 
-      makeDeal: function(cb) {
+      makeDeal: function(dealID,offerAmount, cb) {
         var self = this;
-    
+
         this.contracturl = this.resolveUrl('../contracts/DealForTwoFactory.json');
         this.importHref(this.contracturl, function(e) {
           this.contractjson = JSON.parse(e.target.import.body.innerText);
@@ -458,28 +453,106 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
             var DealForTwoFactoryContractInstance = DealForTwoFactoryContract.at(self.config.dealfortwofactory);
             //address _hashtag, address _counterparty,uint _counterpartyThreshold, bytes32 _dealID
             //console.log('doing transfer of ', amount, ' LC to: ', pubkey, 'from: ', self.account);
-            DealForTwoFactoryContractInstance.makeDealForTwo.sendTransaction(self.config.hashtagcontracts[self.selectedhashtag],1, {
+            DealForTwoFactoryContractInstance.makeDealForTwo.sendTransaction(self.config.hashtagcontracts[self.selectedhashtag], 1, {
               from: self.identity.pubkey,
               gasPrice: gasPrice,
               gas: 1000000
             }, function(err, result) {
-              if (err){
+              if (err) {
                 if (cb) {
                   return cb(err);
                 }
               }
-              cb(null,result);
+              cb(null, result);
               console.log(err, result);
               console.log('waiting for TX to happen');
-              this.waitTx(result,function(err,res){
-                self.transfer(self.offeramount,result,function(){
+              self.waitTx(result, function(err, res) {
+                self.helper_getDealAddressFromTx(result, function(err, dealaddress) {
+                   debugger;
+                  if (!dealaddress){
+                    return console.log('Cannot find deal address for tx. Skipping token transfer',result);
+                  }
+                 
+                  self.transfer(offerAmount, dealaddress, function(err, res) {
 
-                })
+                    // ok so the create deal TX is done. Now notify that we're funding this deal.
+                    var newrequest = {
+                      id: dealID,
+                      type: 'dealfortwo-seeker-funding',
+                      time: Date.now(),
+                      offerseekerfundingtx: res
+                    };
+
+                    var topics = [
+                      self.shhweb3.encodetopic("swarmcity-v1"),
+                      self.shhweb3.encodetopic(newrequest.type),
+                      self.shhweb3.encodetopic(self.hashtag),
+                      self.shhweb3.encodetopic(newrequest.id),
+                      self.shhweb3.encodetopic(self.geohash.slice(0, 1)),
+                      self.shhweb3.encodetopic(self.geohash.slice(0, 2)),
+                      self.shhweb3.encodetopic(self.geohash.slice(0, 3)),
+                      self.shhweb3.encodetopic(self.geohash.slice(0, 4)),
+                    ];
+
+                    if (self.shhweb3 && self.hashtag) {
+
+                      var options = {
+                        "from": self.shhweb3.identity,
+                        "topics": topics,
+                        "payload": self.shhweb3.fromAscii(JSON.stringify(newrequest)),
+                        "ttl": 60 * 60 * 24,
+                        "priority": 1000
+                      };
+
+                      console.log('posting to topics', topics);
+
+                      return self.shhweb3.shh.post(options, function(err, res) {
+                        console.log(err, res);
+                        //self.fire('new-submitted', {dealid:newrequest.id});
+                      });
+                    }
+                  });
+                });
+
               });
               //self.currenttxhash = result;
 
             });
           });
+        });
+      },
+
+
+      helper_getDealAddressFromTx(tx, cb) {
+        var self = this;
+        this.web3.eth.getTransaction(tx, function(err, res) {
+          if (err){
+            return cb(err);
+          }
+          if (res.blockNumber) {
+            self.contracturl = self.resolveUrl('../contracts/DealForTwoFactory.json');
+            self.importHref(self.contracturl, function(e) {
+              var contractjson = JSON.parse(e.target.import.body.innerText);
+              var DealForTwoFactoryContract = self.web3.eth.contract(contractjson.abi);
+              var DealForTwoFactoryContractInstance = DealForTwoFactoryContract.at(self.config.dealfortwofactory);
+              var myEvent = DealForTwoFactoryContractInstance.NewSimpleDeal(null, {
+                fromBlock: res.blockNumber,
+                toBlock: res.blockNumber
+              });
+              myEvent.get(function(error, result) {
+                var myEvent = result.find(function(item) {
+                  return item.transactionHash === tx;
+                });
+                if (!myEvent || !myEvent.args || !myEvent.args.simpleDealAddress){
+                  return cb('event not found');
+                }
+                var address = myEvent.args.simpleDealAddress;
+                return cb(null, address,res.blockNumber);
+              });
+            });
+          } else {
+            return cb('not yet mined');
+          }
         });
       },
 
@@ -511,9 +584,8 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
                 }
               }
               console.log(err, result);
-              console.log('waiting for TX to happen');
-              //self.currenttxhash = result;
-              console.log('')
+              console.log('Tokens transfer started. TXhash=',result);
+              cb(err,result);
 
             });
           });
