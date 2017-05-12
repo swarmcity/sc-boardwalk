@@ -420,7 +420,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
           let deals = this.deals.slice(0);
 
           if (foundDeal > -1) {
-            //deals[foundDeal] = dealdata;
+            deals[foundDeal] = Object.assign({}, deals[foundDeal],dealdata);
           } else {
             var newDeal = {
               id: dealdata.id,
@@ -492,7 +492,16 @@ This is the component showing all requests of a certain hashtag. It contains a r
               deal.replies = [reply];
             }
           } else {
-            console.error('no deal found for reply with ID=', replydata.id)
+            // this message comes before the deal info. Create an empty placehodler
+            var newDeal = {
+              id: replydata.parentrequestid,
+              seeker: {
+                pubkey: '0x0'
+              },
+              replies: [reply]
+            };
+            deals.push(newDeal);
+            //console.error('no deal found for reply with ID=', replydata.id)
           }
 
           deals.sort(function(a, b) {
@@ -1000,10 +1009,10 @@ This is the component showing all requests of a certain hashtag. It contains a r
             null,
             self.shhweb3.encodetopic(this.hashtag),
             null, // ID
-            self.shhweb3.encodetopic(this.geohash.slice(0, 1)),
-            self.shhweb3.encodetopic(this.geohash.slice(0, 2)),
-            null,
-            null
+            //[null,self.shhweb3.encodetopic(this.geohash.slice(0, 1))],
+           // [null,self.shhweb3.encodetopic(this.geohash.slice(0, 2))],
+           // null,
+           // null
           ];
 
           this.filter = self.shhweb3.shh.filter({
@@ -1037,7 +1046,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
           case 'dealfortwo-seeker-funding':
             this.dispatch('request_seeker_funding', payload);
             break;
-          case 'request-reply':
+          case 'dealfortwo-request-reply':
             this.dispatch('request_reply', payload);
           case 'engage-in-deal':
           case 'reply-to-deal':

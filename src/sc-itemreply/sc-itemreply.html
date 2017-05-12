@@ -203,7 +203,7 @@ This component shows a reply on a request.
           <div class="horizont startjust center flex">
             <sc-avatar
               class="replyeravatar"
-              ipfshash="[[replydata.provider.avatar]]"
+              ipfshash="[[replydata.provider.avatarhash]]"
               size="verysmall">
             </sc-avatar>
 
@@ -242,7 +242,7 @@ This component shows a reply on a request.
           <div class="horizont startjust center flex">
             <sc-avatar
               class="replyeravatar"
-              ipfshash="[[replydata.provider.avatar]]"
+              ipfshash="[[replydata.provider.avatarhash]]"
               size="verysmall">
             </sc-avatar>
 
@@ -301,7 +301,7 @@ This component shows a reply on a request.
         <div class="horizont centercenter">
           <sc-avatar
             class="replyeravatar_detail"
-            ipfshash="[[replydata.provider.avatar]]"
+            ipfshash="[[replydata.provider.avatarhash]]"
             size="medium">
           </sc-avatar>
           <div class="vertic start centerjust">
@@ -426,54 +426,57 @@ This component shows a reply on a request.
       toMakedeal: function() {
 
 
-        if (!this.shhidentity) {
-          this.shhidentity = this.shhweb3.shh.newIdentity();
-        }
+        // if (!this.shhidentity) {
+        //   this.shhidentity = this.shhweb3.shh.newIdentity();
+        // }
 
-        //debugger;
+        // //debugger;
 
-        var message = {
-          type: 'engage-in-deal',
-          subjectavatar: this.identity.avatarhash, //'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
-          subjectpub: this.identity.pubkey, //'0x4458...',
-          subjectusername: this.identity.username, //'Hank Moovy',
-          timestamp: Date.now(),
-          dealhashtag: this.itemdata.offerhashtag,
-          msg: 'wants to engage in a deal with you: ' + this.itemdata.offer,
-          // now the specific fields for this type
-          dealid: this.itemdata.id,
-          replyid: this.replydata.id
-        };
+        // var message = {
+        //   type: 'engage-in-deal',
+        //   provider: {
+        //     avatarhash: this.identity.avatarhash, //'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
+        //     pubkey: this.identity.pubkey, //'0x4458...',
+        //     username: this.identity.username, //'Hank Moovy',
+        //   },
+        //   timestamp: Date.now(),
+        //   dealhashtag: this.itemdata.offerhashtag,
+        //   msg: this.itemdata.offer,
+        //   // now the specific fields for this type
+        //   dealid: this.itemdata.id,
+        //   replyid: this.replydata.id
+        // };
+
+        // var topics = [
+        //   this.shhweb3.encodetopic('swarmcity-v1'),
+        //   this.shhweb3.encodetopic('dealfortwo-request-reply'),
+        //   this.shhweb3.encodetopic(message.dealhashtag),
+        //   this.shhweb3.encodetopic(message.dealid),
+        // ];
+
+        // var options = {
+        //   "from": this.shhidentity,
+        //   "topics": topics,
+        //   "payload": this.shhweb3.fromAscii(JSON.stringify(message)),
+        //   "ttl": 60 * 60 * 24,
+        //   "priority": 1000
+        // };
+
+        // console.log('posting to topics', topics);
+
+        // this.shhweb3.shh.post(options, function(err, res) {
+        //   //debugger;
+        //   if (!err) {
+        //     console.log('sc->itemreplier -> Reply posted');
+
+        //   } else {
+        //     console.log('sc-itemreplier -> whisper error:', err);
+        //   }
+
+        // });
 
 
-        var topics = [
-          this.shhweb3.encodetopic('engage-in-deal'),
-          this.shhweb3.encodetopic(this.replydata.provider.pubkey)
-        ];
-
-        var options = {
-          "from": this.shhidentity,
-          "topics": topics,
-          "payload": this.shhweb3.fromAscii(JSON.stringify(message)),
-          "ttl": 60 * 60 * 24,
-          "priority": 1000
-        };
-
-        console.log('posting to topics', topics);
-
-        this.shhweb3.shh.post(options, function(err, res) {
-          //debugger;
-          if (!err) {
-            console.log('sc->itemreplier -> Reply posted');
-
-          } else {
-            console.log('sc-itemreplier -> whisper error:', err);
-          }
-
-        });
-
-
-        this.fire('to-makedeal', this.replydata);
+        // this.fire('to-makedeal', this.replydata);
       },
 
       _log: function(target) {

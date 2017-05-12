@@ -237,7 +237,6 @@ This components allow a Swarm Citizen to reply on a request.
             this.replystate = 'replying'
             this.bgcolor = "whiteback";
             this.borderz = "greytopborder";
-            //   console.log("yes dit dus");
             break;
 
           case 'replying':
@@ -246,16 +245,19 @@ This components allow a Swarm Citizen to reply on a request.
             this.bgcolor = "basestructure";
             this.borderz = "notopborder";
 
-            if (!this.shhidentity) {
-              this.shhidentity = this.shhweb3.shh.newIdentity();
-            }
+            debugger;
 
-            var offer_reply = {
-              type: 'request-reply',
+            // if (!this.shhidentity) {
+            //   this.shhidentity = this.shhweb3.shh.newIdentity();
+            // }
+
+            var message = {
+              type: 'dealfortwo-request-reply',
               id: UUIDjs.create().toString(),
               parentrequestid: this.itemdata.id,
+              hashtag: this.itemdata.hashtag,
               replyer: {
-                avatar: this.identity.avatarhash,
+                avatarhash: this.identity.avatarhash,
                 username: this.identity.username,
                 pubkey: this.identity.pubkey
               },
@@ -263,16 +265,25 @@ This components allow a Swarm Citizen to reply on a request.
               replyamount: this.replyamount,
               replytime: Date.now()
             };
+
+
             var topics = [
-              this.shhweb3.encodetopic(offer_reply.type),
-              this.shhweb3.encodetopic(this.itemdata.id),
-              this.shhweb3.encodetopic(offer_reply.id),
-            ];
+              this.shhweb3.encodetopic('swarmcity-v1'),
+              this.shhweb3.encodetopic('dealfortwo-request-reply'),
+              this.shhweb3.encodetopic(message.hashtag),
+              this.shhweb3.encodetopic(message.dealid),
+            ];  
+
+            // var topics = [
+            //   this.shhweb3.encodetopic(message.type),
+            //   this.shhweb3.encodetopic(this.itemdata.id),
+            //   this.shhweb3.encodetopic(message.id),
+            // ];
 
             var options = {
-              "from": this.shhidentity,
+              "from": this.shhweb3.identity,
               "topics": topics,
-              "payload": this.shhweb3.fromAscii(JSON.stringify(offer_reply)),
+              "payload": this.shhweb3.fromAscii(JSON.stringify(message)),
               "ttl": 60 * 60 * 24,
               "priority": 1000
             };
@@ -290,57 +301,39 @@ This components allow a Swarm Citizen to reply on a request.
               self.borderz = "lightgreytopborder";
             });
 
-            // send notification
-            var reply_to_deal_notification = {
-              type: 'reply-to-deal',
-              subjectavatar: this.identity.avatarhash, //'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
-              subjectpub: this.identity.pubkey, //'0x4458...',
-              subjectusername: this.identity.username, //'Hank Moovy',
-              timestamp: Date.now(),
-              dealhashtag: this.itemdata.offerhashtag,
-              msg: 'replied to your deal: ' + this.replytext,
-              // now the specific fields for this type
-              dealid: this.itemdata.id,
-              replyid: offer_reply.id
+            // // send notification
+            // var reply_to_deal_notification = {
+            //   type: 'reply-to-deal',
+            //   subjectavatar: this.identity.avatarhash, //'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
+            //   subjectpub: this.identity.pubkey, //'0x4458...',
+            //   subjectusername: this.identity.username, //'Hank Moovy',
+            //   timestamp: Date.now(),
+            //   dealhashtag: this.itemdata.offerhashtag,
+            //   msg: 'replied to your deal: ' + this.replytext,
+            //   // now the specific fields for this type
+            //   dealid: this.itemdata.id,
+            //   replyid: offer_reply.id
              
-            };
+            // };
 
 
-            var topics = [
-              this.shhweb3.encodetopic('notification'),
-              this.shhweb3.encodetopic(this.itemdata.offererpubkey)
-            ];
+            // var topics = [
+            //   this.shhweb3.encodetopic('notification'),
+            //   this.shhweb3.encodetopic(this.itemdata.offererpubkey)
+            // ];
 
-            var options = {
-              "from": this.shhidentity,
-              "topics": topics,
-              "payload": this.shhweb3.fromAscii(JSON.stringify(reply_to_deal_notification)),
-              "ttl": 60 * 60 * 24,
-              "priority": 1000
-            };
+            // var options = {
+            //   "from": this.shhidentity,
+            //   "topics": topics,
+            //   "payload": this.shhweb3.fromAscii(JSON.stringify(reply_to_deal_notification)),
+            //   "ttl": 60 * 60 * 24,
+            //   "priority": 1000
+            // };
 
-            console.log('posting to topics', topics);
-
-            // this.shhweb3.shh.post(options, function(err, res) {
-            //   //debugger;
-            //   if (!err) {
-            //     console.log('sc->itemreplier -> Reply posted');
-
-            //   } else {
-            //     console.log('sc-itemreplier -> whisper error:', err);
-            //   }
-
-            // });
-
-
-
+            // console.log('posting to topics', topics);
 
             break;
-          // case 'replygivven':
-          //   this.replystate = 'deletereply'
-          //   this.borderz = "notopborder";
-          //   break;
-          // default:
+        
         }
     },
 
