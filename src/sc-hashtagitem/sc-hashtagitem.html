@@ -8,7 +8,7 @@
 
 <link rel="import" href="../sc-avatar/sc-avatar.html">
 <link rel="import" href="../sc-hashtagcontract/sc-hashtagrep.html">
-<link rel="import" href="../sc-dealfeedback/sc-dealfeedback.html">
+<link rel="import" href="../sc-dealstate/sc-dealstate.html">
 
 
 <!--
@@ -115,10 +115,6 @@ This components is the representation of a request in the requests-list on sc-ha
         margin-bottom: 2px;
       }
 
-      sc-dealfeedback {
-        display: none;
-      }
-
       .half {
         opacity: 0.75;
       }
@@ -137,13 +133,13 @@ This components is the representation of a request in the requests-list on sc-ha
 
     </style>
  
+    <sc-dealstate deal="{{item}}" dealstate="{{dealstate}}"></sc-dealstate>
 
       <div class="totalwidth vertic start startjust" on-tap="toDetail">
 
-        <sc-dealfeedback compact dealstate="{{dealstate}}" showsteps="create"></sc-dealfeedback>
         <small class="small grey3 light flex">
           <moment-js date="{{item.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js>
-          <span class="grey2">{{dealstatusmsg}}</span>
+          <span class="grey2">{{dealstatemsg}}</span>
         </small>
 
         <p class="totalwidth offer grey4"> {{item.msg}} <span class="semibold"> 
@@ -166,7 +162,7 @@ This components is the representation of a request in the requests-list on sc-ha
 
         <div class="totalwidth horizont start startjust">
           <sc-avatar
-            ipfshash="[[item.seeker.avatar]]"
+            ipfshash="[[item.seeker.avatarhash]]"
             size="verysmall">
           </sc-avatar>
           <div class="flex vertic centercenter">
@@ -196,7 +192,8 @@ This components is the representation of a request in the requests-list on sc-ha
       is: 'sc-hashtagitem',
 
       observers: [
-        '_dealstate(dealstate)'
+        '_dealstate(dealstate)',
+        // '_item(item)'
       ],
 
       properties: {
@@ -234,14 +231,12 @@ This components is the representation of a request in the requests-list on sc-ha
 
       },
 
-
-      // DIT MOET UIT DE REDUX KOMEN !!!!!!!!!!!!!!!!
       _dealstate: function(target){
         if (target=='dealinit' || target=='dealcreated') {
-          this.dealstatusmsg = "- Request is being created";  
+          this.dealstatemsg = "- Request is being created";  
           this.amountopacity = "half"; 
         } else {
-          this.dealstatusmsg = "";
+          this.dealstatemsg = "";
           this.amountopacity = "full"; 
         }
       },

@@ -9,7 +9,7 @@
 <link rel="import" href="../sc-avatar/sc-avatar.html">
 <link rel="import" href="../sc-hashtagcontract/sc-hashtagrep.html">
 <link rel="import" href="../sc-redux/sc-redux.html">
-<link rel="import" href="../sc-dealfeedback/sc-dealfeedback.html">
+<link rel="import" href="../sc-dealstate/sc-dealstate.html">
 
 
 <!--
@@ -96,9 +96,6 @@ This components is the representation of a request in the requests-list on sc-ha
         color: var(--sc-grey2);
       }
 
-      sc-dealfeedback {
-        margin: 9px;
-      }
 
       iron-icon.medium {
         width: 34px;
@@ -120,15 +117,16 @@ This components is the representation of a request in the requests-list on sc-ha
 
     </style>
 
+    <sc-dealstate deal="{{item}}" dealstate="{{dealstate}}"></sc-dealstate>
+
+
         <template is="dom-if" if="{{_is(appearance,'first')}}">
           <div class="dealstate_first" on-tap="toDetail">
               <sc-avatar
-                ipfshash="[[item.seeker.avatar]]"
+                ipfshash="[[item.seeker.avatarhash]]"
                 size="verysmall">
               </sc-avatar>
-            <p class="mymsg grey4 flex"> {{item.msg}}</p>
-
-            <sc-dealfeedback compact dealstate="{{dealstate}}" showsteps="create"></sc-dealfeedback>
+            <p class="mymsg grey4 flex"> {{item.msg}} x{{item.dealstate}}</p>
 
               <p class$="myoffer bold yellow {{amountopacity}}">{{item.amount}} SWT</p>
               <div class="horizont center endjust">
@@ -251,34 +249,36 @@ This components is the representation of a request in the requests-list on sc-ha
           this.replycount = 0;
         }
 
-        if (this.item.dealstate=='providerassigned' || this.item.dealstate=='dealfundedbyprovider' || this.item.dealstate=='dealtopayout') {
-          this.appearance = 'second';
-          this.dealstatusmsgclass = "reg grey4";
-        } else {
-          this.appearance = 'first';
-        }
+        console.log("uit dealitem ****", this.item);
 
-        if (this.item.dealstate=='providerassigned') {
-          this.dealstatusmsg = "You agreed to a deal with " + provider + "for " + this.item.amount + "SWT.";
-          this.dealstatusmsgclass = "reg grey4";
-          this.seekervcolor = "green";       
-        }
+        // if (this.item.dealstate=='providerassigned' || this.item.dealstate=='dealfundedbyprovider' || this.item.dealstate=='dealtopayout') {
+        //   this.appearance = 'second';
+        //   this.dealstatusmsgclass = "reg grey4";
+        // } else {
+        //   this.appearance = 'first';
+        // }
 
-
-        if (this.item.dealstate=='dealfundedbyprovider') {
-          this.dealstatusmsg = "Making a deal with " + provider + "for " + this.item.amount + "SWT.";
-          this.dealstatusmsgclass = "reg grey4";
-          this.providervcolor = "green";       
-        }
+        // if (this.item.dealstate=='providerassigned') {
+        //   this.dealstatusmsg = "You agreed to a deal with " + provider + "for " + this.item.amount + "SWT.";
+        //   this.dealstatusmsgclass = "reg grey4";
+        //   this.seekervcolor = "green";       
+        // }
 
 
-        if (this.item.dealstate=='dealtopayout') {
-          this.dealstatusmsg = "You're agreed to a deal with " + provider + "for " + this.item.amount + "SWT.";
-          this.dealstatusmsgclass = "bold blue";
-          this.seekervcolor = "green";  
-          this.providervcolor = "green"; 
+        // if (this.item.dealstate=='dealfundedbyprovider') {
+        //   this.dealstatusmsg = "Making a deal with " + provider + "for " + this.item.amount + "SWT.";
+        //   this.dealstatusmsgclass = "reg grey4";
+        //   this.providervcolor = "green";       
+        // }
 
-        }
+
+        // if (this.item.dealstate=='dealtopayout') {
+        //   this.dealstatusmsg = "You're agreed to a deal with " + provider + "for " + this.item.amount + "SWT.";
+        //   this.dealstatusmsgclass = "bold blue";
+        //   this.seekervcolor = "green";  
+        //   this.providervcolor = "green"; 
+
+        // }
 
       },
 
@@ -286,39 +286,45 @@ This components is the representation of a request in the requests-list on sc-ha
 
       // DIT MOET UIT DE REDUX KOMEN !!!!!!!!!!!!!!!!
       _dealstate: function(target){
-        if (target=='dealinit' || target=='dealcreated' || target=='dealfundedbyseeker') {
+        if (target=='init' || target=='created' || target=='seekerfunding' || target=='seekerfunded') {
           this.appearance = 'first';
         } else {
           this.appearance = 'second';
           this.dealstatusmsgclass = "reg grey4";
         };
 
-        if (target=='dealinit' || target=='dealcreated') {
+        if (target=='init' || target=='created') {
           this.amountopacity = "half";
         } else {
           this.amountopacity = "full";
         };
 
 
-        if (target=='providerassigned') {
+        if (target=='providerassigning' || target=='providerassigned') {
           this.dealstatusmsg = "You agreed to a deal with "+ "for " + this.item.amount + "SWT.";
           this.seekervcolor = "green";       
         };
 
 
-        if (target=='dealfundedbyprovider') {
+        if (target=='providerfunding' || target=='providerfunded') {
           this.dealstatusmsg = "Making a deal with "+ "for " + this.item.amount + "SWT.";
           this.providervcolor = "green";       
         };
 
+        if (target=='providerfundedseekeragreed' || target=='provideragreedseekerassigned' || target=='bothaccepted') {
+          this.dealstatusmsg = "Making a deal with "+ "for " + this.item.amount + "SWT.";
+          this.seekervcolor = "green";       
+          this.providervcolor = "green";       
+        };
 
-        if (target=='dealtopayout') {
+
+
+        if (target=='indeal') {
           this.dealstatusmsg = "You're in deal with "+ "for " + this.item.amount + "SWT.";
           this.dealstatusmsgclass = "bold blue";
           this.seekervcolor = "green";  
           this.providervcolor = "green";  
         };
-        console.log('dealstate:: ', this.dealstate);
 
       },
 
