@@ -168,6 +168,13 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         padding: 25px 25px 0px 25px;
 
       }
+
+      .loadingnew {
+        min-height: 20vh;
+        width: 100%;
+
+      }
+
 /*        .dottedbottom {
           border-bottom: 1px dotted var(--sc-grey2);
         }
@@ -209,9 +216,10 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
     </style>
     <div class="totalcontainer">
       <div id="newitemcontent" class="whiteback shadow">
- AANT LAAJE? **<span>{{loading}}</span>**
 <template is="dom-if" if="{{loading}}">
-  <p>efkes laaie, hmkay?</p>
+  <div class="loadingnew">
+    <sc-loader small>Processing your request</sc-loader>
+  </div>
 </template>
 
 <template is="dom-if" if="{{!loading}}">
@@ -258,7 +266,19 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
           </div> -->
 
         </div>
-        <div class="tenspace"></div>
+          <template is="dom-if" if="{{overspending}}">
+            <div class="totalwidth newitempadding">
+                <div class="minispace"></div>
+                <div class="minispace"></div>
+                <p class="bold red">You don't have enough SWT!</p>
+                <div class="tenspace"></div>
+            </div>
+          </template>
+
+          <template is="dom-if" if="{{!overspending}}">
+            <div class="tenspace"></div>
+          </template>
+
 
 </template>
 
@@ -299,6 +319,12 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
         hashtag: {
           type: String
+        },
+
+
+        overspending: {
+          type: Boolean,
+          value: false
         }
 
       },
@@ -392,6 +418,9 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       },
 
       confirmRequest: function() {
+
+      if (this.swtbalance >= this.offeramount) {
+
         var self = this;
 
         this.loading = true;
@@ -449,6 +478,10 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
             });
           }
         });
+
+      } else {
+        this.overspending = true;
+      };
 
       },
 
