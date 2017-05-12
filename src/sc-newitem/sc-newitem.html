@@ -11,6 +11,7 @@
 <link rel="import" href="../sc-redux/sc-redux.html">
 <link rel="import" href="../sc-web3/sc-web3.html">
 <link rel="import" href="../sc-config/sc-config.html">
+<link rel="import" href="../sc-shh/sc-shh.html">
 
 <!--
 `sc-newitem`
@@ -26,6 +27,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
     <sc-simpledeal id="simpledeal"></sc-simpledeal> 
     <sc-web3 id="web3" web3="{{web3}}"></sc-web3>
     <sc-config config="{{config}}"></sc-config>
+    <sc-shh web3="{{shhweb3}}"></sc-shh>    
     <style include="sc-styles">
       :host {
         display: block;
@@ -223,7 +225,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
           </div>
 
           <div class="horizont end startjust totalwidth paddingsides newitemofferpadding dottedbottom">
-            <paper-input label="What do you offer?" class="swtamount flex" value="{{replyamount}}" type="number">
+            <paper-input label="What do you offer?" class="swtamount flex" value="{{offeramount}}" type="number">
             </paper-input>
             <p class="swtwithoffer bold">SWT</p>
           </div>
@@ -279,6 +281,11 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
           type: Object,
           statePath: 'identity',
         },
+
+        hashtag: {
+          type: String
+        }
+
       },
 
       // animationConfig: {
@@ -306,7 +313,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       //   },
 
       observers: [
-        '_btnable(offermsg,replyamount)',
+        '_btnable(offermsg,offeramount,geohash)',
         '_geohash(geohash)'
       ],
 
@@ -356,13 +363,12 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       },
 
       _btnable: function(){
-        // console.log('Deze dan???',this.offermsg,this.replyamount);
-        if (!this.offermsg || !this.replyamount) {
+        if (!this.offermsg || !this.offeramount || !this.geohash) {
           this.btnable = false;
           return;
         }
 
-        if (this.offermsg && this.replyamount) {
+        if (this.offermsg && this.offeramount) {
           this.btnable = true;
         } else {
           this.btnable = false;
@@ -371,17 +377,71 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
       confirmRequest: function() {
         var self = this;
-        this.makeDeal(function(err,txhash) {
-          debugger;
-          var totalnew = {
-            msg: self.offermsg,
-            amount: self.replyamount,
-            geohash: self.geohash,
-            txhash: txhash
-          }
-          self.fire('new-submitted', totalnew);
 
-        });
+
+
+        //this.makeDeal(function(err,txhash) {
+          var txhash='0x12345';
+          debugger;
+          // var totalnew = {
+          //   msg: self.offermsg,
+          //   amount: self.offeramount,
+          //   geohash: self.geohash,
+          //   txhash: txhash
+          // }
+
+        var newrequest = {
+          id: UUIDjs.create().toString(),
+          type: 'dealfortwo-request-create',
+          seeker: {
+            username: self.identity.username,
+            pubkey: self.identity.pubkey,
+            avatarhash: self.identity.avatarhash,
+          },
+          offer: self.offermsg,
+          offerhashtag: self.hashtag,
+          offertime: Date.now(),
+          offeramount: self.offeramount,
+          offercreationtx: txhash
+        };
+
+        var topics = [
+          self.shhweb3.encodetopic("swarmcity-v1"),
+          self.shhweb3.encodetopic(newrequest.type),
+          self.shhweb3.encodetopic(newrequest.offerhashtag),
+          self.shhweb3.encodetopic(newrequest.id),
+          self.shhweb3.encodetopic(self.geohash.slice(0, 1)),
+          self.shhweb3.encodetopic(self.geohash.slice(0, 2)),
+          self.shhweb3.encodetopic(self.geohash.slice(0, 3)),
+          self.shhweb3.encodetopic(self.geohash.slice(0, 4)),
+        ];
+
+        if (self.shhweb3 && self.hashtag) {
+         
+          var options = {
+            "from": self.shhweb3.identity,
+            "topics": topics,
+            "payload": self.shhweb3.fromAscii(JSON.stringify(newrequest)),
+            "ttl": 60 * 60 * 24,
+            "priority": 1000
+          };
+
+          console.log('posting to topics', topics);
+
+          return self.shhweb3.shh.post(options, function(err, res) {
+            console.log(err, res);
+            self.fire('new-submitted', {dealid:newrequest.id});
+          });
+        }
+
+
+
+
+
+
+          
+
+       // });
 
       },
 
@@ -411,6 +471,11 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
               cb(null,result);
               console.log(err, result);
               console.log('waiting for TX to happen');
+              this.waitTx(result,function(err,res){
+                self.transfer(self.offeramount,result,function(){
+
+                })
+              });
               //self.currenttxhash = result;
 
             });
@@ -418,6 +483,81 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         });
       },
 
+
+
+      /**
+      * 'transfer' does the actual transfer by calling the SWT-contract and using its sendTransaction-function.
+      */
+      transfer: function(amount, pubkey, cb) {
+        var self = this;
+        //this.sendcoinstate = 'sending';
+        this.contracturl = this.resolveUrl('../contracts/MiniMeToken.json');
+        this.importHref(this.contracturl, function(e) {
+          this.contractjson = JSON.parse(e.target.import.body.innerText);
+          self.web3.eth.getGasPrice(function(err, result) {
+            var gasPrice = result.toNumber(10);
+            // console.log('gasprice: ', gasPrice);
+            var MyContract = self.web3.eth.contract(self.contractjson.abi);
+            var myContractInstance = MyContract.at(self.config.swttokencontractaddress);
+            console.log('doing transfer of ', amount, ' LC to: ', pubkey, 'from: ', self.identity.pubkey,);
+            myContractInstance.transfer.sendTransaction(pubkey, amount, {
+              from: self.identity.pubkey,
+              gasPrice: gasPrice,
+              gas: 200000
+            }, function(err, result) {
+              if (err){
+                if (cb) {
+                  return cb(err);
+                }
+              }
+              console.log(err, result);
+              console.log('waiting for TX to happen');
+              //self.currenttxhash = result;
+              console.log('')
+
+            });
+          });
+        });
+      },
+
+
+     waitTx : function(txHash, callback) {
+      /*
+      * Watch for a particular transaction hash and call the awaiting function when done;
+      * Ether-pudding uses another method, with web3.eth.getTransaction(...) and checking the txHash;
+      * on https://github.com/ConsenSys/ether-pudding/blob/master/index.js
+      */
+      var self=this;
+      var blockCounter = 15;
+      // Wait for tx to be finished
+      var filter = this.web3.eth.filter('latest').watch(function(err, blockHash) {
+        if (blockCounter<=0) {
+          filter.stopWatching();
+          filter = null;
+          console.warn('!! Tx expired !!');
+          if (callback)
+            return callback(false);
+          else
+            return false;
+        }
+        // Get info about latest Ethereum block
+        var block = self.web3.eth.getBlock(blockHash);
+        --blockCounter;
+        // Found tx hash?
+        if (block.transactions.indexOf(txHash) > -1) {
+          // Tx is finished
+          filter.stopWatching();
+          filter = null;
+          if (callback)
+            return callback(true);
+          else
+            return true;
+        // Tx hash not found yet?
+        } else {
+          // console.log('Waiting tx..', blockCounter);
+        }
+      });
+    },
 
 
     });
