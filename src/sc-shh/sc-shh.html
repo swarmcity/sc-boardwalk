@@ -10,6 +10,7 @@
 
     var acshh;
     var acshh_filters = [];
+    var acshh_identity;
 
     Polymer({
       is: 'sc-shh',
@@ -24,6 +25,12 @@
         '_host(host)'
       ],
 
+      ready: function(){
+        if (!acshh_identity){
+
+        }
+      },
+
       _host: function(){
         this.initweb3();        
       },
@@ -34,12 +41,14 @@
             return;
           }
           acshh = new Web3(new Web3.providers.HttpProvider(this.host));
-          acshh.shh._filter = acshh.shh.filter;
-          console.log('sc-shh -> created Web3');
+          acshh_identity = acshh.shh.newIdentity();
+          //acshh.shh._filter = acshh.shh.filter;
+          console.log('sc-shh -> created Web3. Identity=',this.identity);
         }
         this.set('web3',acshh);
         this.set('web3.encodetopic',this.encodetopic.bind(this));
-        this.set('web3.shh.filter',this.filter.bind(this));
+        this.set('web3.identity',acshh_identity);
+        //this.set('web3.shh.filter',this.filter.bind(this));
         this.fire('web3-ready');
       },
 

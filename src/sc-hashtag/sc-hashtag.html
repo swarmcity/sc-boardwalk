@@ -376,7 +376,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
       <sc-newitem
         data-action="newitem"
         identity="[[identity]]"
-        pubkey="[[account]]"
+        hashtag="[[data.hashtag]]"
         on-back="newitem_cancel"
         on-cancel=""
         on-new-submitted="newitem_submitted"
@@ -424,20 +424,15 @@ This is the component showing all requests of a certain hashtag. It contains a r
           } else {
             var newDeal = {
               id: dealdata.id,
-              seeker: {
-                avatar: dealdata.offereravatar,
-                username: dealdata.offerer,
-                pubkey: dealdata.offererpubkey
-              },
+              seeker: dealdata.seeker,
               msg: dealdata.offer,
               offercreationtx: dealdata.offercreationtx,
               amount: dealdata.offeramount,
               hashtag: dealdata.offerhashtag,
-              offertime: dealdata.offertime,
-              dealstate: 'open'
+              offertime: dealdata.offertime
             };
             deals.push(newDeal);
-            this.watchtx(dealdata.id,dealdata.offercreationtx);
+            this.getdealaddressfromtx(dealdata.id,dealdata.offercreationtx);
           }
 
           deals.sort(function(a, b) {
@@ -448,6 +443,26 @@ This is the component showing all requests of a certain hashtag. It contains a r
             type: 'DEALS',
             deals: deals
           };
+        },
+
+        request_seeker_funding: function(payload){
+          var foundDeal = this.deals.findIndex(function(item) {
+            return item.id === payload.id;
+          });
+
+          let deals = this.deals.slice(0);
+
+          deals[foundDeal] = Object.assign({}, deals[foundDeal], {
+            offerseekerfundingtx: payload.offerseekerfundingtx
+          });
+
+          this.updatebalanceaddressaftertx(payload.id,payload.offerseekerfundingtx);
+          
+          return {
+            type: 'DEALS',
+            deals: deals
+          };
+
         },
 
         request_reply: function(replydata) {
@@ -508,8 +523,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
         },
 
-     request_updatebalance: function(params) {
-debugger;
+
+        request_seekerfunded: function(params) {
 
           var foundDeal = this.deals.findIndex(function(item) {
             return item.id === params.dealid;
@@ -525,10 +540,26 @@ debugger;
             deals: deals
           };
 
-        },
+        },     
 
+//      request_updatebalance: function(params) {
+// debugger;
 
+//           var foundDeal = this.deals.findIndex(function(item) {
+//             return item.id === params.dealid;
+//           });
 
+//           let deals = this.deals.slice(0);
+
+//           deals[foundDeal] = Object.assign({}, deals[foundDeal], {
+//             dealbalance: params.balance
+//           });
+//           return {
+//             type: 'DEALS',
+//             deals: deals
+//           };
+
+//         },
 
 
 
@@ -663,16 +694,33 @@ debugger;
 
       },
 
-      watchtx: function(dealid,tx){
-        
+      getdealaddressfromtx: function(dealid,tx){
+        console.log('Start monitoring for address from deal tx',tx);
         if (!tx){
           return;
         }
         var self = this;
         this.helper_getDealAddressFromTx(tx,function(err,address,blocknumber){
+          console.log('the address of deal',dealid,'is',address);
           self.dispatch('request_setaddress',{dealid:dealid,address:address});
           self.helper_watchbalance(address,blocknumber);
         });
+      },
+
+      updatebalanceaddressaftertx: function(dealid,tx){
+        var self = this;
+        console.log('Start monitoring for balance from deal tx',tx);
+        if (!tx){
+          return;
+        }
+
+        this.waitTx(tx,function(err,res){
+          // update balence
+          self.dispatch('request_seekerfunded',{dealid:dealid,balance:12345});
+
+        });
+
+
       },
 
       helper_watchbalance(address,startblock){
@@ -709,6 +757,9 @@ debugger;
       helper_getDealAddressFromTx(tx, cb) {
         var self = this;
         this.web3.eth.getTransaction(tx, function(err, res) {
+          if (err){
+            return cb(err);
+          }
           if (res.blockNumber) {
             self.contracturl = self.resolveUrl('../contracts/DealForTwoFactory.json');
             self.importHref(self.contracturl, function(e) {
@@ -735,6 +786,46 @@ debugger;
           }
         });
       },
+
+
+
+     waitTx : function(txHash, callback) {
+      /*
+      * Watch for a particular transaction hash and call the awaiting function when done;
+      * Ether-pudding uses another method, with web3.eth.getTransaction(...) and checking the txHash;
+      * on https://github.com/ConsenSys/ether-pudding/blob/master/index.js
+      */
+      var self=this;
+      var blockCounter = 15;
+      // Wait for tx to be finished
+      var filter = this.web3.eth.filter('latest').watch(function(err, blockHash) {
+        if (blockCounter<=0) {
+          filter.stopWatching();
+          filter = null;
+          console.warn('!! Tx expired !!');
+          if (callback)
+            return callback(false);
+          else
+            return false;
+        }
+        // Get info about latest Ethereum block
+        var block = self.web3.eth.getBlock(blockHash);
+        --blockCounter;
+        // Found tx hash?
+        if (block.transactions.indexOf(txHash) > -1) {
+          // Tx is finished
+          filter.stopWatching();
+          filter = null;
+          if (callback)
+            return callback(true);
+          else
+            return true;
+        // Tx hash not found yet?
+        } else {
+          // console.log('Waiting tx..', blockCounter);
+        }
+      });
+    },
 
 
       _routedata: function() {
@@ -904,15 +995,16 @@ debugger;
         var self = this;
         if (this.shhweb3 && this.geohash) {
 
-      var mytopics = [
-        null, // self.shhweb3.encodetopic("request-create"),
-        self.shhweb3.encodetopic(this.hashtag),
-        null,
-        null,
-        [null,self.shhweb3.encodetopic(this.geohash.slice(0, 2))],
-        null,
-        null
-        ];
+          var mytopics = [
+            self.shhweb3.encodetopic("swarmcity-v1"),
+            null,
+            self.shhweb3.encodetopic(this.hashtag),
+            null, // ID
+            self.shhweb3.encodetopic(this.geohash.slice(0, 1)),
+            self.shhweb3.encodetopic(this.geohash.slice(0, 2)),
+            null,
+            null
+          ];
 
           this.filter = self.shhweb3.shh.filter({
             "topics": mytopics,
@@ -938,9 +1030,12 @@ debugger;
         }
 
         switch(payload.type){
-          case 'request-create':
+          case 'dealfortwo-request-create':
             this.dispatch('request_create', payload);
             this.requestsloaded = true;
+            break;
+          case 'dealfortwo-seeker-funding':
+            this.dispatch('request_seeker_funding', payload);
             break;
           case 'request-reply':
             this.dispatch('request_reply', payload);
@@ -949,7 +1044,7 @@ debugger;
           case 'seeker-acceptdeal':
             break;
           default:
-          debugger;
+          //debugger;
             console.log('unknown message:',payload);
             break;
         }
@@ -1098,68 +1193,9 @@ debugger;
       },
 
       newitem_submitted: function(e) {
-
-        var self = this;
-
-        var newrequest = {
-          id: UUIDjs.create().toString(),
-          type: 'request-create',
-          offereravatar: this.identity.avatarhash,
-          offerer: this.identity.username,
-          offererpubkey: this.identity.pubkey,
-          offer: e.detail.msg,
-          offerhashtag: this.hashtag,
-          //          offererrep: '0',
-          offertime: Date.now(),
-          offeramount: e.detail.amount,
-          offercreationtx: e.detail.txhash
-          //          nrofreplies: '0'
-        }
-
-        var topics = [
-          this.shhweb3.encodetopic(newrequest.type),
-          this.shhweb3.encodetopic(newrequest.offerhashtag),
-          this.shhweb3.encodetopic(newrequest.id),
-          this.shhweb3.encodetopic(''),
-          this.shhweb3.encodetopic(e.detail.geohash.slice(0, 2)),
-          this.shhweb3.encodetopic(e.detail.geohash.slice(0, 3)),
-          this.shhweb3.encodetopic(e.detail.geohash.slice(0, 4)),
-        ];
-
-        if (this.shhweb3 && this.hashtag) {
-          if (!this.shhidentity) {
-            this.shhidentity = this.shhweb3.shh.newIdentity();
-          }
-
-          var options = {
-            "from": this.shhidentity,
-            "topics": topics,
-            "payload": this.shhweb3.fromAscii(JSON.stringify(newrequest)),
-            "ttl": 60 * 60 * 24, // is a time for the message to live on the network, specified in seconds. This defaults to 50.
-            "priority": 1000
-          };
-
-          console.log('posting to topics', topics);
-
-          return this.shhweb3.shh.post(options, function(err, res) {
-            console.log(err, res);
-             //self.dispatch('addmydeal',newrequest);
-            self.set('route.path','/'+self.hashtag+'/list');
-            // self.set('route.path','/'+self.hashtag+'/detail/' + newrequest.id);
-
-            
-          });
-        }
-
-        // console.log('Yes!', newrequest);
-        //this.dispatch('add',newrequest);
-        //        this.push('deals',newrequest);
-
+//        this.set('route.path','/'+self.hashtag+'/detail/'+e.detail.itemid);
+        this.set('route.path', '/' + this.hashtag + '/list');
       },
-
-      // _log: function(target) {
-      //   console.log("***************************", target);
-      // },
 
       toMakeDeal: function(e){  
         //debugger;
