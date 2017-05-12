@@ -563,7 +563,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                   </div>
                   <div class$="avatar_funding {{providerfundclass}}">
                     <sc-avatar
-                      ipfshash="[[replydata.provider.avatar]]"
+                      ipfshash="[[replydata.provider.avatarhash]]"
                       pubkey="[[replydata.provider.pubkey]]"
                       id="makedeal_otheravatar"
                       size="{{avatarfundingsize}}"
@@ -602,7 +602,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
               <div class="bottomhalf blueback totalwidth">
                 <template is="dom-if" if="{{!seekeraccept}}">
-                  <p class="confirmation_question yellow bold">- {{replydata.replyamount}} SWT</p>
+                  <!-- <p class="confirmation_question yellow bold">- {{replydata.replyamount}} SWT</p> -->
                   <div class="confirmbtns">
                     <iron-icon icon="sc-icons:decline" class="decliner medium white" on-tap="cancelDeal"></iron-icon>
                     <paper-icon-button icon="sc-icons:v" noink class="confirmbtn blue big white shadow" on-tap="startDeal"></paper-icon-button>
