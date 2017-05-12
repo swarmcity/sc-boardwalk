@@ -5,7 +5,7 @@
 
 <script type="text/javascript" src="../../bower_components/uuid-js/lib/uuid.js"></script>
 
-<dom-module id="sc-simpledeal">
+<dom-module id="sc-dealfortwo">
   <template>
     <sc-web3 id="web3" web3="{{web3}}"></sc-web3>
     <sc-config config="{{config}}"></sc-config>
@@ -14,7 +14,7 @@
   <!-- Creates the element's prototype and registers it -->
   <script>
     Polymer({
-      is: 'sc-simpledeal',
+      is: 'sc-dealfortwo',
       properties: {
         
       },
@@ -117,7 +117,7 @@
           });
         }, debug_delay * 4 * 1000);
 
-        // start making allowance for this the deal to the simpledeal
+        // start making allowance for this the deal to the dealfortwo
         setTimeout(function() {
           self.fire('status-update', {
             dealID: self.dealID,
@@ -127,7 +127,7 @@
         }, debug_delay * 5 * 1000);
 
 
-        // finished making allowance for this the deal to the simpledeal
+        // finished making allowance for this the deal to the dealfortwo
         setTimeout(function() {
           self.fire('status-update', {
             dealID: self.dealID,

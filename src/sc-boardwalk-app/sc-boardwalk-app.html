@@ -11,8 +11,8 @@
 
 <link rel="import" href="../sc-intro/sc-intro.html">
 <link rel="import" href="../sc-home/sc-home.html">
-<link rel="import" href="../sc-simpledeal/sc-simpledeal-seeker.html">
-<link rel="import" href="../sc-simpledeal/sc-simpledeal-provider.html">
+<link rel="import" href="../sc-dealfortwo/sc-dealfortwo-seeker.html">
+<link rel="import" href="../sc-dealfortwo/sc-dealfortwo-provider.html">
 
 
 
@@ -197,30 +197,30 @@
       pubkey="[[account]]"
       swtbalance="[[swtbalance]]"
       on-leave="hashtag_tohome"
-      on-simpledeal="hashtag_simpledeal"
+      on-dealfortwo="hashtag_dealfortwo"
       currenthasht="{{currenthasht}}"
       on-to-notifications="hashtag_tonotifications"
       on-to-profile="hashtag_toProfile"
       >
     </sc-hashtag>
 
-    <app-route route="{{route}}" pattern="/simpledealseeker" tail="{{pageTail2}}"></app-route>
+    <app-route route="{{route}}" pattern="/dealfortwoseeker" tail="{{pageTail2}}"></app-route>
 
-    <sc-simpledeal-seeker
-      data-page="simpledealseeker"
+    <sc-dealfortwo-seeker
+      data-page="dealfortwoseeker"
       route="{{pageTail2}}"
-      id="simpledealseeker"
+      id="dealfortwoseeker"
       web3="[[web3]]"
-      on-leave="simpledeal_tohome">
-    </sc-simpledeal-seeker>
+      on-leave="dealfortwo_tohome">
+    </sc-dealfortwo-seeker>
 
-    <sc-simpledeal-provider
-      data-page="simpledealprovider"
+    <sc-dealfortwo-provider
+      data-page="dealfortwoprovider"
       route="{{pageTail2}}"
-      id="simpledealprovider"
+      id="dealfortwoprovider"
       web3="[[web3]]"
-      on-leave="simpledeal_tohome">
-    </sc-simpledeal-provider>
+      on-leave="dealfortwo_tohome">
+    </sc-dealfortwo-provider>
     
     <sc-notifications
       data-page="notifications"
@@ -486,7 +486,7 @@
 
 
 
-      simpledeal_tohome: function(){
+      dealfortwo_tohome: function(){
         this.transitionto('/home');
       },
 
@@ -524,9 +524,9 @@
         // console.log("Ik heb zeeeeeeee !!!!!!!", this.notifs);
       },
 
-      hashtag_simpledeal: function(e){
+      hashtag_dealfortwo: function(e){
         //debugger;
-        this.transitionto('/simpledealseeker/' + e.detail.hashtag + '/' + e.detail.parentrequestid+ '/' + e.detail.id);
+        this.transitionto('/dealfortwoseeker/' + e.detail.hashtag + '/' + e.detail.parentrequestid+ '/' + e.detail.id);
       },
 
       notifications_jumpto: function(e){

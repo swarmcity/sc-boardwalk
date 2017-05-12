@@ -11,31 +11,31 @@
 <link rel="import" href="../sc-payout/sc-payout.html">
 <link rel="import" href="../sc-avatar/sc-avatar.html">
 <link rel="import" href="../sc-username/sc-username.html">
+<link rel="import" href="../sc-loader/sc-loader.html">
 <link rel="import" href="../sc-dealchat/sc-dealchat.html">
 <link rel="import" href="../sc-redux/sc-redux.html">
 <link rel="import" href="../sc-shh/sc-shh.html">
 <link rel="import" href="../sc-config/sc-config.html">
 <link rel="import" href="../sc-helpers/sc-helpers.html">
-<link rel="import" href="../sc-loader/sc-loader.html">
 <link rel="import" href="../sc-hashtagcontract/sc-hashtagcontract.html">
-<link rel="import" href="../sc-simpledeal/sc-simpledeal.html">
+<link rel="import" href="../sc-dealfortwo/sc-dealfortwo.html">
 
 <!--<link rel="import" href="../sc-balance/sc-balance.html"> -->
 
 
 <!--
-`sc-simpledeal-seeker`
+`sc-dealfortwo-provider`
 
 This components allows 2 Swarm Citizens to make a deal with eachother, based on the request of the service-seeker.
 
-@demo src/sc-simpledeal-seeker/demo/index.html 
+@demo src/sc-dealfortwo-provider/demo/index.html 
 -->
 
-<dom-module id="sc-simpledeal-seeker">
+<dom-module id="sc-dealfortwo-provider">
 
   <template>
-<style include="sc-styles">
-      :host {
+   <style include="sc-styles">
+     :host {
         display: block;
         height: 100%;
         width: 100%;
@@ -318,40 +318,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         line-height: 26px; 
         text-align: right;
       }
-      .dealcreate_steps {
-/*        background-color: rgba(36,177,255,0.1);*/
-
-        box-sizing:border-box;
-        padding: 10px 10px 10px 0px;
-        max-width: 300px;
-
-/*        border-top: 2px dotted rgba(0,0,0,0.05);
-        border-bottom: 2px dotted rgba(0,0,0,0.05);*/
-
-        border-top: 2px dotted rgba(36,177,255,0.5);
-        border-bottom: 2px dotted rgba(36,177,255,0.5);
-      }
-
-
-      .triangle {
-        width: 10px;
-        transition: all 0.075s linear;
-        margin-right: 8px;
-        margin-left: 4px;
-        margin-bottom: 3px;
-
-        opacity: 1;
-      }
-
-      .triangle svg {
-        width: 100%;
-      }
-
-      .opened {
-        transform: rotate(90deg);
-        opacity: 0.75;
-      }
-
 
 
     @media all and (min-width: 0) and (max-width: 420px) { 
@@ -509,62 +475,43 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                 <paper-icon-button on-tap="leave" icon="sc-icons:decline" noink>back</paper-icon-button>
             </div>
 
-            <div class="totalbox vertic center startjust totalwidth">
-              <div class="tophalf totalwidth">
+<div class="tophalf totalwidth">
 
                 <template is="dom-if" if="{{_is(dealstatus,'init')}}">
-                  <h1 class="">Do you accept a deal with <span class="light blue replyer_username">{{replydata.provider.username}}</span> in <span class="light">#pioneer</span> for <span class="light">{{requestdata.amount}} SWT</span>?</h1>
+                  <h1 class="">Do you accept a deal with <span class="light blue replyer_username">{{replydata.replyer.username}}</span> in <span class="light">#pioneer</span> for <span class="light">{{replydata.replyamount}} SWT</span>?</h1>
                 </template>
 
-                <template is="dom-if" if="{{_is(dealstatus,'seekeraccepted')}}">
+                <template is="dom-if" if="{{_is(dealstatus,'provideraccepted')}}">
                   <h1 class=""><span class="bold">You accepted! </span><template is="dom-if" if="{{!phoneview}}"><br></template> Waiting for <span class="light blue replyer_username">{{replydata.replyer.username}}</span> to accept.</h1>
                 </template>
                 
-                <template is="dom-if" if="{{_is(dealstatus,'provideraccepted')}}">
-                  <h1 class="">Do you accept a deal with <span class="light blue replyer_username">{{replydata.provider.username}}</span> in <span class="light">#pioneer</span> for <span class="light">{{requestdata.amount}} SWT</span>?</h1>
+                <template is="dom-if" if="{{_is(dealstatus,'seekeraccepted')}}">
+                  <h1 class="">Do you accept a deal with <span class="light blue replyer_username">{{replydata.replyer.username}}</span> in <span class="light">#pioneer</span> for <span class="light">{{replydata.replyamount}} SWT</span>?</h1>
                   <div class="whitespace"></div>
-                  <p class="reg grey3"><span>{{replydata.providert.username}}</span> has already accepted.</p>
+                  <p class="reg grey2"><span>{{replydata.replyer.username}}</span> has already accepted.</p>
                 </template>
                 
                 
                 <template is="dom-if" if="{{_is(dealstatus,'bothaccepted')}}">
-                  <h1 class=""><span class="bold">You both accepted!</span></h1>
-                  <div class="whitespace"></div>
-                  <div class="dealcreate_steps">
-                    <div class="horizont end startjust">
-                      <div class$="triangle {{collapsestate}}" on-tap="showSteps">
-                        <svg id="triangle_icon" x="0px" y="0px" viewBox="0 0 50 50" fill="#24B1FF">
-                        <polygon points="6.5,4.9 6.5,44.5 42,24.9 "/>
-                        </svg>
-                      </div>
-                      <p class="reg blue" on-tap="showSteps">A deal is being created <span class="bold"> ({{stepscount}}/4)</span></p>
-                      <sc-loader color="green" small on-tap="showSteps"></sc-loader>
-                      <!-- <p on-tap="showSteps"></p> -->
-                    </div>
-                    <iron-collapse id="steps_collapser">
-                      <p class="">Joooo stepperz</p>
-                    </iron-collapse>
-                  </div>
-
+                  <h1 class=""><span class="bold">You both accepted!</span> <template is="dom-if" if="{{!phoneview}}"><br></template>You're now in a deal with <span class="light blue replyer_username">{{replydata.replyer.username}}</span>.</h1>
                 </template>
 
               <div class="whitespace"></div>
               <div class="whitespace"></div>
 
                 <div class="avatars_funding">
-                  <div class$="avatar_funding {{seekerfundclass}}">
+                  <div class$="avatar_funding {{providerfundclass}}">
                     <sc-avatar
                       ipfshash="[[identity.avatarhash]]"
-                      pubkey="[[identity.pubkey]]"
+                      pubkey="[[pubkey]]"
                       id="makedeal_myavatar"
                       size="{{avatarfundingsize}}"
                       ></sc-avatar>
                     <iron-icon class$="v_icon {{vsize}}" icon="sc-icons:v"></iron-icon>
                   </div>
-                  <div class$="avatar_funding {{providerfundclass}}">
+                  <div class$="avatar_funding {{seekerfundclass}}">
                     <sc-avatar
-                      ipfshash="[[replydata.provider.avatar]]"
-                      pubkey="[[replydata.provider.pubkey]]"
+                      ipfshash="{{replydata.replyer.avatar}}"
                       id="makedeal_otheravatar"
                       size="{{avatarfundingsize}}"
                       on-tap="tempTap"
@@ -580,11 +527,11 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                 </template>
 
                 <iron-collapse id="details_collapser">
-                  <p class="bold blue centertxt">You're about to make a deal with <span class="replyer_username">{{replydata.provider.username}}</span> over:</p>
+                  <p class="bold blue centertxt">You're about to make a deal with <span class="replyer_username">{{replydata.replyer.username}}</span> over:</p>
                     <div class="minispace"></div>
-                    <p class="grey3 ultralight centertxt request_msg">"{{replydata.msg}}"</p>
+                    <p class="grey3 ultralight centertxt request_msg">"{{replydata.reply}}"</p>
                     <div class="minispace"></div>
-                    <p class="bold grey3 centertxt announce_amount">The dealamount is <span class="">{{requestdata.amount}} SWT</span>. </p>
+                    <p class="bold grey3 centertxt announce_amount">The dealamount is <span class="">{{replydata.replyamount}} SWT</span>. </p>
                     <div class="details_collapser_inner">
                       <small>At ... , ... posted a request in #pioneer for:</small>
                       <div class="initial_request">
@@ -608,7 +555,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                     <paper-icon-button icon="sc-icons:v" noink class="confirmbtn blue big white shadow" on-tap="startDeal"></paper-icon-button>
                   </div>
                 </template>
-                <template is="dom-if" if="{{_is(dealstatus,'seekeraccepted')}}">
+                <template is="dom-if" if="{{seekeraccept}}">
                   <paper-button class="blue white shadow" noink>Get out of this deal
                     <iron-icon icon="sc-icons:decline" class="decliner medium white" on-tap="cancelDeal"></iron-icon>
                   </paper-button>
@@ -617,20 +564,19 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
             </div>
 
-            <sc-simpledeal id="simpledeal" on-status-update="handle"></sc-simpledeal>
+            <sc-dealfortwo id="dealfortwo" on-status-update="handle"></sc-dealfortwo>
 
           </neon-animatable>
 
 
           <neon-animatable data-action="waiting">
           <div class="totalwidth vertic centercenter darkerer fullheight paddingsides">
-<!--             <sc-loader small color="grey3">Waiting for the other party to send  {{dealamount}} SWT</sc-loader> -->
             <p class="grey3 centertxt">Waiting for the other party to send {{replydata.replyamount}} SWT to the deal</p>
 
-                  <div class="accepter">
-                    <paper-button noink class$="blueback white {{sendbtnsize}} shadow acceptbtn" on-tap="createDeal">Engage in this deal <!-- for {{replydata.replyamount}} SWT --><iron-icon class="white medium" icon="sc-icons:v">accept</iron-icon></paper-button>
-                    <a class="getoutlink bold white whitelink">get out of this deal <iron-icon class="white declinit" icon="sc-icons:decline">decline</iron-icon></a>
-                  </div>
+            <div class="accepter">
+              <paper-button noink class$="blueback white {{sendbtnsize}} shadow acceptbtn" on-tap="createDeal">Engage in this deal <iron-icon class="white medium" icon="sc-icons:v">accept</iron-icon></paper-button>
+              <a class="getoutlink bold white whitelink">get out of this deal <iron-icon class="white declinit" icon="sc-icons:decline">decline</iron-icon></a>
+            </div>
 
 
           </div>
@@ -655,7 +601,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         </neon-animated-pages>
 
 
-
     <!-- <app-route route="{{route}}" pattern="/:requestid/:replyid" data="{{data}}" tail="{{subroute}}"></app-route>  -->
 
   </template>
@@ -664,7 +609,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
     Polymer({
 
-      is: 'sc-simpledeal-seeker',
+      is: 'sc-dealfortwo-provider',
 
       behaviors: [
         Polymer.NeonSharedElementAnimatableBehavior,
@@ -678,8 +623,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       '_data(data)',
       '_replydata(replydata)',
       '_whoaccepted(seekeraccept,provideraccept)'
-      // '_seekeraccept(seekeraccept)',
-      // '_provideraccept(provideraccept)'
       ],
 
 
@@ -709,13 +652,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         provideraccept: {
           type: Boolean,
           value: false  
-        },
-
-        deals: {
-          type: Array,
-          statePath: 'deals',
-          observer: '_getdata'
-        },
+        }
 
       },
 
@@ -724,6 +661,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
         // this.myamount_state = 'amountwaiting';
         // this.otheramount_state = 'amountwaiting';
+
         this.selecteddealpage = 'dodeal';
         this.seekerfundclass = "fund_init";
         this.providerfundclass="fund_init";
@@ -737,34 +675,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       _data: function(){
         this.requestid = this.data.requestid;
         this.replyid = this.data.replyid;
-        //this._starthastaglistener();
-        this._getdata();
-      },
-
-      _getdata: function(){
-        //debugger;
-        var self = this;
-        if (!this.deals || !this.requestid || !this.replyid){
-          return;
-        }
-        var request = this.deals.find(function(item){
-            return item.id === self.requestid;
-        });
-
-        this.requestdata = request;
-
-        if (request){
-          var reply = request.replies.find(function(item){
-            return item.id === self.replyid;
-          });
-          this.replydata = reply;
-        }else{
-          //debugger;
-          console.error('what now.. ?');
-        }
-
-
-
+        this._starthastaglistener();
       },
 
       /**
@@ -792,13 +703,11 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       _checksize: function(){
         // console.log('Jooooooooo phoneview?', this.phoneview);
         if (this.phoneview) {
-          this.avatarsize = "medium";
           this.avatarfundingsize = "small";
           this.vsize = "medium";
           this.sendbtnsize = "";
         } else {
-          this.avatarsize = "medium";
-          this.avatarfundingsize = "small";
+          this.avatarfundingsize = "medium";
           this.sendbtnsize = "bigbtn";
           this.vsize = "medium";
         }
@@ -819,10 +728,10 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       createDeal: function(){
 
         // TODO : 
-        // 1.deploy a SimpleDeal
-        // 2.call this.$.hashtagcontract(simpledealaddress,pubkey of counterparty)
+        // 1.deploy a dealfortwo
+        // 2.call this.$.hashtagcontract(dealfortwoaddress,pubkey of counterparty)
         // 3.do allowance
-        // 4.call fund() on SimpleDeal
+        // 4.call fund() on dealfortwo
         // and then continue...
 
         this.selecteddealpage = 'waiting';
@@ -850,7 +759,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
 
       _web3: function() {
-        this.startDeal();
       },
 
 
@@ -860,54 +768,54 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           throw new Error('shhweb3 not set while requesting whisper listener');
         }
 
-        //this._starthastaglistener();
+        this._starthastaglistener();
       },
 
 
 
-      //_starthastaglistener: function() {
+      _starthastaglistener: function() {
 
-        // if (this.filter) {
-        //   return;
-        // }
+        if (this.filter) {
+          return;
+        }
 
-        // var self = this;
-        // if (this.shhweb3 && this.replyid && this.requestid) {
+        var self = this;
+        if (this.shhweb3 && this.replyid) {
 
-        //   var mytopics = [
-        //     null, [self.shhweb3.encodetopic(this.requestid),
-        //       self.shhweb3.encodetopic(this.replyid)
-        //     ]
-        //   ];
+        var mytopics = [
+          null, [self.shhweb3.encodetopic(this.requestid),
+            self.shhweb3.encodetopic(this.replyid)
+          ]
+        ];
 
-        //   this.filter = self.shhweb3.shh.filter({
-        //     "topics": mytopics,
-        //   });
+          this.filter = self.shhweb3.shh.filter({
+            "topics": mytopics,
+          });
 
-        //   console.log("sc-simpledeal-seeker: channelswitch, start listening to", mytopics);
-        //   this.filter.watch(this._processmessage.bind(this));
-        // }
-      //},
+          console.log("sc-dealfortwo-provider: channelswitch, start listening to", mytopics);
+          this.filter.watch(this._processmessage.bind(this));
+        }
+      },
 
-      // _processmessage: function(error, result) {
-      //   var self = this;
-      //   //debugger;
-      //   try {
-      //     var payload = JSON.parse(self.shhweb3.toAscii(result.payload));
-      //     console.log('incoming in whisperer: web3 ', result,self.shhweb3.toAscii(result.payload));
+      _processmessage: function(error, result) {
+        var self = this;
+        //debugger;
+        try {
+          var payload = JSON.parse(self.shhweb3.toAscii(result.payload));
+          console.log('incoming in whisperer: web3 ', result, self.shhweb3.toAscii(result.payload));
 
-      //     if (payload.id == this.requestid){
-      //       //debugger;
-      //       this.requestdata = payload;            
-      //     }
-      //     if (payload.id == this.replyid){
-      //       //debugger;
-      //       this.replydata = payload; 
-      //     }
-      //   } catch (e) {
-      //     console.log(e);
-      //   }
-      // },
+          if (payload.id == this.requestid) {
+            //debugger;
+            this.requestdata = payload;
+          }
+          if (payload.id == this.replyid) {
+            //debugger;
+            this.replydata = payload;
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      },
 
       showDetails: function(){
         var details = this.shadowRoot.getElementById('details_collapser');
@@ -915,141 +823,15 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         // console.log(details);
       },
 
-
-      showSteps: function(){
-        var steps = this.shadowRoot.getElementById('steps_collapser');
-        steps.toggle();
-
-        if (steps.opened){
-          this.collapsestate = 'opened';
-        } else {
-          this.collapsestate = '';
-        }
-
-        // console.log(details);
-      },
-
-
       toDodeal: function(){
         this.selecteddealpage = 'dodeal';
       },
 
-
- assignDeal: function(provideraddress,seekeramount,provideramount,cb) {
-        var self = this;
-    
-        this.contracturl = this.resolveUrl('../contracts/DealForTwoFactory.json');
-        this.importHref(this.contracturl, function(e) {
-          this.contractjson = JSON.parse(e.target.import.body.innerText);
-          self.web3.eth.getGasPrice(function(err, result) {
-            var gasPrice = result.toNumber(10);
-            // console.log('gasprice: ', gasPrice);
-            var DealForTwoFactoryContract = self.web3.eth.contract(self.contractjson.abi);
-            var DealForTwoFactoryContractInstance = DealForTwoFactoryContract.at(self.config.dealfortwofactory);
-            //address _hashtag, address _counterparty,uint _counterpartyThreshold, bytes32 _dealID
-            //console.log('doing transfer of ', amount, ' LC to: ', pubkey, 'from: ', self.account);
-            DealForTwoFactoryContractInstance.makeDealForTwo.sendTransaction(self.config.hashtagcontracts[self.selectedhashtag],1, {
-              from: self.identity.pubkey,
-              gasPrice: gasPrice,
-              gas: 1000000
-            }, function(err, result) {
-              if (err){
-                if (cb) {
-                  return cb(err);
-                }
-              }
-              cb(null,result);
-              console.log(err, result);
-              console.log('waiting for TX to happen');
-              //self.currenttxhash = result;
-
-            });
-          });
-        });
-      },
-
-      helper_getSWTBalanceFromAddress(address,cb) {
-        var self = this;
-        self.contracturl = self.resolveUrl('../contracts/MiniMeToken.json');
-        self.importHref(self.contracturl, function(e) {
-          var contractjson = JSON.parse(e.target.import.body.innerText);
-          var SWTTokenContract = self.web3.eth.contract(contractjson.abi);
-          var SWTTokenContractInstance = SWTTokenContract.at(self.config.swttokencontractaddress);
-          SWTTokenContractInstance.balanceOf(address, function(err, swtbalance) {
-            return cb(null, swtbalance);
-          });
-        });
-      },
-
-
-
-
       startDeal: function(){
-        // var self = this;
-        // var tx = '0x2abd79640d815db1e3f052b12a376bc05f0f5ff0b345c45385518698b5275b38'; //this.requestdata.offercreationtx
-        // this.helper_getDealAddressFromTx(tx,function(err,address){
-        //   if (address){
-        //     self.helper_getSWTBalanceFromAddress(address,function(err,balance){
-        //       debugger;
-        //     })
-        //   }
-        //   debugger;
-        // });
-       
-      
+        // alert("Sponnetrakket, JONGE!");
+                this.provideraccept = true;
 
-        
-
-          // this.assignDeal(this.replydata.provider.pubkey,this.requestdata.amount,this.requestdata.amount,function(err,res){
-          //   // do your THANG
-          // });
-
-
-
-
-//        debugger;
-
-//             if (!this.shhidentity) {
-//               this.shhidentity = this.shhweb3.shh.newIdentity();
-//             }
-
-//             var seeker_acceptdealmessage = {
-//               type: 'seeker-acceptdeal',
-//               requestid: this.requestdata.id,
-//               replyid: this.replydata.id,
-//               timestamp: Date.now()
-//             };
-
-//             var topics = [
-//               this.shhweb3.encodetopic(seeker_acceptdealmessage.type),
-//               this.shhweb3.encodetopic(this.requestdata.hashtag),
-//               //this.shhweb3.encodetopic(this.requestdata.id),
-//               //this.shhweb3.encodetopic(seeker_acceptdealmessage.id),
-//             ];
-
-//             var options = {
-//               "from": this.shhidentity,
-//               "topics": topics,
-//               "payload": this.shhweb3.fromAscii(JSON.stringify(seeker_acceptdealmessage)),
-//               "ttl": 60 * 60 * 24,
-//               "priority": 1000
-//             };
-
-//             console.log('posting to topics', topics);
-
-//             this.shhweb3.shh.post(options, function(err, res) {
-//               if (!err){
-//                 //console.log('sc->itemreplier -> Reply posted');
-//                 //self.replystate = 'init';
-//               }else{
-//                 console.log('sc-itemreplier -> whisper error:',err);
-//               }
-//               //self.bgcolor = "whiteback";
-//               //elf.borderz = "lightgreytopborder";
-//             });
-      
-        //this.seekeraccept = true;
-        //this.$.simpledeal.createDeal();
+        // this.$.dealfortwo.createDeal();
       },
 
 
@@ -1061,28 +843,24 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
         switch (deal.step) {
           case 'deal-created':
-            // this.dealmsg
+            this.dealmsg
             break;
           case 'deal-deploy-start':
             console.log(deal.txhash);
-            this.stepscount = "1"
             break;
           case 'deal-deploy-end':
             break;
           case 'deal-register-start':
-            this.stepscount = "2"
-            // console.log(deal.txhash);
+            console.log(deal.txhash);
             break;
           case 'deal-register-end':
             break;
           case 'deal-myallowance-start':
-            this.stepscount = "3"
             console.log(deal.txhash);
             break;
-          case 'deal-myallowance-end':
+          case 'deal-myallowance-start':
             break;
           case 'deal-fund-start':
-            this.stepscount = "4"
             console.log(deal.txhash);
             break;
           case 'deal-fund-end':
@@ -1090,6 +868,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
             break;
         }
       },
+
 
       _log: function(target){
         console.log("***** log==",target);
@@ -1102,53 +881,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         //   this.dealmsg = "At payout, the funds will be received by " + this.replydata.replyer.username + ".";
         // }
       },
-
-      // _seekeraccept: function(){
-
-      //   if (this.seekeraccept){
-      //     this.seekerfundclass = "fund_accepted";
-      //     this.dealstatus = "seekeraccepted";
-      //   } else {
-      //     this.seekerfundclass = "fund_init";
-      //     this.dealstatus = "init";
-      //   }
-      // },
-
-      // _provideraccept: function(){
-      //   if (this.provideraccept){
-      //     this.providerfundclass = "fund_accepted";
-      //   } else {
-      //     this.providerfundclass = "fund_init";
-      //   }
-      // },
-
-
-      // _dealstatus: function(target) {
-
-      //   switch (target) {
-
-      //     case 'init':
-      //       this.seekerfundclass = "fund_init";
-      //       this.providerfundclass = "fund_init";
-      //       break;
-
-      //     case 'seekeraccept':
-      //       this.seekerfundclass = "fund_accepted";
-      //       this.providerfundclass = "fund_init";
-      //       break;
-
-      //     case 'provideraccept':
-      //       this.seekerfundclass = "fund_init";
-      //       this.providerfundclass = "fund_accepted";
-      //       break;
-
-      //     case 'provideraccept':
-      //       this.seekerfundclass = "fund_init";
-      //       this.providerfundclass = "fund_accepted";
-      //       break;
-      //   }
-
-      // },
 
 
       _whoaccepted: function(){
@@ -1179,8 +911,9 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
       // TEMP FUNCTION: to be removed
       tempTap: function(){
-        this.provideraccept = true;
+        this.seekeraccept = true;
       },
+
 
 
     });

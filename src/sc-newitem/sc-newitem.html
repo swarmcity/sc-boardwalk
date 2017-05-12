@@ -7,7 +7,7 @@
 <link rel="import" href="../../bower_components/sc-style/sc-style.html">
 <link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
 <link rel="import" href="../sc-geohash/sc-geohash.html">
-<link rel="import" href="../sc-simpledeal/sc-simpledeal.html">
+<link rel="import" href="../sc-dealfortwo/sc-dealfortwo.html">
 <link rel="import" href="../sc-redux/sc-redux.html">
 <link rel="import" href="../sc-web3/sc-web3.html">
 <link rel="import" href="../sc-config/sc-config.html">
@@ -24,7 +24,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 <dom-module id="sc-newitem">
   <template>
     <sc-geohash geohash="{{geohash}}" locate-on-start></sc-geohash>
-    <sc-simpledeal id="simpledeal"></sc-simpledeal> 
+    <sc-dealfortwo id="dealfortwo"></sc-dealfortwo> 
     <sc-web3 id="web3" web3="{{web3}}"></sc-web3>
     <sc-config config="{{config}}"></sc-config>
     <sc-shh web3="{{shhweb3}}"></sc-shh>    
@@ -370,7 +370,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       },
 
       attached: function(){
-        this.$.simpledeal.getContractAddress(this.identity.pubkey,function(err,res){
+        this.$.dealfortwo.getContractAddress(this.identity.pubkey,function(err,res){
           console.log(err,res);
         })
       },
