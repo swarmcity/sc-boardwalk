@@ -209,6 +209,12 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
     </style>
     <div class="totalcontainer">
       <div id="newitemcontent" class="whiteback shadow">
+ AANT LAAJE? **<span>{{loading}}</span>**
+<template is="dom-if" if="{{loading}}">
+  <p>efkes laaie, hmkay?</p>
+</template>
+
+<template is="dom-if" if="{{!loading}}">
 
       <div class="totalwidth horizont centercenter backbtnarea">
         <span class="flex"></span>
@@ -230,8 +236,8 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
             <p class="swtwithoffer bold">SWT</p>
           </div>
 
-          <div class="whitespace"></div>
-          <div class="whitespace"></div>
+<!--           <div class="whitespace"></div>
+          <div class="whitespace"></div>        
           <div class="totalwidth horizont centercenter paddingsides">
             <div class="avatar-box">
               <sc-avatar
@@ -240,7 +246,6 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
                 size="medium">
               </sc-avatar>
             </div>
-
             <div class="vertic start startjust flex">
               <sc-username
                 id="username"
@@ -248,15 +253,19 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
                 pubkey="{{account}}"
                 size="medium">
               </sc-username>
-
               <p class="bold rep blue">{{offererrep}} REP</p>
             </div>  
+          </div> -->
 
-          </div>
         </div>
- AANT LAAJE? **<span>{{loading}}</span>**
         <div class="tenspace"></div>
+
+</template>
+
       </div> 
+<template is="dom-if" if="{{!loading}}">
+
+
       <div class="confirmbtns">
        <!--  <paper-icon-button noink class="bigbtn blueback white" icon="sc-icons:v">post this offer</paper-icon-button> -->
       
@@ -266,6 +275,9 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
        
         </div>
       </div>
+</template>
+
+
   </div> 
 
   </template>
