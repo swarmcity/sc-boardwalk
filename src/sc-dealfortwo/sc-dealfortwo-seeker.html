@@ -850,7 +850,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
 
       _web3: function() {
-        this.startDeal();
+        //this.startDeal();
       },
 
 
@@ -935,7 +935,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       },
 
 
- assignDeal: function(provideraddress,seekeramount,provideramount,cb) {
+ assignDeal: function(dealaddress,provideraddress,seekeramount,provideramount,cb) {
         var self = this;
     
         this.contracturl = this.resolveUrl('../contracts/DealForTwoFactory.json');
@@ -946,9 +946,10 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
             // console.log('gasprice: ', gasPrice);
             var DealForTwoFactoryContract = self.web3.eth.contract(self.contractjson.abi);
             var DealForTwoFactoryContractInstance = DealForTwoFactoryContract.at(self.config.dealfortwofactory);
-            //address _hashtag, address _counterparty,uint _counterpartyThreshold, bytes32 _dealID
-            //console.log('doing transfer of ', amount, ' LC to: ', pubkey, 'from: ', self.account);
-            DealForTwoFactoryContractInstance.makeDealForTwo.sendTransaction(self.config.hashtagcontracts[self.selectedhashtag],1, {
+
+//DealForTwo _deal, address _provider, uint _newSeekerValue, uint _providerValue
+
+            DealForTwoFactoryContractInstance.assignProvider.sendTransaction(dealaddress,provideraddress,seekeramount,provideramount, {
               from: self.identity.pubkey,
               gasPrice: gasPrice,
               gas: 1000000
@@ -960,7 +961,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
               }
               cb(null,result);
               console.log(err, result);
-              console.log('waiting for TX to happen');
+              //console.log('waiting for TX to happen');
               //self.currenttxhash = result;
 
             });
@@ -985,6 +986,71 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
 
       startDeal: function(){
+
+debugger;
+        var dealaddress = this.requestdata.dealaddress;
+        var provideraddress = this.replydata.provider.pubkey;
+        var seekeramount = this.requestdata.offeramount;
+        var provideramount = this.requestdata.offeramount;
+
+        var self = this;
+
+        this.assignDeal(dealaddress,provideraddress,seekeramount,provideramount,function(err,res){
+
+          // send whisper to provider
+
+            var message = {
+              type: 'dealfortwo-assign-provider',
+              requestid : self.requestdata.id,
+              replyid: self.replydata.id,
+              transactionhash: res,
+              timestamp: Date.now()
+            };
+
+
+            var topics = [
+              self.shhweb3.encodetopic('swarmcity-v1'),
+              self.shhweb3.encodetopic(message.type),
+              self.shhweb3.encodetopic(self.requestdata.offerhashtag),
+              self.shhweb3.encodetopic(self.requestdata.id),
+            ];  
+
+            // var topics = [
+            //   self.shhweb3.encodetopic(message.type),
+            //   self.shhweb3.encodetopic(self.itemdata.id),
+            //   self.shhweb3.encodetopic(message.id),
+            // ];
+
+            var options = {
+              "from": self.shhweb3.identity,
+              "topics": topics,
+              "payload": self.shhweb3.fromAscii(JSON.stringify(message)),
+              "ttl": 60 * 60 * 24,
+              "priority": 1000
+            };
+
+            console.log('posting to topics', topics);
+
+            self.shhweb3.shh.post(options, function(err, res) {
+              if (!err){
+                console.log('sc->dealfortwo_seeker -> Reply posted');
+                //self.replystate = 'init';
+              }else{
+                console.log('sc-dealfortwo_seeker -> whisper error:',err);
+              }
+              //self.bgcolor = "whiteback";
+              //self.borderz = "lightgreytopborder";
+            });
+
+
+
+        });
+
+//        this.requestdata
+
+//dealaddress,provideraddress,seekeramount,provideramount
+
+
         // var self = this;
         // var tx = '0x2abd79640d815db1e3f052b12a376bc05f0f5ff0b345c45385518698b5275b38'; //this.requestdata.offercreationtx
         // this.helper_getDealAddressFromTx(tx,function(err,address){

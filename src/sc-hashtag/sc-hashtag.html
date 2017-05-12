@@ -432,6 +432,9 @@ This is the component showing all requests of a certain hashtag. It contains a r
               offertime: dealdata.offertime
             };
             deals.push(newDeal);
+          }
+          
+          if (dealdata.offercreationtx){
             this.getdealaddressfromtx(dealdata.id,dealdata.offercreationtx);
           }
 
@@ -704,6 +707,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
       },
 
       getdealaddressfromtx: function(dealid,tx){
+        //debugger;
         console.log('Start monitoring for address from deal tx',tx);
         if (!tx){
           return;
@@ -764,6 +768,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
 
       helper_getDealAddressFromTx(tx, cb) {
+        //debugger;
         var self = this;
         this.web3.eth.getTransaction(tx, function(err, res) {
           if (err){
