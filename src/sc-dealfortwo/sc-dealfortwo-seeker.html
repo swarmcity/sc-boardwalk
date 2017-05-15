@@ -512,22 +512,22 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
             <div class="totalbox vertic center startjust totalwidth">
               <div class="tophalf totalwidth">
 
-                <template is="dom-if" if="{{_is(dealstatus,'init')}}">
+                <template is="dom-if" if="{{_is(dealstate,'init')}}">
                   <h1 class="">Do you accept a deal with <span class="light blue replyer_username">{{replydata.provider.username}}</span> in <span class="light">#pioneer</span> for <span class="light">{{requestdata.amount}} SWT</span>?</h1>
                 </template>
 
-                <template is="dom-if" if="{{_is(dealstatus,'seekeraccepted')}}">
+                <template is="dom-if" if="{{_is(dealstate,'seekeraccepted')}}">
                   <h1 class=""><span class="bold">You accepted! </span><template is="dom-if" if="{{!phoneview}}"><br></template> Waiting for <span class="light blue replyer_username">{{replydata.replyer.username}}</span> to accept.</h1>
                 </template>
                 
-                <template is="dom-if" if="{{_is(dealstatus,'provideraccepted')}}">
+                <template is="dom-if" if="{{_is(dealstate,'provideraccepted')}}">
                   <h1 class="">Do you accept a deal with <span class="light blue replyer_username">{{replydata.provider.username}}</span> in <span class="light">#pioneer</span> for <span class="light">{{requestdata.amount}} SWT</span>?</h1>
                   <div class="whitespace"></div>
                   <p class="reg grey3"><span>{{replydata.providert.username}}</span> has already accepted.</p>
                 </template>
                 
                 
-                <template is="dom-if" if="{{_is(dealstatus,'bothaccepted')}}">
+                <template is="dom-if" if="{{_is(dealstate,'bothaccepted')}}">
                   <h1 class=""><span class="bold">You both accepted!</span></h1>
                   <div class="whitespace"></div>
                   <div class="dealcreate_steps">
@@ -677,8 +677,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       // '_connectionline(myamount_state,otheramount_state)',
       '_data(data)',
       '_replydata(replydata)',
-      '_whoaccepted(seekeraccept,provideraccept)'
-      // '_seekeraccept(seekeraccept)',
+      '_whoaccepted(seekeraccept,provideraccept)',
+      '_dealstate(dealstate)',
       // '_provideraccept(provideraccept)'
       ],
 
@@ -717,6 +717,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           observer: '_getdata'
         },
 
+
       },
 
       ready: function(){
@@ -730,7 +731,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         this.dealactivated = false;
         this.hashtagfee = "0.5"
 
-        this.dealstatus = "init";
+        this.dealstate = "init";
 
       },
 
@@ -986,6 +987,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
 
       startDeal: function(){
+        alert("jooo");
 
 debugger;
         var dealaddress = this.requestdata.dealaddress;
@@ -1222,22 +1224,22 @@ debugger;
         if (!this.seekeraccept && !this.provideraccept){
           this.seekerfundclass = "fund_init";
           this.providerfundclass = "fund_init";
-          this.dealstatus = "init";
+          this.dealstate = "init";
         }
         if (this.seekeraccept && !this.provideraccept){
           this.seekerfundclass = "fund_accepted";
           this.providerfundclass = "fund_init";
-          this.dealstatus = "seekeraccepted";
+          this.dealstate = "providerassigning";
         }        
         if (!this.seekeraccept && this.provideraccept){
           this.seekerfundclass = "fund_init";
           this.providerfundclass = "fund_accepted";
-          this.dealstatus = "provideraccepted";
+          this.dealstate = "providerfunding";
         }
         if (this.seekeraccept && this.provideraccept){
           this.seekerfundclass = "fund_accepted";
           this.providerfundclass = "fund_accepted";
-          this.dealstatus = "bothaccepted";
+          this.dealstate = "bothaccepted";
         }
       },
 
@@ -1247,6 +1249,24 @@ debugger;
       tempTap: function(){
         this.provideraccept = true;
       },
+
+
+      _dealstate: function(target){
+        switch (switch (deal.step) {
+          case 'init':
+          case 'created':
+          case 'seekerfunding':
+          case 'seekerfunded':
+          this.seekerfundclass = "fund_init";
+          this.providerfundclass = "fund_init";
+            break;
+          case 'providerassigning':
+          case 'providerassigned':
+          this.seekerfundclass = "fund_init";
+          this.providerfundclass = "fund_init";
+            break;
+        }
+      }
 
 
     });
