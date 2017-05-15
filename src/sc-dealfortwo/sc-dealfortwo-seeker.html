@@ -774,6 +774,9 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
             return item.id === self.replyid;
           });
           this.replydata = reply;
+
+          console.log('request:',this.requestdata);
+
         }else{
           //debugger;
           console.error('what now.. ?');
