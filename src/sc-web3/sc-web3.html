@@ -5,7 +5,7 @@
 
 <dom-module id="sc-web3">
   <template>
-    <sc-config web3host="{{host}}"></sc-config>
+    <sc-config config="{{config}}" web3host="{{host}}"></sc-config>
   </template>
   <script>
     var scweb3_web3;
@@ -55,7 +55,8 @@
           acweb3_customproviderset = true;
           scweb3_web3.setProvider(this.web3Provider);
         }
-        scweb3_web3.waitTx = this.waitTx;
+        scweb3_web3.waitTx = this.waitTx.bind(this);
+        scweb3_web3.getSWTBalance = this.getSWTBalance.bind(this);
         this.set('web3',scweb3_web3);
         this.fire('web3-ready');
       },
@@ -85,10 +86,10 @@
                 else
                   return false;
               }
-              debugger;
+              //debugger;
               // Get info about latest Ethereum block
-              self.scweb3_web3.eth.getBlock(blockHash, function(block) {
-                debugger;
+              scweb3_web3.eth.getBlock(blockHash, function(err,block) {
+                //debugger;
                 --blockCounter;
                 if (block.transactions.indexOf(txHash) > -1) {
                   filter.stopWatching();
@@ -106,6 +107,20 @@
         });
       },
 
+      getSWTBalance: function(address,cb){
+
+       var self = this;
+        self.contracturl = self.resolveUrl('../contracts/MiniMeToken.json');
+        self.importHref(self.contracturl, function(e) {
+          var contractjson = JSON.parse(e.target.import.body.innerText);
+          var SWTTokenContract = self.web3.eth.contract(contractjson.abi);
+          var SWTTokenContractInstance = SWTTokenContract.at(self.config.swttokencontractaddress);
+
+          SWTTokenContractInstance.balanceOf(address, function(err, swtbalance) {
+            return cb(null, swtbalance);
+          });
+        });
+      }
 
 
     });

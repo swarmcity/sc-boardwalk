@@ -697,7 +697,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       '_data(data)',
       '_replydata(replydata)',
       '_whoaccepted(seekeraccept,provideraccept)',
-      '_dealstate(dealstate)',
       '_whatismined()'
       // '_provideraccept(provideraccept)'
       ],
@@ -806,6 +805,9 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
             return item.id === self.replyid;
           });
           this.replydata = reply;
+
+          console.log('request:',this.requestdata);
+
         }else{
           //debugger;
           console.error('what now.. ?');
@@ -1034,13 +1036,13 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
 
       startDeal: function(){
-        alert("jooo");
+        //alert("jooo");
 
 debugger;
         var dealaddress = this.requestdata.dealaddress;
         var provideraddress = this.replydata.provider.pubkey;
-        var seekeramount = this.requestdata.offeramount;
-        var provideramount = this.requestdata.offeramount;
+        var seekeramount = this.requestdata.amount;
+        var provideramount = this.requestdata.amount;
 
         var self = this;
 
@@ -1218,52 +1220,6 @@ debugger;
         // }
       },
 
-      // _seekeraccept: function(){
-
-      //   if (this.seekeraccept){
-      //     this.seekerfundclass = "fund_accepted";
-      //     this.dealstatus = "seekeraccepted";
-      //   } else {
-      //     this.seekerfundclass = "fund_init";
-      //     this.dealstatus = "init";
-      //   }
-      // },
-
-      // _provideraccept: function(){
-      //   if (this.provideraccept){
-      //     this.providerfundclass = "fund_accepted";
-      //   } else {
-      //     this.providerfundclass = "fund_init";
-      //   }
-      // },
-
-
-      // _dealstatus: function(target) {
-
-      //   switch (target) {
-
-      //     case 'init':
-      //       this.seekerfundclass = "fund_init";
-      //       this.providerfundclass = "fund_init";
-      //       break;
-
-      //     case 'seekeraccept':
-      //       this.seekerfundclass = "fund_accepted";
-      //       this.providerfundclass = "fund_init";
-      //       break;
-
-      //     case 'provideraccept':
-      //       this.seekerfundclass = "fund_init";
-      //       this.providerfundclass = "fund_accepted";
-      //       break;
-
-      //     case 'provideraccept':
-      //       this.seekerfundclass = "fund_init";
-      //       this.providerfundclass = "fund_accepted";
-      //       break;
-      //   }
-
-      // },
 
 
       _whoaccepted: function(){
@@ -1307,29 +1263,12 @@ debugger;
       },
 
 
-
       // TEMP FUNCTION: to be removed
       tempTapto: function(){
         this.seekeraccept = true;
       },
 
 
-      // _dealstate: function(target){
-      //   switch (switch (deal.step) {
-      //     case 'init':
-      //     case 'created':
-      //     case 'seekerfunding':
-      //     case 'seekerfunded':
-      //     this.seekerfundclass = "fund_init";
-      //     this.providerfundclass = "fund_init";
-      //       break;
-      //     case 'providerassigning':
-      //     case 'providerassigned':
-      //     this.seekerfundclass = "fund_init";
-      //     this.providerfundclass = "fund_init";
-      //       break;
-      //   }
-      // }
 
 
     });

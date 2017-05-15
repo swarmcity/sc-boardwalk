@@ -513,7 +513,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
               console.log('waiting for TX to happen');
               self.waitTx(result, function(err, res) {
                 self.helper_getDealAddressFromTx(result, function(err, dealaddress) {
-                   debugger;
+                   //debugger;
                   if (!dealaddress){
                     return console.log('Cannot find deal address for tx. Skipping token transfer',result);
                   }
@@ -521,12 +521,18 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
                   self.transfer(offerAmount, dealaddress, function(err, res) {
 
                     // ok so the create deal TX is done. Now notify that we're funding this deal.
-                    var newrequest = {
-                      id: dealID,
-                      type: 'dealfortwo-seeker-funding',
-                      time: Date.now(),
-                      offerseekerfundingtx: res
-                    };
+                  var newrequest = {
+                    id: dealID,
+                    type: 'dealfortwo-seeker-funding',
+                    time: Date.now(),
+                    offerseekerfundingtx: res,
+                    dealaddress: dealaddress,
+                    // seeker: {
+                    //   username: self.identity.username,
+                    //   pubkey: self.identity.pubkey,
+                    //   avatarhash: self.identity.avatarhash,
+                    // },
+                  };
 
                     var topics = [
                       self.shhweb3.encodetopic("swarmcity-v1"),
@@ -570,21 +576,24 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
       helper_getDealAddressFromTx(tx, cb) {
         var self = this;
-        this.web3.eth.getTransaction(tx, function(err, res) {
+                        
+
+        this.web3.waitTx(tx, function(err,blockNumber) {
           if (err){
             return cb(err);
           }
-          if (res.blockNumber) {
+          if (blockNumber) {
             self.contracturl = self.resolveUrl('../contracts/DealForTwoFactory.json');
             self.importHref(self.contracturl, function(e) {
               var contractjson = JSON.parse(e.target.import.body.innerText);
               var DealForTwoFactoryContract = self.web3.eth.contract(contractjson.abi);
               var DealForTwoFactoryContractInstance = DealForTwoFactoryContract.at(self.config.dealfortwofactory);
               var myEvent = DealForTwoFactoryContractInstance.NewSimpleDeal(null, {
-                fromBlock: res.blockNumber,
-                toBlock: res.blockNumber
+                fromBlock: blockNumber,
+                toBlock: blockNumber
               });
               myEvent.get(function(error, result) {
+                //debugger;
                 var myEvent = result.find(function(item) {
                   return item.transactionHash === tx;
                 });
@@ -592,7 +601,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
                   return cb('event not found');
                 }
                 var address = myEvent.args.simpleDealAddress;
-                return cb(null, address,res.blockNumber);
+                return cb(null, address,blockNumber);
               });
             });
           } else {
@@ -600,6 +609,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
           }
         });
       },
+
 
 
 
