@@ -55,9 +55,58 @@
           acweb3_customproviderset = true;
           scweb3_web3.setProvider(this.web3Provider);
         }
+        scweb3_web3.waitTx = this.waitTx;
         this.set('web3',scweb3_web3);
         this.fire('web3-ready');
-      }
+      },
+
+      // wait for a tx to finish
+      // first checks if the tx has been mined already... if not
+      // wait for it to happen.
+      // callsback 
+      waitTx: function(txHash,callback) {
+        var self = this;
+        scweb3_web3.eth.getTransaction(txHash, function(err, res) {
+          if (res) {
+            if (callback)
+              return callback(null, res.blockNumber);
+            else
+              return false;
+          } else {
+            var blockCounter = 15;
+            // Wait for tx to be finished
+            var filter = scweb3_web3.eth.filter('latest').watch(function(err, blockHash) {
+              if (blockCounter <= 0) {
+                filter.stopWatching();
+                filter = null;
+                console.warn('!! Tx expired !!');
+                if (callback)
+                  return callback('tx expired');
+                else
+                  return false;
+              }
+              debugger;
+              // Get info about latest Ethereum block
+              self.scweb3_web3.eth.getBlock(blockHash, function(block) {
+                debugger;
+                --blockCounter;
+                if (block.transactions.indexOf(txHash) > -1) {
+                  filter.stopWatching();
+                  filter = null;
+                  if (callback)
+                    return callback(null,block.number);
+                  else
+                    return true;
+                } else {
+                  // console.log('Waiting tx..', blockCounter);
+                }
+              });
+            });
+          }
+        });
+      },
+
+
 
     });
   </script>

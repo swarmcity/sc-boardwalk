@@ -19,6 +19,8 @@
 <link rel="import" href="../sc-loader/sc-loader.html">
 <link rel="import" href="../sc-hashtagcontract/sc-hashtagcontract.html">
 <link rel="import" href="../sc-dealfortwo/sc-dealfortwo.html">
+<link rel="import" href="../sc-listeners/sc-listeners.html">
+
 
 <!--<link rel="import" href="../sc-balance/sc-balance.html"> -->
 
@@ -432,6 +434,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
     </style>
     <sc-shh web3="{{shhweb3}}"></sc-shh>
+    <sc-listeners id="listeners"></sc-listeners>
     <sc-config config="{{config}}"></sc-config>
     <sc-helpers id="helpers"></sc-helpers>    
     <sc-hashtagcontract id="hashtagcontract" hashtagname="{{data.hashtag}}"></sc-hashtagcontract>    
@@ -674,6 +677,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       observers: [
         '_shhweb3(shhweb3)',
       '_checksize(phoneview)',
+      '_hashtag(data.hashtag)',
       // '_connectionline(myamount_state,otheramount_state)',
       '_data(data)',
       '_replydata(replydata)',
@@ -697,9 +701,14 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           observer: '_web3'
         },
 
-        hashtagname: {
-          type: String
+        route: {
+          type: Object
         },
+
+        // hashtagname: {
+        //   type: String,
+        //   observer: '_hashtagname'
+        // },
 
         seekeraccept: {
           type: Boolean,
@@ -735,6 +744,13 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
       },
 
+      _hashtag: function(){
+        //debugger;
+        if (this.data.hashtag){
+          this.$.listeners._starthastaglistener(this.data.hashtag);
+        }
+      },
+
       _data: function(){
         this.requestid = this.data.requestid;
         this.replyid = this.data.replyid;
@@ -754,7 +770,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
         this.requestdata = request;
 
-        if (request){
+        if (request && request.replies){
           var reply = request.replies.find(function(item){
             return item.id === self.replyid;
           });
