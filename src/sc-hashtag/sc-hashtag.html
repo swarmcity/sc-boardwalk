@@ -15,7 +15,7 @@
 <link rel="import" href="../sc-geohash/sc-geohash.html">
 <link rel="import" href="../sc-hashtagitem/sc-hashtagitem.html">
 <link rel="import" href="../sc-newitem/sc-newitem.html">
-<link rel="import" href="../sc-shh/sc-shh.html">
+<!-- <link rel="import" href="../sc-shh/sc-shh.html"> -->
 <link rel="import" href="../sc-itemdetail/sc-itemdetail.html">
 <link rel="import" href="../sc-itemreply/sc-itemreply.html">
 <link rel="import" href="../sc-redux/sc-redux.html">
@@ -24,6 +24,7 @@
 <link rel="import" href="../sc-config/sc-config.html">
 <link rel="import" href="../sc-helpers/sc-helpers.html">
 <link rel="import" href="../sc-dealitem/sc-dealitem.html">
+<link rel="import" href="../sc-listeners/sc-listeners.html">
 
 
 <script type="text/javascript" src="../../bower_components/uuid-js/lib/uuid.js"></script>
@@ -44,6 +45,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 <!-- <link rel="import" href="../../bower_components/sc-style/sc-style.css" type="css"> -->
   <template>
    <sc-geohash geohash="{{geohash}}" locate-on-start></sc-geohash>
+   <sc-listeners id="listeners"></sc-listeners>
     <style include="sc-styles">
       :host {
         display: block;
@@ -264,7 +266,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
     </style>
  
-    <sc-shh web3="{{shhweb3}}"></sc-shh>
+    <!-- <sc-shh web3="{{shhweb3}}"></sc-shh> -->
     <sc-config config="{{config}}"></sc-config>
     <sc-helpers id="helpers"></sc-helpers>
     
@@ -410,176 +412,9 @@ This is the component showing all requests of a certain hashtag. It contains a r
         ReduxBehaviour
       ],
 
-      actions: {
-
-        request_create: function(dealdata) {
-
-          var foundDeal = this.deals.findIndex(function(item) {
-            return item.id === dealdata.id;
-          });
-
-          let deals = this.deals.slice(0);
-
-          if (foundDeal > -1) {
-            deals[foundDeal] = Object.assign({}, deals[foundDeal],dealdata);
-          } else {
-            var newDeal = {
-              id: dealdata.id,
-              seeker: dealdata.seeker,
-              msg: dealdata.offer,
-              offercreationtx: dealdata.offercreationtx,
-              amount: dealdata.offeramount,
-              hashtag: dealdata.offerhashtag,
-              offertime: dealdata.offertime
-            };
-            deals.push(newDeal);
-          }
-          
-          if (dealdata.offercreationtx){
-            this.getdealaddressfromtx(dealdata.id,dealdata.offercreationtx);
-          }
-
-          deals.sort(function(a, b) {
-            return b.offertime - a.offertime;
-          });
-
-          return {
-            type: 'DEALS',
-            deals: deals
-          };
-        },
-
-        request_seeker_funding: function(payload){
-          var foundDeal = this.deals.findIndex(function(item) {
-            return item.id === payload.id;
-          });
-
-          let deals = this.deals.slice(0);
-
-          deals[foundDeal] = Object.assign({}, deals[foundDeal], {
-            offerseekerfundingtx: payload.offerseekerfundingtx
-          });
-
-          this.updatebalanceaddressaftertx(payload.id,payload.offerseekerfundingtx);
-          
-          return {
-            type: 'DEALS',
-            deals: deals
-          };
-
-        },
-
-        request_reply: function(replydata) {
-
-          var foundDeal = this.deals.findIndex(function(item) {
-            return item.id === replydata.parentrequestid;
-          });
-
-          let deals = this.deals.slice(0);
-          //debugger;
-          var reply = {
-            id: replydata.id,
-            msg: replydata.reply,
-            provider: replydata.replyer,
-            replytime: replydata.replytime,
-            parentrequestid: replydata.parentrequestid
-          };
-
-          if (foundDeal > -1) {
-            var deal = deals[foundDeal];
-            if (deal.replies) {
-              var foundDeal = deal.replies.findIndex(function(item) {
-                return item.id === replydata.id;
-              });
-              deal.replies[foundDeal] = reply;
-            } else {
-              deal.replies = [reply];
-            }
-          } else {
-            // this message comes before the deal info. Create an empty placehodler
-            var newDeal = {
-              id: replydata.parentrequestid,
-              seeker: {
-                pubkey: '0x0'
-              },
-              replies: [reply]
-            };
-            deals.push(newDeal);
-            //console.error('no deal found for reply with ID=', replydata.id)
-          }
-
-          deals.sort(function(a, b) {
-            return b.offertime - a.offertime;
-          });
-         
-          return {
-            type: 'DEALS',
-            deals: deals
-          };
-        },
-
-        request_setaddress: function(params) {
-
-          var foundDeal = this.deals.findIndex(function(item) {
-            return item.id === params.dealid;
-          });
-
-          let deals = this.deals.slice(0);
-
-          deals[foundDeal] = Object.assign({}, deals[foundDeal], {
-            dealaddress: params.address
-          });
-          return {
-            type: 'DEALS',
-            deals: deals
-          };
-
-        },
-
-
-        request_seekerfunded: function(params) {
-
-          var foundDeal = this.deals.findIndex(function(item) {
-            return item.id === params.dealid;
-          });
-
-          let deals = this.deals.slice(0);
-
-          deals[foundDeal] = Object.assign({}, deals[foundDeal], {
-            dealbalance: params.balance
-          });
-          return {
-            type: 'DEALS',
-            deals: deals
-          };
-
-        },     
-
-//      request_updatebalance: function(params) {
-// debugger;
-
-//           var foundDeal = this.deals.findIndex(function(item) {
-//             return item.id === params.dealid;
-//           });
-
-//           let deals = this.deals.slice(0);
-
-//           deals[foundDeal] = Object.assign({}, deals[foundDeal], {
-//             dealbalance: params.balance
-//           });
-//           return {
-//             type: 'DEALS',
-//             deals: deals
-//           };
-
-//         },
-
-
-
-      },
 
       observers: [
-        '_shhweb3(shhweb3)',
+//        '_shhweb3(shhweb3)',
         '_routedata(data)',
         '_log(range)',
         '_geohash(geohash)'
@@ -707,149 +542,14 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       },
 
-      getdealaddressfromtx: function(dealid,tx){
-        //debugger;
-        console.log('Start monitoring for address from deal tx',tx);
-        if (!tx){
-          return;
-        }
-        var self = this;
-        this.helper_getDealAddressFromTx(tx,function(err,address,blocknumber){
-          console.log('the address of deal',dealid,'is',address);
-          self.dispatch('request_setaddress',{dealid:dealid,address:address});
-          self.helper_watchbalance(address,blocknumber);
-        });
-      },
-
-      updatebalanceaddressaftertx: function(dealid,tx){
-        var self = this;
-        console.log('Start monitoring for balance from deal tx',tx);
-        if (!tx){
-          return;
-        }
-
-        this.waitTx(tx,function(err,res){
-          // update balence
-          self.dispatch('request_seekerfunded',{dealid:dealid,balance:12345});
-
-        });
-
-
-      },
-
-      helper_watchbalance(address,startblock){
-        // var self = this;
-        // self.contracturl = self.resolveUrl('../contracts/MiniMeToken.json');
-        // self.importHref(self.contracturl, function(e) {
-        //   var contractjson = JSON.parse(e.target.import.body.innerText);
-        //   var SWTTokenContract = self.web3.eth.contract(contractjson.abi);
-        //   var SWTTokenContractInstance = SWTTokenContract.at(self.config.swttokencontractaddress);
-
-        //   var myEvent = SWTTokenContractInstance.Transfer(null, {
-        //         fromBlock: startblock,
-        //       });
-        //       myEvent.get(function(error, result) {
-        //         var myEvent = result.find(function(item) {
-        //           return item.transactionHash === tx;
-        //         });
-        //         if (!myEvent || !myEvent.args || !myEvent.args.simpleDealAddress){
-        //           return cb('event not found');
-        //         }
-        //         var address = myEvent.args.simpleDealAddress;
-        //         return cb(null, address,res.blockNumber);
-        //       });
-
-
-
-        //   SWTTokenContractInstance.balanceOf(address, function(err, swtbalance) {
-        //     return cb(null, swtbalance);
-        //   });
-        // });
-      },
-
-
-      helper_getDealAddressFromTx(tx, cb) {
-        //debugger;
-        var self = this;
-        this.web3.eth.getTransaction(tx, function(err, res) {
-          if (err){
-            return cb(err);
-          }
-          if (res.blockNumber) {
-            self.contracturl = self.resolveUrl('../contracts/DealForTwoFactory.json');
-            self.importHref(self.contracturl, function(e) {
-              var contractjson = JSON.parse(e.target.import.body.innerText);
-              var DealForTwoFactoryContract = self.web3.eth.contract(contractjson.abi);
-              var DealForTwoFactoryContractInstance = DealForTwoFactoryContract.at(self.config.dealfortwofactory);
-              var myEvent = DealForTwoFactoryContractInstance.NewSimpleDeal(null, {
-                fromBlock: res.blockNumber,
-                toBlock: res.blockNumber
-              });
-              myEvent.get(function(error, result) {
-                var myEvent = result.find(function(item) {
-                  return item.transactionHash === tx;
-                });
-                if (!myEvent || !myEvent.args || !myEvent.args.simpleDealAddress){
-                  return cb('event not found');
-                }
-                var address = myEvent.args.simpleDealAddress;
-                return cb(null, address,res.blockNumber);
-              });
-            });
-          } else {
-            return cb('not yet mined');
-          }
-        });
-      },
-
-
-
-     waitTx : function(txHash, callback) {
-      /*
-      * Watch for a particular transaction hash and call the awaiting function when done;
-      * Ether-pudding uses another method, with web3.eth.getTransaction(...) and checking the txHash;
-      * on https://github.com/ConsenSys/ether-pudding/blob/master/index.js
-      */
-      var self=this;
-      var blockCounter = 15;
-      // Wait for tx to be finished
-      var filter = this.web3.eth.filter('latest').watch(function(err, blockHash) {
-        if (blockCounter<=0) {
-          filter.stopWatching();
-          filter = null;
-          console.warn('!! Tx expired !!');
-          if (callback)
-            return callback(false);
-          else
-            return false;
-        }
-        // Get info about latest Ethereum block
-        var block = self.web3.eth.getBlock(blockHash);
-        --blockCounter;
-        // Found tx hash?
-        if (block.transactions.indexOf(txHash) > -1) {
-          // Tx is finished
-          filter.stopWatching();
-          filter = null;
-          if (callback)
-            return callback(true);
-          else
-            return true;
-        // Tx hash not found yet?
-        } else {
-          // console.log('Waiting tx..', blockCounter);
-        }
-      });
-    },
 
 
       _routedata: function() {
         if (this.data && this.data.hashtag) {
           this.hashtag = this.data.hashtag;
-          this._starthastaglistener();
-          // this.dispatch('removeall');
+          //debugger;
+          this.$.listeners._starthastaglistener(this.hashtag);
         }
-        //        debugger;
       },
 
       hasdeals: function(deals){
@@ -880,96 +580,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
         this._checkSize();
 
 
-
-        // this.dispatch('add', {
-
-        //     offereravatar: 'QmWA8eaJyZpVT5mUx1qBvbNXYfprSdds1oachxmhV1sDGh',
-        //     offerer: 'Mr Rogers',
-        //     offer: 'This is just a test-request!',
-        //     offerhashtag: 'pioneer',
-        //     offererrep: '6',
-        //     offertime: 'a few minutes ago',
-        //     offeramount: '33.50',
-        //     // nrofreplies: '2'
-        //     replies: [
-        //       {
-        //         replyer: {
-        //           replyeravatar:'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
-        //           replyerusername:'Hank Moovy',
-        //           replyerrep: '0'},
-        //         reply: 'Well, in that case: this is just a test-responds then.',
-        //         replyamount: '33.50',
-        //         replytime:'Just now'
-        //       },
-        //       {
-        //         replyer: {
-        //           replyeravatar:'QmRzCWs6F4LiEC4umwLiMB5C6MAo1bKQa4frCC1iKvntme',
-        //           replyerusername:'Frank David',
-        //           replyerrep: '0'},
-        //         reply: 'Oh yeah nice, me too!',
-        //         replyamount: '35.00',
-        //         replytime:'Just now'
-        //       }
-        //     ]
-
-        //   });
-
-
-        // this.deals = [
-        //  {
-        //     offereravatar: 'QmWA8eaJyZpVT5mUx1qBvbNXYfprSdds1oachxmhV1sDGh',
-        //     offerer: 'Mr Rogers',
-        //     offer: 'This is just a test-request!',
-        //     offerhashtag: 'pioneer',
-        //     offererrep: '6',
-        //     offertime: 'a few minutes ago',
-        //     offeramount: '233.50',
-        //     nrofreplies: '2'
-        //   },
-        // {
-        //    offereravatar: 'http://jcket.com/stoneyroads/files/2014/10/600x/Mr-Oizo.jpg',
-        //    offerer: 'Mr Oizo',
-        //    offer: 'Need a ride from 5905 hidden valley trl to 2408 wolf run',
-        //    offerhashtag: '#ridesharing',
-        //    offererrep: '22',
-        //    offertime: 'today at 21:25',
-        //    offeramount: '330.00',
-        //    nrofreplies: '0'
-        //  },
-        // {
-        //    offereravatar: 'http://vignette3.wikia.nocookie.net/southpark/images/c/c2/Butters_(Facebook).jpg/revision/latest?cb=20101010032409',
-        //    offerer: 'Leopold Butters',
-        //    offer: 'I need a pick up from 2795 pleasant vally',
-        //    offerhashtag: '#ridesharing',
-        //    offererrep: '398',
-        //    offertime: 'yesterday at 19:45',
-        //    offeramount: '330.00',
-        //    nrofreplies: '4'
-        //  },          
-        // {
-        //    offereravatar: 'http://jcket.com/stoneyroads/files/2014/10/600x/Mr-Oizo.jpg',
-        //    offerer: 'Mr Oizo',
-        //    offer: 'Need a ride pick up at walmart on ben white and dropped off at 5711 meadow crest',
-        //    offerhashtag: '#ridesharing',
-        //    offererrep: '22',
-        //    offertime: '2 days ago',
-        //    offeramount: '330.00',
-        //    nrofreplies: '0'
-        //  },
-        // ];
-
-
-        // this.locationfilteroptions = [
-        //   'In your area',
-        //   'Globally'
-        // ];
-
-        // this.statusfilteroptions = [
-        //   'All requests',
-        //   'My requests',
-        //   'Requests in deal',
-        //   'Requests payed out'
-        // ];
       },
 
       attached: function(){
@@ -983,89 +593,13 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       },
 
-
-      _shhweb3: function() {
-
-
-
-        if (!this.shhweb3) {
-          throw new Error('shhweb3 not set while requesting whisper listener');
-        }
-
-        this._starthastaglistener();
-      },
-
       _geohash: function() {
         console.log('sc-hashtag -> your geohash is', this.geohash);
         this.hasgeohash = true;
-        this._starthastaglistener();
+        //this._starthastaglistener();
       },
 
-      _starthastaglistener: function() {
-
-        if (this.filter) {
-          return;
-        }
-
-        var self = this;
-        if (this.shhweb3 && this.geohash) {
-
-          var mytopics = [
-            self.shhweb3.encodetopic("swarmcity-v1"),
-            null,
-            self.shhweb3.encodetopic(this.hashtag),
-            null, // ID
-            //[null,self.shhweb3.encodetopic(this.geohash.slice(0, 1))],
-           // [null,self.shhweb3.encodetopic(this.geohash.slice(0, 2))],
-           // null,
-           // null
-          ];
-
-          this.filter = self.shhweb3.shh.filter({
-            "topics": mytopics,
-          });
-
-          console.log("sc-whisperer: channelswitch, start listening to", mytopics);
-          this.filter.watch(this._processmessage.bind(this));
-        }
-      },
-
-      // processinging of channel setup messages.
-      _processmessage: function(error, result) {
-        //debugger;
-        var payload;
-        var self = this;
-        try {
-          payload = JSON.parse(self.shhweb3.toAscii(result.payload));
-          console.log('incoming in whisperer: shhweb3 ', payload);
-          
-          //this.push('deals',payload);
-        } catch (e) {
-          console.log(e);
-        }
-
-        switch(payload.type){
-          case 'dealfortwo-request-create':
-            this.dispatch('request_create', payload);
-            this.requestsloaded = true;
-            break;
-          case 'dealfortwo-seeker-funding':
-            this.dispatch('request_seeker_funding', payload);
-            break;
-          case 'dealfortwo-request-reply':
-            this.dispatch('request_reply', payload);
-          case 'engage-in-deal':
-          case 'reply-to-deal':
-          case 'seeker-acceptdeal':
-            break;
-          default:
-          //debugger;
-            console.log('unknown message:',payload);
-            break;
-        }
-
-      },
-
+  
 
       /**
        * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 

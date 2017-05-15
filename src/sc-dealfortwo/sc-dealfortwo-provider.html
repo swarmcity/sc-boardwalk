@@ -675,7 +675,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       _data: function(){
         this.requestid = this.data.requestid;
         this.replyid = this.data.replyid;
-        this._starthastaglistener();
+        //this._starthastaglistener();
       },
 
       /**
@@ -768,54 +768,54 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           throw new Error('shhweb3 not set while requesting whisper listener');
         }
 
-        this._starthastaglistener();
+        //this._starthastaglistener();
       },
 
 
 
-      _starthastaglistener: function() {
+      // _starthastaglistener: function() {
 
-        if (this.filter) {
-          return;
-        }
+      //   if (this.filter) {
+      //     return;
+      //   }
 
-        var self = this;
-        if (this.shhweb3 && this.replyid) {
+      //   var self = this;
+      //   if (this.shhweb3 && this.replyid) {
 
-        var mytopics = [
-          null, [self.shhweb3.encodetopic(this.requestid),
-            self.shhweb3.encodetopic(this.replyid)
-          ]
-        ];
+      //   var mytopics = [
+      //     null, [self.shhweb3.encodetopic(this.requestid),
+      //       self.shhweb3.encodetopic(this.replyid)
+      //     ]
+      //   ];
 
-          this.filter = self.shhweb3.shh.filter({
-            "topics": mytopics,
-          });
+      //     this.filter = self.shhweb3.shh.filter({
+      //       "topics": mytopics,
+      //     });
 
-          console.log("sc-dealfortwo-provider: channelswitch, start listening to", mytopics);
-          this.filter.watch(this._processmessage.bind(this));
-        }
-      },
+      //     console.log("sc-dealfortwo-provider: channelswitch, start listening to", mytopics);
+      //     this.filter.watch(this._processmessage.bind(this));
+      //   }
+      // },
 
-      _processmessage: function(error, result) {
-        var self = this;
-        //debugger;
-        try {
-          var payload = JSON.parse(self.shhweb3.toAscii(result.payload));
-          console.log('incoming in whisperer: web3 ', result, self.shhweb3.toAscii(result.payload));
+      // _processmessage: function(error, result) {
+      //   var self = this;
+      //   //debugger;
+      //   try {
+      //     var payload = JSON.parse(self.shhweb3.toAscii(result.payload));
+      //     console.log('incoming in whisperer: web3 ', result, self.shhweb3.toAscii(result.payload));
 
-          if (payload.id == this.requestid) {
-            //debugger;
-            this.requestdata = payload;
-          }
-          if (payload.id == this.replyid) {
-            //debugger;
-            this.replydata = payload;
-          }
-        } catch (e) {
-          console.log(e);
-        }
-      },
+      //     if (payload.id == this.requestid) {
+      //       //debugger;
+      //       this.requestdata = payload;
+      //     }
+      //     if (payload.id == this.replyid) {
+      //       //debugger;
+      //       this.replydata = payload;
+      //     }
+      //   } catch (e) {
+      //     console.log(e);
+      //   }
+      // },
 
       showDetails: function(){
         var details = this.shadowRoot.getElementById('details_collapser');
