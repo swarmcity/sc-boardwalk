@@ -42,6 +42,8 @@
 
         request_create: function(dealdata) {
 
+          debugger;
+
           var foundDeal = this.deals.findIndex(function(item) {
             return item.id === dealdata.id;
           });
@@ -49,12 +51,7 @@
           let deals = this.deals.slice(0);
 
 
-          var newDeal = {
-              id: dealdata.id,
-              seeker: dealdata.seeker,
-              msg: dealdata.offer,
-              dealstate: 'dealcreating',
-              creationtx: dealdata.offercreationtx,
+          var emptyDeal = {
               creationtx_mined: false,
               dealaddress: null,
               seekerfundingtx: false,
@@ -63,15 +60,25 @@
               assigntx_mined: false,
               providerfundingtx: false,
               providerfundingtx_mined: false,
+              seeker: {
+                pubkey: '0x0'
+              }
+            };
+
+          var newDeal = {
+              id: dealdata.id,
+              seeker: dealdata.seeker,
+              msg: dealdata.offer,
+              creationtx: dealdata.offercreationtx,
               amount: dealdata.offeramount,
               hashtag: dealdata.offerhashtag,
               offertime: dealdata.offertime
             };
 
           if (foundDeal > -1) {
-            deals[foundDeal] = Object.assign({}, newDeal, deals[foundDeal]);
+            deals[foundDeal] = Object.assign(emptyDeal, deals[foundDeal], newDeal);
           } else {
-            deals.push(newDeal);
+            deals.push(Object.assign(emptyDeal,newDeal));
           }
          
           if (newDeal.creationtx){
@@ -98,7 +105,7 @@
           var mutation = {
             id: payload.id,
             offerseekerfundingtx: payload.offerseekerfundingtx,
-            seeker: payload.seeker
+            //seeker: payload.seeker
           };
 
           let deals = this.deals.slice(0);
@@ -136,7 +143,7 @@
           });
 
           let deals = this.deals.slice(0);
-          //debugger;
+
           var reply = {
             id: replydata.id,
             msg: replydata.reply,
@@ -217,9 +224,9 @@
             id: params.dealid,
             dealbalance: params.balance,
             seekerfundingtx_mined: true,
-            seeker: {
-              pubkey: '0x0'
-            },
+            // seeker: {
+            //   pubkey: '0x0'
+            // },
           };
 
           let deals = this.deals.slice(0);
@@ -367,7 +374,7 @@
 
         this.web3.waitTx(tx, function(err, res) {
           // update balance
-          debugger;
+          //debugger;
           self.web3.getSWTBalance(dealaddress,function(err,balance){
             console.log('The balance of deal',dealaddress,'is',balance.toNumber(),'SWT');
             self.dispatch('request_seekerfunded', {

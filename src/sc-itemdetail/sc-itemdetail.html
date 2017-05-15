@@ -330,7 +330,7 @@ This components shows the detailed view of a request.
       },
 
       youareowner: function(pubkey){
-        //debugger;
+        debugger;
         return (this.identity.pubkey == pubkey);
       },
 
@@ -352,6 +352,8 @@ This components shows the detailed view of a request.
         }
 
         this.itemdata = foundDeal;
+
+
 
         // check if I have already replied to this deal.
         if (this.itemdata.replies){
