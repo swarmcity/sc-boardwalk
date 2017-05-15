@@ -1006,13 +1006,13 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
 
       startDeal: function(){
-        alert("jooo");
+        //alert("jooo");
 
 debugger;
         var dealaddress = this.requestdata.dealaddress;
         var provideraddress = this.replydata.provider.pubkey;
-        var seekeramount = this.requestdata.offeramount;
-        var provideramount = this.requestdata.offeramount;
+        var seekeramount = this.requestdata.amount;
+        var provideramount = this.requestdata.amount;
 
         var self = this;
 
