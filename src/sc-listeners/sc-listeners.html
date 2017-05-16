@@ -27,7 +27,27 @@
         otherdeals: {
           type: Array,
           statePath: 'otherdeals',
-        },   
+        },
+        identity: {
+          type: Object,
+          statePath: 'identity'
+        },        
+        emptyDeal: {
+          type: Object,
+          value: {
+              creationtx_mined: false,
+              dealaddress: null,
+              seekerfundingtx: false,
+              seekerfundingtx_mined: false,
+              assigntx: false,
+              assigntx_mined: false,
+              providerfundingtx: false,
+              providerfundingtx_mined: false,
+              seeker: {
+                pubkey: '0x0'
+              }
+            }
+        }
       },
 
       behaviors: [
@@ -50,21 +70,6 @@
 
           let deals = this.deals.slice(0);
 
-
-          var emptyDeal = {
-              creationtx_mined: false,
-              dealaddress: null,
-              seekerfundingtx: false,
-              seekerfundingtx_mined: false,
-              assigntx: false,
-              assigntx_mined: false,
-              providerfundingtx: false,
-              providerfundingtx_mined: false,
-              seeker: {
-                pubkey: '0x0'
-              }
-            };
-
           var newDeal = {
               id: dealdata.id,
               seeker: dealdata.seeker,
@@ -76,9 +81,9 @@
             };
 
           if (foundDeal > -1) {
-            deals[foundDeal] = Object.assign(emptyDeal, deals[foundDeal], newDeal);
+            deals[foundDeal] = Object.assign(this.emptyDeal, deals[foundDeal], newDeal);
           } else {
-            deals.push(Object.assign(emptyDeal,newDeal));
+            deals.push(Object.assign(this.emptyDeal,newDeal));
           }
          
           if (newDeal.creationtx){
@@ -111,9 +116,9 @@
           let deals = this.deals.slice(0);
 
           if (foundDeal > -1) {
-            deals[foundDeal] = Object.assign({}, deals[foundDeal], mutation);
+            deals[foundDeal] = Object.assign(this.emptyDeal, deals[foundDeal], mutation);
           }else{
-            deals.push(mutation);
+            deals.push(Object.assign(this.emptyDeal,mutation));
           }
 
 
@@ -144,8 +149,14 @@
 
           let deals = this.deals.slice(0);
 
-          var reply = {
+          var ismyreply = false;
+          if (replydata.replyer.pubkey === this.identity.pubkey){
+            ismyreply  = true;
+          }
+
+          var replyMutation = {
             id: replydata.id,
+            ismyreply: ismyreply,
             msg: replydata.reply,
             provider: replydata.replyer,
             replytime: replydata.replytime,
@@ -153,25 +164,23 @@
           };
 
           if (foundDeal > -1) {
-            var deal = deals[foundDeal];
+            var deal = Object.assign(this.emptyDeal,deals[foundDeal],{ireplied : true});
             if (deal.replies) {
               var foundDeal = deal.replies.findIndex(function(item) {
                 return item.id === replydata.id;
               });
-              deal.replies[foundDeal] = reply;
+              deal.replies[foundDeal] = replyMutation;
             } else {
-              deal.replies = [reply];
+              deal.replies = [replyMutation];
             }
           } else {
             // this message comes before the deal info. Create an empty placehodler
             var newDeal = {
               id: replydata.parentrequestid,
-              seeker: {
-                pubkey: '0x0'
-              },
-              replies: [reply]
+              replies: [replyMutation],
+              ireplied : true
             };
-            deals.push(newDeal);
+            deals.push(Object.assign(this.emptyDeal,newDeal));
             //console.error('no deal found for reply with ID=', replydata.id)
           }
 
@@ -201,9 +210,9 @@
           let deals = this.deals.slice(0);
 
           if (foundDeal > -1) {
-            deals[foundDeal] = Object.assign({}, deals[foundDeal], mutation);
+            deals[foundDeal] = Object.assign(this.emptyDeal, deals[foundDeal], mutation);
           }else{
-            deals.push(mutation);
+            deals.push(Object.assign(this.emptyDeal,mutation));
           }
 
           return {
