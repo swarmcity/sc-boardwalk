@@ -625,7 +625,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                   <!-- <p class="confirmation_question yellow bold">- {{replydata.replyamount}} SWT</p> -->
                   <div class="confirmbtns">
                     <iron-icon icon="sc-icons:decline" class="decliner medium white" on-tap="cancelDeal"></iron-icon>
-                    <paper-icon-button icon="sc-icons:v" noink class="confirmbtn blue big white shadow" on-tap="tempTapto"></paper-icon-button>
+                    <paper-icon-button icon="sc-icons:v" noink class="confirmbtn blue big white shadow" on-tap="startDeal"></paper-icon-button>
                   </div>
                 </template>
                 <template is="dom-if" if="{{bothaccepted}}">
@@ -1075,6 +1075,13 @@ debugger;
 
         this.assignDeal(dealaddress,provideraddress,seekeramount,provideramount,function(err,res){
 
+          if (err){
+            if (err.message === 'Insufficient funds for gas * price + value'){
+              // notify UI that I don't have enough funds.
+            }
+            return console.log(err);
+          }
+
           // send whisper to provider
 
             var message = {
@@ -1089,7 +1096,7 @@ debugger;
             var topics = [
               self.shhweb3.encodetopic('swarmcity-v1'),
               self.shhweb3.encodetopic(message.type),
-              self.shhweb3.encodetopic(self.requestdata.offerhashtag),
+              self.shhweb3.encodetopic(self.requestdata.hashtag),
               self.shhweb3.encodetopic(self.requestdata.id),
             ];  
 
@@ -1298,7 +1305,7 @@ debugger;
       _requestdata: function(){
 
         // assigntx check
-        if(this.requestdata.creationtx) {
+        if(this.requestdata.seekerfundingtx) {
           this.seekeraccept = true;
           // debugger;
         } 
