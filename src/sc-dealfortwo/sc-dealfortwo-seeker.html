@@ -331,19 +331,19 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 /*        background-color: rgba(36,177,255,0.1);*/
 
         box-sizing:border-box;
-        padding: 10px 10px 10px 0px;
-        max-width: 300px;
+        padding: 18px 18px 18px 0px;
+        /*max-width: 300px;*/
 
 /*        border-top: 2px dotted rgba(0,0,0,0.05);
         border-bottom: 2px dotted rgba(0,0,0,0.05);*/
 
-        border-top: 2px dotted rgba(36,177,255,0.5);
-        border-bottom: 2px dotted rgba(36,177,255,0.5);
+        border-top: 2px dotted rgba(255,255,255,0.5);
+        border-bottom: 2px dotted rgba(255,255,255,0.5);
       }
 
 
       .triangle {
-        width: 10px;
+        width: 14px;
         transition: all 0.075s linear;
         margin-right: 8px;
         margin-left: 4px;
@@ -359,6 +359,18 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       .opened {
         transform: rotate(90deg);
         opacity: 0.75;
+      }
+
+
+      .grey2b {
+        color: #999999;
+        margin-left: 4px;
+      }
+
+      .creatingadeal {
+        font-family: montserratlight;
+        font-size: 22px;
+        line-height: 26px;
       }
 
 
@@ -435,6 +447,13 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         margin-bottom: 2vw;
        
       }
+
+
+      .dealcreate_steps {
+        padding: 10px 10px 10px 0px;
+      }
+
+
 
     }
 
@@ -535,18 +554,19 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                   <template is="dom-if" if="{{!provideraccept}}">
                   <template is="dom-if" if="{{seekeraccept}}">
                     <div class="whitespace"></div>
-                    <p class="reg grey3">Waiting for<span>{{replydata.provider.username}}</span> to respond.</p>
+                    <p class="grey2b">Waiting for <span>{{replydata.provider.username}}</span> to respond.</p>
                   </template>
                   </template>
                   <template is="dom-if" if="{{provideraccept}}">
                     <div class="whitespace"></div>
-                    <p class="reg grey3"><span>{{replydata.provider.username}}</span> has already accepted.</p>
+                    <p class="grey2b"><span>{{replydata.provider.username}}</span> has already accepted.</p>
                   </template>
                 </template>
                 
                 <template is="dom-if" if="{{bothaccepted}}">
                   <h1 class=""><span class="bold">You both accepted!</span></h1>
                   <div class="whitespace"></div>
+                    <p class="grey2b">A deal is being created.</p>
                 </template>
 
 
@@ -570,6 +590,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                       ></sc-avatar>
                     <iron-icon class$="v_icon {{vsize}}" icon="sc-icons:v"></iron-icon>
                   </div>
+
                 <template is="dom-if" if="{{!phoneview}}">
                   <p class="bold grey3 details_toggler" on-tap="showDetails">More details</p>
                 </template>
@@ -611,19 +632,22 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
                 <template is="dom-if" if="{{!indeal}}">
                   <div class="dealcreate_steps">
-                    <div class="horizont start startjust">
+                    <div class="horizont end startjust">
                       <div class$="triangle {{collapsestate}}" on-tap="showSteps">
-                        <svg id="triangle_icon" x="0px" y="0px" viewBox="0 0 50 50" fill="#24B1FF">
+                        <svg id="triangle_icon" x="0px" y="0px" viewBox="0 0 50 50" fill="#ffffff">
                         <polygon points="6.5,4.9 6.5,44.5 42,24.9 "/>
                         </svg>
                       </div>
-                      <p class="reg blue" on-tap="showSteps">A deal is being created <span class="bold"> ({{stepscount}}/4)</span></p>
-                      <sc-loader color="green" small on-tap="showSteps"></sc-loader>
+                      <p class="creatingadeal reg white" on-tap="showSteps">Creating a deal</p> 
+                      <sc-loader class="white" color="white" small on-tap="showSteps"></sc-loader>
                     </div>
                     <iron-collapse id="steps_collapser">
-                      <p class="">Joooo stepperz</p>
+                      <p>this.requestdata.assigntx</p>
                     </iron-collapse>
                   </div>
+                  <template is="dom-if" if="{{!phoneview}}">
+                    <div class="flex"></div>
+                  </template>
                 </template>
 
                 <template is="dom-if" if="{{indeal}}">
@@ -697,7 +721,9 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       '_data(data)',
       '_replydata(replydata)',
       '_whoaccepted(seekeraccept,provideraccept)',
-      '_whatismined()'
+      '_whatismined()',
+
+      // '_requestdata(requestdata)'
       // '_provideraccept(provideraccept)'
       ],
 
@@ -807,6 +833,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           this.replydata = reply;
 
           console.log('request:',this.requestdata);
+          this._requestdata(this.requestdata);
 
         }else{
           //debugger;
@@ -848,7 +875,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           this.sendbtnsize = "";
         } else {
           this.avatarsize = "medium";
-          this.avatarfundingsize = "small";
+          this.avatarfundingsize = "medium";
           this.sendbtnsize = "bigbtn";
           this.vsize = "medium";
         }
@@ -1226,7 +1253,6 @@ debugger;
 
         if (this.seekeraccept){
           this.seekerfundclass = "fund_accepted";
-          this.bottombg = "greenback";
         } else {
           this.seekerfundclass = "fund_init";
           this.bottombg = "blueback";
@@ -1266,6 +1292,39 @@ debugger;
       // TEMP FUNCTION: to be removed
       tempTapto: function(){
         this.seekeraccept = true;
+      },
+
+
+      _requestdata: function(){
+
+        // assigntx check
+        if(this.requestdata.creationtx) {
+          this.seekeraccept = true;
+          // debugger;
+        } 
+
+        // providerfundingtx check
+        if(this.requestdata.providerfundingtx) {
+          this.provideraccept = true;
+        }
+
+        // assigntx_mined check
+        if(this.requestdata.assigntx_mined) {
+          this.assigntx_mined = true;
+          // console.log("REQUEST::: assigntx_mined", this.requestdata.assigntx_mined);
+        } 
+        // providerfundingtx_mined check
+        if(this.requestdata.providerfundingtx_mined) {
+          console.log("REQUEST::: providerfundingtx_mined",this.requestdata.providerfundingtx_mined);
+        } else {
+          console.log("REQUEST::: providerfundingtx_mined",this.requestdata.providerfundingtx_mined);
+        }
+
+        if (this.requestdata.assigntx_mined && this.requestdata.providerfundingtx_mined) {
+          this.bottombg = 'greenback';
+        } else {
+          this.bottombg = 'blueback';
+        }
       },
 
 
