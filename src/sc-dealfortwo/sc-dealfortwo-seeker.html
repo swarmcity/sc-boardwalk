@@ -595,33 +595,36 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                 </template>
                 
                 <template is="dom-if" if="{{bothaccepted}}">
-                  <h1 class=""><span class="bold">You both accepted!</span></h1>
-                  <div class="whitespace"></div>
-                  <div class="dealcreate_steps">
-                    <div class="horizont end startjust">
-                      <div class$="triangle {{collapsestate}}" on-tap="showSteps">
-                        <svg id="triangle_icon" x="0px" y="0px" viewBox="0 0 50 50" fill="#24B1FF">
-                        <polygon points="6.5,4.9 6.5,44.5 42,24.9 "/>
-                        </svg>
+                  <template is="dom-if" if="{{!indeal}}">
+                    <h1 class=""><span class="bold">You both accepted!</span></h1>
+                    <div class="whitespace"></div>
+                    <div class="dealcreate_steps">
+                      <div class="horizont end startjust">
+                        <div class$="triangle {{collapsestate}}" on-tap="showSteps">
+                          <svg id="triangle_icon" x="0px" y="0px" viewBox="0 0 50 50" fill="#24B1FF">
+                          <polygon points="6.5,4.9 6.5,44.5 42,24.9 "/>
+                          </svg>
+                        </div>
+                        <p class="creatingadeal bold blue" on-tap="showSteps">Processing your deal</p> 
+                        <sc-loader class="blue" color="blue" small on-tap="showSteps"></sc-loader>
                       </div>
-                      <p class="creatingadeal bold blue" on-tap="showSteps">Creating a deal</p> 
-                      <sc-loader class="blue" color="blue" small on-tap="showSteps"></sc-loader>
+                      <iron-collapse id="steps_collapser">
+                        <div class="allsteps">
+                          <div class$="step totalwidth horizont centercenter {{steponestate}}" on-tap="tempTapthree">
+                            <p class="flex">Assigning counterparty to deal</p>
+                            <iron-icon class="" icon="sc-icons:v"></iron-icon>
+                          </div>
+                          <div class$="step totalwidth horizont centercenter {{steptwostate}}" on-tap="tempTapfour">
+                            <p class="flex">Sending SWT of counterparty to deal</p>
+                            <iron-icon class="" icon="sc-icons:v"></iron-icon>
+                          </div>
+                        </div>
+                      </iron-collapse>
                     </div>
-                    <iron-collapse id="steps_collapser">
-                    <div class="allsteps">
-                      <div class$="step totalwidth horizont centercenter {{steponestate}}" on-tap="tempTapthree">
-                        <p class="flex">Assigning counterparty to deal</p>
-                        <iron-icon class="" icon="sc-icons:v"></iron-icon>
-                      </div>
-
-                      <div class$="step totalwidth horizont centercenter {{steptwostate}}" on-tap="tempTapfour">
-                        <p class="flex">Sending SWT of counterparty to deal</p>
-                        <iron-icon class="" icon="sc-icons:v"></iron-icon>
-                      </div>
-                    </div>
-
-                    </iron-collapse>
-                  </div>
+                  </template>
+                  <template is="dom-if" if="{{indeal}}">
+                    <h1 class=""><span class="bold"></span>You are in deal with {{replydata.provider.username}}!</h1>
+                  </template>
 
                     <!-- <p class="grey2b">A deal is being created.</p> -->
                 </template>
@@ -634,6 +637,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                       pubkey="[[identity.pubkey]]"
                       id="makedeal_myavatar"
                       size="{{avatarfundingsize}}"
+                      on-tap="tempTapto"
                       ></sc-avatar>
                     <iron-icon class$="v_icon {{vsize}}" icon="sc-icons:v"></iron-icon>
                   </div>
@@ -687,20 +691,16 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                 </template>
                 <template is="dom-if" if="{{bothaccepted}}">
 
-                <template is="dom-if" if="{{!indeal}}">
-<!-- 
-                  <template is="dom-if" if="{{!phoneview}}">
-                    <div class="flex"></div>
-                  </template> -->
-                </template>
+                  <template is="dom-if" if="{{!indeal}}">
+                  </template>
 
-                <template is="dom-if" if="{{indeal}}">
-                  <div class="confirmbtns">
-                    <paper-button class="confirmbtn green white shadow" noink>Payout
-                      <iron-icon icon="sc-icons:v" class="medium white" on-tap="cancelDeal"></iron-icon>
-                    </paper-button>
-                  </div>
-                </template>
+                  <template is="dom-if" if="{{indeal}}">
+                    <div class="confirmbtns">
+                      <paper-button class="confirmbtn green white shadow" noink>Payout
+                        <iron-icon icon="sc-icons:v" class="medium white" on-tap="cancelDeal"></iron-icon>
+                      </paper-button>
+                    </div>
+                  </template>
 
                 </template>
               </div>
@@ -1368,13 +1368,13 @@ debugger;
 
       // TEMP FUNCTION: to be removed
       tempTap: function(){
-        this.provideraccept = true;
+        this.provideraccept = !this.provideraccept;
       },
 
 
       // TEMP FUNCTION: to be removed
       tempTapto: function(){
-        this.seekeraccept = true;
+        this.seekeraccept = !this.seekeraccept;
       },
 
 
