@@ -1125,12 +1125,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       },
 
 
-
-
-      startDeal: function(){
-        //alert("jooo");
-
-debugger;
+      startDeal: function() {
+  
         var dealaddress = this.requestdata.dealaddress;
         var provideraddress = this.replydata.provider.pubkey;
         var seekeramount = this.requestdata.amount;
@@ -1138,10 +1134,10 @@ debugger;
 
         var self = this;
 
-        this.assignDeal(dealaddress,provideraddress,seekeramount,provideramount,function(err,res){
+        this.assignDeal(dealaddress, provideraddress, seekeramount, provideramount, function(err, res) {
 
-          if (err){
-            if (err.message === 'Insufficient funds for gas * price + value'){
+          if (err) {
+            if (err.message === 'Insufficient funds for gas * price + value') {
               // notify UI that I don't have enough funds.
             }
             return console.log(err);
@@ -1149,123 +1145,41 @@ debugger;
 
           // send whisper to provider
 
-            var message = {
-              type: 'dealfortwo-assign-provider',
-              requestid : self.requestdata.id,
-              replyid: self.replydata.id,
-              transactionhash: res,
-              timestamp: Date.now()
-            };
+          var message = {
+            type: 'dealfortwo-assign-provider',
+            requestid: self.requestdata.id,
+            replyid: self.replydata.id,
+            transactionhash: res,
+            timestamp: Date.now(),
+            dealaddress: self.requestdata.dealaddress
+          };
 
 
-            var topics = [
-              self.shhweb3.encodetopic('swarmcity-v1'),
-              self.shhweb3.encodetopic(message.type),
-              self.shhweb3.encodetopic(self.requestdata.hashtag),
-              self.shhweb3.encodetopic(self.requestdata.id),
-            ];  
+          var topics = [
+            self.shhweb3.encodetopic('swarmcity-v1'),
+            self.shhweb3.encodetopic(message.type),
+            self.shhweb3.encodetopic(self.requestdata.hashtag),
+            self.shhweb3.encodetopic(self.requestdata.id),
+          ];
 
-            // var topics = [
-            //   self.shhweb3.encodetopic(message.type),
-            //   self.shhweb3.encodetopic(self.itemdata.id),
-            //   self.shhweb3.encodetopic(message.id),
-            // ];
+          var options = {
+            "from": self.shhweb3.identity,
+            "topics": topics,
+            "payload": self.shhweb3.fromAscii(JSON.stringify(message)),
+            "ttl": 60 * 60 * 24,
+            "priority": 1000
+          };
 
-            var options = {
-              "from": self.shhweb3.identity,
-              "topics": topics,
-              "payload": self.shhweb3.fromAscii(JSON.stringify(message)),
-              "ttl": 60 * 60 * 24,
-              "priority": 1000
-            };
+          console.log('posting to topics', topics);
 
-            console.log('posting to topics', topics);
-
-            self.shhweb3.shh.post(options, function(err, res) {
-              if (!err){
-                console.log('sc->dealfortwo_seeker -> Reply posted');
-                //self.replystate = 'init';
-              }else{
-                console.log('sc-dealfortwo_seeker -> whisper error:',err);
-              }
-              //self.bgcolor = "whiteback";
-              //self.borderz = "lightgreytopborder";
-            });
-
-
-
+          self.shhweb3.shh.post(options, function(err, res) {
+            if (!err) {
+              console.log('sc->dealfortwo_seeker -> Reply posted');
+            } else {
+              console.log('sc-dealfortwo_seeker -> whisper error:', err);
+            }
+          });
         });
-
-//        this.requestdata
-
-//dealaddress,provideraddress,seekeramount,provideramount
-
-
-        // var self = this;
-        // var tx = '0x2abd79640d815db1e3f052b12a376bc05f0f5ff0b345c45385518698b5275b38'; //this.requestdata.offercreationtx
-        // this.helper_getDealAddressFromTx(tx,function(err,address){
-        //   if (address){
-        //     self.helper_getSWTBalanceFromAddress(address,function(err,balance){
-        //       debugger;
-        //     })
-        //   }
-        //   debugger;
-        // });
-       
-      
-
-        
-
-          // this.assignDeal(this.replydata.provider.pubkey,this.requestdata.amount,this.requestdata.amount,function(err,res){
-          //   // do your THANG
-          // });
-
-
-
-
-//        debugger;
-
-//             if (!this.shhidentity) {
-//               this.shhidentity = this.shhweb3.shh.newIdentity();
-//             }
-
-//             var seeker_acceptdealmessage = {
-//               type: 'seeker-acceptdeal',
-//               requestid: this.requestdata.id,
-//               replyid: this.replydata.id,
-//               timestamp: Date.now()
-//             };
-
-//             var topics = [
-//               this.shhweb3.encodetopic(seeker_acceptdealmessage.type),
-//               this.shhweb3.encodetopic(this.requestdata.hashtag),
-//               //this.shhweb3.encodetopic(this.requestdata.id),
-//               //this.shhweb3.encodetopic(seeker_acceptdealmessage.id),
-//             ];
-
-//             var options = {
-//               "from": this.shhidentity,
-//               "topics": topics,
-//               "payload": this.shhweb3.fromAscii(JSON.stringify(seeker_acceptdealmessage)),
-//               "ttl": 60 * 60 * 24,
-//               "priority": 1000
-//             };
-
-//             console.log('posting to topics', topics);
-
-//             this.shhweb3.shh.post(options, function(err, res) {
-//               if (!err){
-//                 //console.log('sc->itemreplier -> Reply posted');
-//                 //self.replystate = 'init';
-//               }else{
-//                 console.log('sc-itemreplier -> whisper error:',err);
-//               }
-//               //self.bgcolor = "whiteback";
-//               //elf.borderz = "lightgreytopborder";
-//             });
-      
-        //this.seekeraccept = true;
-        //this.$.dealfortwo.createDeal();
       },
 
 
