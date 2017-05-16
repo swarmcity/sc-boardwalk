@@ -196,7 +196,6 @@
 
         // when a a creationtx has passed & a dealaddress is available
         request_setdealaddress: function(params) {
-
           var foundDeal = this.deals.findIndex(function(item) {
             return item.id === params.dealid;
           });
@@ -224,38 +223,53 @@
 
         // seeker funding TX has finished
         request_seekerfunded: function(params) {
-
-          var foundDeal = this.deals.findIndex(function(item) {
-            return item.id === params.dealid;
-          });
-
           var mutation = {
-            id: params.dealid,
+            id: params.requestid,
             dealbalance: params.balance,
             seekerfundingtx_mined: true,
-            // seeker: {
-            //   pubkey: '0x0'
-            // },
           };
 
           let deals = this.deals.slice(0);
-
-
+          var foundDeal = deals.findIndex(function(item) {
+            return item.id === params.dealid;
+          });
           if (foundDeal > -1) {
             deals[foundDeal] = Object.assign({}, deals[foundDeal], mutation);
           }else{
             deals.push(mutation);
           }
-
-
           return {
             type: 'DEALS',
             deals: deals
           };
+        },
 
-        },     
-
+        // I have a TX that says : assign this pubkey
+        assign_provider: function(payload){
+          debugger;
+          var mutation = {
+            id : payload.requestid,
+            assigntx: payload.transactionhash,
+            selectedreply: payload.replyid
+          };
+          let deals = this.deals.slice(0);
+          var foundDeal = deals.findIndex(function(item) {
+            return item.id === payload.requestid;
+          });
+          if (foundDeal > -1) {
+            deals[foundDeal] = Object.assign({}, deals[foundDeal], mutation);
+          }else{
+            deals.push(mutation);
+          }
+          this.readcontractaftertx(payload.requestid,payload.transactionhash);
+          return {
+            type: 'DEALS',
+            deals: deals
+          };
+        }    
       },
+
+
 
       stopFiltering: function(options,cb){
         this.options
@@ -322,9 +336,9 @@
             break;
           case 'dealfortwo-request-reply':
             this.dispatch('request_reply', payload);
-          case 'engage-in-deal':
-          case 'reply-to-deal':
-          case 'seeker-acceptdeal':
+            break;
+          case 'dealfortwo-assign-provider':
+            this.dispatch('assign_provider', payload);
             break;
           default:
           //debugger;
@@ -373,7 +387,7 @@
       // },
 
 
-      updatebalanceaddressaftertx: function(dealid,dealaddress,tx){
+      updatebalanceaddressaftertx: function(requestid,dealaddress,tx){
         var self = this;
 
         console.log('Start monitoring for balance from deal tx',tx);
@@ -387,7 +401,7 @@
           self.web3.getSWTBalance(dealaddress,function(err,balance){
             console.log('The balance of deal',dealaddress,'is',balance.toNumber(),'SWT');
             self.dispatch('request_seekerfunded', {
-              dealid: dealid,
+              requestid: requestid,
               balance: balance.toNumber()
             });            
           })
@@ -424,6 +438,48 @@
         //     return cb(null, swtbalance);
         //   });
         // });
+      },
+
+
+      readcontractaftertx: function(dealid,dealaddress,tx){
+        var self = this;
+debugger;
+        console.log('Start monitoring for balance from deal tx',tx);
+        if (!tx){
+          return;
+        }
+
+        this.web3.waitTx(tx, function(err, res) {
+        
+debugger;
+        this.contracturl = this.resolveUrl('../contracts/DealForTwo.json');
+        this.importHref(this.contracturl, function(e) {
+          this.contractjson = JSON.parse(e.target.import.body.innerText);
+         
+            var MyContract = self.web3.eth.contract(self.contractjson.abi);
+            var myContractInstance = MyContract.at(dealaddress);
+            myContractInstance.provider.call(function(err, result) {
+              if (err){
+                if (cb) {
+                  //return cb(err);
+                }
+              }
+              console.log(err, result);
+             
+
+          });
+        });          
+          // update balance
+          //debugger;
+          // self.web3.getSWTBalance(dealaddress,function(err,balance){
+          //   console.log('The balance of deal',dealaddress,'is',balance.toNumber(),'SWT');
+          //   self.dispatch('request_seekerfunded', {
+          //     dealid: dealid,
+          //     balance: balance.toNumber()
+          //   });            
+          // })
+        });
+
       },
 
 
