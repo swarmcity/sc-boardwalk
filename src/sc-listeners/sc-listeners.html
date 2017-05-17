@@ -147,7 +147,7 @@
           });
 
           if (foundDeal > -1) {
-            var deal = Object.assign({},this.emptyDeal,deals[foundDeal],{ireplied : true});
+            var deal = Object.assign({},this.emptyDeal,deals[foundDeal]);
             if (deal.replies) {
               var foundReply = deal.replies.findIndex(function(item) {
                 return item.id === replydata.id;
@@ -160,7 +160,19 @@
             } else {
               deal.replies = [replyMutation];
             }
-            deals[foundDeal] = deal;
+
+            // check if I already replied to this deal
+            var ireplied = false;
+            if (deal.replies){
+              for (var i = 0; i < deal.replies.length; i++) {
+                if (deal.replies[i].ismyreply){
+                  //debugger;
+                  ireplied = true;
+                }
+              }
+            }
+            // put deal back into array of deals
+            deals[foundDeal] = Object.assign(deal,{ireplied : ireplied});
           } else {
             // this message comes before the deal info. Create an empty placehodler
             var newDeal = {
