@@ -228,7 +228,7 @@ This components shows the detailed view of a request.
  -->
         <template is="dom-if" if="{{!youareowner(itemdata.seeker.pubkey)}}">
           <!-- <p>replypossible={{replypossible}}</p> -->
-          <template is="dom-if" if="{{!itemdata.ireplied}}">
+          <template is="dom-if" if="{{!itemdata.selectedreply}}">
             <sc-itemreplier itemdata="{{itemdata}}">
             </sc-itemreplier>
           </template>
