@@ -180,7 +180,7 @@ This components shows the detailed view of a request.
           <div class$="totalwidth {{totalopacity}}">
             <p class="small grey3"><moment-js date="{{item.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
             <div class="minispace"></div>
-            <p class="offer light grey4">{{itemdata.msg}} (DS={{dealstate}})<span class="bold offerhashtag">#{{itemdata.hashtag}}</span></p>
+            <p class="offer light grey4">{{itemdata.msg}}<span class="bold offerhashtag">#{{itemdata.hashtag}}</span></p>
           </div>
           <div class="whitespace"></div>
 
@@ -351,15 +351,16 @@ This components shows the detailed view of a request.
           return;
         }
 
-        this.itemdata = foundDeal;
+        this.set('itemdata',foundDeal);
 
 
 
         // check if I have already replied to this deal.
         if (this.itemdata.replies){
-          var foundReply = this.itemdata.replies.findIndex(function(item){
-            return item.provider.pubkey === self.identity.pubkey;
-          });
+          this.set('itemdata.replies',foundDeal.replies);
+          // var foundReply = this.itemdata.replies.findIndex(function(item){
+          //   return item.provider.pubkey === self.identity.pubkey;
+          // });
           // if (foundReply>-1){
           //   self.replypossible = false;
           // }else{
@@ -476,6 +477,44 @@ This components shows the detailed view of a request.
 //       },
 
       toMakeDeal: function(e){
+        var self=this;
+        var replydata = e.detail;
+        debugger;
+        var message = {
+            type: 'dealfortwo-select-provider',
+            requestid: replydata.parentrequestid,
+            replyid: replydata.id,
+            timestamp: Date.now(),
+          };
+
+
+          var topics = [
+            self.shhweb3.encodetopic('swarmcity-v1'),
+            self.shhweb3.encodetopic(message.type),
+            self.shhweb3.encodetopic(self.itemdata.hashtag),
+            self.shhweb3.encodetopic(self.itemdata.id),
+          ];
+
+          var options = {
+            "from": self.shhweb3.identity,
+            "topics": topics,
+            "payload": self.shhweb3.fromAscii(JSON.stringify(message)),
+            "ttl": 60 * 60 * 24,
+            "priority": 1000
+          };
+
+          console.log('posting to topics', topics);
+
+          self.shhweb3.shh.post(options, function(err, res) {
+            if (!err) {
+              console.log(message.type,'-> Reply posted');
+            } else {
+              console.log(message.type,'-> whisper error:', err);
+            }
+          });
+
+
+
         this.fire('to-makedeal',e.detail);
       },
 

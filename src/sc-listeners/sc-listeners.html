@@ -196,7 +196,9 @@
 
         // when a a creationtx has passed & a dealaddress is available
         request_setdealaddress: function(params) {
-          var foundDeal = this.deals.findIndex(function(item) {
+          let deals = this.deals.slice(0);
+          
+          var foundDeal = deals.findIndex(function(item) {
             return item.id === params.dealid;
           });
 
@@ -205,8 +207,6 @@
             dealaddress: params.address,
             creationtx_mined: true
           };
-
-          let deals = this.deals.slice(0);
 
           if (foundDeal > -1) {
             deals[foundDeal] = Object.assign(this.emptyDeal, deals[foundDeal], mutation);
@@ -234,22 +234,21 @@
             return item.id === params.dealid;
           });
           if (foundDeal > -1) {
-            deals[foundDeal] = Object.assign({}, deals[foundDeal], mutation);
+            deals[foundDeal] = Object.assign(this.emptyDeal, deals[foundDeal], mutation);
           }else{
-            deals.push(mutation);
+            deals.push(Object.assign(this.emptyDeal,mutation));
           }
           return {
             type: 'DEALS',
             deals: deals
           };
         },
-
-        // I have a TX that says : assign this pubkey
-        assign_provider: function(payload){
+        
+        // seeker says : I just selected this reply as my provider
+        select_provider: function(payload){
           debugger;
           var mutation = {
             id : payload.requestid,
-            assigntx: payload.transactionhash,
             selectedreply: payload.replyid
           };
           let deals = this.deals.slice(0);
@@ -257,16 +256,39 @@
             return item.id === payload.requestid;
           });
           if (foundDeal > -1) {
-            deals[foundDeal] = Object.assign({}, deals[foundDeal], mutation);
+            deals[foundDeal] = Object.assign(this.emptyDeal, deals[foundDeal], mutation);
           }else{
-            deals.push(mutation);
+            deals.push(Object.assign(this.emptyDeal,mutation));
+          }
+          return {
+            type: 'DEALS',
+            deals: deals
+          };
+        },
+        // I have a TX that says : assign this pubkey
+        assign_provider: function(payload){
+          debugger;
+          var mutation = {
+            id : payload.requestid,
+            assigntx: payload.transactionhash,
+            //selectedreply: payload.replyid
+          };
+          let deals = this.deals.slice(0);
+          var foundDeal = deals.findIndex(function(item) {
+            return item.id === payload.requestid;
+          });
+          if (foundDeal > -1) {
+            deals[foundDeal] = Object.assign(this.emptyDeal, deals[foundDeal], mutation);
+          }else{
+            deals.push(Object.assign(this.emptyDeal,mutation));
           }
           this.readcontractaftertx(payload.requestid,payload.transactionhash);
           return {
             type: 'DEALS',
             deals: deals
           };
-        }    
+        },
+
       },
 
 
@@ -336,6 +358,9 @@
             break;
           case 'dealfortwo-request-reply':
             this.dispatch('request_reply', payload);
+            break;
+          case 'dealfortwo-select-provider':
+            this.dispatch('select_provider', payload);
             break;
           case 'dealfortwo-assign-provider':
             this.dispatch('assign_provider', payload);
