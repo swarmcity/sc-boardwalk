@@ -479,10 +479,10 @@ This components shows the detailed view of a request.
       toMakeDeal: function(e){
         var self=this;
         var replydata = e.detail;
-        debugger;
+        //debugger;
         var message = {
             type: 'dealfortwo-select-provider',
-            requestid: replydata.parentrequestid,
+            requestid: self.itemdata.id,
             replyid: replydata.id,
             timestamp: Date.now(),
           };

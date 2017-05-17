@@ -62,14 +62,6 @@
 
         request_create: function(dealdata) {
 
-          //debugger;
-
-          var foundDeal = this.deals.findIndex(function(item) {
-            return item.id === dealdata.id;
-          });
-
-          let deals = this.deals.slice(0);
-
           var newDeal = {
               id: dealdata.id,
               seeker: dealdata.seeker,
@@ -80,6 +72,10 @@
               offertime: dealdata.offertime
             };
 
+          let deals = this.deals.slice(0);
+          var foundDeal = deals.findIndex(function(item) {
+            return item.id === dealdata.id;
+          });
           if (foundDeal > -1) {
             deals[foundDeal] = Object.assign(this.emptyDeal, deals[foundDeal], newDeal);
           } else {
@@ -103,36 +99,23 @@
         // ioncoming SHH that seeker has funded his deal & 
         // provided the TXhash for that.
         request_seeker_funding: function(payload){
-          var foundDeal = this.deals.findIndex(function(item) {
-            return item.id === payload.id;
-          });
 
           var mutation = {
             id: payload.id,
             offerseekerfundingtx: payload.offerseekerfundingtx,
-            //seeker: payload.seeker
           };
 
-          let deals = this.deals.slice(0);
+          this.updatebalanceaddressaftertx(payload.id,payload.dealaddress,payload.offerseekerfundingtx);
 
+          let deals = this.deals.slice(0);
+          var foundDeal = deals.findIndex(function(item) {
+            return item.id === payload.id;
+          });
           if (foundDeal > -1) {
             deals[foundDeal] = Object.assign(this.emptyDeal, deals[foundDeal], mutation);
           }else{
             deals.push(Object.assign(this.emptyDeal,mutation));
           }
-
-
-
-          // let deals = this.deals.slice(0);
-
-          // deals[foundDeal] = Object.assign({}, deals[foundDeal], {
-          //   offerseekerfundingtx: payload.offerseekerfundingtx
-          // });
-          //debugger;
-          this.updatebalanceaddressaftertx(mutation.id,payload.dealaddress,mutation.offerseekerfundingtx);
-
-          //this.updatebalanceaddressaftertx(payload.id,payload.offerseekerfundingtx);
-          
           return {
             type: 'DEALS',
             deals: deals
@@ -142,12 +125,6 @@
 
         // when a reply comes in to a deal
         request_reply: function(replydata) {
-
-          var foundDeal = this.deals.findIndex(function(item) {
-            return item.id === replydata.parentrequestid;
-          });
-
-          let deals = this.deals.slice(0);
 
           var ismyreply = false;
           if (replydata.replyer.pubkey === this.identity.pubkey){
@@ -162,6 +139,12 @@
             replytime: replydata.replytime,
             parentrequestid: replydata.parentrequestid
           };
+
+          // make a copy of deals - apply changes and return
+          let deals = this.deals.slice(0);
+          var foundDeal = deals.findIndex(function(item) {
+            return item.id === replydata.parentrequestid;
+          });
 
           if (foundDeal > -1) {
             var deal = Object.assign(this.emptyDeal,deals[foundDeal],{ireplied : true});
@@ -196,18 +179,17 @@
 
         // when a a creationtx has passed & a dealaddress is available
         request_setdealaddress: function(params) {
-          let deals = this.deals.slice(0);
-          
-          var foundDeal = deals.findIndex(function(item) {
-            return item.id === params.dealid;
-          });
-
+//debugger;
           var mutation = {
             id: params.dealid,
             dealaddress: params.address,
             creationtx_mined: true
           };
 
+          let deals = this.deals.slice(0);
+          var foundDeal = deals.findIndex(function(item) {
+            return item.id === params.dealid;
+          });
           if (foundDeal > -1) {
             deals[foundDeal] = Object.assign(this.emptyDeal, deals[foundDeal], mutation);
           }else{
@@ -223,6 +205,7 @@
 
         // seeker funding TX has finished
         request_seekerfunded: function(params) {
+          //debugger;
           var mutation = {
             id: params.requestid,
             dealbalance: params.balance,
@@ -231,7 +214,7 @@
 
           let deals = this.deals.slice(0);
           var foundDeal = deals.findIndex(function(item) {
-            return item.id === params.dealid;
+            return item.id === params.requestid;
           });
           if (foundDeal > -1) {
             deals[foundDeal] = Object.assign(this.emptyDeal, deals[foundDeal], mutation);
@@ -246,7 +229,7 @@
         
         // seeker says : I just selected this reply as my provider
         select_provider: function(payload){
-          debugger;
+          
           var mutation = {
             id : payload.requestid,
             selectedreply: payload.replyid
@@ -265,9 +248,10 @@
             deals: deals
           };
         },
+
         // I have a TX that says : assign this pubkey
         assign_provider: function(payload){
-          debugger;
+         
           var mutation = {
             id : payload.requestid,
             assigntx: payload.transactionhash,
