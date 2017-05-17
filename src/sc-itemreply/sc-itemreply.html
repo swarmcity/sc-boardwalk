@@ -142,6 +142,29 @@ This component shows a reply on a request.
 
       }
 
+      .yourethechoosenone {
+/*        box-sizing:border-box;
+        padding: 4px 6px;
+        background-color: var(--sc-grey3);*/
+        margin: 0px 0px 16px 0px;
+      }
+
+
+
+      .yourethechoosenone p {
+        font-size: 14px;
+        line-height: 16px;
+      }
+
+      .full {
+        opacity: 1;
+      }
+
+      .notfull {
+        opacity: 0.75;
+      }
+
+
       @media all and (min-width: 0) and (max-width: 420px) { 
 
 
@@ -179,14 +202,21 @@ This component shows a reply on a request.
       <div class="responditem totalwidth vertic centercenter darker">
         <div class="totalwidth vertic start centerjust">
 
-            <template is="dom-if" if="{{!phoneview}}">
+        <template is="dom-if" if="{{!phoneview}}">
 
-        <div class="totalwidth horizont start centerjust">
+          <template is="dom-if" if="{{yourethechoosenone}}">
+            <div class="yourethechoosenone">
+              <p class="green bold">{{itemdata.seeker.username}} has chosen {{replydata.provider.username}} to make a deal with.</p>
+            </div>
+          </template>
 
-        <div class="vertic start centerjust totalwidth flex">
-          <p class="grey3 small"><moment-js date="{{replydata.replytime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
-          <p class="reply grey4">{{replydata.msg}}</p>
-        </div>
+
+          <div class$="totalwidth horizont start centerjust {{totalopacity}}">
+
+          <div class="vertic start centerjust totalwidth flex">
+            <p class="grey3 small"><moment-js date="{{replydata.replytime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
+            <p class="reply grey4">{{replydata.msg}}</p>
+          </div>
 
 
           <div class="horizont start startjust">
@@ -195,79 +225,79 @@ This component shows a reply on a request.
               <iron-icon class="grey4 small" icon="sc-icons:v">checked</iron-icon>
             </div>
           </div>
-        </div>
-<div class="minispace"></div>
-<!--         
-        <div class="minispace"></div> -->
-        <div class="totalwidth horizont center startjust">
-          <div class="horizont startjust center flex">
-            <sc-avatar
-              class="replyeravatar"
-              ipfshash="[[replydata.provider.avatarhash]]"
-              size="verysmall">
-            </sc-avatar>
-
-            <div class="vertic centercenter replyer">
-              <p class="totalwidth replyername small bold grey3">{{replydata.provider.username}}</p>
-              <p class="totalwidth replyerrep small bold blue">{{replydata.provider.replyerrep}} REP</p>
-            </div>
           </div>
-
-
+          <div class="minispace"></div>
+          <div class$="totalwidth horizont center startjust {{totalopacity}}">
+            <div class="horizont startjust center flex">
+              <sc-avatar
+                class="replyeravatar"
+                ipfshash="[[replydata.provider.avatarhash]]"
+                size="verysmall">
+              </sc-avatar>
+              <div class="vertic centercenter replyer">
+                <p class="totalwidth replyername small bold grey3">{{replydata.provider.username}}</p>
+                <p class="totalwidth replyerrep small bold blue">{{replydata.provider.replyerrep}} REP</p>
+              </div>
+            </div>
             <template is="dom-if" if="{{btnshow}}">
               <div class="horizont center endjust">
                 <paper-button class="blueback white makedealbtn" on-tap="toMakedeal"><iron-icon icon="sc-icons:arrowright" class="white"></iron-icon>Make a deal with {{replydata.provider.username}}</paper-button>
               </div>
             </template>
-        </div>
-
-            </template>
-
-
-
-            <template is="dom-if" if="{{phoneview}}">
-
-
-        <div class="vertic start centerjust totalwidth">
-          <p class="grey3 small"><moment-js date="{{replydata.replytime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
-          <p class="reply grey4">{{replydata.msg}}</p>
-        </div>
-
-
-
-
-        <div class="minispace"></div>
-        <div class="minispace"></div>
-        <div class="totalwidth horizont start startjust">
-          <div class="horizont startjust center flex">
-            <sc-avatar
-              class="replyeravatar"
-              ipfshash="[[replydata.provider.avatarhash]]"
-              size="verysmall">
-            </sc-avatar>
-
-            <div class="vertic centercenter replyer">
-              <p class="totalwidth replyername small bold grey3">{{replydata.provider.username}}</p>
-              <p class="totalwidth replyerrep small bold blue"><sc-hashtagrep pubkey="{{replydata.provider.pubkey}}" hashtagname="{{itemdata.hashtag}}"></sc-hashtagrep> REP</p>
-            </div>
-          </div>
-          <div class="horizont start startjust">
-            <div class="horizont end endjust acceptsfor">
-              <p class="bold grey4 replyamount">{{replydata.replyamount}} <span class="replySWT">SWT</span></p>
-              <iron-icon class="grey4 small" icon="sc-icons:v">checked</iron-icon>
-            </div>
           </div>
 
-        </div>
 
-            <template is="dom-if" if="{{btnshow}}">
-                <div class="whitespace"></div>
+        </template>
 
-              <div class="totalwidth horizont centercenter">
-                <paper-button class="blueback white small totalwidth" on-tap="toMakedeal"><iron-icon icon="sc-icons:arrowright" class="white"></iron-icon>Make a deal with {{replydata.provider.username}}</paper-button>
+
+
+        <template is="dom-if" if="{{phoneview}}">
+
+
+          <div class$="vertic start centerjust totalwidth {{totalopacity}}">
+            <p class="grey3 small"><moment-js date="{{replydata.replytime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
+            <p class="reply grey4">{{replydata.msg}}</p>
+          </div>
+
+          <div class="minispace"></div>
+          <div class="minispace"></div>
+          <div class$="totalwidth horizont start startjust {{totalopacity}}">
+            <div class="horizont startjust center flex">
+              <sc-avatar
+                class="replyeravatar"
+                ipfshash="[[replydata.provider.avatarhash]]"
+                size="verysmall">
+              </sc-avatar>
+
+              <div class="vertic centercenter replyer">
+                <p class="totalwidth replyername small bold grey3">{{replydata.provider.username}}</p>
+                <p class="totalwidth replyerrep small bold blue"><sc-hashtagrep pubkey="{{replydata.provider.pubkey}}" hashtagname="{{itemdata.hashtag}}"></sc-hashtagrep> REP</p>
               </div>
-            </template>
-            </template>
+            </div>
+            <div class="horizont start startjust">
+              <div class="horizont end endjust acceptsfor">
+                <p class="bold grey4 replyamount">{{replydata.replyamount}} <span class="replySWT">SWT</span></p>
+                <iron-icon class="grey4 small" icon="sc-icons:v">checked</iron-icon>
+              </div>
+            </div>
+
+          </div>
+
+          <template is="dom-if" if="{{btnshow}}">
+            <div class="whitespace"></div>
+            <div class="totalwidth horizont centercenter">
+              <paper-button class="blueback white small totalwidth" on-tap="toMakedeal"><iron-icon icon="sc-icons:arrowright" class="white"></iron-icon>Make a deal with {{replydata.provider.username}}</paper-button>
+            </div>
+          </template>
+
+
+          <template is="dom-if" if="{{yourethechoosenone}}">
+            <div class="yourethechoosenone">
+              <p class="grey3 bold">{{itemdata.seeker.username}} has chosen {{replydata.provider.username}} to make a deal with.</p>
+            </div>
+          </template>
+
+        </template>
 
 
 
@@ -326,7 +356,8 @@ This component shows a reply on a request.
       is: 'sc-itemreply',
 
       observers: [
-        '_log(replydata)'
+        // '_log(itemdata,replydata)'
+        '_yourethechoosenone(itemdata,replydata)'
       ],
       properties: {
         /**
@@ -364,6 +395,16 @@ This component shows a reply on a request.
         replydata: {
           type: Object,
           observer: '_replydata'
+        },
+
+        yourethechoosenone: {
+          type: Boolean,
+          value: false
+        },
+
+        totalopacity: {
+          type: String,
+          value: 'full'
         }
 
 
@@ -479,10 +520,17 @@ This component shows a reply on a request.
         this.fire('to-makedeal', this.replydata);
       },
 
-      _log: function(target) {
-        console.log("*************************** in itemreplyzzzz", target);
+      _yourethechoosenone: function() {
+        if(this.itemdata.selectedreply == this.replydata.id){
+          this.yourethechoosenone = true;
+          this.totalopacity = "notfull";       
+        }
       },
 
+
+      _log: function(target) {
+        console.log("*************************** in itemreplyzzzz reply", this.replydata);
+      },
 
 
     });
