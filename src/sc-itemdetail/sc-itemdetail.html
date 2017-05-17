@@ -228,7 +228,7 @@ This components shows the detailed view of a request.
  -->
         <template is="dom-if" if="{{!youareowner(itemdata.seeker.pubkey)}}">
           <!-- <p>replypossible={{replypossible}}</p> -->
-          <template is="dom-if" if="{{!itemdata.selectedreply}}">
+          <template is="dom-if" if="{{canireply(itemdata)}}">
             <sc-itemreplier itemdata="{{itemdata}}">
             </sc-itemreplier>
           </template>
@@ -327,6 +327,14 @@ This components shows the detailed view of a request.
 
       _web3: function() {
        // this.startListener();
+      },
+
+      canireply: function(itemdata){
+        if (!itemdata.selectedreply && !itemdata.ireplied){
+          return true;
+        }else{
+          return false;
+        }
       },
 
       youareowner: function(pubkey){
