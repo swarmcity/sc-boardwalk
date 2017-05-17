@@ -149,13 +149,18 @@
           if (foundDeal > -1) {
             var deal = Object.assign({},this.emptyDeal,deals[foundDeal],{ireplied : true});
             if (deal.replies) {
-              var foundDeal = deal.replies.findIndex(function(item) {
+              var foundReply = deal.replies.findIndex(function(item) {
                 return item.id === replydata.id;
               });
-              deal.replies[foundDeal] = replyMutation;
+              if (foundReply>-1){
+                deal.replies[foundReply] = replyMutation;
+              }else{
+                deal.replies.push(replyMutation);
+              }
             } else {
               deal.replies = [replyMutation];
             }
+            deals[foundDeal] = deal;
           } else {
             // this message comes before the deal info. Create an empty placehodler
             var newDeal = {
