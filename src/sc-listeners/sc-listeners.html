@@ -165,7 +165,7 @@
             var ireplied = false;
             if (deal.replies){
               for (var i = 0; i < deal.replies.length; i++) {
-                if (deal.replies[i].ismyreply){
+                if (deal.replies[i].provider.pubkey === this.identity.pubkey){
                   //debugger;
                   ireplied = true;
                 }
@@ -178,7 +178,7 @@
             var newDeal = {
               id: replydata.parentrequestid,
               replies: [replyMutation],
-              ireplied : true
+              ireplied : replyMutation.ismyreply
             };
             deals.push(Object.assign({},this.emptyDeal,newDeal));
             //console.error('no deal found for reply with ID=', replydata.id)
