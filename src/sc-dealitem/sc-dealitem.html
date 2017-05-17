@@ -117,7 +117,7 @@ This components is the representation of a request in the requests-list on sc-ha
 
     </style>
 
-    <sc-dealstate deal="{{item}}" dealstate="{{dealstate}}"></sc-dealstate>
+    <sc-dealstate deal="{{item}}" dealstate="{{dealstate}}" seekerstate="{{seekerstate}}" providerstate="{{providerstate}}"></sc-dealstate>
 
 
         <template is="dom-if" if="{{_is(appearance,'first')}}">
@@ -126,7 +126,7 @@ This components is the representation of a request in the requests-list on sc-ha
                 ipfshash="[[item.seeker.avatarhash]]"
                 size="verysmall">
               </sc-avatar>
-            <p class="mymsg grey4 flex"> {{item.msg}} xx {{dealstate}}</p>
+            <p class="mymsg grey4 flex"> {{item.msg}} xx {{dealstate}} xx {{seekerstate}} xx {{providerstate}}</p>
 
             <p class="small grey2 semibold"> {{dealstatusmsg}}</p>
 
