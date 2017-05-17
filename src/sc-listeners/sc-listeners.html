@@ -457,7 +457,7 @@
 
       readcontractaftertx: function(dealid,dealaddress,tx){
         var self = this;
-debugger;
+//debugger;
         console.log('Start monitoring for balance from deal tx',tx);
         if (!tx){
           return;
@@ -465,7 +465,7 @@ debugger;
 
         this.web3.waitTx(tx, function(err, res) {
         
-debugger;
+//debugger;
         this.contracturl = this.resolveUrl('../contracts/DealForTwo.json');
         this.importHref(this.contracturl, function(e) {
           this.contractjson = JSON.parse(e.target.import.body.innerText);
