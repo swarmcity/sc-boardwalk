@@ -169,11 +169,6 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
       }
 
-      .loadingnew {
-        min-height: 20vh;
-        width: 100%;
-
-      }
 
 /*        .dottedbottom {
           border-bottom: 1px dotted var(--sc-grey2);
@@ -216,13 +211,6 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
     </style>
     <div class="totalcontainer">
       <div id="newitemcontent" class="whiteback shadow">
-<template is="dom-if" if="{{loading}}">
-  <div class="loadingnew vertic centercenter">
-    <sc-loader small class="grey2" color="grey2">Processing your request</sc-loader>
-  </div>
-</template>
-
-<template is="dom-if" if="{{!loading}}">
 
       <div class="totalwidth horizont centercenter backbtnarea">
         <span class="flex"></span>
@@ -278,9 +266,11 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
           <template is="dom-if" if="{{!overspending}}">
             <div class="tenspace"></div>
           </template>
+          
+          <template is="dom-if" if="{{loading}}">
+              <sc-loader small class="grey4" color="grey4">Processing your request</sc-loader>
+          </template>
 
-
-</template>
 
       </div> 
 <template is="dom-if" if="{{!loading}}">
@@ -478,6 +468,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
             });
           }
         });
+        this.overspending = false;
 
       } else {
         this.overspending = true;
