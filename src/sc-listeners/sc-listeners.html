@@ -77,9 +77,9 @@
             return item.id === dealdata.id;
           });
           if (foundDeal > -1) {
-            deals[foundDeal] = Object.assign(this.emptyDeal, deals[foundDeal], newDeal);
+            deals[foundDeal] = Object.assign({},this.emptyDeal, deals[foundDeal], newDeal);
           } else {
-            deals.push(Object.assign(this.emptyDeal,newDeal));
+            deals.push(Object.assign({},this.emptyDeal,newDeal));
           }
          
           if (newDeal.creationtx){
@@ -112,9 +112,9 @@
             return item.id === payload.id;
           });
           if (foundDeal > -1) {
-            deals[foundDeal] = Object.assign(this.emptyDeal, deals[foundDeal], mutation);
+            deals[foundDeal] = Object.assign({},this.emptyDeal, deals[foundDeal], mutation);
           }else{
-            deals.push(Object.assign(this.emptyDeal,mutation));
+            deals.push(Object.assign({},this.emptyDeal,mutation));
           }
           return {
             type: 'DEALS',
@@ -147,15 +147,20 @@
           });
 
           if (foundDeal > -1) {
-            var deal = Object.assign(this.emptyDeal,deals[foundDeal],{ireplied : true});
+            var deal = Object.assign({},this.emptyDeal,deals[foundDeal],{ireplied : true});
             if (deal.replies) {
-              var foundDeal = deal.replies.findIndex(function(item) {
+              var foundReply = deal.replies.findIndex(function(item) {
                 return item.id === replydata.id;
               });
-              deal.replies[foundDeal] = replyMutation;
+              if (foundReply>-1){
+                deal.replies[foundReply] = replyMutation;
+              }else{
+                deal.replies.push(replyMutation);
+              }
             } else {
               deal.replies = [replyMutation];
             }
+            deals[foundDeal] = deal;
           } else {
             // this message comes before the deal info. Create an empty placehodler
             var newDeal = {
@@ -163,7 +168,7 @@
               replies: [replyMutation],
               ireplied : true
             };
-            deals.push(Object.assign(this.emptyDeal,newDeal));
+            deals.push(Object.assign({},this.emptyDeal,newDeal));
             //console.error('no deal found for reply with ID=', replydata.id)
           }
 
@@ -191,9 +196,9 @@
             return item.id === params.dealid;
           });
           if (foundDeal > -1) {
-            deals[foundDeal] = Object.assign(this.emptyDeal, deals[foundDeal], mutation);
+            deals[foundDeal] = Object.assign({},this.emptyDeal, deals[foundDeal], mutation);
           }else{
-            deals.push(Object.assign(this.emptyDeal,mutation));
+            deals.push(Object.assign({},this.emptyDeal,mutation));
           }
 
           return {
@@ -217,9 +222,9 @@
             return item.id === params.requestid;
           });
           if (foundDeal > -1) {
-            deals[foundDeal] = Object.assign(this.emptyDeal, deals[foundDeal], mutation);
+            deals[foundDeal] = Object.assign({},this.emptyDeal, deals[foundDeal], mutation);
           }else{
-            deals.push(Object.assign(this.emptyDeal,mutation));
+            deals.push(Object.assign({},this.emptyDeal,mutation));
           }
           return {
             type: 'DEALS',
@@ -239,9 +244,9 @@
             return item.id === payload.requestid;
           });
           if (foundDeal > -1) {
-            deals[foundDeal] = Object.assign(this.emptyDeal, deals[foundDeal], mutation);
+            deals[foundDeal] = Object.assign({},this.emptyDeal, deals[foundDeal], mutation);
           }else{
-            deals.push(Object.assign(this.emptyDeal,mutation));
+            deals.push(Object.assign({},this.emptyDeal,mutation));
           }
           return {
             type: 'DEALS',
@@ -262,9 +267,9 @@
             return item.id === payload.requestid;
           });
           if (foundDeal > -1) {
-            deals[foundDeal] = Object.assign(this.emptyDeal, deals[foundDeal], mutation);
+            deals[foundDeal] = Object.assign({},this.emptyDeal, deals[foundDeal], mutation);
           }else{
-            deals.push(Object.assign(this.emptyDeal,mutation));
+            deals.push(Object.assign({},this.emptyDeal,mutation));
           }
           this.readcontractaftertx(payload.requestid,payload.transactionhash);
           return {
