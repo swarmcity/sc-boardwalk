@@ -10,14 +10,26 @@
           observer: '_deal'
         },
         dealstate: {
-          type: Object,
+          type: String,
           notify: true
         },
+        seekerstate: {
+          type: String,
+          notify: true
+        },
+        providerstate: {
+          type: String,
+          notify: true
+        },                  
       },
 
       _deal: function(){
+
         var newdealstate = 'init';
-        if (this.deal.offercreationtx){
+        var newseekerstate = 'init';
+        var newproviderstate = 'init';
+
+        if (this.deal.creationtx){
           newdealstate = 'init';
         }
         if (this.deal.dealaddress){
@@ -29,9 +41,30 @@
         if (this.deal.amount > 0){
           newdealstate = 'seekerfunded';
         }
+        if (this.deal.assigntx){
+          newseekerstate = 'accepted';
+        }
+        if (this.deal.assigntx_mined){
+          newseekerstate = 'mined';
+        }
+        if (this.deal.providerfundingtx){
+          newproviderstate = 'accepted';
+        }
+        if (this.deal.providerfundingtx_mined){
+          newproviderstate = 'mined';
+        }
+
+        if (this.deal.providerfundingtx && this.deal.assigntx){
+          newdealstate = 'bothaccepted';
+        }
+
+        if (this.deal.providerfundingtx_mined && this.deal.assigntx_mined){
+          newdealstate = 'indeal';
+        }
 
         this.dealstate = newdealstate;
-
+        this.seekerstate = newseekerstate;
+        this.providerstate = newproviderstate;
 
       }
     });

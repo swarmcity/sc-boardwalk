@@ -178,7 +178,7 @@ This components shows the detailed view of a request.
         </div>
         <div class="totalwidth detailpadding">
           <div class$="totalwidth {{totalopacity}}">
-            <p class="small grey3"><moment-js date="{{item.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
+            <p class="small grey3"><moment-js date="{{itemdata.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
             <div class="minispace"></div>
             <p class="offer light grey4">{{itemdata.msg}} (DS={{dealstate}})<span class="bold offerhashtag">#{{itemdata.hashtag}}</span></p>
           </div>
@@ -352,7 +352,7 @@ This components shows the detailed view of a request.
         }
 
         this.itemdata = foundDeal;
-
+        console.log("AZER::", foundDeal);
 
 
         // check if I have already replied to this deal.
@@ -367,10 +367,10 @@ This components shows the detailed view of a request.
           // }
         }
 
-        console.log('-------> ITEMDATA CHANGED <--------');
-        if (this.itemdata){
-          console.log('------->',this.itemdata.dealstate,' <--------');
-        }
+        // console.log('-------> ITEMDATA CHANGED <--------');
+        // if (this.itemdata){
+        //   console.log('------->',this.itemdata.dealstate,' <--------');
+        // }
 
 
         //this.startListener();
