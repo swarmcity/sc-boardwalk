@@ -234,7 +234,7 @@ This components shows the detailed view of a request.
           </template>
         </template>
         <div class="whiteback totalwidth">
-        <template is="dom-repeat" items="{{itemdata.replies}}">
+        <template is="dom-repeat" items="{{itemreplies}}">
           <sc-itemreply
           itemdata="{{itemdata}}"
           btnshow="{{youareowner(itemdata.seeker.pubkey)}}"
@@ -352,34 +352,21 @@ This components shows the detailed view of a request.
         
         var self = this;
         //debugger;
-        var foundDeal = this.deals.find(function(item){
+        var foundDeal = this.deals.findIndex(function(item){
             return item.id === self.itemid;
         });
 
-        if (!foundDeal){
-          return;
+        if (foundDeal > -1){
+          this.itemdata = this.deals[foundDeal];
+          if (this.itemdata.replies){
+            this.itemreplies = this.itemdata.replies.slice(0);
+          }
+        }else{
+          this.itemdata = null;
+          this.itemreplies = null;
         }
-
-        this.set('itemdata',foundDeal);
-
-
-        // check if I have already replied to this deal.
-        if (this.itemdata.replies){
-          this.set('itemdata.replies',foundDeal.replies);
-          // var foundReply = this.itemdata.replies.findIndex(function(item){
-          //   return item.provider.pubkey === self.identity.pubkey;
-          // });
-          // if (foundReply>-1){
-          //   self.replypossible = false;
-          // }else{
-          //   self.replypossible = true;            
-          // }
-        }
-
-        console.log('-------> ITEMDATA CHANGED <--------');
-        if (this.itemdata){
-          console.log('------->',this.itemdata.dealstate,' <--------');
-        }
+        console.log('hi will');
+        console.log(this.itemreplies);
 
 
         //this.startListener();

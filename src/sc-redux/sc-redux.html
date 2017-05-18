@@ -38,14 +38,16 @@
                 break;
             case 'DEALS':
                 //let deals = state.deals;
-                var deals  = action.deals;
+                //var deals  = action.deals;
                
                 //debugger;
+                var deals = [];
                 var mydeals = [];
                 var otherdeals = [];
 
                 if (state.identity && state.identity.pubkey) {
                     for (var i = 0; i < action.deals.length; i++) {
+                        deals.push(action.deals[i]);
                         if (state.identity.pubkey === action.deals[i].seeker.pubkey) {
                             mydeals.push(Object.assign({}, action.deals[i]));
                         }else{
@@ -62,6 +64,7 @@
                     mydeals: mydeals,
                     otherdeals: otherdeals
                 });
+                //debugger;
                 return newstate;
 
                 break;
