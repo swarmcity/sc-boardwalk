@@ -709,12 +709,12 @@ This is the component showing all requests of a certain hashtag. It contains a r
        * 'hashtag_to_detail' fires 'to-itemdetail' to the parent-element, and includes the animationconfig for this action.
        */
       hashtag_to_detail: function(e) {
-        debugger;
         console.log("Dit is de e uit hashtgitem", e.detail);
         this.currentitem = e.detail;
         this.set('route.path', '/' + this.hashtag + '/detail/' + e.detail.id);
       },
 
+      // my deal -> to dealfortwo
       hashtag_to_dealfortwo: function(e) {
         //debugger;
         this.fire('redirect', {
