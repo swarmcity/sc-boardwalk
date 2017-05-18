@@ -346,7 +346,8 @@ This components shows the detailed view of a request.
           replydata="{{item}}"
           on-to-detail="fireReplyselected"
           on-item-detail="firetoItemdetail"
-          on-to-makedeal="toMakeDeal">
+          on-to-makedeal="toMakeDeal"
+          on-to-dealfortwo-provider="toProvider">
           </sc-itemreply>
         </template>
         </div>
@@ -519,6 +520,10 @@ This components shows the detailed view of a request.
 
       _log: function(target){
           console.log("HAZ THIS in item-detail??!!!!",target);
+      },
+
+      toProvider: function(e){
+        this.fire('to-dealfortwo-provider', e.detail);;
       },
 
       toMakeDeal: function(e) {

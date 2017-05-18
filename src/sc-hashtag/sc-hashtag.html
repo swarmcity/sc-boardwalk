@@ -395,6 +395,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
         on-reply-selected="detail_to_reply"
         on-reply-to-detail="reply_to_detail"
         on-to-makedeal="toMakeDeal"
+        on-to-dealfortwo-provider="toDealForTwoProvider"
       ></sc-itemdetail>
 
     </neon-animated-pages>
@@ -760,6 +761,12 @@ This is the component showing all requests of a certain hashtag. It contains a r
           target: '/dealfortwoseeker/' + this.data.hashtag + '/' + e.detail.parentrequestid + '/' + e.detail.id
         });
         //        this.fire('redirect',Object.assign({}, e.detail, {hashtag: this.data.hashtag}));
+      },
+
+      toDealForTwoProvider: function(e){
+        this.fire('redirect', {
+          target: '/dealfortwoprovider/' + this.data.hashtag + '/' + e.detail.parentrequestid + '/' + e.detail.id
+        });
       },
 
       
