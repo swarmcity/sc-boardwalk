@@ -121,11 +121,11 @@ This components shows the detailed view of a request.
 
 
       .dealcreate_steps {
-        margin-top: 20px;
+        margin-bottom: 20px;
         box-sizing:border-box;
         padding: 10px 10px 10px 0px;
-        border-top: 2px dotted rgba(0,0,0,0.5);
-        border-bottom: 2px dotted rgba(0,0,0,0.5);
+/*        border-top: 2px dotted rgba(0,0,0,0.5);
+        border-bottom: 2px dotted rgba(0,0,0,0.5);*/
       }
 
 
@@ -252,6 +252,37 @@ This components shows the detailed view of a request.
           <iron-icon class="grey3 backicon" icon="sc-icons:decline" on-tap="back">back</iron-icon>
         </div>
         <div class="totalwidth detailpadding">
+
+         <template is="dom-if" if="{{notreadyyet}}">
+            <div class="dealcreate_steps">
+              <div class="horizont end startjust">
+                <div class$="triangle {{collapsestate}}" on-tap="showSteps">
+                  <svg id="triangle_icon" x="0px" y="0px" viewBox="0 0 50 50" fill="#666666">
+                  <polygon points="6.5,4.9 6.5,44.5 42,24.9 "/>
+                  </svg>
+                </div>
+                <div class="horizont end startjust">
+                  <p class="grey2 bold" on-tap="showSteps">{{dealstatemsg}}</p>
+                  <sc-loader class="grey3" color="grey3" small on-tap="showSteps"></sc-loader>
+                </div>
+              </div>
+              <iron-collapse id="steps_collapser">
+                <div class="allsteps">
+                  <div class$="step totalwidth horizont centercenter {{steponestate}}" on-tap="tempTapthree">
+                    <p class="flex">Creating a new dealcontract for this request</p>
+                    <iron-icon class="" icon="sc-icons:v"></iron-icon>
+                  </div>
+                  <div class$="step totalwidth horizont centercenter {{steptwostate}}" on-tap="tempTapfour">
+                    <p class="flex">Sending SWT to this request</p>
+                    <iron-icon class="" icon="sc-icons:v"></iron-icon>
+                  </div>
+                </div>
+              </iron-collapse>
+            </div>
+          </template>
+
+
+
           <div class$="totalwidth {{totalopacity}}">
             <p class="small grey3"><moment-js date="{{itemdata.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
             <div class="minispace"></div>
@@ -295,37 +326,7 @@ This components shows the detailed view of a request.
               <p class$="bold yellow amount {{amountopacity}}">{{itemdata.amount}} <span class="swt">SWT</span></p>
           </div>
           </template>
-          <template is="dom-if" if="{{notreadyyet}}">
-
-            <div class="dealcreate_steps">
-              <div class="horizont end startjust">
-                <div class$="triangle {{collapsestate}}" on-tap="showSteps">
-                  <svg id="triangle_icon" x="0px" y="0px" viewBox="0 0 50 50" fill="#666666">
-                  <polygon points="6.5,4.9 6.5,44.5 42,24.9 "/>
-                  </svg>
-                </div>
-                <div class="horizont end startjust">
-                  <p class="grey3 reg" on-tap="showSteps">{{dealstatemsg}}</p>
-                  <sc-loader class="grey3" color="grey3" small on-tap="showSteps"></sc-loader>
-                </div>
-              </div>
-              <iron-collapse id="steps_collapser">
-                <div class="allsteps">
-                  <div class$="step totalwidth horizont centercenter {{steponestate}}" on-tap="tempTapthree">
-                    <p class="flex">Creating a new dealcontract for this request</p>
-                    <iron-icon class="" icon="sc-icons:v"></iron-icon>
-                  </div>
-                  <div class$="step totalwidth horizont centercenter {{steptwostate}}" on-tap="tempTapfour">
-                    <p class="flex">Sending SWT to this request</p>
-                    <iron-icon class="" icon="sc-icons:v"></iron-icon>
-                  </div>
-                </div>
-              </iron-collapse>
-            </div>
-
-
-
-          </template>
+ 
         </div>
 <!--           <div class="feedbackbox totalwidth">
             <sc-dealfeedback showsteps="create" dealstate="{{dealstate}}"></sc-dealfeedback>
