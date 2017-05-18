@@ -12,11 +12,18 @@
         var v = window.localStorage.setItem(key,JSON.stringify(val));
     }
         
-    // debug state - remove me.
-    //setLS('sc-deals',[]);
+    var initialdeals = [];
+    var initialmydeals = [];
+    var initialotherdeals = [];
+
+    // var initialdeals = getLS('sc-deals') || [];
+    // var initialmydeals = getLS('sc-mydeals') || [];
+    // var initialotherdeals = getLS('sc-otherdeals') || [];
 
     let initialState = {
-        deals: [],
+        deals: initialdeals,
+        mydeals: initialmydeals,
+        otherdeals: initialotherdeals,
         notifications: [],
         mydeals: [],
         otherdeals: [],
@@ -57,7 +64,9 @@
                 }
             
                 setLS('sc-deals',deals);
-                setLS('sc-deals-len',deals.length);
+                setLS('sc-mydeals',mydeals);
+                setLS('sc-otherdeals',otherdeals);
+                //setLS('sc-deals-len',deals.length);
 
                 var newstate = Object.assign({}, state, {
                     deals: deals,
