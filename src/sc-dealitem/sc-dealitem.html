@@ -57,8 +57,7 @@ This components is the representation of a request in the requests-list on sc-ha
 
       .dealstate_second {
         box-sizing:border-box;
-        padding: 10px 20px 10px 20px;
-        background-color: white;
+        padding: 14px 16px 14px 20px;
         margin: 8px 0px 0px 0px;
       }
 
@@ -85,8 +84,8 @@ This components is the representation of a request in the requests-list on sc-ha
       }
 
       .dealstatusmsg {
-        font-size: 12px;
-        line-height: 26px;
+/*        font-size: 12px;
+        line-height: 26px;*/
       }
 
       .rightmarg {
@@ -134,9 +133,11 @@ This components is the representation of a request in the requests-list on sc-ha
               </sc-avatar>
             <!-- <p class="mymsg grey4 flex"> {{item.msg}} xx {{dealstate}} xx {{seekerstate}} xx {{providerstate}}</p> -->
             <p class="mymsg grey4 flex">{{item.msg}}</p>
-            <div class="horizont end startjust">
-            <p class="dealstatusmsg small grey2 semibold">{{dealstatusmsg}} </p><sc-loader small color="grey2"></sc-loader>
-            </div>
+            <template is="dom-if" if="{{showmsg}}">
+              <div class="horizont end startjust">
+                <p class="dealstatusmsg small grey2 semibold">{{dealstatusmsg}} </p><sc-loader small color="grey2"></sc-loader>
+              </div>
+            </template>
 
               <p class$="myoffer bold yellow {{amountopacity}}">{{item.amount}} SWT</p>
               <div class="horizont center endjust">
@@ -154,7 +155,7 @@ This components is the representation of a request in the requests-list on sc-ha
 
 
         <template is="dom-if" if="{{_is(appearance,'second')}}">
-          <div class="dealstate_second totalwidth horizont center startjust" on-tap="toDetail">
+          <div class$="dealstate_second totalwidth horizont center startjust {{dealstatesecondbg}}" on-tap="toDealfortwo">
             <div class="horizont center startjust flex">
               <p class$="dealstatusmsg {{dealstatusmsgclass}}">{{dealstatusmsg}}</p>
             </div>
@@ -163,12 +164,12 @@ This components is the representation of a request in the requests-list on sc-ha
                 ipfshash="[[identity.avatarhash]]"
                 size="verysmall">
               </sc-avatar>
-              <iron-icon icon="sc-icons:v" class$="{{seekervcolor}} medium rightmarg"></iron-icon>
+              <iron-icon icon="sc-icons:v" class$="{{seekervcolor}} {{seekervopacity}} medium rightmarg"></iron-icon>
               <sc-avatar
-                ipfshash="[[item.offereravatar]]"
+                ipfshash="[[currentprovider.avatarhash]]"
                 size="verysmall">
               </sc-avatar>
-              <iron-icon icon="sc-icons:v" class$="{{providervcolor}} medium"></iron-icon>
+              <iron-icon icon="sc-icons:v" class$="{{providervcolor}} {{providervopacity}} medium"></iron-icon>
             </div>
           </div> 
         </template>
@@ -189,7 +190,9 @@ This components is the representation of a request in the requests-list on sc-ha
 
       observers: [
         '_item(item)',
-        '_dealstate(dealstate)'
+        '_dealstate(dealstate)',
+        '_seekerstate(seekerstate)',
+        '_providerstate(providerstate)'
       ],
 
       properties: {
@@ -207,12 +210,12 @@ This components is the representation of a request in the requests-list on sc-ha
 
         seekervcolor: {
           type: String,
-          value: 'grey2'
+          value: 'grey3'
         },
 
         providervcolor: {
           type: String,
-          value: 'grey2'
+          value: 'grey3'
         },
 
         amountopacity: {
@@ -227,7 +230,22 @@ This components is the representation of a request in the requests-list on sc-ha
 
         dealstatusmsg: {
           type: String
-        }
+        },
+
+        showmsg: {
+          type: Boolean,
+          value: false
+        }, 
+
+        dealstatesecondbg: {
+          type: String,
+          value: 'white'  
+        },
+
+        vopacity: {
+          type: String,
+          value: 'half'  
+        },
       },
 
       ready: function(){
@@ -269,6 +287,8 @@ This components is the representation of a request in the requests-list on sc-ha
 
       _item: function(){
 
+        var self = this;
+
         if (this.item.replies){        
           this.replycount = this.item.replies.length;
         } else {
@@ -276,6 +296,19 @@ This components is the representation of a request in the requests-list on sc-ha
         }
 
         console.log("uit dealitem ****", this.item);
+
+        if (this.item.selectedreply){        
+          var foundReply = this.item.replies.find(function(item){
+            return item.id === self.item.selectedreply;
+        });
+          this.currentprovider = foundReply.provider;
+      
+          this.appearance = 'second';
+          this.dealstatusmsgclass = "grey3";
+          this.dealstatusmsg = "You're making a deal with "+ foundReply.provider.username+".";
+          this.dealstatesecondbg = "lighterer";
+        }
+
 
         // if (this.item.dealstate=='providerassigned' || this.item.dealstate=='dealfundedbyprovider' || this.item.dealstate=='dealtopayout') {
         //   this.appearance = 'second';
@@ -323,6 +356,10 @@ This components is the representation of a request in the requests-list on sc-ha
 
         if (target=='init' || target=='seekerfunding') {
           this.dealstatusmsg = "Creating your request";
+          this.showmsg = true;
+        } else {
+          this.dealstatusmsg = "";
+          this.showmsg = false;
         };
 
         if (target=='seekerfunded') {
@@ -332,38 +369,38 @@ This components is the representation of a request in the requests-list on sc-ha
           this.amountopacity = "half";
         };
 
-
-        // if (target=='providerassigning' || target=='providerassigned') {
-        //   this.dealstatusmsg = "You agreed to a deal with "+ "for " + this.item.amount + "SWT.";
-        //   this.seekervcolor = "green";       
-        // };
+      },
 
 
-        // if (target=='providerfunding' || target=='providerfunded') {
-        //   this.dealstatusmsg = "Making a deal with "+ "for " + this.item.amount + "SWT.";
-        //   this.providervcolor = "green";       
-        // };
+      _seekerstate: function(){
+        if (this.seekerstate === 'accepted' || this.seekerstate === 'mined') {
+          this.seekervopacity = "full";
+          this.seekervcolor = "green";       
+        } else {
+          this.seekervopacity = "half";
+          this.seekervcolor = "grey2";    
+        };
+        console.log("seekerstate in dealitem==", this.seekerstate);
+      },
 
-        // if (target=='providerfundedseekeragreed' || target=='provideragreedseekerassigned' || target=='bothaccepted') {
-        //   this.dealstatusmsg = "Making a deal with "+ "for " + this.item.amount + "SWT.";
-        //   this.seekervcolor = "green";       
-        //   this.providervcolor = "green";       
-        // };
-
-
-
-        // if (target=='indeal') {
-        //   this.dealstatusmsg = "You're in deal with "+ "for " + this.item.amount + "SWT.";
-        //   this.dealstatusmsgclass = "bold blue";
-        //   this.seekervcolor = "green";  
-        //   this.providervcolor = "green";  
-        // };
-
+      _providerstate: function(){
+        if (this.providerstate === 'accepted' || this.providerstate === 'mined') {
+          this.providervopacity = "full";
+          this.providervcolor = "green";       
+        } else {
+          this.providervopacity = "half";
+          this.providervcolor = "grey2";    
+        };
+        console.log("providerstate in dealitem==", this.providerstate);
       },
 
 
       toDetail: function(){
         this.fire('to-detail',this.item);
+      },
+
+      toDealfortwo: function(){
+        this.fire('to-dealfortwo',this.item);
       },
 
 
