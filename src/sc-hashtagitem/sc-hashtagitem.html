@@ -122,6 +122,19 @@ This components is the representation of a request in the requests-list on sc-ha
       .full {
         opacity: 1;
       }
+
+      iron-icon.verysmall {
+        width: 14px;
+        height: 14px;
+        margin-left: 3px;
+        margin-bottom: 2px;
+      }
+
+      .replies {
+        margin-right: 10px;
+      }
+
+
       @media all and (min-width: 0) and (max-width: 420px) { 
       
         .smalltxt {
@@ -137,14 +150,15 @@ This components is the representation of a request in the requests-list on sc-ha
 
       <div class="totalwidth vertic start startjust" on-tap="toDetail">
 
-        <small class="small grey3 light flex">
-          <moment-js date="{{item.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js>
-          <span class="grey2">{{dealstatemsg}}</span>
-        </small>
+        <div class="totalwidth horizont center startjust">
+          <small class="small grey3 light">          
+            <moment-js date="{{item.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js>
+          </small>
+        </div>
 
         <p class="totalwidth offer grey4"> {{item.msg}} <span class="semibold"> 
           #{{item.hashtag}}</span></p>
-        <template is="dom-if" if="{{showreplies}}">
+<!--         <template is="dom-if" if="{{showreplies}}">
           <div class="nrofreplies horizont start startjust">
             <p class="small reg grey3">{{item.replies.length}}</p>
             <iron-icon icon="sc-icons:babble" class="grey3">replies</iron-icon>
@@ -156,11 +170,11 @@ This components is the representation of a request in the requests-list on sc-ha
             <iron-icon icon="sc-icons:babble" class="grey2">replies</iron-icon>
           </div>
         </template>
-
+ -->
         <div class="minispace"></div>
         <div class="minispace"></div>
 
-        <div class="totalwidth horizont start startjust">
+        <div class="totalwidth horizont end startjust">
           <sc-avatar
             ipfshash="[[item.seeker.avatarhash]]"
             size="verysmall">
@@ -170,15 +184,23 @@ This components is the representation of a request in the requests-list on sc-ha
             <p class="totalwidth yourrep small bold blue"><sc-hashtagrep pubkey="{{item.seeker.pubkey}}" hashtagname="{{item.hashtag}}"></sc-hashtagrep> REP</p>
           </div>
 
-<!--         <div class="totalwidth horizont centercenter">
-          <div class="flex"></div> -->
+          <template is="dom-if" if="{{item.replies}}">
+            <div class="replies horizont centercenter">
+              <small class="small grey2 light">{{item.replies.length}}</small>
+              <iron-icon icon="sc-icons:babble" class="grey2 verysmall">replies</iron-icon>
+            </div>
+          </template>
+
           <p class$="offeramount bold yellow {{amountopacity}}">{{item.amount}}<span class="offeramountSWT">SWT</span></p>
-<!--         </div> -->
 
 
 
 
         </div>
+
+<!--         <template is="dom-repeat" items="{{item.replies}}">
+          <p class="red">{{item.msg}}</p>
+        </template> -->
       </div>
 
 

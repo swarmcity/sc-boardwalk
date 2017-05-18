@@ -7,6 +7,7 @@
 <link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
 
 <link rel="import" href="../sc-avatar/sc-avatar.html">
+<link rel="import" href="../sc-loader/sc-loader.html">
 <link rel="import" href="../sc-hashtagcontract/sc-hashtagrep.html">
 <link rel="import" href="../sc-redux/sc-redux.html">
 <link rel="import" href="../sc-dealstate/sc-dealstate.html">
@@ -84,7 +85,8 @@ This components is the representation of a request in the requests-list on sc-ha
       }
 
       .dealstatusmsg {
-        font-size: 14px;
+        font-size: 12px;
+        line-height: 26px;
       }
 
       .rightmarg {
@@ -103,11 +105,15 @@ This components is the representation of a request in the requests-list on sc-ha
       }
 
       .half {
-        opacity: 0.75;
+        opacity: 0.5;
       }
 
       .full {
         opacity: 1;
+      }
+
+      sc-loader {
+        margin-bottom: 3px;
       }
 
       @media all and (min-width: 0) and (max-width: 420px) { 
@@ -126,15 +132,22 @@ This components is the representation of a request in the requests-list on sc-ha
                 ipfshash="[[item.seeker.avatarhash]]"
                 size="verysmall">
               </sc-avatar>
-            <p class="mymsg grey4 flex"> {{item.msg}} xx {{dealstate}} xx {{seekerstate}} xx {{providerstate}}</p>
-
-            <p class="small grey2 semibold"> {{dealstatusmsg}}</p>
+            <!-- <p class="mymsg grey4 flex"> {{item.msg}} xx {{dealstate}} xx {{seekerstate}} xx {{providerstate}}</p> -->
+            <p class="mymsg grey4 flex">{{item.msg}}</p>
+            <div class="horizont end startjust">
+            <p class="dealstatusmsg small grey2 semibold">{{dealstatusmsg}} </p><sc-loader small color="grey2"></sc-loader>
+            </div>
 
               <p class$="myoffer bold yellow {{amountopacity}}">{{item.amount}} SWT</p>
               <div class="horizont center endjust">
                 <p class="bold">{{replycount}}</p>
                 <iron-icon icon="sc-icons:babble" class="small replyicon">replies</iron-icon>
               </div>
+
+<!--         <template is="dom-repeat" items="{{item.replies}}">
+          <p class="red">{{item.msg}}</p>
+        </template> -->
+
           </div>
         </template>
 
@@ -308,12 +321,8 @@ This components is the representation of a request in the requests-list on sc-ha
           this.dealstatusmsgclass = "reg grey4";
         };
 
-        if (target=='init') {
-          this.dealstatusmsg = "Creating your request (1/2)";
-        };
-
-        if (target=='seekerfunding') {
-          this.dealstatusmsg = "Creating your request (2/2)";
+        if (target=='init' || target=='seekerfunding') {
+          this.dealstatusmsg = "Creating your request";
         };
 
         if (target=='seekerfunded') {

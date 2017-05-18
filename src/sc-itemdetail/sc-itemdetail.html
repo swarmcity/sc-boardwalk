@@ -1,11 +1,13 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
 <link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
 <link rel="import" href="../../bower_components/moment-js/moment-js.html">
 
 <link rel="import" href="../../bower_components/sc-style/sc-style.html">
 <link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
 <link rel="import" href="../sc-avatar/sc-avatar.html">
+<link rel="import" href="../sc-loader/sc-loader.html">
 <link rel="import" href="../sc-itemreplier/sc-itemreplier.html">
 <link rel="import" href="../sc-itemreply/sc-itemreply.html">
 <link rel="import" href="../sc-shh/sc-shh.html">
@@ -110,12 +112,85 @@ This components shows the detailed view of a request.
     }
 
     .halfop {
-      opacity: 0.5;
+      opacity: 0.65;
     }
 
     .fullop {
       opacity: 1;
     }
+
+
+      .dealcreate_steps {
+        margin-top: 20px;
+        box-sizing:border-box;
+        padding: 10px 10px 10px 0px;
+        border-top: 2px dotted rgba(0,0,0,0.5);
+        border-bottom: 2px dotted rgba(0,0,0,0.5);
+      }
+
+
+
+      .dealcreate_steps sc-loader {
+        font-size: 10px;
+      }
+
+
+      .triangle {
+        width: 12px;
+        transition: all 0.075s linear;
+        margin-right: 8px;
+        margin-left: 8px;
+        margin-bottom: 2px;
+        opacity: 1;
+      }
+
+      .triangle svg {
+        width: 100%;
+      }
+
+      .opened {
+        transform: rotate(90deg);
+        opacity: 0.75;
+      }
+
+
+      .grey2b {
+        color: #999999;
+        margin-left: 4px;
+      }
+
+      .allsteps {
+        width: 100%;
+        height: 100%;
+        @apply(--layout-vertical);
+        @apply(--layout-start);
+        @apply(--layout-start-justified);
+        box-sizing:border-box;
+        padding: 10px 0px 10px 0px;
+      }
+
+      .step {
+        box-sizing:border-box;
+        padding: 0px 0px 2px 28px;
+      }
+      .step p {
+        font-size: 14px;
+        line-height: 20px;
+        margin-right: 12px;
+      }
+
+      .stepinit {
+        color: var(--sc-grey2);
+      }
+
+      .stepdone p {
+        font-family: montserrat;
+        color: var(--sc-grey3);
+      }
+
+      .stepdone iron-icon {
+        color: var(--sc-green);
+      }
 
 
     @media all and (min-width: 0) and (max-width: 540px) { 
@@ -220,6 +295,37 @@ This components shows the detailed view of a request.
               <p class$="bold yellow amount {{amountopacity}}">{{itemdata.amount}} <span class="swt">SWT</span></p>
           </div>
           </template>
+          <template is="dom-if" if="{{notreadyyet}}">
+
+            <div class="dealcreate_steps">
+              <div class="horizont end startjust">
+                <div class$="triangle {{collapsestate}}" on-tap="showSteps">
+                  <svg id="triangle_icon" x="0px" y="0px" viewBox="0 0 50 50" fill="#666666">
+                  <polygon points="6.5,4.9 6.5,44.5 42,24.9 "/>
+                  </svg>
+                </div>
+                <div class="horizont end startjust">
+                  <p class="grey3 reg" on-tap="showSteps">{{dealstatemsg}}</p>
+                  <sc-loader class="grey3" color="grey3" small on-tap="showSteps"></sc-loader>
+                </div>
+              </div>
+              <iron-collapse id="steps_collapser">
+                <div class="allsteps">
+                  <div class$="step totalwidth horizont centercenter {{steponestate}}" on-tap="tempTapthree">
+                    <p class="flex">Creating a new dealcontract for this request</p>
+                    <iron-icon class="" icon="sc-icons:v"></iron-icon>
+                  </div>
+                  <div class$="step totalwidth horizont centercenter {{steptwostate}}" on-tap="tempTapfour">
+                    <p class="flex">Sending SWT to this request</p>
+                    <iron-icon class="" icon="sc-icons:v"></iron-icon>
+                  </div>
+                </div>
+              </iron-collapse>
+            </div>
+
+
+
+          </template>
         </div>
 <!--           <div class="feedbackbox totalwidth">
             <sc-dealfeedback showsteps="create" dealstate="{{dealstate}}"></sc-dealfeedback>
@@ -279,6 +385,21 @@ This components shows the detailed view of a request.
           type: Array,
           statePath: 'deals',
           observer: '_getitemdata'
+        },
+
+        notreadyyet: {
+          type: Boolean,
+          value: true
+        },
+
+        steponestate: {
+          type: String,
+          value: 'stepinit'
+        },
+
+        steptwostate: {
+          type: String,
+          value: 'stepinit'
         },
 
         // youareowner: {
@@ -527,20 +648,62 @@ This components shows the detailed view of a request.
 
       _dealstate: function(target) {
         switch(target){
-          case 'dealinit': 
+          case 'init': 
             this.totalopacity = 'halfop';
             this.amountopacity = 'halfop';
+            this.notreadyyet = true;
+            this.dealstatemsg = "Creating this request - 1/2";
           break;
-          case 'dealcreated': 
+          case 'created': 
             this.totalopacity = 'fullop';
             this.amountopacity = 'halfop';
+            this.steponestate = 'stepdone';
+            this.notreadyyet = true;
           break;
-          case 'dealfundedbyseeker': 
+          case 'seekerfunding': 
+            this.totalopacity = 'fullop';
+            this.amountopacity = 'halfop';
+            this.dealstatemsg = "Creating this request - 2/2";
+            this.steponestate = 'stepdone';
+            this.notreadyyet = true;
+          break;
+          case 'seekerfunded': 
+          case 'bothaccepted': 
+          case 'indeal': 
             this.totalopacity = 'fullop';
             this.amountopacity = 'fullop';
+            this.steponestate = 'stepdone';
+            this.steptwostate = 'stepdone';
+            this.notreadyyet = false;
           break;
         }
-      }
+      },
+
+      showSteps: function(){
+        var steps = this.shadowRoot.getElementById('steps_collapser');
+        steps.toggle();
+
+        if (steps.opened){
+          this.collapsestate = 'opened';
+        } else {
+          this.collapsestate = '';
+        }
+
+        // console.log(details);
+      },
+
+
+
+      tempTapthree: function(){
+            this.steponestate = 'stepdone';
+      },
+
+      tempTapfour: function(){
+            this.steptwostate = 'stepdone';
+      },
+
+
+
 
     });
   </script>
