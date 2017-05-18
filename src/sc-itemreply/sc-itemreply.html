@@ -142,11 +142,33 @@ This component shows a reply on a request.
 
       }
 
+
+      .iamthechoosenone {
+        box-sizing:border-box;
+        padding: 4px 10px 8px 10px;
+        border: 1px solid var(--sc-blue);
+        @apply(--layout-horizontal);
+        @apply(--layout-start);
+        @apply(--layout-start-justified); 
+        margin: 16px 0px 0px 0px;
+      }
+
+
+      .iamthechoosenone p {
+        font-size: 14px;
+        line-height: 16px;
+        margin-top: 5px;
+      }
+
+
       .yourethechoosenone {
-/*        box-sizing:border-box;
-        padding: 4px 6px;
-        background-color: var(--sc-grey3);*/
-        margin: 0px 0px 16px 0px;
+        box-sizing:border-box;
+        padding: 4px 10px 8px 10px;
+        border: 1px solid var(--sc-grey3);
+        @apply(--layout-horizontal);
+        @apply(--layout-start);
+        @apply(--layout-start-justified); 
+        margin: 16px 0px 0px 0px;
       }
 
 
@@ -154,6 +176,7 @@ This component shows a reply on a request.
       .yourethechoosenone p {
         font-size: 14px;
         line-height: 16px;
+        margin-top: 5px;
       }
 
       .full {
@@ -161,7 +184,7 @@ This component shows a reply on a request.
       }
 
       .notfull {
-        opacity: 0.75;
+        opacity: 0.65;
       }
 
 
@@ -204,13 +227,6 @@ This component shows a reply on a request.
 
         <template is="dom-if" if="{{!phoneview}}">
 
-          <template is="dom-if" if="{{yourethechoosenone}}">
-            <div class="yourethechoosenone">
-              <p class="green bold">{{itemdata.seeker.username}} has chosen {{replydata.provider.username}} to make a deal with.</p>
-            </div>
-          </template>
-
-
           <div class$="totalwidth horizont start centerjust {{totalopacity}}">
 
           <div class="vertic start centerjust totalwidth flex">
@@ -246,7 +262,21 @@ This component shows a reply on a request.
             </template>
           </div>
 
+          <template is="dom-if" if="{{yourethechoosenone}}">
+            <template is="dom-if" if="{{thisismyreply}}">
+              <div class="iamthechoosenone" on-tap="toDealfortwoprovider">
+                <p class="bold blue">{{itemdata.seeker.username}} has chosen you to make a deal with.</p>
+                <iron-icon icon="sc-icons:v" class="blue"></iron-icon>
+              </div>
+            </template>
 
+            <template is="dom-if" if="{{!thisismyreply}}">
+              <div class="yourethechoosenone">
+                <p class="grey4 bold">{{itemdata.seeker.username}} has chosen {{replydata.provider.username}} to make a deal with.</p>
+                <iron-icon icon="sc-icons:v" class="grey4"></iron-icon>
+              </div>
+            </template>
+          </template>
         </template>
 
 
@@ -292,9 +322,20 @@ This component shows a reply on a request.
 
 
           <template is="dom-if" if="{{yourethechoosenone}}">
-            <div class="yourethechoosenone">
-              <p class="grey3 bold">{{itemdata.seeker.username}} has chosen {{replydata.provider.username}} to make a deal with.</p>
-            </div>
+            <template is="dom-if" if="{{thisismyreply}}">
+              <div class="yourethechoosenone" on-tap="toDealfortwoprovider">
+                <p class="grey4 bold">{{itemdata.seeker.username}} has chosen you to make a deal with. <span class="bold blue">Go to this deal.</span> </p>
+                <iron-icon icon="sc-icons:v" class="grey4"></iron-icon>
+              </div>
+            </template>
+
+            <template is="dom-if" if="{{!thisismyreply}}">
+              <div class="yourethechoosenone">
+                <p class="grey4 bold">{{itemdata.seeker.username}} has chosen {{replydata.provider.username}} to make a deal with.</p>
+                <iron-icon icon="sc-icons:v" class="grey4"></iron-icon>
+              </div>
+            </template>
+
           </template>
 
         </template>
@@ -356,8 +397,9 @@ This component shows a reply on a request.
       is: 'sc-itemreply',
 
       observers: [
-        '_log(replydata)',
-        '_yourethechoosenone(itemdata,replydata)'
+        '_log(identity)',
+        '_yourethechoosenone(itemdata,replydata)',
+        '_isthismyreply(identity,itemdata)'
       ],
       properties: {
         /**
@@ -405,7 +447,7 @@ This component shows a reply on a request.
         totalopacity: {
           type: String,
           value: 'full'
-        }
+        },
 
 
       },
@@ -521,18 +563,50 @@ This component shows a reply on a request.
       },
 
       _yourethechoosenone: function() {
-        if(this.itemdata.selectedreply && this.itemdata.selectedreply == this.replydata.id){
-          this.yourethechoosenone = true;
-          this.totalopacity = "notfull";       
-        } else {
-          this.yourethechoosenone = false;
-          this.totalopacity = "full";       
+        var self = this;
+
+        if (this.itemdata.selectedreply) {
+          if(this.itemdata.selectedreply == this.replydata.id){
+            this.yourethechoosenone = true;
+            this.totalopacity = "full";       
+          } else {
+            this.yourethechoosenone = false;
+            this.totalopacity = "notfull";       
+          }
+
+
+          var foundReply = this.itemdata.replies.find(function(item){
+            return item.id === self.itemdata.selectedreply;
+          });
+
+          this.currentprovider = foundReply.provider.pubkey;
+          console.log("*************************** in itemreplyzzzz currentprovider", this.currentprovider);
+          this._isthismyreply();
         }
+
+      },
+
+      _isthismyreply:function(){
+        if(this.identity){
+          if (this.currentprovider === this.identity.pubkey) {
+            this.thisismyreply = true;
+          } else {
+            this.thisismyreply = false;
+          };
+        } else {
+            this.thisismyreply = false;
+          };
+      },
+
+
+      toDealfortwoprovider: function(){
+        debugger;
+        this.fire('to-dealfortwo-provider', this.itemdata);
       },
 
 
       _log: function(target) {
-        console.log("*************************** in itemreplyzzzz reply", this.replydata);
+        console.log("*************************** in itemreplyzzzz reply", target);
       },
 
 
