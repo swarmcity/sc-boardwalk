@@ -342,7 +342,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
             <template is="dom-repeat" items="{{mydeals}}">
               <sc-dealitem
                 item="[[item]]"
-                on-to-detail="hashtag_to_detail">
+                on-to-detail="hashtag_to_detail"
+                on-to-dealfortwo="hashtag_to_dealfortwo">
               </sc-dealitem>
             </template>
             </div>
@@ -714,6 +715,10 @@ This is the component showing all requests of a certain hashtag. It contains a r
         this.set('route.path', '/' + this.hashtag + '/detail/' + e.detail.id);
       },
 
+      hashtag_to_dealfortwo: function(e){
+        this.fire('redirect','/dealfortwoseeker/' + this.hashtag + '/' + e.detail.parentrequestid+ '/' + e.detail.id);
+      },
+
       detail_to_list: function() {
         this.set('route.path', '/' + this.hashtag + '/list');
       },
@@ -746,9 +751,12 @@ This is the component showing all requests of a certain hashtag. It contains a r
         this.set('route.path', '/' + this.hashtag + '/list');
       },
 
-      toMakeDeal: function(e){  
-        //debugger;
-        this.fire('dealfortwo',Object.assign({}, e.detail, {hashtag: this.data.hashtag}));
+      toMakeDeal: function(e) {
+        debugger;
+        this.fire('redirect', {
+          target: '/dealfortwoseeker/' + this.data.hashtag + '/' + e.detail.parentrequestid + '/' + e.detail.id
+        });
+        //        this.fire('redirect',Object.assign({}, e.detail, {hashtag: this.data.hashtag}));
       },
 
       

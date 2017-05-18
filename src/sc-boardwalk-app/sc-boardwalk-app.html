@@ -197,7 +197,7 @@
       pubkey="[[account]]"
       swtbalance="[[swtbalance]]"
       on-leave="hashtag_tohome"
-      on-dealfortwo="hashtag_dealfortwo"
+      on-redirect="hashtag_redirect"
       currenthasht="{{currenthasht}}"
       on-to-notifications="hashtag_tonotifications"
       on-to-profile="hashtag_toProfile"
@@ -524,9 +524,9 @@
         // console.log("Ik heb zeeeeeeee !!!!!!!", this.notifs);
       },
 
-      hashtag_dealfortwo: function(e){
-        //debugger;
-        this.transitionto('/dealfortwoseeker/' + e.detail.hashtag + '/' + e.detail.parentrequestid+ '/' + e.detail.id);
+      hashtag_redirect: function(e){
+        debugger;
+        this.transitionto(e.detail.target);
       },
 
       notifications_jumpto: function(e){
