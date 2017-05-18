@@ -123,6 +123,31 @@
 
         },
 
+        request_provider_funding: function(payload){
+//debugger;
+          var mutation = {
+            id: payload.id,
+            offerproviderfundingtx: payload.offerproviderfundingtx || payload.offerseekerfundingtx, // TODO : fix this
+          };
+
+          this.updatebalanceaddressaftertx(payload.id,payload.dealaddress,mutation.offerproviderfundingtx);
+
+          let deals = this.deals.slice(0);
+          var foundDeal = deals.findIndex(function(item) {
+            return item.id === payload.id;
+          });
+          if (foundDeal > -1) {
+            deals[foundDeal] = Object.assign({},this.emptyDeal, deals[foundDeal], mutation);
+          }else{
+            deals.push(Object.assign({},this.emptyDeal,mutation));
+          }
+          return {
+            type: 'DEALS',
+            deals: deals
+          };
+
+        },
+
         // when a reply comes in to a deal
         request_reply: function(replydata) {
 
@@ -366,6 +391,9 @@
           case 'dealfortwo-assign-provider':
             this.dispatch('assign_provider', payload);
             break;
+          case 'dealfortwo-provider-funding':
+            this.dispatch('request_provider_funding', payload);
+            break;            
           default:
           //debugger;
             console.log('unknown message:',payload);
