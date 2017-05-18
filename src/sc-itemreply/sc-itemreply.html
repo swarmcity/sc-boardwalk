@@ -32,8 +32,8 @@ This component shows a reply on a request.
       .responditem {
         /*background-color: var(--sc-grey1);*/
         box-sizing:border-box;
-        padding-top: 30px;
-        padding-bottom: 30px;
+        padding-top: 26px;
+        padding-bottom: 24px;
         padding-left: 40px;
         padding-right: 40px;
         border-bottom: 1px solid rgba(0,0,0,0.075);
@@ -138,7 +138,7 @@ This component shows a reply on a request.
       }
 
       paper-button.makedealbtn {
-        padding: 14px 20px 14px 20px;
+        padding: 10px 16px 10px 13px;
 
       }
 
@@ -180,11 +180,14 @@ This component shows a reply on a request.
       }
 
       .full {
-        opacity: 1;
+/*        opacity: 1;*/
+        display: block;
       }
 
       .notfull {
-        opacity: 0.65;
+        display: none;
+
+/*        opacity: 0.65;*/
       }
 
 
@@ -222,12 +225,12 @@ This component shows a reply on a request.
     <iron-media-query query="(min-width:0px) and (max-width: 540px)" query-matches="{{phoneview}}"></iron-media-query>
     <template is="dom-if" if="{{_is(viewmode,'normal')}}">
 
-      <div class="responditem totalwidth vertic centercenter darker">
+      <div class$="{{displaythis}} responditem totalwidth vertic centercenter darker">
         <div class="totalwidth vertic start centerjust">
 
         <template is="dom-if" if="{{!phoneview}}">
 
-          <div class$="totalwidth horizont start centerjust {{totalopacity}}">
+          <div class="totalwidth horizont start centerjust">
 
           <div class="vertic start centerjust totalwidth flex">
             <p class="grey3 small"><moment-js date="{{replydata.replytime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
@@ -243,7 +246,7 @@ This component shows a reply on a request.
           </div>
           </div>
           <div class="minispace"></div>
-          <div class$="totalwidth horizont center startjust {{totalopacity}}">
+          <div class="totalwidth horizont center startjust">
             <div class="horizont startjust center flex">
               <sc-avatar
                 class="replyeravatar"
@@ -257,7 +260,7 @@ This component shows a reply on a request.
             </div>
             <template is="dom-if" if="{{btnshow}}">
               <div class="horizont center endjust">
-                <paper-button class="blueback white makedealbtn" on-tap="toMakedeal"><iron-icon icon="sc-icons:arrowright" class="white"></iron-icon>Make a deal with {{replydata.provider.username}}</paper-button>
+                <paper-button class="whiteback grey4 makedealbtn" on-tap="toMakedeal"><iron-icon icon="sc-icons:arrowright" class="blue"></iron-icon>Make a deal with {{replydata.provider.username}}</paper-button>
               </div>
             </template>
           </div>
@@ -284,14 +287,14 @@ This component shows a reply on a request.
         <template is="dom-if" if="{{phoneview}}">
 
 
-          <div class$="vertic start centerjust totalwidth {{totalopacity}}">
+          <div class="vertic start centerjust totalwidth">
             <p class="grey3 small"><moment-js date="{{replydata.replytime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
             <p class="reply grey4">{{replydata.msg}}</p>
           </div>
 
           <div class="minispace"></div>
           <div class="minispace"></div>
-          <div class$="totalwidth horizont start startjust {{totalopacity}}">
+          <div class="totalwidth horizont start startjust">
             <div class="horizont startjust center flex">
               <sc-avatar
                 class="replyeravatar"
@@ -444,7 +447,7 @@ This component shows a reply on a request.
           value: false
         },
 
-        totalopacity: {
+        displaythis: {
           type: String,
           value: 'full'
         },
@@ -568,10 +571,10 @@ This component shows a reply on a request.
         if (this.itemdata.selectedreply) {
           if(this.itemdata.selectedreply == this.replydata.id){
             this.yourethechoosenone = true;
-            this.totalopacity = "full";       
+            this.displaythis = "full";       
           } else {
             this.yourethechoosenone = false;
-            this.totalopacity = "notfull";       
+            this.displaythis = "notfull";       
           }
 
 

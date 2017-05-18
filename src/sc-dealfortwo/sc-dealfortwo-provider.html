@@ -205,6 +205,11 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           background-color: #8ADEA9;
       }
 
+
+      paper-button.confirmbtn.green {
+          background-color: #8ADEA9;
+      }
+
       paper-button.blue {
           background-color: #36B7FF;
       } 
@@ -319,6 +324,84 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         text-align: right;
       }
 
+      .dealcreate_steps {
+/*        background-color: rgba(36,177,255,0.1);*/
+
+        box-sizing:border-box;
+        padding: 10px 10px 10px 0px;
+        /*max-width: 300px;*/
+
+/*        border-top: 2px dotted rgba(0,0,0,0.05);
+        border-bottom: 2px dotted rgba(0,0,0,0.05);*/
+
+        border-top: 2px dotted rgba(36,177,255,0.5);
+        border-bottom: 2px dotted rgba(36,177,255,0.5);
+      }
+
+
+      .triangle {
+        width: 12px;
+        transition: all 0.075s linear;
+        margin-right: 8px;
+        margin-left: 8px;
+        margin-bottom: 2px;
+        opacity: 1;
+      }
+
+      .triangle svg {
+        width: 100%;
+      }
+
+      .opened {
+        transform: rotate(90deg);
+        opacity: 0.75;
+      }
+
+
+      .grey2b {
+        color: #999999;
+        margin-left: 4px;
+      }
+
+      .allsteps {
+        width: 100%;
+        height: 100%;
+        @apply(--layout-vertical);
+        @apply(--layout-start);
+        @apply(--layout-start-justified);
+        box-sizing:border-box;
+        padding: 10px 0px 10px 0px;
+      }
+
+      .step {
+        box-sizing:border-box;
+        padding: 0px 0px 2px 28px;
+      }
+      .step p {
+        font-size: 14px;
+        line-height: 20px;
+        margin-right: 12px;
+      }
+
+      .stepinit {
+        color: var(--sc-grey2);
+      }
+
+      .stepdone p {
+        font-family: montserrat;
+        color: var(--sc-grey3);
+      }
+
+      .stepdone iron-icon {
+        color: var(--sc-green);
+      }
+/*      .creatingadeal {
+        font-family: montserratlight;
+        font-size: 22px;
+        line-height: 26px;
+      }
+*/
+
 
     @media all and (min-width: 0) and (max-width: 420px) { 
 
@@ -392,6 +475,11 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
        
       }
 
+
+      .dealcreate_steps {
+        padding: 10px 10px 10px 0px;
+      }
+
     }
 
 
@@ -405,12 +493,170 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
     <app-route route="{{route}}" pattern="/:hashtag/:requestid/:replyid" data="{{routedata}}"></app-route>
 
+
+
+<!-- 
+    SPONNET RAKET
+    //////
+    //////
+    
     <blink>
-    FUND "{{requestdata.msg}}" ... with {{requestdata.seeker.username}} by sending {{requestdata.amount}} SWT to the dealaddress {{requestdata.dealaddress}} ?
-     <paper-icon-button icon="sc-icons:v" noink class="confirmbtn blue big white shadow" on-tap="fundThisDeal"></paper-icon-button>
+      FUND "{{requestdata.msg}}" ... with {{requestdata.seeker.username}} by sending {{requestdata.amount}} SWT to the dealaddress {{requestdata.dealaddress}} ?
+       <paper-icon-button icon="sc-icons:v" noink class="confirmbtn blue big white shadow" on-tap="fundThisDeal"></paper-icon-button>
+    </blink> 
+  -->
+
+          <neon-animatable data-action="dodeal">
+
+            <div class="topbar">
+              <span class="flex"></span>
+                <paper-icon-button on-tap="leave" icon="sc-icons:decline" noink>back</paper-icon-button>
+            </div>
+
+            <div class="totalbox vertic center startjust totalwidth">
+              <div class="tophalf totalwidth">
+
+                <template is="dom-if" if="{{!bothaccepted}}">
+
+                  <template is="dom-if" if="{{!seekeraccept}}">
+                    <h1 class="">Do you accept a deal with <span class="light blue replyer_username">{{replydata.provider.username}}</span> in <span class="light">#pioneer</span> for <span class="light">{{requestdata.amount}} SWT</span>?</h1>
+                  </template>
+                  <template is="dom-if" if="{{seekeraccept}}">
+                    <h1 class="bold">You accepted!</h1>
+                  </template>
+                  
+                  <template is="dom-if" if="{{!provideraccept}}">
+                  <template is="dom-if" if="{{seekeraccept}}">
+                    <div class="whitespace"></div>
+                    <p class="grey2b">Waiting for <span>{{replydata.provider.username}}</span> to respond.</p>
+                  </template>
+                  </template>
+                  <template is="dom-if" if="{{provideraccept}}">
+                    <div class="whitespace"></div>
+                    <p class="grey2b"><span>{{replydata.provider.username}}</span> has already accepted.</p>
+                  </template>
+                </template>
+                
+                <template is="dom-if" if="{{bothaccepted}}">
+                  <template is="dom-if" if="{{!indeal}}">
+                    <h1 class=""><span class="bold">You both accepted!</span></h1>
+                    <div class="whitespace"></div>
+                    <div class="dealcreate_steps">
+                      <div class="horizont end startjust">
+                        <div class$="triangle {{collapsestate}}" on-tap="showSteps">
+                          <svg id="triangle_icon" x="0px" y="0px" viewBox="0 0 50 50" fill="#24B1FF">
+                          <polygon points="6.5,4.9 6.5,44.5 42,24.9 "/>
+                          </svg>
+                        </div>
+                        <p class="creatingadeal bold blue" on-tap="showSteps">Processing your deal</p> 
+                        <sc-loader class="blue" color="blue" small on-tap="showSteps"></sc-loader>
+                      </div>
+                      <iron-collapse id="steps_collapser">
+                        <div class="allsteps">
+                          <div class$="step totalwidth horizont centercenter {{steponestate}}" on-tap="tempTapthree">
+                            <p class="flex">Assigning counterparty to deal</p>
+                            <iron-icon class="" icon="sc-icons:v"></iron-icon>
+                          </div>
+                          <div class$="step totalwidth horizont centercenter {{steptwostate}}" on-tap="tempTapfour">
+                            <p class="flex">Sending SWT of counterparty to deal</p>
+                            <iron-icon class="" icon="sc-icons:v"></iron-icon>
+                          </div>
+                        </div>
+                      </iron-collapse>
+                    </div>
+                  </template>
+                  <template is="dom-if" if="{{indeal}}">
+                    <h1 class=""><span class="bold"></span>You are in deal with {{replydata.provider.username}}!</h1>
+                  </template>
+
+                    <!-- <p class="grey2b">A deal is being created.</p> -->
+                </template>
 
 
-    </blink>
+                <div class="avatars_funding">
+                  <div class$="avatar_funding {{seekerfundclass}}">
+                    <sc-avatar
+                      ipfshash="[[identity.avatarhash]]"
+                      pubkey="[[identity.pubkey]]"
+                      id="makedeal_myavatar"
+                      size="{{avatarfundingsize}}"
+                      on-tap="tempTapto"
+                      ></sc-avatar>
+                    <iron-icon class$="v_icon {{vsize}}" icon="sc-icons:v"></iron-icon>
+                  </div>
+                  <div class$="avatar_funding {{providerfundclass}}">
+                    <sc-avatar
+                      ipfshash="[[replydata.provider.avatarhash]]"
+                      pubkey="[[replydata.provider.pubkey]]"
+                      id="makedeal_otheravatar"
+                      size="{{avatarfundingsize}}"
+                      on-tap="tempTap"
+                      ></sc-avatar>
+                    <iron-icon class$="v_icon {{vsize}}" icon="sc-icons:v"></iron-icon>
+                  </div>
+
+                <template is="dom-if" if="{{!phoneview}}">
+                  <p class="bold grey3 details_toggler" on-tap="showDetails">More details</p>
+                </template>
+                </div>
+                <template is="dom-if" if="{{phoneview}}">
+                  <p class="bold grey3 details_toggler" on-tap="showDetails">More details</p>
+                </template>
+
+                <iron-collapse id="details_collapser">
+                  <p class="bold blue centertxt">You're about to make a deal with <span class="replyer_username">{{replydata.provider.username}}</span> over:</p>
+                    <div class="minispace"></div>
+                    <p class="grey3 ultralight centertxt request_msg">"{{replydata.msg}}"</p>
+                    <div class="minispace"></div>
+                    <p class="bold grey3 centertxt announce_amount">The dealamount is <span class="">{{requestdata.amount}} SWT</span>. </p>
+                    <div class="details_collapser_inner">
+                      <small>At ... , ... posted a request in #pioneer for:</small>
+                      <div class="initial_request">
+                        <p>Blabla initial request</p>
+                      </div>
+                      <div class="minispace"></div>
+                      <div class="minispace"></div>
+                      <small>At ... , ... replied to this request:</small>
+                      <div class="initial_request">
+                        <p>Blabla reply</p>
+                      </div>
+                    </div>
+                </iron-collapse>
+              </div>
+
+              <div class$="bottomhalf {{bottombg}} totalwidth">
+                <template is="dom-if" if="{{!seekeraccept}}">
+                  <!-- <p class="confirmation_question yellow bold">- {{replydata.replyamount}} SWT</p> -->
+                  <div class="confirmbtns">
+                    <iron-icon icon="sc-icons:decline" class="decliner medium white" on-tap="cancelDeal"></iron-icon>
+                    <paper-icon-button icon="sc-icons:v" noink class="confirmbtn blue big white shadow" on-tap="startDeal"></paper-icon-button>
+                  </div>
+                </template>
+                <template is="dom-if" if="{{bothaccepted}}">
+
+                  <template is="dom-if" if="{{!indeal}}">
+                  </template>
+
+                  <template is="dom-if" if="{{indeal}}">
+                    <div class="confirmbtns">
+                      <paper-button class="confirmbtn green white shadow" noink>Payout
+                        <iron-icon icon="sc-icons:v" class="medium white" on-tap="cancelDeal"></iron-icon>
+                      </paper-button>
+                    </div>
+                  </template>
+
+                </template>
+              </div>
+
+            </div>
+
+            <sc-dealfortwo id="dealfortwo" on-status-update="handle"></sc-dealfortwo>
+
+          </neon-animatable>
+
+
+
+<neon-animated-pages id="hashpages" attr-for-selected="data-action" selected="{{selecteddealpage}}" entry-animation="slide-from-right-animation" exit-animation="slide-left-animation">
 
   </template>
 
