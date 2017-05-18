@@ -178,7 +178,7 @@ This components shows the detailed view of a request.
         </div>
         <div class="totalwidth detailpadding">
           <div class$="totalwidth {{totalopacity}}">
-            <p class="small grey3"><moment-js date="{{item.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
+            <p class="small grey3"><moment-js date="{{itemdata.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
             <div class="minispace"></div>
             <p class="offer light grey4">{{itemdata.msg}}<span class="bold offerhashtag">#{{itemdata.hashtag}}</span></p>
           </div>
@@ -227,7 +227,6 @@ This components shows the detailed view of a request.
 
  -->
         <template is="dom-if" if="{{!youareowner(itemdata.seeker.pubkey)}}">
-          <!-- <p>replypossible={{replypossible}}</p> -->
           <template is="dom-if" if="{{canireply(itemdata)}}">
             <sc-itemreplier itemdata="{{itemdata}}">
             </sc-itemreplier>
