@@ -107,6 +107,7 @@
 
           var self = this;
           this.updatebalanceaddressaftertx(payload.dealaddress, payload.offerseekerfundingtx, function(err, balance) {
+  
             self.dispatch('request_seekerfunded', {
               requestid: payload.id,
               balance: balance.toNumber()
@@ -161,7 +162,8 @@
           };
 
           var self = this;
-          this.updatebalanceaddressaftertx(payload.dealaddress, mutation.offerproviderfundingtx, function(err, balance) {
+          this.updatebalanceaddressaftertx(payload.dealaddress, payload.offerproviderfundingtx, function(err, balance) {
+            //debugger;
             self.dispatch('request_providerfunded', {
               requestid: payload.id,
               balance: balance.toNumber()
@@ -187,7 +189,7 @@
 
         // provider funding TX has finished
         request_providerfunded: function(params) {
-          debugger;
+          //debugger;
           var mutation = {
             id: params.requestid,
             dealbalance: params.balance,
@@ -332,7 +334,7 @@
 
         // I have a TX that says : assign this pubkey
         assign_provider: function(payload){
-         
+          var self=this;
           var mutation = {
             id : payload.requestid,
             assigntx: payload.transactionhash,
@@ -346,11 +348,41 @@
           }else{
             deals.push(Object.assign({},this.emptyDeal,mutation));
           }
-          this.readcontractaftertx(payload.requestid,payload.transactionhash);
+
+          this.web3.waitTx(payload.transactionhash, function(err, res) {
+          //this.readcontractaftertx(payload.requestid,payload.transactionhash,function(err,res){
+            self.dispatch('request_setprovider_mined', {
+              requestid: payload.requestid
+            });
+          });
           return {
             type: 'DEALS',
             deals: deals
           };
+        },
+
+        request_setprovider_mined: function(params) {
+          //debugger;
+          var mutation = {
+            id: params.requestid,
+            assigntx_mined: true
+          };
+
+          let deals = this.deals.slice(0);
+          var foundDeal = deals.findIndex(function(item) {
+            return item.id === params.requestid;
+          });
+          if (foundDeal > -1) {
+            deals[foundDeal] = Object.assign({},this.emptyDeal, deals[foundDeal], mutation);
+          }else{
+            deals.push(Object.assign({},this.emptyDeal,mutation));
+          }
+
+          return {
+            type: 'DEALS',
+            deals: deals
+          };
+
         },
 
       },
@@ -517,7 +549,8 @@
       },
 
 
-      readcontractaftertx: function(dealid,dealaddress,tx){
+      readcontractaftertx: function(dealid,dealaddress,tx,cb){
+        debugger;
         var self = this;
         if (!tx){
           return;
@@ -539,6 +572,7 @@
                 }
               }
               console.log(err, result);
+              cb(err,result);
              
 
           });
