@@ -46,6 +46,8 @@
               assigntx_mined: false,
               providerfundingtx: false,
               providerfundingtx_mined: false,
+              payouttx: false,
+              payouttx_mined: false
               seeker: {
                 pubkey: '0x0'
               }
@@ -388,6 +390,58 @@
 
         },
 
+        request_approve: function(payload){
+          var self=this;
+          var mutation = {
+            id : payload.requestid,
+            payouttx: payload.transactionhash,
+          };
+          let deals = this.deals.slice(0);
+          var foundDeal = deals.findIndex(function(item) {
+            return item.id === payload.requestid;
+          });
+          if (foundDeal > -1) {
+            deals[foundDeal] = Object.assign({},this.emptyDeal, deals[foundDeal], mutation);
+          }else{
+            deals.push(Object.assign({},this.emptyDeal,mutation));
+          }
+
+          this.web3.waitTx(payload.transactionhash, function(err, res) {
+          //this.readcontractaftertx(payload.requestid,payload.transactionhash,function(err,res){
+            self.dispatch('request_approve_mined', {
+              requestid: payload.requestid
+            });
+          });
+          return {
+            type: 'DEALS',
+            deals: deals
+          };
+        },
+
+        request_setprovider_mined: function(params) {
+          //debugger;
+          var mutation = {
+            id: params.requestid,
+            payouttx_mined: true
+          };
+
+          let deals = this.deals.slice(0);
+          var foundDeal = deals.findIndex(function(item) {
+            return item.id === params.requestid;
+          });
+          if (foundDeal > -1) {
+            deals[foundDeal] = Object.assign({},this.emptyDeal, deals[foundDeal], mutation);
+          }else{
+            deals.push(Object.assign({},this.emptyDeal,mutation));
+          }
+
+          return {
+            type: 'DEALS',
+            deals: deals
+          };
+
+        },
+
       },
 
 
@@ -437,7 +491,7 @@
           this.filter.watch(this._processmessage.bind(this));
 
           sc_listeners_listening = true;
-          
+
         }
       },
 
@@ -475,6 +529,9 @@
           case 'dealfortwo-provider-funding':
             this.dispatch('request_provider_funding', payload);
             break;            
+          case 'dealfortwo-approve':
+            this.dispatch('request_approve', payload);
+            break;   
           default:
           //debugger;
             console.log('unknown message:',payload);
