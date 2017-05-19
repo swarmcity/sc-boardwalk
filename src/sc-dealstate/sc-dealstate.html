@@ -35,10 +35,10 @@
         if (this.deal.dealaddress){
           newdealstate = 'created';
         }
-        if (this.deal.offerseekerfundingtx){
+        if (this.deal.seekerfundingtx){
           newdealstate = 'seekerfunding';
         }
-        if (this.deal.amount > 0){
+        if (this.deal.seekerfundingtx_mined){
           newdealstate = 'seekerfunded';
         }
         if (this.deal.assigntx){
