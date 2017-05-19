@@ -528,7 +528,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 <neon-animated-pages id="hashpages" attr-for-selected="data-action" selected="{{selecteddealpage}}" entry-animation="slide-from-right-animation" exit-animation="slide-left-animation">
           <neon-animatable data-action="dodeal">
 
-            <div class="topbar">
+            <div class="topbar" on-tap="dumpdeal">
               <span class="flex"></span>
                 <paper-icon-button on-tap="leave" icon="sc-icons:decline" noink>back</paper-icon-button>
             </div>
@@ -770,6 +770,11 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
       },
 
+      dumpdeal: function(){
+        console.log('----------------------------------------');
+        console.log(this.requestdata);
+        console.log('----------------------------------------');
+      },
 
       ready: function(){
         this.selecteddealpage = 'dodeal';
