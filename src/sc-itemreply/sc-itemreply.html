@@ -139,7 +139,7 @@ This component shows a reply on a request.
 
       paper-button.makedealbtn {
         padding: 10px 16px 10px 13px;
-
+        font-size: 14px;
       }
 
 
@@ -246,7 +246,8 @@ This component shows a reply on a request.
           </div>
           </div>
           <div class="minispace"></div>
-          <div class="totalwidth horizont center startjust">
+          <div class="minispace"></div>
+          <div class="totalwidth horizont start startjust">
             <div class="horizont startjust center flex">
               <sc-avatar
                 class="replyeravatar"
@@ -260,7 +261,7 @@ This component shows a reply on a request.
             </div>
             <template is="dom-if" if="{{btnshow}}">
               <div class="horizont center endjust">
-                <paper-button class="whiteback grey4 makedealbtn" on-tap="toMakedeal"><iron-icon icon="sc-icons:arrowright" class="blue"></iron-icon>Make a deal with {{replydata.provider.username}}</paper-button>
+                <paper-button class="darkerer blue makedealbtn shadow" on-tap="toMakedeal"><!-- <iron-icon icon="sc-icons:arrowright" class="blue"></iron-icon> -->Select {{replydata.provider.username}}</paper-button>
               </div>
             </template>
           </div>
