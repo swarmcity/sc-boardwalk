@@ -535,7 +535,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
             <div class="totalbox vertic center startjust totalwidth">
               <div class="tophalf totalwidth">
-
                 <template is="dom-if" if="{{!bothaccepted}}">
 
                   <template is="dom-if" if="{{!seekeraccept}}">
@@ -817,6 +816,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
             return item.id === self.routedata.replyid;
           });
           this.replydata = reply;
+          this._requestdata(this.requestdata);
 
         }else{
           //debugger;
@@ -1024,6 +1024,32 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       },
 
 
+
+      _requestdata: function(){
+
+        // assigntx check
+        if(this.requestdata.assigntx) {
+          this.seekeraccept = true;
+        } 
+
+        // providerfundingtx check
+        if(this.requestdata.providerfundingtx) {
+          //debugger;
+          this.provideraccept = true;
+        }
+
+        // assigntx_mined check
+        if(this.requestdata.assigntx_mined) {
+         // debugger;
+          this.assignmined = true;
+          // console.log("REQUEST::: assigntx_mined", this.requestdata.assigntx_mined);
+        } 
+        // providerfundingtx_mined check
+        if(this.requestdata.providerfundingtx_mined) {
+          //debugger;
+          this.providerfundingmined = true;
+        } 
+      },
 
     });
   </script>
