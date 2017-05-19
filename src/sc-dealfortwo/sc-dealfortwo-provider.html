@@ -537,22 +537,22 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
               <div class="tophalf totalwidth">
                 <template is="dom-if" if="{{!bothaccepted}}">
 
-                  <template is="dom-if" if="{{!seekeraccept}}">
+                  <template is="dom-if" if="{{!provideraccept}}">
                     <h1 class="">Do you accept a deal with <span class="light blue replyer_username">{{requestdata.seeker.username}}</span> in <span class="light">#pioneer</span> for <span class="light">{{requestdata.amount}} SWT</span>?</h1>
                   </template>
-                  <template is="dom-if" if="{{seekeraccept}}">
+                  <template is="dom-if" if="{{provideraccept}}">
                     <h1 class="bold">You accepted!</h1>
                   </template>
                   
-                  <template is="dom-if" if="{{!provideraccept}}">
-                  <template is="dom-if" if="{{seekeraccept}}">
-                    <div class="whitespace"></div>
-                    <p class="grey2b">Waiting for <span>{{requestdata.seeker.username}}./span> to respond.</p>
-                  </template>
-                  </template>
+                  <template is="dom-if" if="{{!seekeraccept}}">
                   <template is="dom-if" if="{{provideraccept}}">
                     <div class="whitespace"></div>
-                    <p class="grey2b"><span>{{requestdata.seeker.username}}./span> has already accepted.</p>
+                    <p class="grey2b">Waiting for <span>{{requestdata.seeker.username}}</span> to respond.</p>
+                  </template>
+                  </template>
+                  <template is="dom-if" if="{{seekeraccept}}">
+                    <div class="whitespace"></div>
+                    <p class="grey2b"><span>{{requestdata.seeker.username}}</span> has already accepted.</p>
                   </template>
                 </template>
                 
@@ -593,7 +593,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
 
                 <div class="avatars_funding">
-                  <div class$="avatar_funding {{seekerfundclass}}">
+                  <div class$="avatar_funding {{providerfundclass}}">
                     <sc-avatar
                       ipfshash="[[identity.avatarhash]]"
                       pubkey="[[identity.pubkey]]"
@@ -603,7 +603,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                       ></sc-avatar>
                     <iron-icon class$="v_icon {{vsize}}" icon="sc-icons:v"></iron-icon>
                   </div>
-                  <div class$="avatar_funding {{providerfundclass}}">
+                  <div class$="avatar_funding {{seekerfundclass}}">
                     <sc-avatar
                       ipfshash="[[requestdata.seeker.avatarhash]]"
                       pubkey="[[requestdata.seeker.pubkey]]"
@@ -644,7 +644,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
               </div>
 
               <div class$="bottomhalf {{bottombg}} totalwidth">
-                <template is="dom-if" if="{{!seekeraccept}}">
+                <template is="dom-if" if="{{!provideraccept}}">
 
                   <p class="confirmation_question white">{{requestdata.amount}} SWT will be locked on this deal until payout.</p>
                   <p class="confirmation_question_amount bold yellow">- {{requestdata.amount}} SWT</p>
