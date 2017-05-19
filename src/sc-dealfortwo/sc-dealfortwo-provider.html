@@ -19,6 +19,7 @@
 <link rel="import" href="../sc-helpers/sc-helpers.html">
 <link rel="import" href="../sc-hashtagcontract/sc-hashtagcontract.html">
 <link rel="import" href="../sc-dealfortwo/sc-dealfortwo.html">
+<link rel="import" href="../sc-listeners/sc-listeners.html">
 
 <!--<link rel="import" href="../sc-balance/sc-balance.html"> -->
 
@@ -505,6 +506,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
     </style>
     <sc-shh web3="{{shhweb3}}"></sc-shh>
     <sc-config config="{{config}}"></sc-config>
+    <sc-listeners id="listeners"></sc-listeners>    
     <!--<sc-helpers id="helpers"></sc-helpers>    
     <sc-hashtagcontract id="hashtagcontract" hashtagname="{{data.hashtag}}"></sc-hashtagcontract>   -->  
     <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
@@ -649,7 +651,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                   <p class="confirmation_question_amount bold yellow">- {{requestdata.amount}} SWT</p>
                   <div class="confirmbtns">
                     <iron-icon icon="sc-icons:decline" class="decliner medium white" on-tap="cancelDeal"></iron-icon>
-                    <paper-icon-button icon="sc-icons:v" noink class="confirmbtn blue big white shadow" on-tap="startDeal"></paper-icon-button>
+                    <paper-icon-button icon="sc-icons:v" noink class="confirmbtn blue big white shadow" on-tap="fundThisDeal"></paper-icon-button>
                   </div>
                 </template>
                 <template is="dom-if" if="{{bothaccepted}}">
@@ -694,7 +696,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
       observers: [
       '_checksize(phoneview)',
-      '_whoaccepted(seekeraccept,provideraccept)'    
+      '_whoaccepted(seekeraccept,provideraccept)',
+      '_hashtag(routedata.hashtag)'    
       ],
 
 
@@ -708,7 +711,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         },
         route: {
           type: Object,
-          observer: '_getdata'
+          observer: '_route'
         },        
         deals: {
           type: Array,
@@ -779,6 +782,16 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       */
       leave: function(){
         this.fire('leave');
+      },
+
+      _route: function(){
+        this._getdata();
+      },
+
+      _hashtag: function(){
+        if (this.routedata.hashtag){
+          this.$.listeners._starthastaglistener(this.routedata.hashtag);
+        }
       },
 
       _getdata: function(){

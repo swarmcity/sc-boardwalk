@@ -12,6 +12,9 @@
     <sc-config config="{{config}}"></sc-config>
   </template>
   <script>
+
+  var sc_listeners_listening = false;
+
     Polymer({
       is: 'sc-listeners',
       
@@ -395,6 +398,11 @@
 
       _starthastaglistener: function(hashtag) {
         
+        if (sc_listeners_listening){
+          console.log('skipping init listeners. Already lsitening');
+          return;
+        }
+
         var self = this;
         
         if (!self.shhweb3){
@@ -427,6 +435,9 @@
 
           console.log("sc-listeners: channelswitch, start listening to", mytopics);
           this.filter.watch(this._processmessage.bind(this));
+
+          sc_listeners_listening = true;
+          
         }
       },
 

@@ -794,7 +794,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         },
 
         route: {
-          type: Object
+          type: Object,
+          observer: '_route'
         },
 
         // hashtagname: {
@@ -872,8 +873,13 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
       },
 
-      _hashtag: function(){
+      _route: function(){
         //debugger;
+        this._hashtag();
+      },
+
+      _hashtag: function(){
+//          debugger;
         if (this.data.hashtag){
           this.$.listeners._starthastaglistener(this.data.hashtag);
         }

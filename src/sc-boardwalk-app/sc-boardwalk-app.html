@@ -204,7 +204,9 @@
       >
     </sc-hashtag>
 
-    <app-route route="{{route}}" pattern="/dealfortwoseeker" tail="{{pageTail2}}"></app-route>
+    <!-- <app-route route="{{route}}" pattern="/:page" data="{{routedata}}" tail="{{pageTail}}"></app-route> -->
+
+    <app-route route="{{route}}" pattern="/dealfortwoseeker" data={{pt2}} tail="{{pageTail2}}"></app-route>
 
     <sc-dealfortwo-seeker
       data-page="dealfortwoseeker"
@@ -214,7 +216,7 @@
       on-leave="dealfortwo_tohome">
     </sc-dealfortwo-seeker>
 
-    <app-route route="{{route}}" pattern="/dealfortwoprovider" tail="{{pageTail3}}"></app-route>
+    <app-route route="{{route}}" pattern="/dealfortwoprovider" data={{pt3}} tail="{{pageTail3}}"></app-route>
     <sc-dealfortwo-provider
       data-page="dealfortwoprovider"
       route="{{pageTail3}}"
