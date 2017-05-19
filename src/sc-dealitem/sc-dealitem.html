@@ -67,10 +67,7 @@ This components is the representation of a request in the requests-list on sc-ha
       }
 
 
-      .replyicon {   
-        margin-top: 4px;            
-        margin-left: 5px;            
-      }
+
 
       .mymsg {
         margin-top: 4px;      
@@ -84,12 +81,24 @@ This components is the representation of a request in the requests-list on sc-ha
         margin-right: 10px;
       }
 
+      .dealstatusmsg_box {
+        margin-top: 10px;      
+      }
+
       .dealstatusmsg {
         margin-bottom: 2px;      
       }
 
+      .replycount_box {
+        margin-top: 4px;      
+      }
+
+      .replycount_box iron-icon {              
+        margin-left: 5px;            
+      }
+
       .rightmarg {
-        margin-right:10px;
+        margin-right:5px;
       }
 
       .status_init {
@@ -111,9 +120,9 @@ This components is the representation of a request in the requests-list on sc-ha
         opacity: 1;
       }
 
-      sc-loader {
+/*      sc-loader {
         margin-bottom: 3px;
-      }
+      }*/
 
       @media all and (min-width: 0) and (max-width: 420px) { 
       
@@ -132,15 +141,15 @@ This components is the representation of a request in the requests-list on sc-ha
                 size="verysmall">
               </sc-avatar>
             <!-- <p class="mymsg grey4 flex"> {{item.msg}} xx {{dealstate}} xx {{seekerstate}} xx {{providerstate}}</p> -->
-            <p class="mymsg grey4 flex">{{item.msg}}</p>
-            <template is="dom-if" if="{{showmsg}}">
-              <div class="horizont end startjust">
-                <p class="dealstatusmsg small grey2 semibold">{{dealstatusmsg}} </p><sc-loader small color="grey2"></sc-loader>
-              </div>
-            </template>
+              <p class="mymsg grey4 flex">{{item.msg}}</p>
+              <template is="dom-if" if="{{showmsg}}">
+                <div class="dealstatusmsg_box horizont end startjust">
+                  <p class="dealstatusmsg small grey2 semibold">{{dealstatusmsg}} </p><sc-loader small color="grey2"></sc-loader>
+                </div>
+              </template>
 
               <p class$="myoffer bold yellow {{amountopacity}}">{{item.amount}} SWT</p>
-              <div class="horizont center endjust">
+              <div class="replycount_box horizont center endjust">
                 <p class="bold">{{replycount}}</p>
                 <iron-icon icon="sc-icons:babble" class="small replyicon">replies</iron-icon>
               </div>

@@ -547,12 +547,12 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                   <template is="dom-if" if="{{!provideraccept}}">
                   <template is="dom-if" if="{{seekeraccept}}">
                     <div class="whitespace"></div>
-                    <p class="grey2b">Waiting for <span>{{replydata.provider.username}}</span> to respond.</p>
+                    <p class="grey2b">Waiting for <span>{{requestdata.seeker.username}}./span> to respond.</p>
                   </template>
                   </template>
                   <template is="dom-if" if="{{provideraccept}}">
                     <div class="whitespace"></div>
-                    <p class="grey2b"><span>{{replydata.provider.username}}</span> has already accepted.</p>
+                    <p class="grey2b"><span>{{requestdata.seeker.username}}./span> has already accepted.</p>
                   </template>
                 </template>
                 
@@ -585,7 +585,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                     </div>
                   </template>
                   <template is="dom-if" if="{{indeal}}">
-                    <h1 class=""><span class="bold"></span>You are in deal with {{replydata.provider.username}}!</h1>
+                    <h1 class=""><span class="bold"></span>You're in deal with <span class="light blue replyer_username">{{requestdata.seeker.username}}</span>.</h1>
                   </template>
 
                     <!-- <p class="grey2b">A deal is being created.</p> -->
