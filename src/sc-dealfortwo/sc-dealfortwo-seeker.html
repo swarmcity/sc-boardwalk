@@ -1067,8 +1067,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         } else {
           this.collapsestate = '';
         }
-
-        // console.log(details);
       },
 
 
@@ -1076,36 +1074,53 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         this.selecteddealpage = 'dodeal';
       },
 
-
- assignDeal: function(dealaddress,provideraddress,seekeramount,provideramount,cb) {
+      approveDeal: function(dealaddress, cb) {
         var self = this;
-    
         this.contracturl = this.resolveUrl('../contracts/DealForTwoFactory.json');
         this.importHref(this.contracturl, function(e) {
           this.contractjson = JSON.parse(e.target.import.body.innerText);
           self.web3.eth.getGasPrice(function(err, result) {
             var gasPrice = result.toNumber(10);
-            // console.log('gasprice: ', gasPrice);
             var DealForTwoFactoryContract = self.web3.eth.contract(self.contractjson.abi);
             var DealForTwoFactoryContractInstance = DealForTwoFactoryContract.at(self.config.dealfortwofactory);
-
-//DealForTwo _deal, address _provider, uint _newSeekerValue, uint _providerValue
-
-            DealForTwoFactoryContractInstance.assignProvider.sendTransaction(dealaddress,provideraddress,seekeramount,provideramount, {
+            DealForTwoFactoryContractInstance.payout.sendTransaction(dealaddress, {
               from: self.identity.pubkey,
               gasPrice: gasPrice,
               gas: 1000000
             }, function(err, result) {
-              if (err){
+              if (err) {
                 if (cb) {
                   return cb(err);
                 }
               }
-              cb(null,result);
+              cb(null, result);
               console.log(err, result);
-              //console.log('waiting for TX to happen');
-              //self.currenttxhash = result;
+            });
+          });
+        });
+      },
 
+      assignDeal: function(dealaddress, provideraddress, seekeramount, provideramount, cb) {
+        var self = this;
+        this.contracturl = this.resolveUrl('../contracts/DealForTwoFactory.json');
+        this.importHref(this.contracturl, function(e) {
+          this.contractjson = JSON.parse(e.target.import.body.innerText);
+          self.web3.eth.getGasPrice(function(err, result) {
+            var gasPrice = result.toNumber(10);
+            var DealForTwoFactoryContract = self.web3.eth.contract(self.contractjson.abi);
+            var DealForTwoFactoryContractInstance = DealForTwoFactoryContract.at(self.config.dealfortwofactory);
+            DealForTwoFactoryContractInstance.assignProvider.sendTransaction(dealaddress, provideraddress, seekeramount, provideramount, {
+              from: self.identity.pubkey,
+              gasPrice: gasPrice,
+              gas: 1000000
+            }, function(err, result) {
+              if (err) {
+                if (cb) {
+                  return cb(err);
+                }
+              }
+              cb(null, result);
+              console.log(err, result);
             });
           });
         });
