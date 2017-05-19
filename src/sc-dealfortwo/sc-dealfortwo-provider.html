@@ -499,12 +499,12 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
     SPONNET RAKET
     //////
     //////
-    
+   --> 
     <blink>
       FUND "{{requestdata.msg}}" ... with {{requestdata.seeker.username}} by sending {{requestdata.amount}} SWT to the dealaddress {{requestdata.dealaddress}} ?
        <paper-icon-button icon="sc-icons:v" noink class="confirmbtn blue big white shadow" on-tap="fundThisDeal"></paper-icon-button>
     </blink> 
-  -->
+
 
           <neon-animatable data-action="dodeal">
 
@@ -735,7 +735,11 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         debugger;
 
         self.transfer(offerAmount, dealaddress, function(err, res) {
-
+          if (err){
+            console.log('tx error',err);
+            return;
+          }
+          console.log('Transferred',offerAmount,'SWT tokens from',self.identity.pubkey,'to',dealaddress,'txhash=',res);
           // ok so the create deal TX is done. Now notify that we're funding this deal.
           var payload = {
             id: dealID,

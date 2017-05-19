@@ -102,10 +102,16 @@
 
           var mutation = {
             id: payload.id,
-            offerseekerfundingtx: payload.offerseekerfundingtx,
+            seekerfundingtx: payload.offerseekerfundingtx,
           };
 
-          this.updatebalanceaddressaftertx(payload.id,payload.dealaddress,payload.offerseekerfundingtx);
+          var self = this;
+          this.updatebalanceaddressaftertx(payload.dealaddress, payload.offerseekerfundingtx, function(err, balance) {
+            self.dispatch('request_seekerfunded', {
+              requestid: payload.id,
+              balance: balance.toNumber()
+            });
+          });
 
           let deals = this.deals.slice(0);
           var foundDeal = deals.findIndex(function(item) {
@@ -123,14 +129,46 @@
 
         },
 
+        // seeker funding TX has finished
+        request_seekerfunded: function(params) {
+          //debugger;
+          var mutation = {
+            id: params.requestid,
+            dealbalance: params.balance,
+            seekerfundingtx_mined: true,
+          };
+
+          let deals = this.deals.slice(0);
+          var foundDeal = deals.findIndex(function(item) {
+            return item.id === params.requestid;
+          });
+          if (foundDeal > -1) {
+            deals[foundDeal] = Object.assign({},this.emptyDeal, deals[foundDeal], mutation);
+          }else{
+            deals.push(Object.assign({},this.emptyDeal,mutation));
+          }
+          return {
+            type: 'DEALS',
+            deals: deals
+          };
+        },
+
         request_provider_funding: function(payload){
 //debugger;
           var mutation = {
             id: payload.id,
-            offerproviderfundingtx: payload.offerproviderfundingtx || payload.offerseekerfundingtx, // TODO : fix this
+            providerfundingtx: payload.offerproviderfundingtx,
           };
 
-          this.updatebalanceaddressaftertx(payload.id,payload.dealaddress,mutation.offerproviderfundingtx);
+          var self = this;
+          this.updatebalanceaddressaftertx(payload.dealaddress, mutation.offerproviderfundingtx, function(err, balance) {
+            self.dispatch('request_providerfunded', {
+              requestid: payload.id,
+              balance: balance.toNumber()
+            });
+          });
+
+//          this.updatebalanceaddressaftertx(payload.dealaddress,mutation.offerproviderfundingtx);
 
           let deals = this.deals.slice(0);
           var foundDeal = deals.findIndex(function(item) {
@@ -145,7 +183,30 @@
             type: 'DEALS',
             deals: deals
           };
+        },
 
+        // provider funding TX has finished
+        request_providerfunded: function(params) {
+          debugger;
+          var mutation = {
+            id: params.requestid,
+            dealbalance: params.balance,
+            providerfundingtx_mined: true,
+          };
+
+          let deals = this.deals.slice(0);
+          var foundDeal = deals.findIndex(function(item) {
+            return item.id === params.requestid;
+          });
+          if (foundDeal > -1) {
+            deals[foundDeal] = Object.assign({},this.emptyDeal, deals[foundDeal], mutation);
+          }else{
+            deals.push(Object.assign({},this.emptyDeal,mutation));
+          }
+          return {
+            type: 'DEALS',
+            deals: deals
+          };
         },
 
         // when a reply comes in to a deal
@@ -245,29 +306,7 @@
 
         },
 
-        // seeker funding TX has finished
-        request_seekerfunded: function(params) {
-          //debugger;
-          var mutation = {
-            id: params.requestid,
-            dealbalance: params.balance,
-            seekerfundingtx_mined: true,
-          };
 
-          let deals = this.deals.slice(0);
-          var foundDeal = deals.findIndex(function(item) {
-            return item.id === params.requestid;
-          });
-          if (foundDeal > -1) {
-            deals[foundDeal] = Object.assign({},this.emptyDeal, deals[foundDeal], mutation);
-          }else{
-            deals.push(Object.assign({},this.emptyDeal,mutation));
-          }
-          return {
-            type: 'DEALS',
-            deals: deals
-          };
-        },
         
         // seeker says : I just selected this reply as my provider
         select_provider: function(payload){
@@ -297,7 +336,6 @@
           var mutation = {
             id : payload.requestid,
             assigntx: payload.transactionhash,
-            //selectedreply: payload.replyid
           };
           let deals = this.deals.slice(0);
           var foundDeal = deals.findIndex(function(item) {
@@ -422,26 +460,9 @@
         });
       },
 
-      // monitorseekerfunding: function(dealid,tx){
-      //   //debugger;
-      //   console.log('Start monitoring for funding from seeker',tx);
-      //   if (!tx){
-      //     return;
-      //   }
-      //   var self = this;
-      //   this.helper_getDealAddressFromTx(tx,function(err,address,blocknumber){
-      //     self.web3.waitTx(tx, function(err, res) {
-      //       // update balence
-      //       self.dispatch('request_seekerfunded', {
-      //         dealid: dealid,
-      //         balance: 12345
-      //       });
-      //     });
-      //   });
-      // },
-
-
-      updatebalanceaddressaftertx: function(requestid,dealaddress,tx){
+      // wait for transactionhash tx to happen, and return the balance of address dealaddress
+      // in the callback (err,balance)
+      updatebalanceaddressaftertx: function(dealaddress,tx,cb){
         var self = this;
 
         console.log('Start monitoring for balance from deal tx',tx);
@@ -453,11 +474,12 @@
           // update balance
           //debugger;
           self.web3.getSWTBalance(dealaddress,function(err,balance){
+            if (err){
+              console.log('updatebalanceaddressaftertx -->',err);
+              return cb(err);
+            }
             console.log('The balance of deal',dealaddress,'is',balance.toNumber(),'SWT');
-            self.dispatch('request_seekerfunded', {
-              requestid: requestid,
-              balance: balance.toNumber()
-            });            
+            return cb(null,balance);
           })
         });
 
@@ -497,15 +519,13 @@
 
       readcontractaftertx: function(dealid,dealaddress,tx){
         var self = this;
-//debugger;
-        console.log('Start monitoring for balance from deal tx',tx);
         if (!tx){
           return;
         }
+        console.log('Start monitoring for balance from deal tx',tx);
 
         this.web3.waitTx(tx, function(err, res) {
         
-//debugger;
         this.contracturl = this.resolveUrl('../contracts/DealForTwo.json');
         this.importHref(this.contracturl, function(e) {
           this.contractjson = JSON.parse(e.target.import.body.innerText);
