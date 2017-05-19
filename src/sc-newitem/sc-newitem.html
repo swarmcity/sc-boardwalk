@@ -268,7 +268,9 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
           </template>
           
           <template is="dom-if" if="{{loading}}">
-              <sc-loader small class="grey4" color="grey4">Processing your request</sc-loader>
+            <div class="totalwidth newitempadding">
+              <sc-loader small class="grey3" color="grey3">Processing your request</sc-loader>
+            </div>
           </template>
 
 

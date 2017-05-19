@@ -631,7 +631,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                     </div>
                   </template>
                   <template is="dom-if" if="{{indeal}}">
-                    <h1 class=""><span class="bold"></span>You are in deal with {{replydata.provider.username}}!</h1>
+                    <h1 class=""><span class="bold"></span>You're in deal with <span class="light blue replyer_username">{{replydata.provider.username}}</span>.</h1>
                   </template>
 
                     <!-- <p class="grey2b">A deal is being created.</p> -->
@@ -704,7 +704,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
                   <template is="dom-if" if="{{indeal}}">
                     <div class="confirmbtns">
-                      <paper-button class="confirmbtn green white shadow" noink>Payout
+                      <paper-button class="confirmbtn payoutbtn green white shadow" noink>Payout
                         <iron-icon icon="sc-icons:v" class="medium white" on-tap="cancelDeal"></iron-icon>
                       </paper-button>
                     </div>

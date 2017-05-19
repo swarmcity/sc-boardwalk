@@ -34,7 +34,7 @@ This components is the representation of a request in the requests-list on sc-ha
       .dealstate_first {
         box-sizing:border-box;
         padding: 15px 20px 15px 20px;
-        background-color: white;
+        background-color: var(--sc-white);
         @apply(--layout-horizontal);
         @apply(--layout-start);
         @apply(--layout-start-justified);
@@ -51,7 +51,6 @@ This components is the representation of a request in the requests-list on sc-ha
 
       .dealstate_first p {
         @apply(--sc-font-nowrap);
-        margin-top: 4px;      
       }
 
 
@@ -74,18 +73,19 @@ This components is the representation of a request in the requests-list on sc-ha
       }
 
       .mymsg {
+        margin-top: 4px;      
         margin-bottom: 4px;        
         margin-left: 10px;        
         margin-right: 10px;        
       }
 
       .myoffer {
+        margin-top: 4px;      
         margin-right: 10px;
       }
 
       .dealstatusmsg {
-/*        font-size: 12px;
-        line-height: 26px;*/
+        margin-bottom: 2px;      
       }
 
       .rightmarg {
@@ -191,8 +191,8 @@ This components is the representation of a request in the requests-list on sc-ha
       observers: [
         '_item(item)',
         '_dealstate(dealstate)',
-        '_seekerstate(seekerstate)',
-        '_providerstate(providerstate)'
+        '_whoaccepted(seekerstate,providerstate)',
+
       ],
 
       properties: {
@@ -303,10 +303,22 @@ This components is the representation of a request in the requests-list on sc-ha
         });
           this.currentprovider = foundReply.provider;
       
+        if (this.dealstate=='indeal') {
+          this.amountopacity = "full";
+          this.dealstatusmsgclass = "bold green";
+          this.dealstatusmsg = "You're in deal with "+foundReply.provider.username+" for "+self.item.amount+" SWT.";
+          this.dealstatesecondbg = "whiteback";
+        } else {
+
           this.appearance = 'second';
           this.dealstatusmsgclass = "grey3";
           this.dealstatusmsg = "You're making a deal with "+foundReply.provider.username+" for "+self.item.amount+"SWT.";
           this.dealstatesecondbg = "lighterer";
+
+        };
+
+
+
         }
 
 
@@ -372,7 +384,8 @@ This components is the representation of a request in the requests-list on sc-ha
       },
 
 
-      _seekerstate: function(){
+      _whoaccepted: function(){
+
         if (this.seekerstate === 'accepted' || this.seekerstate === 'mined') {
           this.seekervopacity = "full";
           this.seekervcolor = "green";       
@@ -380,10 +393,7 @@ This components is the representation of a request in the requests-list on sc-ha
           this.seekervopacity = "half";
           this.seekervcolor = "grey2";    
         };
-        console.log("seekerstate in dealitem==", this.seekerstate);
-      },
 
-      _providerstate: function(){
         if (this.providerstate === 'accepted' || this.providerstate === 'mined') {
           this.providervopacity = "full";
           this.providervcolor = "green";       
@@ -391,7 +401,14 @@ This components is the representation of a request in the requests-list on sc-ha
           this.providervopacity = "half";
           this.providervcolor = "grey2";    
         };
-        console.log("providerstate in dealitem==", this.providerstate);
+
+        if (this.seekerstate === 'accepted' && this.providerstate === 'accepted') {
+          this.dealstatusmsg = "You both accepted. Processing your deal...";
+        };
+
+
+        // console.log("seekerstate in dealitem==", this.seekerstate);
+        // console.log("providerstate in dealitem==", this.providerstate);
       },
 
 
