@@ -33,7 +33,7 @@
             return;
           }
           acshh = new Web3(new Web3.providers.HttpProvider(this.host));
-          console.log('sc-shh -> created Web3');
+          console.log('sc-shh -> created Web3 with URL',this.host);
         }
         this.set('web3',acshh);
         this.fire('web3-ready');
