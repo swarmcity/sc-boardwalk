@@ -158,6 +158,10 @@ This is the component showing all requests of a certain hashtag. It contains a r
         padding: 20px 0px 20px 0px;
       }
 
+      .tester {
+        border: 1px solid red;
+      }
+
 
     @media all and (min-width: 0) and (max-width: 540px) { 
 
@@ -363,13 +367,31 @@ This is the component showing all requests of a certain hashtag. It contains a r
                 </div>
               </template>
 
-            <template is="dom-repeat" items="{{otherdeals}}">
+          <div class="tester">
+
+            <template is="dom-repeat" items="{{otherdeals}}"
+              filter="iReplied" observe="type manager.type">
               <sc-hashtagitem
                 item="[[item]]"
                 identity="[[identity]]"
                 on-to-detail="hashtag_to_detail">
               </sc-hashtagitem>
             </template>
+          </div>
+
+
+            <template is="dom-repeat" items="{{otherdeals}}"
+              filter="ididntReply" observe="type manager.type">
+              <sc-hashtagitem
+                item="[[item]]"
+                identity="[[identity]]"
+                on-to-detail="hashtag_to_detail">
+              </sc-hashtagitem>
+            </template>
+
+
+
+
             <div class="whitespace"></div>
             <div class="whitespace"></div>
             <div class="whitespace"></div>
@@ -779,6 +801,15 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
 
 
+        iReplied: function(item) {
+            return item.ireplied == true;
+        },
+
+
+
+        ididntReply: function(item) {
+            return item.ireplied == false || item.ireplied == '';
+        },
 
 
     });
