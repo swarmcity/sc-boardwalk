@@ -366,6 +366,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
             <template is="dom-repeat" items="{{otherdeals}}">
               <sc-hashtagitem
                 item="[[item]]"
+                identity="[[identity]]"
                 on-to-detail="hashtag_to_detail">
               </sc-hashtagitem>
             </template>

@@ -25,9 +25,14 @@ This components is the representation of a request in the requests-list on sc-ha
       :host {
         display: block;
         width: 100%;
+        @apply(--base-shadow); 
+
+      }
+
+      .itemtotal {
+        width: 100%;
         box-sizing:border-box;
         padding: 25px;
-        @apply(--base-shadow); 
         background-color: rgba(255,255,255,1);
       }
 
@@ -134,6 +139,24 @@ This components is the representation of a request in the requests-list on sc-ha
         margin-right: 10px;
       }
 
+      .youreplied {
+        /*margin-top: 26px;*/
+        box-sizing: border-box;
+        padding: 20px 25px;
+        border-bottom: 1px solid var(--sc-grey2);
+        background-color: rgba(255, 255, 255, 0.15);
+      }
+
+
+      .youreplied p {
+        font-size: 14px;
+        line-height: 18px;
+      }
+
+      .youreplied small {
+        font-size: 12px;
+        line-height: 14px;
+      }
 
       @media all and (min-width: 0) and (max-width: 420px) { 
       
@@ -147,8 +170,9 @@ This components is the representation of a request in the requests-list on sc-ha
     </style>
  
     <sc-dealstate deal="{{item}}" dealstate="{{dealstate}}"></sc-dealstate>
+      <template is="dom-if" if="{{!item.selectedreply}}">
 
-      <div class="totalwidth vertic start startjust" on-tap="toDetail">
+      <div class="itemtotal vertic start startjust" on-tap="toDetail">
 
         <div class="totalwidth horizont center startjust">
           <small class="small grey3 light">          
@@ -158,19 +182,6 @@ This components is the representation of a request in the requests-list on sc-ha
 
         <p class="totalwidth offer grey4"> {{item.msg}} <span class="semibold"> 
           #{{item.hashtag}}</span></p>
-<!--         <template is="dom-if" if="{{showreplies}}">
-          <div class="nrofreplies horizont start startjust">
-            <p class="small reg grey3">{{item.replies.length}}</p>
-            <iron-icon icon="sc-icons:babble" class="grey3">replies</iron-icon>
-          </div>
-        </template>
-        <template is="dom-if" if="{{!showreplies}}">
-          <div class="nrofreplies noneyet horizont start startjust">
-            <p class="small reg grey2">0</p>
-            <iron-icon icon="sc-icons:babble" class="grey2">replies</iron-icon>
-          </div>
-        </template>
- -->
         <div class="minispace"></div>
         <div class="minispace"></div>
 
@@ -190,21 +201,100 @@ This components is the representation of a request in the requests-list on sc-ha
               <iron-icon icon="sc-icons:babble" class="grey2 verysmall">replies</iron-icon>
             </div>
           </template>
-
           <p class$="offeramount bold yellow {{amountopacity}}">{{item.amount}}<span class="offeramountSWT">SWT</span></p>
-
-
-
-
         </div>
 
-<!--         <template is="dom-repeat" items="{{item.replies}}">
-          <p class="red">{{item.msg}}</p>
-        </template> -->
       </div>
 
+          <template is="dom-if" if="{{item.ireplied}}">
+            <div class="youreplied totalwidth horizont start startjust">
+            <sc-avatar
+              ipfshash="[[identity.avatarhash]]"
+              size="verysmall"
+              ></sc-avatar>
+
+              <div class="vertic start startjust flex">
+                <small class="semibold grey4">You replied<!-- , <moment-js date="{{yourreplytime}}" format="HH:mm:ss.SSS" from-now></moment-js>-->:</small>
+                <p class="grey4">{{yourreply}}</p>
+              </div>
+
+            </div>
+          </template>
 
 
+
+      </template>
+
+      <template is="dom-if" if="{{item.selectedreply}}">
+          <template is="dom-if" if="{{!item.ireplied}}">
+
+            <div class="itemtotal vertic start startjust" on-tap="toDetail">
+              <div class="totalwidth horizont center startjust">
+                <small class="small grey3 light">          
+                  <moment-js date="{{item.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js>
+                </small>
+              </div>
+
+              <p class="totalwidth offer grey4"> {{item.msg}}<span class="semibold"> 
+                #{{item.hashtag}}</span></p>
+              <div class="minispace"></div>
+              <div class="minispace"></div>
+
+
+              <div class="totalwidth horizont start startjust">
+                <sc-avatar
+                  ipfshash="[[item.seeker.avatarhash]]"
+                  size="verysmall">
+                </sc-avatar>
+
+                <sc-avatar
+                  ipfshash="[[provideravatarhash]]"
+                  size="verysmall">
+                </sc-avatar>
+                <div class="flex"></div>
+                 <p class=" offerer small bold grey3">{{item.seeker.username}} selected {{providerusername}} to make a deal with.</p>
+
+<!--                 <div class="flex vertic centercenter">
+                  <p class="totalwidth offerer small bold grey3">{{item.seeker.username}}</p>
+                  <p class="totalwidth yourrep small bold blue"><sc-hashtagrep pubkey="{{item.seeker.pubkey}}" hashtagname="{{item.hashtag}}"></sc-hashtagrep> REP</p>
+                </div> -->
+              </div>
+            </div>
+
+          </template>
+
+          <template is="dom-if" if="{{item.ireplied}}">
+ <div class="itemtotal vertic start startjust" on-tap="toDetail">
+              <div class="totalwidth horizont center startjust">
+                <small class="small grey3 light">          
+                  <moment-js date="{{item.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js>
+                </small>
+              </div>
+
+              <p class="totalwidth offer grey4"> {{item.msg}} PPOOPLL<span class="semibold"> 
+                #{{item.hashtag}}</span></p>
+              <div class="minispace"></div>
+              <div class="minispace"></div>
+
+
+              <div class="totalwidth horizont start startjust">
+
+              <sc-avatar
+                  ipfshash="[[item.seeker.avatarhash]]"
+                  size="verysmall">
+                </sc-avatar>
+
+                <sc-avatar
+                  ipfshash="[[youavatarhash]]"
+                  size="verysmall">
+                </sc-avatar>
+                <div class="flex"></div>
+                 <p class="offerer small bold grey3">{{item.seeker.username}} selected you to make a deal with.</p>
+              </div>
+            </div>
+          </template>
+
+      </template>
 
   </template>
 
@@ -215,7 +305,7 @@ This components is the representation of a request in the requests-list on sc-ha
 
       observers: [
         '_dealstate(dealstate)',
-        // '_item(item)'
+        '_item(identity)'
       ],
 
       properties: {
@@ -223,8 +313,15 @@ This components is the representation of a request in the requests-list on sc-ha
        * `` .
        */
         item: {
-          type: Object
+          type: Object,
         },
+        identity: {
+          type: Object,
+          statePath: 'identity',
+        },
+        yourreply: {
+          type: String
+        }
       },
 
       ready: function(){
@@ -260,6 +357,27 @@ This components is the representation of a request in the requests-list on sc-ha
         } else {
           this.dealstatemsg = "";
           this.amountopacity = "full"; 
+        }
+      },
+
+
+      _item: function(){
+        var self = this;
+        var deal = this.item;
+
+        // this.provideravatarhash = deal.replies[i].provider.avatarhash;
+        // this.providerusername = deal.replies[i].provider.username;
+
+        if(deal.ireplied) {
+          for (var i = 0; i < deal.replies.length; i++) {
+
+            if (deal.replies[i].provider.pubkey === self.identity.pubkey){
+              self.yourreply = deal.replies[i].msg;
+              self.youravatarhash = deal.replies[i].provider.avatarhash;
+              self.yourusername = "you";
+            }
+
+          };     
         }
       },
 
