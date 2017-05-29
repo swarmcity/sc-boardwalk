@@ -73,17 +73,20 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
       .tophalf h1 {
         font-size: 40px;
-        line-height: 44px;
+        line-height: 48px;
         max-width: 800px;
       }
 
       .withconfirmq {
         min-height: 50vh;
       }
-/*
+
       sc-avatar {
-        margin-right: 10px;         
-      }*/
+        width: 50px;
+        height: 50px;
+        min-width: 50px;
+        min-height: 50px;   
+      }
 
       .bottomhalf {
         height: 35vh;
@@ -161,7 +164,13 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         /*text-decoration: underline;*/        
         border-bottom: 1px dotted var(--sc-grey3);
         font-size: 14px;
-        line-height: 14px;   
+        line-height: 20px;   
+      }
+
+      paper-button.details_toggler_btn {
+        padding: 10px 16px 10px 13px;
+        font-size: 14px;
+        margin: 10px 0px;
       }
 
 
@@ -478,6 +487,28 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       }
 */
 
+      paper-icon-button.chatbtn {
+        width: 52px;
+        height: 52px;
+        min-width: 52px;
+        min-height: 52px;
+        padding: 12px;
+        margin-left: 10px;
+      }
+
+        paper-button.chatbtn {
+          opacity: 0.75;
+          font-size: 14px;
+
+          border-radius: 0px;
+          padding: 0px;
+          border-bottom: 2px dotted var(--sc-grey4); 
+
+        }
+
+        paper-button.chatbtn iron-icon {
+          margin:0px 0px 2px 4px;
+        }
 
     @media all and (min-width: 0) and (max-width: 420px) { 
 
@@ -715,12 +746,15 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                     </div>
                   </template>
                   <template is="dom-if" if="{{indeal}}">
-                    <h1 class=""><span class="bold"></span>You're in deal with <span class="light blue replyer_username">{{replydata.provider.username}}</span>.</h1>
+                    <h1 class=""><span class="bold">You're in deal</span> with <span class="light blue replyer_username">{{replydata.provider.username}}</span>.</h1>
                   </template>
 
                     <!-- <p class="grey2b">A deal is being created.</p> -->
                 </template>
-
+                <!-- <div class="whitespace"></div> -->
+<!-- <div class="whitespace"></div> -->
+                <!-- <p class="reg grey3 details_toggler" on-tap="showDetails">Show deal details</p> -->
+                
 
                 <div class="avatars_funding">
                   <div class$="avatar_funding {{seekerfundclass}}">
@@ -744,19 +778,35 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                     <iron-icon class$="v_icon {{vsize}}" icon="sc-icons:v"></iron-icon>
                   </div>
 
-                <template is="dom-if" if="{{!phoneview}}">
-                  <p class="bold grey3 details_toggler" on-tap="showDetails">More details</p>
-                </template>
+                  <template is="dom-if" if="{{!phoneview}}">
+<!--                   <paper-button noink class="shadow lighterer chatbtn">
+                    Chat with [[replydata.provider.username]]
+                    <iron-icon class="blue" icon="sc-icons:babble">chat</iron-icon>
+                  </paper-button> -->
+<paper-button class="details_toggler_btn shadow grey3 darker"> Show more details</paper-button>
+
+                  </template>
+
                 </div>
+                
                 <template is="dom-if" if="{{phoneview}}">
-                  <p class="bold grey3 details_toggler" on-tap="showDetails">More details</p>
+                <paper-button noink class="shadow lighterer chatbtn">
+                  Chat with [[replydata.provider.username]]
+                </paper-button>
                 </template>
 
+
+
+<!--                 <template is="dom-if" if="{{!phoneview}}">
+                  <div class="flex"></div>
+                </template> -->
+
+
+
+                
                 <iron-collapse id="details_collapser">
                     <div class="details_collapser_inner">
                       <div class="details_request totalwidth vertic start startjust">
-
-
 
                         <div class="detail">
                           <p class="cat">Offer</p>
@@ -801,33 +851,31 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                           <p class="cat">Blockchain transactions</p>
                           <p class="reg">[[requestdata.id]]</p>
                         </div>
-
-
-
-
-
-                        <!-- <div class="detail_step totalwidth horizont start startjust">
-                          <iron-icon class="grey3" icon="sc-icons:arrowright"></iron-icon>
-                          <div class="flex vertic start startjust">
-                             <p class="grey3">[[requestdata.seeker.username]] posted <span class="reg">"{{requestdata.msg}}"</span> in #pioneer for {{requestdata.amount}} SWT, <moment-js date="{{requestdata.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js>.</p>
-                          </div>
-                        </div>
-
-                        <div class="detail_step totalwidth horizont start startjust">
-                          <iron-icon class="grey3" icon="sc-icons:arrowright"></iron-icon>
-                          <div class="flex vertic start startjust">
-                             <p class="grey3">[[replydata.provider.username]] replied <span class="bold">"{{replydata.msg}}"</span> for {{requestdata.amount}} SWT, <moment-js date="{{replydata.replytime}}" format="HH:mm:ss.SSS" from-now></moment-js>.</p>
-                          </div>
-                        </div> -->
-                        
-
                       </div>
-                    
                     </div>
                 </iron-collapse>
+<!--               <template is="dom-if" if="{{indeal}}">
+                <div class="flex"></div>
+                <paper-button noink class="shadow lighterer chatbtn">
+                  <sc-avatar
+                  ipfshash="[[replydata.provider.avatarhash]]"
+                  size="verysmall"
+                  ></sc-avatar>
+                  Chat with [[replydata.provider.username]]
+                </paper-button>
+              </template> -->
+
               </div>
 
               <div class$="bottomhalf {{bottombg}} totalwidth">
+                  <!-- <paper-button noink class="chatbtn">
+                    Chat with [[replydata.provider.username]]
+                    <iron-icon class="grey4 small" icon="sc-icons:babble">chat</iron-icon>
+                  </paper-button> -->
+                   
+<paper-icon-button class="shadow blue grey4 chatbtn" icon="sc-icons:babble"></paper-icon-button>
+
+ <div class="flex"></div>
                 <template is="dom-if" if="{{!seekeraccept}}">
                   <!-- <p class="confirmation_question yellow bold">- {{replydata.replyamount}} SWT</p> -->
                   <div class="confirmbtns">

@@ -145,17 +145,17 @@ This component shows a reply on a request.
 
       .iamthechoosenone {
         box-sizing:border-box;
-        padding: 6px 40px 18px 40px;
-        border-bottom: 1px solid var(--sc-blue);
+        padding: 0px 40px 18px 40px;
+        border-bottom: 2px solid var(--sc-blue);
         @apply(--layout-horizontal);
         @apply(--layout-start);
-        @apply(--layout-start-justified); 
+        @apply(--layout-end-justified); 
         margin: 0px 0px 0px 0px;
       }
 
 
       .iamthechoosenone p {
-        font-size: 16px;
+        font-size: 14px;
         line-height: 16px;
         margin-top: 5px;
       }
@@ -163,11 +163,11 @@ This component shows a reply on a request.
 
       .yourethechoosenone {
         box-sizing:border-box;
-        padding: 4px 40px 18px 40px;
-        border-bottom: 1px solid var(--sc-grey3);
+        padding: 0px 40px 18px 40px;
+        border-bottom: 2px solid var(--sc-grey3);
         @apply(--layout-horizontal);
         @apply(--layout-start);
-        @apply(--layout-start-justified); 
+        @apply(--layout-end-justified); 
         margin: 0px 0px 0px 0px;
       }
 
@@ -365,9 +365,7 @@ This component shows a reply on a request.
 
             <template is="dom-if" if="{{!thisismyreply}}">
               <div class="yourethechoosenone darker">
-                <iron-icon icon="sc-icons:arrowright" class="grey4"></iron-icon>
-
-                <p class="grey4 bold">{{chosenonemsg}} {{replydata.provider.username}} to make a deal with.</p>
+                <p class="reg grey4">{{chosenonemsg}} {{replydata.provider.username}} for this request.</p>
               </div>
             </template>
           </template>
