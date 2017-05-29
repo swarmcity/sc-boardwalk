@@ -367,7 +367,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
                 </div>
               </template>
 
-          <div class="tester">
+          <!-- <div class="tester"> -->
 
             <template is="dom-repeat" items="{{otherdeals}}"
               filter="iReplied" observe="type manager.type">
@@ -377,7 +377,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
                 on-to-detail="hashtag_to_detail">
               </sc-hashtagitem>
             </template>
-          </div>
+          <!-- </div> -->
 
 
             <template is="dom-repeat" items="{{otherdeals}}"
@@ -808,7 +808,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
 
         ididntReply: function(item) {
-            return item.ireplied == false || item.ireplied == '';
+            return item.ireplied == false || item.ireplied == undefined;
         },
 
 
