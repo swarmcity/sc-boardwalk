@@ -1,1 +1,122 @@
-{"abi":[{"constant":false,"inputs":[{"name":"_deal","type":"address"}],"name":"payout","outputs":[],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_deal","type":"address"},{"name":"_provider","type":"address"},{"name":"_newSeekerValue","type":"uint256"},{"name":"_providerValue","type":"uint256"}],"name":"assignProvider","outputs":[],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_hashtag","type":"address"},{"name":"_offerValue","type":"uint256"}],"name":"makeDealForTwo","outputs":[],"payable":false,"type":"function"},{"anonymous":false,"inputs":[{"indexed":false,"name":"simpleDealAddress","type":"address"}],"name":"NewSimpleDeal","type":"event"}]}
+{"abi":[
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_dealid",
+          "type": "string"
+        },
+        {
+          "name": "_dealowner",
+          "type": "address"
+        }
+      ],
+      "name": "fundDeal",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_dealid",
+          "type": "string"
+        }
+      ],
+      "name": "payout",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_dealid",
+          "type": "string"
+        },
+        {
+          "name": "_dealowner",
+          "type": "address"
+        },
+        {
+          "name": "_seekerFraction",
+          "type": "uint256"
+        }
+      ],
+      "name": "resolve",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_dealid",
+          "type": "string"
+        },
+        {
+          "name": "_offerValue",
+          "type": "uint256"
+        }
+      ],
+      "name": "makeDealForTwo",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_dealid",
+          "type": "string"
+        },
+        {
+          "name": "_dealowner",
+          "type": "address"
+        }
+      ],
+      "name": "dispute",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_dealid",
+          "type": "string"
+        }
+      ],
+      "name": "cancelDeal",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "name": "_hashtag",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "dealForTwoAddress",
+          "type": "address"
+        }
+      ],
+      "name": "NewDealForTwo",
+      "type": "event"
+    }
+  ]}
