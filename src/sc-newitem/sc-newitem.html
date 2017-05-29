@@ -418,8 +418,8 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         this.loading = true;
 
         var dealID = UUIDjs.create().toString();
-
-        this.$.dealfortwo.makeDealForTwo(dealID,self.offeramount, function(err, txhash) {
+//debugger;
+        this.$.dealfortwo.makeDealForTwo(dealID,self.identity.pubkey, self.offeramount, function(err, txhash) {
          
           var newrequest = {
             id: dealID,

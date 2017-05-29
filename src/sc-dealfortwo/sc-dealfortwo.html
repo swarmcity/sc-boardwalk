@@ -7,7 +7,7 @@
 
 <dom-module id="sc-dealfortwo">
   <template>
-    <sc-web3 id="web3" web3="{{web3}}"></sc-web3>
+    <sc-web3 web3="{{web3}}"></sc-web3>
     <sc-config config="{{config}}"></sc-config>
 
   </template>
@@ -115,7 +115,7 @@
       },
 
       observers: [
-        '_getready(web3)',
+        '_getready(web3,config)',
       ],
 
       ready: function(){
@@ -123,31 +123,37 @@
       },
 
       _getready: function(){
-        if (!this.web){
+        if (!this.web3 || !this.config){
           return;
         }
 
-        var DealForTwoFactoryContract = self.web3.eth.contract(self.contractjson.abi);
-        this.DealForTwoFactoryContractInstance = DealForTwoFactoryContract.at(self.config.dealfortwofactory);
+        var DealForTwoFactoryContract = this.web3.eth.contract(this.abi);
+        this.DealForTwoFactoryContractInstance = DealForTwoFactoryContract.at(this.config.dealfortwofactory);
 
       },
 
       // starts making a dealfortwo. callback with TXhash.
-      
-      makeDealForTwo: function(dealID, offerAmount, cb) {
-        this.DealForTwoFactoryContractInstance.makeDealForTwo.sendTransaction(dealID, offerAmount, {
-          //from: self.identity.pubkey,
-          gasPrice: gasPrice,
-          gas: 1000000
-        }, function(err, result) {
-          if (err) {
-            if (cb) {
-              return cb(err);
+
+      makeDealForTwo: function(dealID, from, offerAmount, cb) {
+        var self = this;
+
+        this.getGasPrice(function(err, gasPrice) {
+
+          self.DealForTwoFactoryContractInstance.makeDealForTwo.sendTransaction(dealID, offerAmount, {
+            from: from, //self.identity.pubkey,
+            gasPrice: gasPrice,
+            gas: 1000000
+          }, function(err, result) {
+            if (err) {
+              if (cb) {
+                return cb(err);
+              }
             }
-          }
-          cb(null, result);
-          console.log(err, result);
+            cb(null, result);
+            console.log(err, result);
+          });
         });
+
       },
 
       // makeDeal: function(dealID,offerAmount, cb) {
@@ -238,16 +244,17 @@
       //   });
       // },      
 
-      // getGasPrice: function() {
-      //   var self = this;
-      //   return new Promise(function(resolve, reject) {
-      //     self.web3.eth.getGasPrice(function(err, result) {
-      //       self.gasPrice = result;
-      //       console.log('nonce=', result);
-      //       resolve();
-      //     })
-      //   });
-      // },
+      getGasPrice: function(cb) {
+        var self = this;
+        return new Promise(function(resolve, reject) {
+          self.web3.eth.getGasPrice(function(err, result) {
+            self.gasPrice = result;
+            if (cb){ cb(err,result);}
+            console.log('nonce=', result);
+            resolve();
+          })
+        });
+      },
 
       // getContractAddress(account) {
       //   var self = this;
