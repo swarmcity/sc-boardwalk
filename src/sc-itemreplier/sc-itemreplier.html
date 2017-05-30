@@ -443,8 +443,12 @@ This components allow a Swarm Citizen to reply on a request.
           this.focusclass = "infocus";
           replyform.opened = true;
         } else {
-          this.focusclass = "outfocus";
-          replyform.opened = false;
+
+          if (!this.$.replyinput.value) {
+            this.focusclass = "outfocus";
+            replyform.opened = false;
+          }
+
         };
       }
 
