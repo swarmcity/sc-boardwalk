@@ -1,5 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/paper-input/paper-textarea.html">
@@ -12,6 +13,7 @@
 <link rel="import" href="../sc-web3/sc-web3.html">
 <link rel="import" href="../sc-config/sc-config.html">
 <link rel="import" href="../sc-shh/sc-shh.html">
+<link rel="import" href="../sc-avatar/sc-avatar.html">
 
 <!--
 `sc-newitem`
@@ -31,8 +33,9 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
     <style include="sc-styles">
       :host {
         display: block;
-        min-height: 100%;
         width: 100%;
+        transition: all 0.25s linear;
+        @apply(--base-shadow); 
       }
 
       .totalcontainer {
@@ -41,95 +44,31 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         @apply(--layout-start);
         @apply(--layout-start-justified); 
         box-sizing:border-box;
-        padding-top: 18vh;    
+        transition: all 0.25s linear;
+
+/*        padding-top: 18vh; */ 
       }
 
-      .paddingsides {
-        padding-left: 4vw;
-        padding-right: 4vw;
+      .totalopen {
+        padding: 18px 50px 30px 25px;
+        background-color: var(--sc-white);
       }
 
-
-
-      #newitemcontent {
-        width: 100%;
-        max-width: 600px;
+      .totalclosed {
+        padding: 10px 50px 20px 25px;
+        background-color: rgba(255,255,255,0.25);
       }
 
-      #avatarimg {
-        z-index: 9;
-      }
-
-      .newitempadding {
-        padding-left: 4vw;
-        padding-right: 4vw;
-      }
-/*
-      .newitempadding {
-        padding-left: 4vw;
-        padding-right: 4vw;
-        padding-bottom: 8vh;
+      .incollapser {
+        padding: 0px 0px 0px 52px;
       }
 
 
-      .newitemofferpadding {
-        padding: 8vh 4vw;
-      }
-*/
-
-      .avatar-box {
-        z-index: 2;
-        box-sizing:border-box;
-        margin-right: 14px;     
+      .swtamount {
+        width: 70%;
+        max-width: 300px; 
       }
 
-      .rep {
-        font-size: 14px;
-      }
-
-      .amount {
-        font-size: 36px;
-      }
-
-      .swt {
-        font-size: 18px;
-      }
-
-
-      paper-input.swtamount {
-/*        max-width: 200px;*/
-        width: 100%;
-        --paper-input-container-input: {
-          font-family: montserratbold;
-          font-size: 24px;
-          line-height: 24px;
-          color: var(--sc-yellow);
-        };
-        --paper-input-container-focus-color: var(--sc-yellow);
-      }
-
-      paper-textarea.offermsg {
-/*        max-width: 600px;*/
-        width: 100%;
-      }
-
-      .padder {
-        box-sizing:border-box;
-        padding: 20px;    
-      }
-
-      .amountinput {
-        width: 100px;
-      }
-
-
-      .yourname {
-        margin-bottom: 4px;
-      }
-
-      .offeramount {
-        width: 50%;
-      }
 
       .swtwithoffer {
         color: var(--sc-yellow);
@@ -139,34 +78,50 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       }
 
 
-      .alignedhashtag {
-        width: 100%;        
-      }
-
       .confirmbtns {
         z-index: 2;
-        margin-top: -40px;   
+/*        margin-top: -40px;   
         width: 100%;
-        max-width: 600px;
+        max-width: 600px;*/
+        @apply(--layout-self-end);
+
         @apply(--layout-horizontal);
         @apply(--layout-start);
         @apply(--layout-end-justified);
         box-sizing:border-box;
-        padding-right: 30px;
       }
 
       .confirmbtn {
-        background-color: var(--sc-white);
+/*        background-color: var(--sc-white);
         @apply(--layout-horizontal);
         @apply(--layout-center-center);
         width: 76px;
         height: 76px;
-        border-radius: 50%;
+        border-radius: 50%;*/
       }
 
-      .backbtnarea {
-        padding: 25px 25px 0px 25px;
 
+      .plusicon {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        min-height: 40px;
+        border-radius: 50%;
+        margin: 0px 12px 4px 0px;
+
+        box-shadow: 0px 3px 3px -3px rgba(0, 0, 0, 0.25);
+        -webkit-box-shadow: 0px 3px 3px -3px rgba(0, 0, 0, 0.25);
+        -moz-box-shadow: 0px 3px 3px -3px rgba(0, 0, 0, 0.25);
+        -o-box-shadow: 0px 3px 3px -3px rgba(0, 0, 0, 0.25); 
+
+      }
+
+      sc-avatar {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        min-height: 40px;
+        margin: 0px 12px 4px 0px;
       }
 
 
@@ -182,7 +137,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
           @apply(--layout-vertical);
           @apply(--layout-center-center);        
           box-sizing:border-box;
-          padding-top: 4vh; 
+
         }
 
         #newitemcontent {
@@ -209,88 +164,90 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       }
 
     </style>
-    <div class="totalcontainer">
-      <div id="newitemcontent" class="whiteback shadow">
+    <div class$="totalcontainer {{totalstate}}">
 
-      <div class="totalwidth horizont centercenter backbtnarea">
-        <span class="flex"></span>
-        <paper-icon-button on-tap="back" icon="sc-icons:decline" noink>back</paper-icon-button>
-      </div>
 
-        <div class="totalwidth vertic centercenter">
-          <div class="totalwidth vertic start centerjust paddingsides newitempadding dottedbottom">
-            <paper-textarea label="What are you looking for?" class="totalwidth offermsg" autofocus value="{{offermsg}}">
+          <div class="totalwidth horizont end startjust">
+            <template is="dom-if" if="{{showavatar}}">
+              <sc-avatar
+                class="replyeravatar"
+                ipfshash="[[identity.avatarhash]]"
+                size="small">
+              </sc-avatar>
+            </template>
+
+            <template is="dom-if" if="{{!showavatar}}">
+              <div class="plusicon horizont centercenter whiteback" on-tap="doFocus">
+                <iron-icon icon="sc-icons:plus" class="blue medium"></iron-icon>
+              </div>
+            </template>
+
+            <paper-textarea id="offerinput" label="What are you looking for? #{{selectedhashtag}}" class="totalwidth offermsg grey2unfocus"  on-focused-changed="checkFocus" value="{{offermsg}}">
             </paper-textarea>
-            <div class="totalwidth horizont center endjust alignedhashtag">
-              <p class="bold"><span>#</span>{{selectedhashtag}}</p>
-            </div>
           </div>
 
-          <div class="horizont end startjust totalwidth paddingsides newitemofferpadding dottedbottom">
-            <paper-input label="What do you offer?" class="swtamount flex" value="{{offeramount}}" type="number">
+      <iron-collapse id="offerinputform" class="totalwidth">
+
+        <div class="incollapser totalwidth vertic centercenter">
+
+          <div class="horizont end startjust totalwidth">
+            <paper-input label="What do you offer?" class="swtamount" value="{{offeramount}}" type="number">
             </paper-input>
             <p class="swtwithoffer bold">SWT</p>
           </div>
 
-<!--           <div class="whitespace"></div>
-          <div class="whitespace"></div>        
-          <div class="totalwidth horizont centercenter paddingsides">
-            <div class="avatar-box">
-              <sc-avatar
-                id="avatarimg"
-                ipfshash="[[identity.avatarhash]]"
-                size="medium">
-              </sc-avatar>
+
+        <template is="dom-if" if="{{loading}}">
+          <div class="totalwidth newitempadding">
+            <sc-loader small class="grey3" color="grey3">Processing your request</sc-loader>
+          </div>
+        </template>
+
+
+        <template is="dom-if" if="{{!loading}}">
+          <div class="confirmbtns">
+            <div class="confirmbtn">
+              <paper-icon-button icon="sc-icons:v" class="medium blueback white" on-tap="confirmRequest" noink disabled="{{!btnable}}">show</paper-icon-button>
             </div>
-            <div class="vertic start startjust flex">
-              <sc-username
-                id="username"
-                identity="{{identity}}"
-                pubkey="{{account}}"
-                size="medium">
-              </sc-username>
-              <p class="bold rep blue">{{offererrep}} REP</p>
-            </div>  
-          </div> -->
+          </div>
+        </template>
+
+
 
         </div>
-          <template is="dom-if" if="{{overspending}}">
-            <div class="totalwidth newitempadding">
-                <div class="minispace"></div>
-                <div class="minispace"></div>
-                <p class="bold red">You don't have enough SWT!</p>
-                <div class="tenspace"></div>
+
+      </iron-collapse>
+
+<!-- 
+        <template is="dom-if" if="{{overspending}}">
+          <div class="totalwidth newitempadding">
+              <div class="minispace"></div>
+              <div class="minispace"></div>
+              <p class="bold red">You don't have enough SWT!</p>
+              <div class="tenspace"></div>
+          </div>
+        </template>
+
+        <template is="dom-if" if="{{!overspending}}">
+          <div class="tenspace"></div>
+        </template>
+        
+        <template is="dom-if" if="{{loading}}">
+          <div class="totalwidth newitempadding">
+            <sc-loader small class="grey3" color="grey3">Processing your request</sc-loader>
+          </div>
+        </template>
+
+
+        <template is="dom-if" if="{{!loading}}">
+          <div class="confirmbtns">
+            <div class="confirmbtn">
+              <paper-icon-button icon="sc-icons:v" class="big blueback white" on-tap="confirmRequest" noink disabled="{{!btnable}}">show</paper-icon-button>
             </div>
-          </template>
-
-          <template is="dom-if" if="{{!overspending}}">
-            <div class="tenspace"></div>
-          </template>
-          
-          <template is="dom-if" if="{{loading}}">
-            <div class="totalwidth newitempadding">
-              <sc-loader small class="grey3" color="grey3">Processing your request</sc-loader>
-            </div>
-          </template>
-
-
-      </div> 
-<template is="dom-if" if="{{!loading}}">
-
-
-      <div class="confirmbtns">
-       <!--  <paper-icon-button noink class="bigbtn blueback white" icon="sc-icons:v">post this offer</paper-icon-button> -->
-      
-       <div class="confirmbtn">
-          <paper-icon-button icon="sc-icons:v" class="big blueback white" on-tap="confirmRequest" noink disabled="{{!btnable}}">show</paper-icon-button>
-       
-       
-        </div>
-      </div>
-</template>
-
-
-  </div> 
+          </div>
+        </template>
+ -->
+    </div> 
 
   </template>
 
@@ -377,8 +334,8 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
         // These are for REALS
         this.btnable = false;
-
-
+        this.totalstate = "totalclosed";
+        this.showavatar = false;
       },
 
       /**
@@ -678,6 +635,33 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         }
       });
     },
+
+
+      doFocus: function(){
+        this.$.offerinput.focus();
+      },
+
+
+      checkFocus: function(){
+        var offerinputform = this.shadowRoot.getElementById('offerinputform');
+
+
+        if (this.$.offerinput.focused) {
+          this.showavatar = true;
+          this.totalstate = "totalopen";
+          offerinputform.opened = true;
+          this.fire('newitem-open');
+        } else {
+
+        if (!this.$.offerinput.value) {
+          this.showavatar = false;
+          this.totalstate = "totalclosed";
+          offerinputform.opened = false;
+          this.fire('newitem-close');
+          }
+        };
+      }
+
 
 
     });

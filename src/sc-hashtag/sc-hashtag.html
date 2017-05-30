@@ -100,6 +100,14 @@ This is the component showing all requests of a certain hashtag. It contains a r
         width: 100%;
         max-width: 600px;
         margin: 10px 0px;
+        transition: all 0.25s linear;
+
+      }
+
+      sc-newitem {
+        width: 100%;
+        max-width: 600px;
+        margin: 20px 0px 0px 0px;
       }
 
       sc-dealitem {
@@ -160,6 +168,19 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       .tester {
         border: 1px solid red;
+      }
+
+      #currenttag {
+/*        background-color: red;*/
+      }
+
+      .full {
+        opacity: 1;
+      }
+
+      .half {
+        opacity: 0.25;
+
       }
 
 
@@ -323,15 +344,15 @@ This is the component showing all requests of a certain hashtag. It contains a r
         </div>
 
     <div class="contentcanvas">
-    <neon-animated-pages id="hashpages" attr-for-selected="data-action" selected="[[data.action]]">
+<!--     <neon-animated-pages id="hashpages" attr-for-selected="data-action" selected="[[data.action]]">
 
-      <neon-animatable data-action="list">
-          <paper-icon-button disabled="{{!hasgeohash}}" id="addbtn" icon="sc-icons:plus" class="left whiteback shadow medium addbtn" on-tap="tonewItem" noink>+ new offer</paper-icon-button>
+      <neon-animatable data-action="list"> -->
+<!--           <paper-icon-button disabled="{{!hasgeohash}}" id="addbtn" icon="sc-icons:plus" class="left whiteback shadow medium addbtn" on-tap="tonewItem" noink>+ new offer</paper-icon-button> -->
           <div id="pagecontent" class="pagecontent totalwidth">
             <div id="{{item}}" class="hashtagtotal totalwidth horizont centercenter">
 
                 <paper-icon-button on-tap="leave" icon="sc-icons:arrowleft" class="backarrow" noink>back to hashtaglist</paper-icon-button>
-              <div class="hashtagtitle horizont start startjust">
+              <div class="hashtagtitle horizont start startjust" id="currenttag">
                 <div class="symbol">
                   <p class="semibold">#</p>
                 </div>
@@ -340,24 +361,55 @@ This is the component showing all requests of a certain hashtag. It contains a r
               <div class="flex"></div>
             </div>
 
+
+      <sc-newitem
+        data-action="newitem"
+        identity="[[identity]]"
+        hashtag="[[data.hashtag]]"
+        swtbalance="[[swtbalance]]"
+        on-back="newitem_cancel"
+        on-cancel=""
+        on-new-submitted="newitem_submitted"
+        on-newitem-open="opacityHalf"
+        on-newitem-close="opacityFull"
+        >
+      </sc-newitem>
+
             <template is="dom-if" if="{{hasmydeals(mydeals)}}">
 
-            <div class="mydeals_repeater">
+<!--             <div class="mydeals_repeater">
             <template is="dom-repeat" items="{{mydeals}}">
               <sc-dealitem
                 item="[[item]]"
                 on-to-detail="hashtag_to_detail"
-                on-to-dealfortwo="hashtag_to_dealfortwo">
+                on-to-dealfortwo="hashtag_to_dealfortwo"
+                class$="{{dealsopacity}}">
               </sc-dealitem>
             </template>
-            </div>
+            </div> -->
+            </template>
+            <template is="dom-repeat" items="{{otherdeals}}"
+              filter="ididntReply" observe="type manager.type">
+              <sc-hashtagitem
+                item="[[item]]"
+                identity="[[identity]]"
+                on-to-detail="hashtag_to_detail"
+                class$="{{dealsopacity}}">
+              </sc-hashtagitem>
             </template>
 
-
-              <div class="filterbox">
+<!--           <div class="filterbox">
                 <sc-filter id="locationfilter" currentid="locationfilter" location range="{{range}}"></sc-filter>
-                <!-- <sc-filter id="statusfilter" filteroptions="[[statusfilteroptions]]" selecteditem="{{statusfilterselected}}" currentid="statusfilter"></sc-filter> -->
-              </div>
+              </div> -->
+
+
+
+
+
+
+
+
+<!--               
 
 
 
@@ -367,7 +419,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
                 </div>
               </template>
 
-          <!-- <div class="tester"> -->
 
             <template is="dom-repeat" items="{{otherdeals}}"
               filter="iReplied" observe="type manager.type">
@@ -377,7 +428,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
                 on-to-detail="hashtag_to_detail">
               </sc-hashtagitem>
             </template>
-          <!-- </div> -->
 
 
             <template is="dom-repeat" items="{{otherdeals}}"
@@ -395,9 +445,9 @@ This is the component showing all requests of a certain hashtag. It contains a r
             <div class="whitespace"></div>
             <div class="whitespace"></div>
             <div class="whitespace"></div>
-            <div class="whitespace"></div>
+            <div class="whitespace"></div> -->
           </div>
-      </neon-animatable>
+<!--       </neon-animatable>
 
       <sc-newitem
         data-action="newitem"
@@ -421,7 +471,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
         on-to-dealfortwo-provider="toDealForTwoProvider"
       ></sc-itemdetail>
 
-    </neon-animated-pages>
+    </neon-animated-pages> -->
     </div>
     </div>
 
@@ -488,7 +538,9 @@ This is the component showing all requests of a certain hashtag. It contains a r
           value: function() {
             return {
               'hero': this.$.hashtagavatar,
-              'balance': this.$.balancebox
+              'balance': this.$.balancebox,
+              'currenttag': this.$.currenttag
+
             }
           }
         },
@@ -501,13 +553,21 @@ This is the component showing all requests of a certain hashtag. It contains a r
           value: function() {
             return {
               'entry': [{
-                name: 'slide-from-bottom-animation',
-                node: this.$.pagecontent,
+              //   name: 'slide-from-bottom-animation',
+              //   node: this.$.pagecontent,
+              //   toPage: this,
+              //   timing: {
+              //     duration: 700
+              //   }
+              // }, {
+                name: 'hero-animation',
+                id: 'currenttag',
                 toPage: this,
                 timing: {
-                  duration: 700
+                  duration: 600
                 }
               }, {
+
                 name: 'hero-animation',
                 id: 'hero',
                 toPage: this,
@@ -524,22 +584,30 @@ This is the component showing all requests of a certain hashtag. It contains a r
               }],
 
               'exit': [{
-                name: 'slide-down-animation',
-                node: this.$.pagecontent,
+              //   name: 'slide-down-animation',
+              //   node: this.$.pagecontent,
+              //   fromPage: this,
+              //   timing: {
+              //     duration: 700
+              //   }
+
+              //   // },{
+              //   //   name: 'fade-out-animation',
+              //   //   node:this.$.backbtn,
+              //   //   fromPage: this,
+              //   //   timing: {
+              //   //     duration: 125
+              //   //   }
+
+              // }, {
+                name: 'hero-animation',
+                id: 'currenttag',
                 fromPage: this,
                 timing: {
-                  duration: 700
+                  duration: 600
                 }
-
-                // },{
-                //   name: 'fade-out-animation',
-                //   node:this.$.backbtn,
-                //   fromPage: this,
-                //   timing: {
-                //     duration: 125
-                //   }
-
               }, {
+
                 name: 'hero-animation',
                 id: 'hero',
                 fromPage: this,
@@ -603,8 +671,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       ready: function() {
         this._checkSize();
-
-
+        this.dealsopacity = "full";
       },
 
       attached: function(){
@@ -661,73 +728,73 @@ This is the component showing all requests of a certain hashtag. It contains a r
       /**
        * 'tonewItem' .
        */
-      tonewItem: function() {
-        this.sharedElements = {
-          'hero': this.$.hashtagavatar,
-          'balance': this.$.balancebox
-        };
+      // tonewItem: function() {
+      //   this.sharedElements = {
+      //     'hero': this.$.hashtagavatar,
+      //     'balance': this.$.balancebox
+      //   };
 
-        this.animationConfig = {
+      //   this.animationConfig = {
 
-          'entry': [{
-            name: 'slide-from-bottom-animation',
-            node: this.$.pagecontent,
-            toPage: this,
-            timing: {
-              duration: 700
-            }
-          }, {
-            name: 'hero-animation',
-            id: 'hero',
-            toPage: this,
-            timing: {
-              duration: 600
-            }
-          }, {
-            name: 'hero-animation',
-            id: 'balance',
-            toPage: this,
-            timing: {
-              duration: 600
-            }
-          }],
+      //     'entry': [{
+      //       name: 'slide-from-bottom-animation',
+      //       node: this.$.pagecontent,
+      //       toPage: this,
+      //       timing: {
+      //         duration: 700
+      //       }
+      //     }, {
+      //       name: 'hero-animation',
+      //       id: 'hero',
+      //       toPage: this,
+      //       timing: {
+      //         duration: 600
+      //       }
+      //     }, {
+      //       name: 'hero-animation',
+      //       id: 'balance',
+      //       toPage: this,
+      //       timing: {
+      //         duration: 600
+      //       }
+      //     }],
 
 
-          'exit': [{
-            name: 'slide-down-animation',
-            node: this.$.pagecontent,
-            fromPage: this,
-            timing: {
-              duration: 700
-            }
+      //     'exit': [{
+      //       name: 'slide-down-animation',
+      //       node: this.$.pagecontent,
+      //       fromPage: this,
+      //       timing: {
+      //         duration: 700
+      //       }
 
-          }, {
-            //   name: 'fade-out-animation',
-            //   node:this.$.backbtn,
-            //   fromPage: this,
-            //   timing: {
-            //     duration: 125
-            //   }
+      //     }, {
+      //       //   name: 'fade-out-animation',
+      //       //   node:this.$.backbtn,
+      //       //   fromPage: this,
+      //       //   timing: {
+      //       //     duration: 125
+      //       //   }
 
-            // }, {
-            name: 'hero-animation',
-            id: 'hero',
-            fromPage: this,
-            timing: {
-              duration: 600
-            }
-          }, {
-            name: 'hero-animation',
-            id: 'balance',
-            fromPage: this,
-            timing: {
-              duration: 600
-            }
-          }]
-        };
+      //       // }, {
+      //       name: 'hero-animation',
+      //       id: 'hero',
+      //       fromPage: this,
+      //       timing: {
+      //         duration: 600
+      //       }
+      //     }, {
+      //       name: 'hero-animation',
+      //       id: 'balance',
+      //       fromPage: this,
+      //       timing: {
+      //         duration: 600
+      //       }
+      //     }]
+      //   };
 
-        this.set('route.path', '/' + this.hashtag + '/newitem');
-      },
+      //   this.set('route.path', '/' + this.hashtag + '/newitem');
+      // },
 
       /**
        * 'hashtag_to_detail' fires 'to-itemdetail' to the parent-element, and includes the animationconfig for this action.
@@ -810,6 +877,18 @@ This is the component showing all requests of a certain hashtag. It contains a r
         ididntReply: function(item) {
             return item.ireplied == false || item.ireplied == undefined;
         },
+
+
+        opacityHalf: function(){
+          this.dealsopacity = "half";
+        },
+
+
+        opacityFull: function(){
+          this.dealsopacity = "full";
+        },
+
+        
 
 
     });
