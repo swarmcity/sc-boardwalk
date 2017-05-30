@@ -260,13 +260,10 @@ This components is the representation of a request in the requests-list on sc-ha
           </template>
           <template is="dom-repeat" as="currentreply" items="{{item.replies}}">
             <sc-itemreply
-            itemdata="{{item}}"
+            item="{{item}}"
             btnshow="{{youareowner(item.seeker.pubkey)}}"
-            replydata="{{currentreply}}"
-            on-to-detail="fireReplyselected"
-            on-item-detail="firetoItemdetail"
-            on-to-makedeal="toMakeDeal"
-            on-to-dealfortwo-provider="toProvider">
+            reply="{{currentreply}}"
+           >
             </sc-itemreply>
           </template>
 

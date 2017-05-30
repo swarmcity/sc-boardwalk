@@ -285,25 +285,26 @@ This component shows a reply on a request.
       <div class="totalwidth horizont start startjust">
 
         <sc-avatar
-          ipfshash="[[replydata.provider.avatarhash]]"
+          ipfshash="[[reply.provider.avatarhash]]"
           class="replyeravatar"
           size="verysmall">
         </sc-avatar>
 
         <div class="flex vertic start startjust">
           <div class="totalwidth horizont center startjust">
-            <p class="replier small reg blue">{{replydata.provider.username}}
-            <small class="bold"><sc-hashtagrep pubkey="{{replydata.provider.replyerrep}}" hashtagname="{{item.hashtag}}"></sc-hashtagrep></small></p>
-            <p class="grey2b light small"><moment-js date="{{replydata.replytime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
+            <p class="replier small reg blue">{{reply.provider.username}}
+            <small class="bold"><sc-hashtagrep pubkey="{{reply.provider.pubkey}}" hashtagname="{{item.hashtag}}"></sc-hashtagrep></small></p>
+            <p class="grey2b light small"><moment-js date="{{reply.replytime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
 
           </div>
-          <p class="msg totalwidth grey4"> {{replydata.msg}}<!-- <span class="bold"> for {{item.amount}} SWT</span> --></p>
+          <p class="msg totalwidth grey4"> {{reply.msg}}<!-- <span class="bold"> for {{item.amount}} SWT</span> --></p>
         </div>
 
             <template is="dom-if" if="{{btnshow}}">
               <template is="dom-if" if="{{showselectbtn}}">
                 <div class="horizont center endjust">
-                  <paper-button class="darker grey4 makedealbtn shadow" on-tap="toMakedeal">Select {{replydata.provider.username}}</paper-button>
+
+                  <paper-button class="darker grey4 makedealbtn shadow" on-tap="toMakeDeal">Select {{reply.provider.username}}</paper-button>
                 </div>
               </template>
             </template>
@@ -323,14 +324,14 @@ This component shows a reply on a request.
     <!--       <div class="totalwidth horizont start centerjust">
 
           <div class="vertic start centerjust totalwidth flex">
-            <p class="grey3 small"><moment-js date="{{replydata.replytime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
-            <p class="reply grey4">{{replydata.msg}}</p>
+            <p class="grey3 small"><moment-js date="{{reply.replytime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
+            <p class="reply grey4">{{reply.msg}}</p>
           </div>
 
 
           <div class="horizont start startjust">
             <div class="horizont end endjust acceptsfor">
-              <p class="bold grey4 replyamount">{{replydata.amount}} <span class="replySWT">SWT</span></p>
+              <p class="bold grey4 replyamount">{{reply.amount}} <span class="replySWT">SWT</span></p>
               <iron-icon class="grey4 small" icon="sc-icons:v">checked</iron-icon>
             </div>
           </div>
@@ -344,18 +345,18 @@ This component shows a reply on a request.
             <div class="horizont startjust center flex">
               <sc-avatar
                 class="replyeravatar"
-                ipfshash="[[replydata.provider.avatarhash]]"
+                ipfshash="[[reply.provider.avatarhash]]"
                 size="verysmall">
               </sc-avatar>
               <div class="vertic centercenter replyer">
-                <p class="totalwidth replyername small bold grey3">{{replydata.provider.username}}</p>
-                <p class="totalwidth replyerrep small bold blue">{{replydata.provider.replyerrep}} REP</p>
+                <p class="totalwidth replyername small bold grey3">{{reply.provider.username}}</p>
+                <p class="totalwidth replyerrep small bold blue">{{reply.provider.replyerrep}} REP</p>
               </div>
             </div>
             <template is="dom-if" if="{{btnshow}}">
               <template is="dom-if" if="{{showselectbtn}}">
                 <div class="horizont center endjust">
-                  <paper-button class="darkerer blue makedealbtn shadow" on-tap="toMakedeal">Select {{replydata.provider.username}}</paper-button>
+                  <paper-button class="darkerer blue makedealbtn shadow" on-tap="toMakedeal">Select {{reply.provider.username}}</paper-button>
                 </div>
               </template>
             </template>
@@ -374,8 +375,8 @@ This component shows a reply on a request.
 <!--         <template is="dom-if" if="{{phoneview}}">
 
           <div class="vertic start centerjust totalwidth">
-            <p class="grey3 small"><moment-js date="{{replydata.replytime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
-            <p class="reply grey4">{{replydata.msg}}</p>
+            <p class="grey3 small"><moment-js date="{{reply.replytime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
+            <p class="reply grey4">{{reply.msg}}</p>
           </div>
 
           <div class="minispace"></div>
@@ -385,18 +386,18 @@ This component shows a reply on a request.
             <div class="horizont startjust center flex">
               <sc-avatar
                 class="replyeravatar"
-                ipfshash="[[replydata.provider.avatarhash]]"
+                ipfshash="[[reply.provider.avatarhash]]"
                 size="verysmall">
               </sc-avatar>
 
               <div class="vertic centercenter replyer">
-                <p class="totalwidth replyername small bold grey3">{{replydata.provider.username}}</p>
-                <p class="totalwidth replyerrep small bold blue"><sc-hashtagrep pubkey="{{replydata.provider.pubkey}}" hashtagname="{{itemdata.hashtag}}"></sc-hashtagrep> REP</p>
+                <p class="totalwidth replyername small bold grey3">{{reply.provider.username}}</p>
+                <p class="totalwidth replyerrep small bold blue"><sc-hashtagrep pubkey="{{reply.provider.pubkey}}" hashtagname="{{item.hashtag}}"></sc-hashtagrep> REP</p>
               </div>
             </div>
             <div class="horizont start startjust">
               <div class="horizont end endjust acceptsfor">
-                <p class="bold grey4 replyamount">{{replydata.amount}} <span class="replySWT">SWT</span></p>
+                <p class="bold grey4 replyamount">{{reply.amount}} <span class="replySWT">SWT</span></p>
                 <iron-icon class="grey4 small" icon="sc-icons:v">checked</iron-icon>
               </div>
             </div>
@@ -406,7 +407,7 @@ This component shows a reply on a request.
             <template is="dom-if" if="{{showselectbtn}}">
               <div class="whitespace"></div>
               <div class="totalwidth horizont centercenter">
-                <paper-button class="blueback white small totalwidth" on-tap="toMakedeal"><iron-icon icon="sc-icons:arrowright" class="white"></iron-icon>Select {{replydata.provider.username}}</paper-button>
+                <paper-button class="blueback white small totalwidth" on-tap="toMakedeal"><iron-icon icon="sc-icons:arrowright" class="white"></iron-icon>Select {{reply.provider.username}}</paper-button>
               </div>
             </template>
           </template>
@@ -425,7 +426,7 @@ This component shows a reply on a request.
 
             <template is="dom-if" if="{{!thisismyreply}}">
               <div class="yourethechoosenone darker">
-                <p class="reg grey4">{{chosenonemsg}} {{replydata.provider.username}} for this request.</p>
+                <p class="reg grey4">{{chosenonemsg}} {{reply.provider.username}} for this request.</p>
               </div>
             </template>
           </template> -->
@@ -439,9 +440,9 @@ This component shows a reply on a request.
       is: 'sc-itemreply',
 
       observers: [
-        '_log(identity,btnshow)',
-        '_yourethechoosenone(itemdata,replydata)',
-        '_isthismyreply(identity,itemdata)'
+//        '_log(identity,btnshow)',
+        '_yourethechoosenone(item,reply)',
+        '_isthismyreply(identity,item)'
       ],
       properties: {
         /**
@@ -467,18 +468,18 @@ This component shows a reply on a request.
           value: false
         },
 
-        itemdata: {
-          type: Object
-        },
+        // item: {
+        //   type: Object
+        // },
 
 
         item: {
           type: Object
         },
 
-        replydata: {
+        reply: {
           type: Object,
-          observer: '_replydata'
+          observer: '_reply'
         },
 
         yourethechoosenone: {
@@ -509,7 +510,7 @@ This component shows a reply on a request.
       ],
 
 
-      _replydata: function(){
+      _reply: function(){
         //debugger;
       },
 
@@ -550,10 +551,10 @@ This component shows a reply on a request.
 
       // TEMP FUNCTION
       fireTodetail: function(){
-        this.fire('to-detail',this.replydata);
+        this.fire('to-detail',this.reply);
       },
 
-      toMakedeal: function() {
+      // toMakedeal: function() {
 
 
         // if (!this.shhidentity) {
@@ -570,11 +571,11 @@ This component shows a reply on a request.
         //     username: this.identity.username, //'Hank Moovy',
         //   },
         //   timestamp: Date.now(),
-        //   dealhashtag: this.itemdata.offerhashtag,
-        //   msg: this.itemdata.offer,
+        //   dealhashtag: this.item.offerhashtag,
+        //   msg: this.item.offer,
         //   // now the specific fields for this type
-        //   dealid: this.itemdata.id,
-        //   replyid: this.replydata.id
+        //   dealid: this.item.id,
+        //   replyid: this.reply.id
         // };
 
         // var topics = [
@@ -606,14 +607,14 @@ This component shows a reply on a request.
         // });
 
 
-        this.fire('to-makedeal', this.replydata);
-      },
+      //   this.fire('to-makedeal', this.reply);
+      // },
 
       _yourethechoosenone: function() {
         var self = this;
 
-        if (this.itemdata.selectedreply) {
-          if(this.itemdata.selectedreply == this.replydata.id){
+        if (this.item.selectedreply) {
+          if(this.item.selectedreply == this.reply.id){
             this.yourethechoosenone = true;
             this.displaythis = "full";       
           } else {
@@ -622,39 +623,34 @@ This component shows a reply on a request.
           }
 
 
-          var foundReply = this.itemdata.replies.find(function(item){
-            return item.id === self.itemdata.selectedreply;
+          var foundReply = this.item.replies.find(function(item){
+            return item.id === self.item.selectedreply;
           });
 
           this.currentprovider = foundReply.provider.pubkey;
           console.log("*************************** in itemreplyzzzz currentprovider", this.currentprovider);
           this._isthismyreply();
         }
-
       },
 
-
-
-
-
-      _isthismyreply:function(){
-        if(this.identity){
+      _isthismyreply: function() {
+        if (this.identity) {
           if (this.currentprovider === this.identity.pubkey) {
             this.thisismyreply = true;
           } else {
             this.thisismyreply = false;
           };
-          if(this.itemdata.seeker.pubkey === this.identity.pubkey ) {
+          if (this.item.seeker.pubkey === this.identity.pubkey) {
             this.chosenonemsg = "You selected";
-            if(this.itemdata.selectedreply){
-            this.showselectbtn = false;
-            console.log("ZOOooooooo Jongeè!");
-            } 
+            if (this.item.selectedreply) {
+              this.showselectbtn = false;
+              console.log("ZOOooooooo Jongeè!");
+            }
           } else {
-            this.chosenonemsg = this.itemdata.seeker.username+" has selected";
+            this.chosenonemsg = this.item.seeker.username + " has selected";
           };
 
-          // if(this.itemdata.selectedreply){
+          // if(this.item.selectedreply){
           //   this.btnshow = false;
           // }; else {
           //   this.btnshow = false;
@@ -662,22 +658,64 @@ This component shows a reply on a request.
 
 
         } else {
-            this.thisismyreply = false;
-          };
-
-
+          this.thisismyreply = false;
+        };
       },
 
 
-      toDealfortwoprovider: function(){
-        //debugger;
-        this.fire('to-dealfortwo-provider', this.itemdata);
+      toMakeDeal: function(e) {
+
+        var self = this;
+
+        var message = {
+          type: 'dealfortwo-select-provider',
+          requestid: self.item.id,
+          replyid: self.reply.id,
+          timestamp: Date.now(),
+        };
+
+        var topics = [
+          self.shhweb3.encodetopic('swarmcity-v1'),
+          self.shhweb3.encodetopic(message.type),
+          self.shhweb3.encodetopic(self.item.hashtag),
+          self.shhweb3.encodetopic(self.item.id),
+        ];
+
+        var options = {
+          "from": self.shhweb3.identity,
+          "topics": topics,
+          "payload": self.shhweb3.fromAscii(JSON.stringify(message)),
+          "ttl": 60 * 60 * 24,
+          "priority": 1000
+        };
+
+        console.log('posting to topics', topics);
+
+        self.shhweb3.shh.post(options, function(err, res) {
+          if (!err) {
+            console.log(message.type, '-> Reply posted');
+          } else {
+            console.log(message.type, '-> whisper error:', err);
+          }
+        });
+
+        this.fire('redirect', {
+          target: '/dealfortwoseeker/' + this.item.hashtag + '/' + this.item.id + '/' + this.reply.id
+        });
+
+        //this.fire('to-makedeal', e.detail);
       },
 
 
-      _log: function(target) {
-        console.log("*************************** in itemreplyzzzz reply", target, "BTNSHOW",this.showselectbtn);
-      },
+      // toDealfortwoprovider: function(){
+      //   //debugger;
+      //   this.fire('to-dealfortwo-provider', this.item);
+      // },
+
+
+      // _log: function(target) {
+      //   console.log("*************************** in itemreplyzzzz reply", target, "BTNSHOW",this.showselectbtn);
+      // },
 
 
     });

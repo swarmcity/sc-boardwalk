@@ -527,43 +527,43 @@ This components shows the detailed view of a request.
         this.fire('to-dealfortwo-provider', e.detail);;
       },
 
-      toMakeDeal: function(e) {
-        var self = this;
-        var replydata = e.detail;
-        //debugger;
-        var message = {
-          type: 'dealfortwo-select-provider',
-          requestid: self.itemdata.id,
-          replyid: replydata.id,
-          timestamp: Date.now(),
-        };
+      // toMakeDeal: function(e) {
+      //   var self = this;
+      //   var replydata = e.detail;
+      //   //debugger;
+      //   var message = {
+      //     type: 'dealfortwo-select-provider',
+      //     requestid: self.itemdata.id,
+      //     replyid: replydata.id,
+      //     timestamp: Date.now(),
+      //   };
 
-        var topics = [
-          self.shhweb3.encodetopic('swarmcity-v1'),
-          self.shhweb3.encodetopic(message.type),
-          self.shhweb3.encodetopic(self.itemdata.hashtag),
-          self.shhweb3.encodetopic(self.itemdata.id),
-        ];
+      //   var topics = [
+      //     self.shhweb3.encodetopic('swarmcity-v1'),
+      //     self.shhweb3.encodetopic(message.type),
+      //     self.shhweb3.encodetopic(self.itemdata.hashtag),
+      //     self.shhweb3.encodetopic(self.itemdata.id),
+      //   ];
 
-        var options = {
-          "from": self.shhweb3.identity,
-          "topics": topics,
-          "payload": self.shhweb3.fromAscii(JSON.stringify(message)),
-          "ttl": 60 * 60 * 24,
-          "priority": 1000
-        };
+      //   var options = {
+      //     "from": self.shhweb3.identity,
+      //     "topics": topics,
+      //     "payload": self.shhweb3.fromAscii(JSON.stringify(message)),
+      //     "ttl": 60 * 60 * 24,
+      //     "priority": 1000
+      //   };
 
-        console.log('posting to topics', topics);
+      //   console.log('posting to topics', topics);
 
-        self.shhweb3.shh.post(options, function(err, res) {
-          if (!err) {
-            console.log(message.type, '-> Reply posted');
-          } else {
-            console.log(message.type, '-> whisper error:', err);
-          }
-        });
-        this.fire('to-makedeal', e.detail);
-      },
+      //   self.shhweb3.shh.post(options, function(err, res) {
+      //     if (!err) {
+      //       console.log(message.type, '-> Reply posted');
+      //     } else {
+      //       console.log(message.type, '-> whisper error:', err);
+      //     }
+      //   });
+      //   this.fire('to-makedeal', e.detail);
+      // },
 
       _dealstate: function(target) {
         switch(target){
