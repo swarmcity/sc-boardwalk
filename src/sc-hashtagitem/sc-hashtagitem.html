@@ -92,6 +92,11 @@ This components is the representation of a request in the requests-list on sc-ha
       }
 
 
+      .myavatar {
+/*        width: 22px;
+        height: 22px;        
+*/      }
+
       .othermargins {
         margin-right: 5px;
       }
@@ -199,6 +204,31 @@ This components is the representation of a request in the requests-list on sc-ha
 
       }
 
+      .dealmessage {
+          padding-left: 75px;
+          padding-top: 6px;
+      }
+
+      .dottedline {
+        width: 100%;
+        height: 1px;
+        border-top: 1px dotted rgba(0,0,0,0.075);
+      }
+
+      .you {
+/*        box-sizing:border-box;
+        padding: 2px 4px;*/
+        margin-right: 12px;
+
+      }
+
+/*      .blueborder {
+        border-left: 2px solid var(--sc-blue);
+      }
+
+      .whiteborder {
+        border-left: 2px solid transparent;
+      }*/
 
       @media all and (min-width: 0) and (max-width: 420px) { 
       
@@ -220,24 +250,21 @@ This components is the representation of a request in the requests-list on sc-ha
 
 <!-- WHEN REPLY == NOT SELECTED YET -->
       <template is="dom-if" if="{{!item.selectedreply}}">
-      <div class="totalwidth vertic start centerjust">
+      <div class$="totalwidth vertic start centerjust {{ownerclass}}">
 
         <div class="itemtotal horizont start startjust" on-tap="toggleItem">
-
-            <template is="dom-if" if="{{!item.ireplied}}">
-            <sc-avatar
-            ipfshash="[[identity.avatarhash]]"
-            size="verysmall">
-          </sc-avatar>
-            </template>
-
           <sc-avatar
             ipfshash="[[item.seeker.avatarhash]]"
             size="small">
           </sc-avatar>
           <div class="flex vertic start startjust">
             <div class="totalwidth horizont center startjust">
+            <template is="dom-if" if="{{youareowner(item.seeker.pubkey)}}">
+              <p class="you small bold grey4">you</p>
+            </template>
+            <template is="dom-if" if="{{!youareowner(item.seeker.pubkey)}}">
               <p class="seeker small reg blue">{{item.seeker.username}} • <span class="bold"><sc-hashtagrep pubkey="{{item.seeker.pubkey}}" hashtagname="{{item.hashtag}}"></sc-hashtagrep></span></p>
+            </template>
               <p class="grey2b light small"><moment-js date="{{item.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
               <template is="dom-if" if="{{item.replies}}">
                 <div class="replies horizont centercenter">
@@ -255,7 +282,16 @@ This components is the representation of a request in the requests-list on sc-ha
           </div>
         </div>
 
-
+            <template is="dom-if" if="{{item.ireplied}}">
+              <div class="dealmessage totalwidth horizontal center endjust">
+                <p class="small grey4 bold">You replied on this.</p>
+              <!-- <sc-avatar
+                ipfshash="[[identity.avatarhash]]"
+                size="verysmall"
+                class="myavatar">
+              </sc-avatar> -->
+            </div>
+            </template>
 
         <iron-collapse id="innerCollapser" class="totalwidth">
 
@@ -268,6 +304,7 @@ This components is the representation of a request in the requests-list on sc-ha
           <template is="dom-if" if="{{item.replies}}">
             <div class="whitespace"></div>
           </template>
+          <!-- <div class="dottedline"></div> -->
           <template is="dom-repeat" as="currentreply" items="{{item.replies}}">
             <sc-itemreply
             item="{{item}}"
@@ -489,6 +526,11 @@ This components is the representation of a request in the requests-list on sc-ha
 
         // this.provideravatarhash = deal.replies[i].provider.avatarhash;
         // this.providerusername = deal.replies[i].provider.username;
+        if(deal.seeker.pubkey == self.identity.pubkey) {
+          this.ownerclass = "blueborder";
+        } else {
+          this.ownerclass = "whiteborder";
+        }
 
         if(deal.selectedreply) {
           for (var i = 0; i < deal.replies.length; i++) {
