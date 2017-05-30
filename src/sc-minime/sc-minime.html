@@ -442,7 +442,7 @@
             return cb(null);
           }
           self.web3.cached.getGasPrice(function(err, gasPrice) {
-            debugger;
+            //debugger;
             self.MiniMeContractInstance.approve.estimateGas(to, amount, function(err, gasNeeded) {
               self.MiniMeContractInstance.approve(to, amount, {
                 from: from,
