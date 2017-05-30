@@ -1,7 +1,8 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../sc-config/sc-config.html">
-<script src="../../bower_components/browser-builds/dist/ethereumjs-tx.js"></script>
+<!-- <script src="../../bower_components/browser-builds/dist/ethereumjs-tx.js"></script> -->
 <link rel="import" href="../sc-web3/sc-web3.html">
+<link rel="import" href="../sc-minime/sc-minime.html">
 
 <script type="text/javascript" src="../../bower_components/uuid-js/lib/uuid.js"></script>
 
@@ -9,6 +10,7 @@
   <template>
     <sc-web3 web3="{{web3}}"></sc-web3>
     <sc-config config="{{config}}"></sc-config>
+    <sc-minime id="minime"></sc-minime>
 
   </template>
   <!-- Creates the element's prototype and registers it -->
@@ -137,22 +139,26 @@
       makeDealForTwo: function(dealID, from, offerAmount, cb) {
         var self = this;
 
-        this.getGasPrice(function(err, gasPrice) {
+        this.$.minime.checkOrGiveAllowance(from,this.config.dealfortwofactory,offerAmount,function(err,allowanceortx){
 
-          self.DealForTwoFactoryContractInstance.makeDealForTwo.sendTransaction(dealID, offerAmount, {
-            from: from, //self.identity.pubkey,
-            gasPrice: gasPrice,
-            gas: 1000000
-          }, function(err, result) {
-            if (err) {
-              if (cb) {
-                return cb(err);
+          self.web3.cached.getGasPrice(function(err, gasPrice) {
+
+            self.DealForTwoFactoryContractInstance.makeDealForTwo.sendTransaction(dealID, offerAmount, {
+              from: from, //self.identity.pubkey,
+              gasPrice: gasPrice,
+              gas: 1000000
+            }, function(err, result) {
+              if (err) {
+                if (cb) {
+                  return cb(err);
+                }
               }
-            }
-            cb(null, result);
-            console.log(err, result);
+              cb(null, result);
+              console.log(err, result);
+            });
           });
-        });
+
+          });
 
       },
 
@@ -244,17 +250,6 @@
       //   });
       // },      
 
-      getGasPrice: function(cb) {
-        var self = this;
-        return new Promise(function(resolve, reject) {
-          self.web3.eth.getGasPrice(function(err, result) {
-            self.gasPrice = result;
-            if (cb){ cb(err,result);}
-            console.log('nonce=', result);
-            resolve();
-          })
-        });
-      },
 
       // getContractAddress(account) {
       //   var self = this;

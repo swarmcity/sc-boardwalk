@@ -43,6 +43,10 @@
             return;
           }
           scweb3_web3 = new Web3(new Web3.providers.HttpProvider(this.host));
+          scweb3_web3.cached = {
+            getGasPrice: this.getGasPrice
+          };
+
           console.log('sc-web3 -> created Web3 (',this.host,')');
         }
         // If no HookedWeb3Provider was assigned yet - assign it using the given keystore.
@@ -105,6 +109,17 @@
             });
           }
         });
+      },
+
+      getGasPrice: function(cb) {
+        var self = this;
+        if (this.gasPrice) {
+          return cb(null, this.gasPrice);
+        }
+        scweb3_web3.eth.getGasPrice(function(err, result) {
+          self.gasPrice = result;
+          cb(err, result);
+        })
       },
 
       getSWTBalance: function(address,cb){
