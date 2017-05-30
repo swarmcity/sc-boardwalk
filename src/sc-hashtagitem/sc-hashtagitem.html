@@ -223,6 +223,14 @@ This components is the representation of a request in the requests-list on sc-ha
       <div class="totalwidth vertic start centerjust">
 
         <div class="itemtotal horizont start startjust" on-tap="toggleItem">
+
+            <template is="dom-if" if="{{!item.ireplied}}">
+            <sc-avatar
+            ipfshash="[[identity.avatarhash]]"
+            size="verysmall">
+          </sc-avatar>
+            </template>
+
           <sc-avatar
             ipfshash="[[item.seeker.avatarhash]]"
             size="small">
@@ -252,8 +260,10 @@ This components is the representation of a request in the requests-list on sc-ha
         <iron-collapse id="innerCollapser" class="totalwidth">
 
           <template is="dom-if" if="{{!youareowner(item.seeker.pubkey)}}">
-            <sc-itemreplier itemdata="{{item}}">
-            </sc-itemreplier>
+            <template is="dom-if" if="{{!item.ireplied}}">
+              <sc-itemreplier itemdata="{{item}}">
+              </sc-itemreplier>
+            </template>
           </template>
           <template is="dom-if" if="{{item.replies}}">
             <div class="whitespace"></div>
@@ -274,7 +284,7 @@ This components is the representation of a request in the requests-list on sc-ha
 
       </div>
 
-
+<!-- 
           <template is="dom-if" if="{{item.ireplied}}">
             <div class="youreplied totalwidth horizont start startjust">
             <sc-avatar
@@ -283,13 +293,13 @@ This components is the representation of a request in the requests-list on sc-ha
               ></sc-avatar>
 
               <div class="vertic start startjust flex">
-                <small class="semibold grey4">You replied<!-- , <moment-js date="{{yourreplytime}}" format="HH:mm:ss.SSS" from-now></moment-js>-->:</small>
+                <small class="semibold grey4">You replied:</small>
                 <p class="grey4">{{yourreply}}</p>
               </div>
 
             </div>
           </template>
-
+ -->
 
 
       </template>
