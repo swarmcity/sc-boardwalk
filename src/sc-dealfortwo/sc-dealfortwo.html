@@ -160,6 +160,7 @@
 
       fundDeal: function(dealID, dealOwner, offerAmount, from, cb) {
         var self = this;
+        debugger;
         this.$.minime.checkOrGiveAllowance(from, this.config.dealfortwofactory, offerAmount, function(err, allowanceortx) {
           self.web3.cached.getGasPrice(function(err, gasPrice) {
             self.DealForTwoFactoryContractInstance.fundDeal.estimateGas(dealID, dealOwner, function(err, gasNeeded) {

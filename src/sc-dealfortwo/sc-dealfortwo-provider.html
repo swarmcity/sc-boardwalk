@@ -842,7 +842,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
 //dealID, dealOwner, offerAmount, from, cb
 
-        this.$.dealfortwo.fundDeal(dealID,this.requestdata.seeker.pubkey, self.offeramount,self.identity.pubkey, function(err, res) { 
+        this.$.dealfortwo.fundDeal(dealID,this.requestdata.seeker.pubkey, this.requestdata.amount,this.identity.pubkey, function(err, res) { 
 
         // self.transfer(offerAmount, dealaddress, function(err, res) {
           if (err){
