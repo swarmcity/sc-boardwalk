@@ -251,14 +251,14 @@ This components is the representation of a request in the requests-list on sc-ha
 
         <iron-collapse id="innerCollapser" class="totalwidth">
 
-          <sc-itemreplier itemdata="{{itemdata}}">
+          <sc-itemreplier itemdata="{{item}}">
           </sc-itemreplier>
 
-          <template is="dom-repeat" items="{{item.replies}}">
+          <template is="dom-repeat" as="currentreply" items="{{item.replies}}">
             <sc-itemreply
-            itemdata="{{itemdata}}"
-            btnshow="{{youareowner(itemdata.seeker.pubkey)}}"
-            replydata="{{item}}"
+            itemdata="{{item}}"
+            btnshow="{{youareowner(item.seeker.pubkey)}}"
+            replydata="{{currentreply}}"
             on-to-detail="fireReplyselected"
             on-item-detail="firetoItemdetail"
             on-to-makedeal="toMakeDeal"
@@ -427,7 +427,7 @@ This components is the representation of a request in the requests-list on sc-ha
 
 
       toggleItem: function(){
-        console.log('*toggleitem*',this.item);
+        //console.log('*toggleitem*',this.item);
         var toggler = this.shadowRoot.getElementById('innerCollapser');
         // toggler.toggle();
 

@@ -377,16 +377,23 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
             <template is="dom-if" if="{{hasmydeals(mydeals)}}">
 
-<!--             <div class="mydeals_repeater">
+            <div class="mydeals_repeater">
+            MIJN DEALS JONGE
             <template is="dom-repeat" items="{{mydeals}}">
-              <sc-dealitem
+<!--               <sc-dealitem
                 item="[[item]]"
                 on-to-detail="hashtag_to_detail"
                 on-to-dealfortwo="hashtag_to_dealfortwo"
                 class$="{{dealsopacity}}">
-              </sc-dealitem>
+              </sc-dealitem> -->
+              <sc-hashtagitem
+                item="[[item]]"
+                identity="[[identity]]"
+                on-to-detail="hashtag_to_detail"
+                class$="{{dealsopacity}}">
+              </sc-hashtagitem>              
             </template>
-            </div> -->
+            </div>
             </template>
             <template is="dom-repeat" items="{{otherdeals}}"
               filter="ididntReply" observe="type manager.type">
