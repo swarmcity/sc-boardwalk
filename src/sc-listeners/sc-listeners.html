@@ -65,156 +65,190 @@
 
       actions: {
 
-        request_create: function(dealdata) {
-
-          var newDeal = {
-              id: dealdata.id,
-              seeker: dealdata.seeker,
-              msg: dealdata.offer,
-              creationtx: dealdata.offercreationtx,
-              amount: dealdata.offeramount,
-              hashtag: dealdata.offerhashtag,
-              offertime: dealdata.offertime
-            };
-
+        // update deal providing a mutation 
+        // mutation looks like this :
+        // mutation = {
+        //  id: <dealID>,
+        //  <any_field>: <any_value>  
+        // }
+        update_deal: function(mutation){
+          
           let deals = this.deals.slice(0);
           var foundDeal = deals.findIndex(function(item) {
-            return item.id === dealdata.id;
+            return item.id === mutation.id;
           });
           if (foundDeal > -1) {
-            deals[foundDeal] = Object.assign({},this.emptyDeal, deals[foundDeal], newDeal);
-          } else {
-            deals.push(Object.assign({},this.emptyDeal,newDeal));
+            deals[foundDeal] = Object.assign({},this.emptyDeal, deals[foundDeal], mutation);
+          }else{
+            deals.push(Object.assign({},this.emptyDeal,mutation));
           }
-         
-          if (newDeal.creationtx){
-            this.getdealaddressfromtx(newDeal.id,newDeal.creationtx);
-          }
-
           deals.sort(function(a, b) {
             return b.offertime - a.offertime;
-          });
-
+          });          
           return {
             type: 'DEALS',
             deals: deals
           };
         },
+
+        // request_create: function(dealdata) {
+
+        //   var newDeal = {
+        //       id: dealdata.id,
+        //       seeker: dealdata.seeker,
+        //       msg: dealdata.offer,
+        //       creationtx: dealdata.offercreationtx,
+        //       amount: dealdata.offeramount,
+        //       hashtag: dealdata.offerhashtag,
+        //       offertime: dealdata.offertime
+        //     };
+
+        //   // let deals = this.deals.slice(0);
+        //   // var foundDeal = deals.findIndex(function(item) {
+        //   //   return item.id === dealdata.id;
+        //   // });
+        //   // if (foundDeal > -1) {
+        //   //   deals[foundDeal] = Object.assign({},this.emptyDeal, deals[foundDeal], newDeal);
+        //   // } else {
+        //   //   deals.push(Object.assign({},this.emptyDeal,newDeal));
+        //   // }
+         
+        //   if (newDeal.creationtx){
+
+        //     this.web3.waitTx(newDeal.creationtx, function(err, res) {
+         
+        //       self.dispatch('update_deal', {
+        //         id: newDeal.id,
+        //         creationtx_mined: true
+        //       });
+        //     });
+
+        //   }
+
+        //   deals.sort(function(a, b) {
+        //     return b.offertime - a.offertime;
+        //   });
+
+        //   return {
+        //     type: 'DEALS',
+        //     deals: deals
+        //   };
+        // },
 
         // ioncoming SHH that seeker has funded his deal & 
         // provided the TXhash for that.
-        request_seeker_funding: function(payload){
+//         // request_seeker_funding: function(payload){
 
-          var mutation = {
-            id: payload.id,
-            seekerfundingtx: payload.offerseekerfundingtx,
-          };
+//         //   var mutation = {
+//         //     id: payload.id,
+//         //     seekerfundingtx: payload.offerseekerfundingtx,
+//         //   };
 
-          var self = this;
-          this.updatebalanceaddressaftertx(payload.dealaddress, payload.offerseekerfundingtx, function(err, balance) {
+//         //   var self = this;
+//         //   this.updatebalanceaddressaftertx(payload.dealaddress, payload.offerseekerfundingtx, function(err, balance) {
   
-            self.dispatch('request_seekerfunded', {
-              requestid: payload.id,
-              balance: balance.toNumber()
-            });
-          });
+//         //     self.dispatch('request_seekerfunded', {
+//         //       requestid: payload.id,
+//         //       balance: balance.toNumber()
+//         //     });
+//         //   });
 
-          let deals = this.deals.slice(0);
-          var foundDeal = deals.findIndex(function(item) {
-            return item.id === payload.id;
-          });
-          if (foundDeal > -1) {
-            deals[foundDeal] = Object.assign({},this.emptyDeal, deals[foundDeal], mutation);
-          }else{
-            deals.push(Object.assign({},this.emptyDeal,mutation));
-          }
-          return {
-            type: 'DEALS',
-            deals: deals
-          };
+//         //   let deals = this.deals.slice(0);
+//         //   var foundDeal = deals.findIndex(function(item) {
+//         //     return item.id === payload.id;
+//         //   });
+//         //   if (foundDeal > -1) {
+//         //     deals[foundDeal] = Object.assign({},this.emptyDeal, deals[foundDeal], mutation);
+//         //   }else{
+//         //     deals.push(Object.assign({},this.emptyDeal,mutation));
+//         //   }
+//         //   return {
+//         //     type: 'DEALS',
+//         //     deals: deals
+//         //   };
 
-        },
+//         // },
 
-        // seeker funding TX has finished
-        request_seekerfunded: function(params) {
-          //debugger;
-          var mutation = {
-            id: params.requestid,
-            dealbalance: params.balance,
-            seekerfundingtx_mined: true,
-          };
+//         // // seeker funding TX has finished
+//         // request_seekerfunded: function(params) {
+//         //   //debugger;
+//         //   var mutation = {
+//         //     id: params.requestid,
+//         //     dealbalance: params.balance,
+//         //     seekerfundingtx_mined: true,
+//         //   };
 
-          let deals = this.deals.slice(0);
-          var foundDeal = deals.findIndex(function(item) {
-            return item.id === params.requestid;
-          });
-          if (foundDeal > -1) {
-            deals[foundDeal] = Object.assign({},this.emptyDeal, deals[foundDeal], mutation);
-          }else{
-            deals.push(Object.assign({},this.emptyDeal,mutation));
-          }
-          return {
-            type: 'DEALS',
-            deals: deals
-          };
-        },
+//         //   let deals = this.deals.slice(0);
+//         //   var foundDeal = deals.findIndex(function(item) {
+//         //     return item.id === params.requestid;
+//         //   });
+//         //   if (foundDeal > -1) {
+//         //     deals[foundDeal] = Object.assign({},this.emptyDeal, deals[foundDeal], mutation);
+//         //   }else{
+//         //     deals.push(Object.assign({},this.emptyDeal,mutation));
+//         //   }
+//         //   return {
+//         //     type: 'DEALS',
+//         //     deals: deals
+//         //   };
+//         // },
 
-        request_provider_funding: function(payload){
-//debugger;
-          var mutation = {
-            id: payload.id,
-            providerfundingtx: payload.offerproviderfundingtx,
-          };
+//         request_provider_funding: function(payload){
+// //debugger;
+//           var mutation = {
+//             id: payload.id,
+//             providerfundingtx: payload.offerproviderfundingtx,
+//           };
 
-          var self = this;
-          this.updatebalanceaddressaftertx(payload.dealaddress, payload.offerproviderfundingtx, function(err, balance) {
-            //debugger;
-            self.dispatch('request_providerfunded', {
-              requestid: payload.id,
-              balance: balance.toNumber()
-            });
-          });
+//           var self = this;
+//           this.updatebalanceaddressaftertx(payload.dealaddress, payload.offerproviderfundingtx, function(err, balance) {
+//             //debugger;
+//             self.dispatch('request_providerfunded', {
+//               requestid: payload.id,
+//               balance: balance.toNumber()
+//             });
+//           });
 
-//          this.updatebalanceaddressaftertx(payload.dealaddress,mutation.offerproviderfundingtx);
+// //          this.updatebalanceaddressaftertx(payload.dealaddress,mutation.offerproviderfundingtx);
 
-          let deals = this.deals.slice(0);
-          var foundDeal = deals.findIndex(function(item) {
-            return item.id === payload.id;
-          });
-          if (foundDeal > -1) {
-            deals[foundDeal] = Object.assign({},this.emptyDeal, deals[foundDeal], mutation);
-          }else{
-            deals.push(Object.assign({},this.emptyDeal,mutation));
-          }
-          return {
-            type: 'DEALS',
-            deals: deals
-          };
-        },
+//           let deals = this.deals.slice(0);
+//           var foundDeal = deals.findIndex(function(item) {
+//             return item.id === payload.id;
+//           });
+//           if (foundDeal > -1) {
+//             deals[foundDeal] = Object.assign({},this.emptyDeal, deals[foundDeal], mutation);
+//           }else{
+//             deals.push(Object.assign({},this.emptyDeal,mutation));
+//           }
+//           return {
+//             type: 'DEALS',
+//             deals: deals
+//           };
+//         },
 
-        // provider funding TX has finished
-        request_providerfunded: function(params) {
-          //debugger;
-          var mutation = {
-            id: params.requestid,
-            dealbalance: params.balance,
-            providerfundingtx_mined: true,
-          };
+//         // provider funding TX has finished
+//         request_providerfunded: function(params) {
+//           //debugger;
+//           var mutation = {
+//             id: params.requestid,
+//             dealbalance: params.balance,
+//             providerfundingtx_mined: true,
+//           };
 
-          let deals = this.deals.slice(0);
-          var foundDeal = deals.findIndex(function(item) {
-            return item.id === params.requestid;
-          });
-          if (foundDeal > -1) {
-            deals[foundDeal] = Object.assign({},this.emptyDeal, deals[foundDeal], mutation);
-          }else{
-            deals.push(Object.assign({},this.emptyDeal,mutation));
-          }
-          return {
-            type: 'DEALS',
-            deals: deals
-          };
-        },
+//           let deals = this.deals.slice(0);
+//           var foundDeal = deals.findIndex(function(item) {
+//             return item.id === params.requestid;
+//           });
+//           if (foundDeal > -1) {
+//             deals[foundDeal] = Object.assign({},this.emptyDeal, deals[foundDeal], mutation);
+//           }else{
+//             deals.push(Object.assign({},this.emptyDeal,mutation));
+//           }
+//           return {
+//             type: 'DEALS',
+//             deals: deals
+//           };
+//         },
 
         // when a reply comes in to a deal
         request_reply: function(replydata) {
@@ -511,27 +545,46 @@
 
         switch(payload.type){
           case 'dealfortwo-request-create':
-            this.dispatch('request_create', payload);
+            var self = this;
+            var newDeal = {
+              id: payload.id,
+              seeker: payload.seeker,
+              msg: payload.offer,
+              creationtx: payload.offercreationtx,
+              amount: payload.offeramount,
+              hashtag: payload.offerhashtag,
+              offertime: payload.offertime
+            };
+
+            if (newDeal.creationtx) {
+              this.web3.waitTx(newDeal.creationtx, function(err, res) {
+                self.dispatch('update_deal', {
+                  id: newDeal.id,
+                  creationtx_mined: true
+                });
+              });
+            }
+            this.dispatch('update_deal', newDeal);
             this.requestsloaded = true;
             break;
-          case 'dealfortwo-seeker-funding':
-            this.dispatch('request_seeker_funding', payload);
-            break;
+          // case 'dealfortwo-seeker-funding':
+          //   this.dispatch('request_seeker_funding', payload);
+          //   break;
           case 'dealfortwo-request-reply':
             this.dispatch('request_reply', payload);
             break;
           case 'dealfortwo-select-provider':
             this.dispatch('select_provider', payload);
             break;
-          case 'dealfortwo-assign-provider':
-            this.dispatch('assign_provider', payload);
-            break;
-          case 'dealfortwo-provider-funding':
-            this.dispatch('request_provider_funding', payload);
-            break;            
-          case 'dealfortwo-approve':
-            this.dispatch('request_approve', payload);
-            break;   
+          // case 'dealfortwo-assign-provider':
+          //   this.dispatch('assign_provider', payload);
+          //   break;
+          // case 'dealfortwo-provider-funding':
+          //   this.dispatch('request_provider_funding', payload);
+          //   break;            
+          // case 'dealfortwo-approve':
+          //   this.dispatch('request_approve', payload);
+          //   break;   
           default:
           //debugger;
             console.log('unknown message:',payload);
@@ -546,19 +599,19 @@
       },
 
 
-      getdealaddressfromtx: function(dealid,tx){
-        //debugger;
-        console.log('Start monitoring for address from deal tx',tx);
-        if (!tx){
-          return;
-        }
-        var self = this;
-        this.helper_getDealAddressFromTx(tx,function(err,address,blocknumber){
-          console.log('the address of deal',dealid,'is',address);
-          self.dispatch('request_setdealaddress',{dealid:dealid,address:address});
-          self.helper_watchbalance(address,blocknumber);
-        });
-      },
+//       getdealaddressfromtx: function(dealid,tx){
+//         //debugger;
+//         console.log('Start monitoring for address from deal tx',tx);
+//         if (!tx){
+//           return;
+//         }
+//         var self = this;
+//         this.helper_getDealAddressFromTx(tx,function(err,address,blocknumber){
+//           console.log('the address of deal',dealid,'is',address);
+//           self.dispatch('request_setdealaddress',{dealid:dealid,address:address});
+// //          self.helper_watchbalance(address,blocknumber);
+//         });
+//       },
 
       // wait for transactionhash tx to happen, and return the balance of address dealaddress
       // in the callback (err,balance)
@@ -585,36 +638,6 @@
 
       },
 
-
-      helper_watchbalance(address,startblock){
-        // var self = this;
-        // self.contracturl = self.resolveUrl('../contracts/MiniMeToken.json');
-        // self.importHref(self.contracturl, function(e) {
-        //   var contractjson = JSON.parse(e.target.import.body.innerText);
-        //   var SWTTokenContract = self.web3.eth.contract(contractjson.abi);
-        //   var SWTTokenContractInstance = SWTTokenContract.at(self.config.swttokencontractaddress);
-
-        //   var myEvent = SWTTokenContractInstance.Transfer(null, {
-        //         fromBlock: startblock,
-        //       });
-        //       myEvent.get(function(error, result) {
-        //         var myEvent = result.find(function(item) {
-        //           return item.transactionHash === tx;
-        //         });
-        //         if (!myEvent || !myEvent.args || !myEvent.args.simpleDealAddress){
-        //           return cb('event not found');
-        //         }
-        //         var address = myEvent.args.simpleDealAddress;
-        //         return cb(null, address,res.blockNumber);
-        //       });
-
-
-
-        //   SWTTokenContractInstance.balanceOf(address, function(err, swtbalance) {
-        //     return cb(null, swtbalance);
-        //   });
-        // });
-      },
 
 
       readcontractaftertx: function(dealid,dealaddress,tx,cb){
