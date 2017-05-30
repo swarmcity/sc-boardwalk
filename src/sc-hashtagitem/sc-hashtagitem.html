@@ -255,7 +255,9 @@ This components is the representation of a request in the requests-list on sc-ha
             <sc-itemreplier itemdata="{{item}}">
             </sc-itemreplier>
           </template>
-          <div class="whitespace"></div>
+          <template is="dom-if" if="{{item.replies}}">
+            <div class="whitespace"></div>
+          </template>
           <template is="dom-repeat" as="currentreply" items="{{item.replies}}">
             <sc-itemreply
             item="{{item}}"
