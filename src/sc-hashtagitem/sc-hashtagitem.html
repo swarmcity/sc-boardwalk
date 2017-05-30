@@ -342,7 +342,7 @@ This components is the representation of a request in the requests-list on sc-ha
           </template>
 
           <template is="dom-if" if="{{item.ireplied}}">
-            <div class="itemtotal vertic start startjust" on-tap="toDetail">
+            <div class="itemtotal vertic start startjust" on-tap="toDealForTwoProvider">
               <div class="totalwidth horizont center startjust">
                 <small class="small grey3 light">          
                   <moment-js date="{{item.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js>
@@ -426,6 +426,11 @@ This components is the representation of a request in the requests-list on sc-ha
         this.fire('to-detail',this.item);
       },
 
+      toDealForTwoProvider: function(e) {
+        this.fire('redirect', {
+          target: '/dealfortwoprovider/' + this.item.hashtag + '/' + this.item.id + '/' + this.item.selectedreply
+        });
+      },
 
       toggleItem: function(){
         //console.log('*toggleitem*',this.item);
