@@ -378,7 +378,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
             <template is="dom-if" if="{{hasmydeals(mydeals)}}">
 
             <div class="mydeals_repeater">
-            MIJN DEALS JONGE
+
             <template is="dom-repeat" items="{{mydeals}}">
 <!--               <sc-dealitem
                 item="[[item]]"
@@ -395,8 +395,9 @@ This is the component showing all requests of a certain hashtag. It contains a r
             </template>
             </div>
             </template>
-            <template is="dom-repeat" items="{{otherdeals}}"
-              filter="ididntReply" observe="type manager.type">
+<!--             <template is="dom-repeat" items="{{otherdeals}}"
+              filter="ididntReply" observe="type manager.type"> -->
+            <template is="dom-repeat" items="{{otherdeals}}">
               <sc-hashtagitem
                 item="[[item]]"
                 identity="[[identity]]"
@@ -404,6 +405,11 @@ This is the component showing all requests of a certain hashtag. It contains a r
                 class$="{{dealsopacity}}">
               </sc-hashtagitem>
             </template>
+
+
+<div class="tenspace"></div>
+<div class="tenspace"></div>
+
 
 <!--           <div class="filterbox">
                 <sc-filter id="locationfilter" currentid="locationfilter" location range="{{range}}"></sc-filter>
@@ -879,11 +885,13 @@ This is the component showing all requests of a certain hashtag. It contains a r
             return item.ireplied == true;
         },
 
-
-
         ididntReply: function(item) {
             return item.ireplied == false || item.ireplied == undefined;
         },
+
+        // notmyIssue: function(item) {
+        //     return item.ireplied == false || item.ireplied == undefined;
+        // },
 
 
         opacityHalf: function(){

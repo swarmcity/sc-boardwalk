@@ -75,12 +75,13 @@ This components allow a Swarm Citizen to reply on a request.
       paper-input.swtamount {
         --paper-input-container-input: {
           font-family:montserratbold;
-          font-size: 24px;
-          line-height: 24px;
+          font-size: 16px;
+          line-height: 22px;
           color: var(--sc-grey4);
         };
         --paper-input-container-focus-color: var(--sc-grey4);
-        max-width:100px;
+        width:140px;
+        margin-left:37px;
       }
 
       .swtwithoffer {
@@ -118,11 +119,10 @@ This components allow a Swarm Citizen to reply on a request.
         @apply(--layout-horizontal);
         @apply(--layout-center);
         @apply(--layout-end-justified);
+        margin-top: -30px;
       }
       paper-icon-button.confirmbtn {
         margin-left: 5px;
-        width: 76px;
-        height: 76px;
       }
       @media all and (min-width: 0) and (max-width: 420px) { 
 
@@ -198,7 +198,7 @@ This components allow a Swarm Citizen to reply on a request.
 <!--             </div> -->
 
             <div class="totalwidth confirmbtns">
-              <iron-icon icon="sc-icons:decline" class="medium blue" on-tap="toggleForm">close collapse</iron-icon>
+              <iron-icon icon="sc-icons:decline" class="medium grey4" on-tap="toggleForm">close collapse</iron-icon>
               <paper-icon-button icon="sc-icons:v" noink class="white medium blueback shadow confirmbtn" on-tap="submitReply"> Reply with offer</paper-icon-button>
             </div>
 
