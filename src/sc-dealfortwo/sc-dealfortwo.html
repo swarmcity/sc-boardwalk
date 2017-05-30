@@ -135,31 +135,51 @@
       },
 
       // starts making a dealfortwo. callback with TXhash.
-
       makeDealForTwo: function(dealID, from, offerAmount, cb) {
         var self = this;
-
-        this.$.minime.checkOrGiveAllowance(from,this.config.dealfortwofactory,offerAmount,function(err,allowanceortx){
-
+        this.$.minime.checkOrGiveAllowance(from, this.config.dealfortwofactory, offerAmount, function(err, allowanceortx) {
           self.web3.cached.getGasPrice(function(err, gasPrice) {
-
-            self.DealForTwoFactoryContractInstance.makeDealForTwo.sendTransaction(dealID, offerAmount, {
-              from: from, //self.identity.pubkey,
-              gasPrice: gasPrice,
-              gas: 1000000
-            }, function(err, result) {
-              if (err) {
-                if (cb) {
-                  return cb(err);
+            self.DealForTwoFactoryContractInstance.makeDealForTwo.estimateGas(dealID, offerAmount, function(err, gasNeeded) {
+              self.DealForTwoFactoryContractInstance.makeDealForTwo.sendTransaction(dealID, offerAmount, {
+                from: from,
+                gasPrice: gasPrice,
+                gas: gasNeeded
+              }, function(err, result) {
+                if (err) {
+                  if (cb) {
+                    return cb(err);
+                  }
                 }
-              }
-              cb(null, result);
-              console.log(err, result);
+                cb(null, result);
+                console.log(err, result);
+              });
             });
           });
+        });
+      },
 
+      fundDeal: function(dealID, dealOwner, offerAmount, from, cb) {
+        var self = this;
+        debugger;
+        this.$.minime.checkOrGiveAllowance(from, this.config.dealfortwofactory, offerAmount, function(err, allowanceortx) {
+          self.web3.cached.getGasPrice(function(err, gasPrice) {
+            self.DealForTwoFactoryContractInstance.fundDeal.estimateGas(dealID, dealOwner, function(err, gasNeeded) {
+              self.DealForTwoFactoryContractInstance.fundDeal.sendTransaction(dealID, dealOwner, {
+                from: from, //self.identity.pubkey,
+                gasPrice: gasPrice,
+                gas: gasNeeded
+              }, function(err, result) {
+                if (err) {
+                  if (cb) {
+                    return cb(err);
+                  }
+                }
+                cb(null, result);
+                console.log(err, result);
+              });
+            });
           });
-
+        });
       },
 
       // makeDeal: function(dealID,offerAmount, cb) {

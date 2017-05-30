@@ -506,7 +506,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
     </style>
     <sc-shh web3="{{shhweb3}}"></sc-shh>
     <sc-config config="{{config}}"></sc-config>
-    <sc-listeners id="listeners"></sc-listeners>    
+    <sc-listeners id="listeners"></sc-listeners>  
+    <sc-dealfortwo id="dealfortwo"></sc-dealfortwo>  
     <!--<sc-helpers id="helpers"></sc-helpers>    
     <sc-hashtagcontract id="hashtagcontract" hashtagname="{{data.hashtag}}"></sc-hashtagcontract>   -->  
     <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
@@ -671,7 +672,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
             </div>
 
-            <sc-dealfortwo id="dealfortwo" on-status-update="handle"></sc-dealfortwo>
+            
 
           </neon-animatable>
 
@@ -833,24 +834,29 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         var self = this;
 
         var offerAmount = this.requestdata.amount;
-        var dealaddress = this.requestdata.dealaddress;
+        //var dealaddress = this.requestdata.dealaddress;
         var dealID = this.requestdata.id;
 
         debugger;
 
-        self.transfer(offerAmount, dealaddress, function(err, res) {
+
+//dealID, dealOwner, offerAmount, from, cb
+
+        this.$.dealfortwo.fundDeal(dealID,this.requestdata.seeker.pubkey, this.requestdata.amount,this.identity.pubkey, function(err, res) { 
+
+        // self.transfer(offerAmount, dealaddress, function(err, res) {
           if (err){
             console.log('tx error',err);
             return;
           }
-          console.log('Transferred',offerAmount,'SWT tokens from',self.identity.pubkey,'to',dealaddress,'txhash=',res);
+          // console.log('Transferred',offerAmount,'SWT tokens from',self.identity.pubkey,'to',dealaddress,'txhash=',res);
           // ok so the create deal TX is done. Now notify that we're funding this deal.
           var payload = {
             id: dealID,
             type: 'dealfortwo-provider-funding',
             time: Date.now(),
             offerproviderfundingtx: res,
-            dealaddress: dealaddress,
+            //dealaddress: dealaddress,
           };
 
           var topics = [
