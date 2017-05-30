@@ -69,8 +69,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
       .tophalf h1 {
         font-size: 40px;
-        line-height: 44px;
-        max-width: 800px;
+        line-height: 48px;
+       /* max-width: 800px;*/
       }
 
       .withconfirmq {
@@ -155,7 +155,13 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         /*text-decoration: underline;*/        
         border-bottom: 1px dotted var(--sc-grey3);
         font-size: 14px;
-        line-height: 14px;   
+        line-height: 20px;   
+      }
+
+      paper-button.details_toggler_btn {
+        padding: 10px 16px 10px 13px;
+        font-size: 14px;
+        margin: 10px 0px;
       }
 
 
@@ -172,8 +178,50 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         border-top: 1px dotted var(--sc-grey2);
         border-bottom: 1px dotted var(--sc-grey2); 
         box-sizing:border-box;
-        padding: 15px 0px;
+        padding: 20px;
         margin-bottom: 25px;       
+      }
+
+      .details_collapser_inner {
+        font-size: 14px;
+        line-height: 20px;
+      }
+
+/*      .detail_step {
+        box-sizing:border-box;
+        padding-bottom: 6px;
+      }*/
+
+      .detail {
+        margin-bottom: 10px;
+        color: var(--sc-grey3);
+        width: 100%;
+        @apply(--layout-horizontal);
+        @apply(--layout-start);
+        @apply(--layout-start-justified);
+
+      }
+
+
+      .detail p {
+        font-size: 14px; 
+        line-height: 18px;
+      }
+
+      .detail a {
+        font-size: 14px; 
+        line-height: 18px;
+      }
+
+      .cat {
+        /*margin-top: 4px;*/
+
+        font-family: montserratlight;
+        color: var(--sc-grey3);
+        width: 50%;
+        max-width: 100px;
+        text-align: right;
+        margin-right: 10px;
       }
 
       .announce paper-button{ 
@@ -536,9 +584,11 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
             <div class="totalbox vertic center startjust totalwidth">
               <div class="tophalf totalwidth">
-                <template is="dom-if" if="{{!bothaccepted}}">
+                <template is="dom-if" if="{{!provideraccept}}">
+                <h1 class="">Do you accept a deal  with <span class="light blue replyer_username">{{requestdata.seeker.username}}</span> <template is="dom-if" if="{{!phoneview}}"><br></template>for <span class="">{{requestdata.amount}} SWT</span>?</h1>
 
-                  <template is="dom-if" if="{{!provideraccept}}">
+
+                  <!-- <template is="dom-if" if="{{!provideraccept}}">
                     <h1 class="">Do you accept a deal with <span class="light blue replyer_username">{{requestdata.seeker.username}}</span> in <span class="light">#pioneer</span> for <span class="light">{{requestdata.amount}} SWT</span>?</h1>
                   </template>
                   <template is="dom-if" if="{{provideraccept}}">
@@ -554,12 +604,18 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                   <template is="dom-if" if="{{seekeraccept}}">
                     <div class="whitespace"></div>
                     <p class="grey2b"><span>{{requestdata.seeker.username}}</span> has already accepted.</p>
-                  </template>
+                  </template> -->
+
                 </template>
                 
-                <template is="dom-if" if="{{bothaccepted}}">
+
+
+
+
+                <template is="dom-if" if="{{provideraccept}}">
+
                   <template is="dom-if" if="{{!indeal}}">
-                    <h1 class=""><span class="bold">You both accepted!</span></h1>
+                    <h1 class=""><span class="bold">You accepted!</span></h1>
                     <div class="whitespace"></div>
                     <div class="dealcreate_steps">
                       <div class="horizont end startjust">
@@ -594,7 +650,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
 
                 <div class="avatars_funding">
-                  <div class$="avatar_funding {{providerfundclass}}">
+<!--                   <div class$="avatar_funding {{providerfundclass}}">
                     <sc-avatar
                       ipfshash="[[identity.avatarhash]]"
                       pubkey="[[identity.pubkey]]"
@@ -603,42 +659,72 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                       on-tap="tempTapto"
                       ></sc-avatar>
                     <iron-icon class$="v_icon {{vsize}}" icon="sc-icons:v"></iron-icon>
-                  </div>
-                  <div class$="avatar_funding {{seekerfundclass}}">
+                  </div> -->
+                  <div class$="avatar_funding {{providerfundclass}}">
                     <sc-avatar
-                      ipfshash="[[requestdata.seeker.avatarhash]]"
-                      pubkey="[[requestdata.seeker.pubkey]]"
+                      ipfshash="[[replydata.provider.avatarhash]]"
+                      pubkey="[[replydata.provider.pubkey]]"
                       id="makedeal_otheravatar"
-                      size="{{avatarfundingsize}}"
+                      size="{{provideravatarsize}}"
                       on-tap="tempTap"
                       ></sc-avatar>
                     <iron-icon class$="v_icon {{vsize}}" icon="sc-icons:v"></iron-icon>
                   </div>
 
-                <template is="dom-if" if="{{!phoneview}}">
-                  <p class="bold grey3 details_toggler" on-tap="showDetails">More details</p>
-                </template>
+                  <!-- <template is="dom-if" if="{{!phoneview}}"> -->
+                    <paper-button class="details_toggler_btn shadow grey3 darker" on-tap="showDetails"> Show more details</paper-button>
+                  <!-- </template> -->
                 </div>
-                <template is="dom-if" if="{{phoneview}}">
-                  <p class="bold grey3 details_toggler" on-tap="showDetails">More details</p>
-                </template>
 
+
+                
                 <iron-collapse id="details_collapser">
-                  <p class="bold blue centertxt">You're about to make a deal with <span class="replyer_username">{{requestdata.seeker.username}}</span> over:</p>
-                    <div class="minispace"></div>
-                    <p class="grey3 ultralight centertxt request_msg">"{{replydata.msg}}"</p>
-                    <div class="minispace"></div>
-                    <p class="bold grey3 centertxt announce_amount">The dealamount is <span class="">{{requestdata.amount}} SWT</span>. </p>
                     <div class="details_collapser_inner">
-                      <small>At ... , ... posted a request in #pioneer for:</small>
-                      <div class="initial_request">
-                        <p>Blabla initial request</p>
-                      </div>
-                      <div class="minispace"></div>
-                      <div class="minispace"></div>
-                      <small>At ... , ... replied to this request:</small>
-                      <div class="initial_request">
-                        <p>Blabla reply</p>
+                      <div class="details_request totalwidth vertic start startjust">
+
+                        <div class="detail">
+                          <p class="cat">Offer</p>
+                          <p class="reg bold">[[requestdata.amount]] SWT</p>
+                        </div>
+
+                        <div class="detail">
+                          <p class="cat">Hashtag</p>
+                          <p class="reg bold">#[[requestdata.hashtag]]</p>
+                        </div>
+
+
+                        <div class="detail">
+                          <p class="cat">Requester</p>
+                          <a href="" class="reg blue">[[requestdata.seeker.username]]<span>( [[requestdata.seeker.pubkey]] )</span></a>
+                        </div>
+
+                        <div class="detail">
+                          <p class="cat">Provider</p>
+                          <a href="" class="reg blue">[[replydata.provider.username]]<span>( [[replydata.provide.pubkey]] )</span></a>
+                        </div>                        
+
+
+                        <div class="detail">
+                          <p class="cat">Dealid</p>
+                          <p class="reg">[[requestdata.id]]</p>
+                        </div>
+                        <div class="whitespace"></div>
+
+                        <div class="detail">
+                          <p class="cat">Initial request</p>
+                          <p class="reg">[[requestdata.msg]]</p>
+                        </div>
+
+                        <div class="detail">
+                          <p class="cat">Initial reply</p>
+                          <p class="reg">[[replydata.msg]]</p>
+                        </div>
+                        <div class="whitespace"></div>
+
+                        <div class="detail">
+                          <p class="cat">Blockchain transactions</p>
+                          <p class="reg">[[requestdata.id]]</p>
+                        </div>
                       </div>
                     </div>
                 </iron-collapse>
@@ -654,7 +740,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                     <paper-icon-button icon="sc-icons:v" noink class="confirmbtn blue big white shadow" on-tap="fundThisDeal"></paper-icon-button>
                   </div>
                 </template>
-                <template is="dom-if" if="{{bothaccepted}}">
+                <template is="dom-if" if="{{provideraccept}}">
 
                   <template is="dom-if" if="{{!indeal}}">
                   </template>
@@ -676,6 +762,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
           </neon-animatable>
 
+          <neon-animatable data-action="dealchat">
+          </neon-animatable>
 
           </neon-animated-pages>
 
@@ -696,7 +784,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
       observers: [
       '_checksize(phoneview)',
-      '_whoaccepted(seekeraccept,provideraccept)',
+      '_provideraccept(provideraccept)',
       '_hashtag(routedata.hashtag)'    
       ],
 
@@ -928,27 +1016,12 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
 
 
-      _whoaccepted: function(){
-
-        if (this.seekeraccept){
-          this.seekerfundclass = "fund_accepted";
-        } else {
-          this.seekerfundclass = "fund_init";
-          this.bottombg = "blueback";
-        }
-
+      _provideraccept: function(){
         if (this.provideraccept){
           this.providerfundclass = "fund_accepted";
         } else {
           this.providerfundclass = "fund_init";
         }
-
-        if (this.seekeraccept && this.provideraccept){
-          this.bothaccepted = true;
-        } else {
-          this.bothaccepted = false;
-        }
-
       },
 
 
@@ -1001,12 +1074,14 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         // console.log('Jooooooooo phoneview?', this.phoneview);
         if (this.phoneview) {
           this.avatarsize = "medium";
-          this.avatarfundingsize = "small";
+          this.seekeravatarsize = "medium";
+          this.provideravatarsize = "small";
           this.vsize = "medium";
           this.sendbtnsize = "";
         } else {
           this.avatarsize = "medium";
-          this.avatarfundingsize = "medium";
+          this.seekeravatarsize = "more";
+          this.provideravatarsize = "medium";
           this.sendbtnsize = "bigbtn";
           this.vsize = "medium";
         }
@@ -1018,13 +1093,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       tempTap: function(){
         this.provideraccept = !this.provideraccept;
       },
-
-
-      // TEMP FUNCTION: to be removed
-      tempTapto: function(){
-        this.seekeraccept = !this.seekeraccept;
-      },
-
 
       tempTapthree: function(){
         this.assignmined = true;

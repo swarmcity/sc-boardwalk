@@ -81,13 +81,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         min-height: 50vh;
       }
 
-      sc-avatar {
-        width: 50px;
-        height: 50px;
-        min-width: 50px;
-        min-height: 50px;   
-      }
-
       .bottomhalf {
         height: 35vh;
         box-sizing:border-box;
@@ -312,7 +305,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         box-sizing:border-box;
         padding: 0px;
         @apply(--layout-horizontal);
-        @apply(--layout-center);
+        @apply(--layout-end);
         @apply(--layout-start-justified); 
         margin-bottom: 2vw;
         margin-top: 5vh;
@@ -767,50 +760,31 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                 
 
                 <div class="avatars_funding">
-                  <div class$="avatar_funding {{seekerfundclass}}">
-<!--                     <sc-avatar
+<!--                   <div class$="avatar_funding {{seekerfundclass}}">
+                    <sc-avatar
                       ipfshash="[[identity.avatarhash]]"
                       pubkey="[[identity.pubkey]]"
                       id="makedeal_myavatar"
-                      size="{{avatarfundingsize}}"
+                      size="{{seekeravatarsize}}"
                       on-tap="tempTapto"
-                      ></sc-avatar> -->
-                    <iron-icon class$="v_icon {{vsize}}" icon="sc-icons:v"></iron-icon>
-                  </div>
+                      ></sc-avatar>
+                  </div> -->
                   <div class$="avatar_funding {{providerfundclass}}">
                     <sc-avatar
                       ipfshash="[[replydata.provider.avatarhash]]"
                       pubkey="[[replydata.provider.pubkey]]"
                       id="makedeal_otheravatar"
-                      size="{{avatarfundingsize}}"
+                      size="{{provideravatarsize}}"
                       on-tap="tempTap"
                       ></sc-avatar>
                     <iron-icon class$="v_icon {{vsize}}" icon="sc-icons:v"></iron-icon>
                   </div>
 
-                  <template is="dom-if" if="{{!phoneview}}">
-<!--                   <paper-button noink class="shadow lighterer chatbtn">
-                    Chat with [[replydata.provider.username]]
-                    <iron-icon class="blue" icon="sc-icons:babble">chat</iron-icon>
-                  </paper-button> -->
-<paper-button class="details_toggler_btn shadow grey3 darker"> Show more details</paper-button>
-
-                  </template>
+                  <!-- <template is="dom-if" if="{{!phoneview}}"> -->
+                    <paper-button class="details_toggler_btn shadow grey3 darker" on-tap="showDetails"> Show more details</paper-button>
+                  <!-- </template> -->
 
                 </div>
-                
-                <template is="dom-if" if="{{phoneview}}">
-                <paper-button noink class="shadow lighterer chatbtn">
-                  Chat with [[replydata.provider.username]]
-                </paper-button>
-                </template>
-
-
-
-<!--                 <template is="dom-if" if="{{!phoneview}}">
-                  <div class="flex"></div>
-                </template> -->
-
 
 
                 
@@ -883,17 +857,14 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                     <iron-icon class="grey4 small" icon="sc-icons:babble">chat</iron-icon>
                   </paper-button> -->
                    
-<paper-icon-button class="shadow blue grey4 chatbtn" icon="sc-icons:babble"></paper-icon-button>
+                  <paper-icon-button class="shadow blue grey4 chatbtn" icon="sc-icons:babble"></paper-icon-button>
 
- <div class="flex"></div>
-                <template is="dom-if" if="{{!seekeraccept}}">
-                  <!-- <p class="confirmation_question yellow bold">- {{replydata.replyamount}} SWT</p> -->
-                  <div class="confirmbtns">
-                    <iron-icon icon="sc-icons:decline" class="decliner medium white" on-tap="cancelDeal"></iron-icon>
-                    <paper-icon-button icon="sc-icons:v" noink class="confirmbtn blue big white shadow" on-tap="startDeal"></paper-icon-button>
-                  </div>
+                  <div class="flex"></div>
+<!--                 <template is="dom-if" if="{{!seekeraccept}}">
+                        hier cancelbtn??
                 </template>
-                <template is="dom-if" if="{{bothaccepted}}">
+ -->                
+                <template is="dom-if" if="{{provideraccept}}">
 
                   <template is="dom-if" if="{{!indeal}}">
                   </template>
@@ -941,6 +912,9 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
             <a class="conflictlink bold white whitelink">Conflict!</a>
           </div>
           </neon-animatable> -->
+
+          <neon-animatable data-action="dealchat">
+          </neon-animatable>
 
         </neon-animated-pages>
 
@@ -1145,12 +1119,14 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         // console.log('Jooooooooo phoneview?', this.phoneview);
         if (this.phoneview) {
           this.avatarsize = "medium";
-          this.avatarfundingsize = "small";
+          this.seekeravatarsize = "medium";
+          this.provideravatarsize = "small";
           this.vsize = "medium";
           this.sendbtnsize = "";
         } else {
           this.avatarsize = "medium";
-          this.avatarfundingsize = "medium";
+          this.seekeravatarsize = "more";
+          this.provideravatarsize = "medium";
           this.sendbtnsize = "bigbtn";
           this.vsize = "medium";
         }
