@@ -32,17 +32,20 @@ This component shows a reply on a request.
       .responditem {
         /*background-color: var(--sc-grey1);*/
         box-sizing:border-box;
-        padding-top: 26px;
-        padding-bottom: 24px;
-        padding-left: 40px;
-        padding-right: 40px;
-        /*border-bottom: 1px solid rgba(0,0,0,0.075);*/
+        padding-top: 18px;
+        padding-bottom: 18px;
+        padding-left: 37px;
+        padding-right: 25px;
+/*        background-color: rgba(255,255,255,0.5);*/
+
+        border-bottom: 1px solid rgba(0,0,0,0.075);
       }
 
 
 
       .replyeravatar {
         margin-right: 10px;
+
       }
 
       .replyamount {
@@ -191,6 +194,32 @@ This component shows a reply on a request.
 /*        opacity: 0.65;*/
       }
 
+      .grey2b {
+        color: #999999;
+      }
+
+
+
+
+
+
+      .replier {
+        margin-right: 12px;
+        /*border-bottom: 1px dotted var(--sc-blue);*/
+      }
+      .replierrep {
+        margin-right: 10px;
+        margin-left: 2px;
+      }
+      
+      .msg {
+        margin-top: 2px;
+        font-size: 14px;
+        line-height: 20px;
+          /*margin: 5px 0px 15px 0px;*/
+      }
+
+
 
       @media all and (min-width: 0) and (max-width: 420px) { 
 
@@ -247,12 +276,43 @@ This component shows a reply on a request.
     <iron-media-query query="(min-width:0px) and (max-width: 540px)" query-matches="{{phoneview}}"></iron-media-query>
     <template is="dom-if" if="{{_is(viewmode,'normal')}}">
 
-      <div class$="{{displaythis}} responditem totalwidth vertic centercenter darker">
+      <div class$="{{displaythis}} responditem totalwidth vertic centercenter">
         <div class="totalwidth vertic start centerjust">
 
-        <template is="dom-if" if="{{!phoneview}}">
+        <!-- <template is="dom-if" if="{{!phoneview}}"> -->
 
-          <div class="totalwidth horizont start centerjust">
+
+      <div class="totalwidth horizont start startjust">
+
+        <sc-avatar
+          ipfshash="[[replydata.provider.avatarhash]]"
+          class="replyeravatar"
+          size="verysmall">
+        </sc-avatar>
+
+        <div class="flex vertic start startjust">
+          <div class="totalwidth horizont center startjust">
+            <p class="replier small reg blue">{{replydata.provider.username}}
+            <small class="bold"><sc-hashtagrep pubkey="{{replydata.provider.replyerrep}}" hashtagname="{{item.hashtag}}"></sc-hashtagrep></small></p>
+            <p class="grey2b light small"><moment-js date="{{replydata.replytime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
+
+          </div>
+          <p class="msg totalwidth grey4"> {{replydata.msg}}<!-- <span class="bold"> for {{item.amount}} SWT</span> --></p>
+        </div>
+
+<!--         <div class="amountstuff vertic end endjust">
+          <small class="bold yellow">for</small>
+          <p class="bold yellow">{{item.amount}} SWT</p>
+        </div> -->
+        
+      </div>
+
+
+
+
+
+
+    <!--       <div class="totalwidth horizont start centerjust">
 
           <div class="vertic start centerjust totalwidth flex">
             <p class="grey3 small"><moment-js date="{{replydata.replytime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
@@ -267,6 +327,9 @@ This component shows a reply on a request.
             </div>
           </div>
           </div>
+
+
+
           <div class="minispace"></div>
           <div class="minispace"></div>
           <div class="totalwidth horizont start startjust">
@@ -289,13 +352,18 @@ This component shows a reply on a request.
               </template>
             </template>
           </div>
+ -->
 
 
-        </template>
 
 
 
-        <template is="dom-if" if="{{phoneview}}">
+
+        <!-- </template> -->
+
+
+
+<!--         <template is="dom-if" if="{{phoneview}}">
 
           <div class="vertic start centerjust totalwidth">
             <p class="grey3 small"><moment-js date="{{replydata.replytime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
@@ -334,28 +402,12 @@ This component shows a reply on a request.
               </div>
             </template>
           </template>
-
-<!--           <template is="dom-if" if="{{yourethechoosenone}}">
-            <template is="dom-if" if="{{thisismyreply}}">
-              <div class="iamthechoosenone" on-tap="toDealfortwoprovider">
-                <p class="bold blue">{{itemdata.seeker.username}} has chosen you to make a deal with.</p>
-                <iron-icon icon="sc-icons:v" class="blue"></iron-icon>
-              </div>
-            </template>
-            <template is="dom-if" if="{{!thisismyreply}}">
-              <div class="yourethechoosenone">
-                <p class="grey4 bold">{{itemdata.seeker.username}} has chosen {{replydata.provider.username}} to make a deal with.</p>
-                <iron-icon icon="sc-icons:v" class="grey4"></iron-icon>
-              </div>
-            </template>
-          </template> -->
-
-        </template>
+        </template> -->
 
         </div>
       </div>
 
-          <template is="dom-if" if="{{yourethechoosenone}}">
+<!--           <template is="dom-if" if="{{yourethechoosenone}}">
             <template is="dom-if" if="{{thisismyreply}}">
               <div class="iamthechoosenone darker" on-tap="toDealfortwoprovider">
                 <p class="bold grey4">{{chosenonemsg}} you to make a deal with.</p>
@@ -368,53 +420,9 @@ This component shows a reply on a request.
                 <p class="reg grey4">{{chosenonemsg}} {{replydata.provider.username}} for this request.</p>
               </div>
             </template>
-          </template>
-
-
-
-
+          </template> -->
 
       </template>
-
-<!--       <template is="dom-if" if="{{_is(viewmode,'detail')}}">
-      <div class="totalcontainer_detail paddingsides">
-
-      <div class="requestself whiteback totalwidth horizont start startjust" on-tap="fireBack">
-        <iron-icon icon="sc-icons:arrowleft" class="blue">arrowleft-icon</iron-icon>
-        <p>Hier komt de request zelf en dus ook alle text die daarmee gemoeid is enzo allemaal wete wel</p>
-      </div>
-      <div id="responditemcontent" class="shadow totalwidth vertic centercenter">
-        <p class="centertxt small replytime_detail grey3">{{replydata.replytime}}</p>
-
-        <p class="centertxt replymsg_detail ultralight">{{replydata.msg}}</p>
-        <div class="horizont centercenter totalwidth">
-          <p class="bold grey4 replyamount">{{replydata.replyamount}} <span class="replySWT">SWT</span></p>
-          <iron-icon class="grey4 small" icon="sc-icons:v">checked</iron-icon>
-        </div>
-        <div class="fivespace"></div>
-        <div class="dottedlinio"></div>
-        <div class="fivespace"></div>
-
-        <div class="horizont centercenter">
-          <sc-avatar
-            class="replyeravatar_detail"
-            ipfshash="[[replydata.provider.avatarhash]]"
-            size="medium">
-          </sc-avatar>
-          <div class="vertic start centerjust">
-            <p class="replyerusername_detail bold centertxt grey3">{{replydata.provider.username}}</p>
-            <p class="replyerrep_detail bold centertxt blue"><sc-hashtagrep pubkey="{{replydata.provider.pubkey}}" hashtagname="{{itemdata.hashtag}}"></sc-hashtagrep> REP</p>
-          </div>
-        </div>
-      </div>
-
-      </div>
-      </div>
-
-
-      </template> -->
-
-
   </template>
 
   <script>
