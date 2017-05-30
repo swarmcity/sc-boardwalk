@@ -32,12 +32,47 @@
         cursor: pointer;
       }
 
-      sc-hashtaglist {
+      .hashtaglist {
+          /*@apply(--layout-flex);*/
+
         background-color: transparent;
         box-sizing:border-box;
         padding: 18vh 0px 15vh 0px;
         height: 100%;
       }
+
+      .hashtag p {
+        /*width: 70%;*/
+        word-break:break-all;
+        user-select: none;
+      }
+
+      .hashtag:hover p {
+        color:var(--sc-blue);
+        cursor: pointer;
+      }
+
+      .big {
+        margin: 0px 0px 12px 0px;
+      }
+
+      .big p {
+        font-size: 26px;
+        line-height: 34px;
+        margin: 0px 0px 2px 0px;
+      }
+
+      .symbol p {
+        font-size: 24px;
+        line-height: 38px;  
+        margin: 0px 0px 0px 0px;
+      }
+
+      .symbol {
+        min-width: 24px;
+      }
+
+
 
       .warningbackup {
         margin-left: 10px;
@@ -62,12 +97,16 @@
           @apply(--layout-center-center);
         }
 
-        sc-hashtaglist {
+        .hashtaglist {
           width: 100%;
-          box-sizing:border-box;
-          padding: 0px;
+/*          box-sizing:border-box;
+          padding: 0px;*/
           background-color: rgba(255,255,255,0.5);
           height: 35vh;
+          box-sizing:border-box;
+          padding: 7vh 12vw 8vh 12vw;
+          @apply(--layout-flex-none);
+          overflow-y:scroll;
         }
       }
 
@@ -111,8 +150,24 @@
         </div>
       </div>
       
+      <!-- <div id="currenttag" on-tap="toHashtag"><p class="bold">pioneer</p></div> -->
       
-      <sc-hashtaglist on-hashtag="toHashtag" id="bottomhalf" class="flex"></sc-hashtaglist>
+      <div class="hashtaglist ">
+        <div class="vertic start startjust">
+        <template is="dom-repeat" items="{{hashtaglist}}">
+          <div on-tap="toHashtag" id="{{item}}" class="hashtag big horizont start startjust ">
+              <div class="symbol">
+                <p class="semibold grey4">#</p>
+              </div>
+              <p on-tap="toHashtag" class="grey4 bold">
+               {{item}}
+              </p>
+          </div>
+        </template>
+      </div>
+      </div>
+
+      <!-- <sc-hashtaglist on-hashtag="toHashtag" id="bottomhalf" class="flex"></sc-hashtaglist> -->
       
     </div>
 
@@ -154,6 +209,10 @@
         keystore: {
           type: Object,
            // observer: '_keystore',
+        },
+
+        hashtaglist: {
+          type: Array
         },
 
        //  /**
@@ -201,6 +260,16 @@
       attached: function(){
         // TODO : remove this
         this.onEnter();
+
+          this.hashtaglist = [
+              'pioneer',
+            'ridesharing',
+            'dev-ops',
+            'testingSC',
+            'dogwalking',
+            'food-delivery',
+            'it-hive'
+        ];
 
       },
 
@@ -255,10 +324,15 @@
       */
       toHashtag: function(e) {
         // if (this.phoneview) {
+        var selectedhasht = e.detail.sourceEvent.target.parentElement.id;
+          console.log('*Joooo*',selectedhasht);
+        var testertje = this.shadowRoot.getElementById(selectedhasht);
+
 
           this.sharedElements = {
               'hero': this.$.homeavatar,
-              'balance': this.$.homebalance
+              'balance': this.$.homebalance,
+              'currenttag': testertje
             };
 
           this.animationConfig = {
@@ -286,6 +360,13 @@
                   toPage: this,
                   timing: {
                     duration: 700
+                  }
+                },{
+                  name: 'hero-animation',
+                  id: 'currenttag',
+                  toPage: this,
+                  timing: {
+                      duration: 500
                   }
                 },{
                   name: 'hero-animation',
@@ -320,6 +401,13 @@
                     }
                   },{
                     name: 'hero-animation',
+                    id: 'currenttag',
+                    fromPage: this,
+                    timing: {
+                        duration: 500
+                    }
+                  },{
+                    name: 'hero-animation',
                     id: 'hero',
                     fromPage: this,
                     timing: {
@@ -334,8 +422,8 @@
                     }
                 }]
               };
-
-            this.fire('to-hashtag',e.detail);
+              // debugger;
+            this.fire('to-hashtag',selectedhasht);
           // } else {
           //   this.fire('to-hashtag',e.detail);
           // }

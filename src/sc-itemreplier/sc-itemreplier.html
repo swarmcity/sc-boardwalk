@@ -35,9 +35,29 @@ This components allow a Swarm Citizen to reply on a request.
       }
       .yourrespond {
         box-sizing:border-box;
-        padding: 2vw 40px 2vw 40px;
+        padding: 0px 40px 0px 76px;
         transition: all 0.5s linear;
       }
+
+      .infocus {
+        margin-top: 25px;
+        border-top: 1px solid rgba(0,0,0,0.075);
+        background-color: var(--sc-white);
+      }
+
+      .outfocus {
+        border-top: 1px solid rgba(0,0,0,0);
+        background-color: transparent;
+        /*background-color: rgba(0, 0, 0, 0.015);*/
+      }
+
+      .replyeravatar {
+        margin-top: 26px;
+        margin-right: 10px;
+      }
+
+
+
       .lightgreytopborder {
         border-top: 1px solid var(--sc-grey1);
         border-bottom: 1px solid var(--sc-grey1);
@@ -128,27 +148,32 @@ This components allow a Swarm Citizen to reply on a request.
 
     </style>
     
-      <div class$=" {{borderz}} yourrespond totalwidth vertic centercenter">
+      <div class$="{{focusclass}} yourrespond totalwidth vertic centercenter">
 
-        <template is="dom-if" if="{{btnvisible}}">
           <!-- <paper-button noink class="darker totalwidth blue shadow respondbtn big" on-tap="toggleForm">Reply</paper-button> -->
           <div class="totalwidth horizont start startjust">
-            <paper-button on-tap="toggleForm" noink class="addreplybtn grey4 shadow darker"> 
             <sc-avatar
               class="replyeravatar"
               ipfshash="[[identity.avatarhash]]"
               size="verysmall">
             </sc-avatar>
-            Reply to this request<iron-icon icon="sc-icons:babble" class="small blue">reply-icon</iron-icon></paper-button>
+            <paper-input id="replyinput" label="Your reply" class="flex grey2unfocus replyinput" value="{{replytext}}"  on-focused-changed="checkFocus"></paper-input>
+
+<!--             <paper-button on-tap="toggleForm" noink class="addreplybtn grey4 shadow darker"> 
+            <sc-avatar
+              class="replyeravatar"
+              ipfshash="[[identity.avatarhash]]"
+              size="verysmall">
+            </sc-avatar>
+            Reply to this request<iron-icon icon="sc-icons:babble" class="small blue">reply-icon</iron-icon></paper-button> -->
           </div>
-        </template>
 
         <!-- <template is="dom-if" if="{{_is(replystate,'replying')}}"> -->
 
       <iron-collapse id="replyform" class="totalwidth">
           <div class="totalwidth vertic centercenter">
 
-              <paper-textarea label="Your reply" class="totalwidth grey2unfocus" value="{{replytext}}" autofocus></paper-textarea>
+
 <!--               <div class=" totalwidth horizont center startjust">
                 <p>Hank Moovy is offering 1 SWT.</p>
                 <a href="">Make a counteroffer</a>
@@ -196,7 +221,7 @@ This components allow a Swarm Citizen to reply on a request.
       is: 'sc-itemreplier',
 
       observers: [
-        '_log(replyamount)',
+        '_log(focusclass)',
         '_itemdata(itemdata)'
       ],
 
@@ -393,15 +418,15 @@ This components allow a Swarm Citizen to reply on a request.
     },
 
 
-    backtoInit: function(){
-      this.replystate = 'init'
-      this.bgcolor = "whiteback";
-      this.borderz = "lightgreytopborder";
-    },
+    // backtoInit: function(){
+    //   this.replystate = 'init'
+    //   this.bgcolor = "whiteback";
+    //   this.borderz = "lightgreytopborder";
+    // },
 
-    replyLoaded: function(){
-      //this.submittingreply = false;
-    },
+    // replyLoaded: function(){
+    //   //this.submittingreply = false;
+    // },
 
 
 
@@ -409,6 +434,19 @@ This components allow a Swarm Citizen to reply on a request.
       _log: function(target) {
         console.log("*************************** in itemreplierzzzz", target);
       },
+
+      checkFocus: function(){
+        var replyform = this.shadowRoot.getElementById('replyform');
+
+
+        if (this.$.replyinput.focused) {
+          this.focusclass = "infocus";
+          replyform.opened = true;
+        } else {
+          this.focusclass = "outfocus";
+          replyform.opened = false;
+        };
+      }
 
 
     });
