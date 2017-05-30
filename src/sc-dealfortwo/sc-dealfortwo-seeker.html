@@ -74,7 +74,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       .tophalf h1 {
         font-size: 40px;
         line-height: 48px;
-        max-width: 800px;
+        max-width: 700px;
       }
 
       .withconfirmq {
@@ -696,7 +696,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
             <div class="totalbox vertic center startjust totalwidth">
               <div class="tophalf totalwidth">
 
-                <template is="dom-if" if="{{!bothaccepted}}">
+<!--                 <template is="dom-if" if="{{!bothaccepted}}">
 
                   <template is="dom-if" if="{{!seekeraccept}}">
                     <h1 class="">Do you accept a deal with <span class="light blue replyer_username">{{replydata.provider.username}}</span> in <span class="light">#pioneer</span> for <span class="light">{{requestdata.amount}} SWT</span>?</h1>
@@ -715,11 +715,21 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                     <div class="whitespace"></div>
                     <p class="grey2b"><span>{{replydata.provider.username}}</span> has already accepted.</p>
                   </template>
-                </template>
+                </template> -->
                 
-                <template is="dom-if" if="{{bothaccepted}}">
+
+
+               <template is="dom-if" if="{{!provideraccept}}">
+                  <h1 class="">You selected <span class="light blue replyer_username">{{replydata.provider.username}}</span> to make a deal <!-- in <span class="light">#pioneer</span> --> for <span class="">{{requestdata.amount}} SWT</span>.</h1>
+                    <div class="whitespace"></div>
+
+                    <p class="grey2b">Waiting for <span>{{replydata.provider.username}}</span> to respond.</p>
+
+               </template>
+
+                <template is="dom-if" if="{{provideraccept}}">
                   <template is="dom-if" if="{{!indeal}}">
-                    <h1 class=""><span class="bold">You both accepted!</span></h1>
+                    <h1 class=""><span class="bold">{{replydata.provider.username}} accepted!</span></h1>
                     <div class="whitespace"></div>
                     <div class="dealcreate_steps">
                       <div class="horizont end startjust">
@@ -758,13 +768,13 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
                 <div class="avatars_funding">
                   <div class$="avatar_funding {{seekerfundclass}}">
-                    <sc-avatar
+<!--                     <sc-avatar
                       ipfshash="[[identity.avatarhash]]"
                       pubkey="[[identity.pubkey]]"
                       id="makedeal_myavatar"
                       size="{{avatarfundingsize}}"
                       on-tap="tempTapto"
-                      ></sc-avatar>
+                      ></sc-avatar> -->
                     <iron-icon class$="v_icon {{vsize}}" icon="sc-icons:v"></iron-icon>
                   </div>
                   <div class$="avatar_funding {{providerfundclass}}">
@@ -958,7 +968,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       // '_connectionline(myamount_state,otheramount_state)',
       '_data(data)',
       '_log(replydata)',
-      '_whoaccepted(seekeraccept,provideraccept)'
+      '_provideraccepted(provideraccept)'
 
       // '_requestdata(requestdata)'
       // '_provideraccept(provideraccept)'
@@ -1487,14 +1497,14 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
 
 
-      _whoaccepted: function(){
+      _provideraccepted: function(){
 
-        if (this.seekeraccept){
-          this.seekerfundclass = "fund_accepted";
-        } else {
-          this.seekerfundclass = "fund_init";
-          this.bottombg = "blueback";
-        }
+        // if (this.seekeraccept){
+        //   this.seekerfundclass = "fund_accepted";
+        // } else {
+        //   this.seekerfundclass = "fund_init";
+        //   this.bottombg = "blueback";
+        // }
 
         if (this.provideraccept){
           this.providerfundclass = "fund_accepted";
@@ -1502,11 +1512,11 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           this.providerfundclass = "fund_init";
         }
 
-        if (this.seekeraccept && this.provideraccept){
-          this.bothaccepted = true;
-        } else {
-          this.bothaccepted = false;
-        }
+        // if (this.seekeraccept && this.provideraccept){
+        //   this.bothaccepted = true;
+        // } else {
+        //   this.bothaccepted = false;
+        // }
 
       },
 
