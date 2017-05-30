@@ -251,9 +251,11 @@ This components is the representation of a request in the requests-list on sc-ha
 
         <iron-collapse id="innerCollapser" class="totalwidth">
 
-          <sc-itemreplier itemdata="{{item}}">
-          </sc-itemreplier>
-
+          <template is="dom-if" if="{{!youareowner(item.seeker.pubkey)}}">
+            <sc-itemreplier itemdata="{{item}}">
+            </sc-itemreplier>
+          </template>
+          <div class="whitespace"></div>
           <template is="dom-repeat" as="currentreply" items="{{item.replies}}">
             <sc-itemreply
             itemdata="{{item}}"
@@ -459,6 +461,12 @@ This components is the representation of a request in the requests-list on sc-ha
           this.amountopacity = "full"; 
         }
       },
+
+
+      youareowner: function(pubkey){
+        //debugger;
+        return (this.identity.pubkey == pubkey);
+      },  
 
 
       _item: function(){
