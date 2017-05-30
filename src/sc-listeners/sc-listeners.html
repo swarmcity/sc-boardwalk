@@ -193,38 +193,38 @@
 //         //   };
 //         // },
 
-        request_provider_funding: function(payload){
-//debugger;
-          var mutation = {
-            id: payload.id,
-            providerfundingtx: payload.offerproviderfundingtx,
-          };
+//         request_provider_funding: function(payload){
+// //debugger;
+//           var mutation = {
+//             id: payload.id,
+//             providerfundingtx: payload.offerproviderfundingtx,
+//           };
 
-          var self = this;
-          this.updatebalanceaddressaftertx(payload.dealaddress, payload.offerproviderfundingtx, function(err, balance) {
-            //debugger;
-            self.dispatch('request_providerfunded', {
-              requestid: payload.id,
-              balance: balance.toNumber()
-            });
-          });
+//           var self = this;
+//           this.updatebalanceaddressaftertx(payload.dealaddress, payload.offerproviderfundingtx, function(err, balance) {
+//             //debugger;
+//             self.dispatch('request_providerfunded', {
+//               requestid: payload.id,
+//               balance: balance.toNumber()
+//             });
+//           });
 
-//          this.updatebalanceaddressaftertx(payload.dealaddress,mutation.offerproviderfundingtx);
+// //          this.updatebalanceaddressaftertx(payload.dealaddress,mutation.offerproviderfundingtx);
 
-          let deals = this.deals.slice(0);
-          var foundDeal = deals.findIndex(function(item) {
-            return item.id === payload.id;
-          });
-          if (foundDeal > -1) {
-            deals[foundDeal] = Object.assign({},this.emptyDeal, deals[foundDeal], mutation);
-          }else{
-            deals.push(Object.assign({},this.emptyDeal,mutation));
-          }
-          return {
-            type: 'DEALS',
-            deals: deals
-          };
-        },
+//           let deals = this.deals.slice(0);
+//           var foundDeal = deals.findIndex(function(item) {
+//             return item.id === payload.id;
+//           });
+//           if (foundDeal > -1) {
+//             deals[foundDeal] = Object.assign({},this.emptyDeal, deals[foundDeal], mutation);
+//           }else{
+//             deals.push(Object.assign({},this.emptyDeal,mutation));
+//           }
+//           return {
+//             type: 'DEALS',
+//             deals: deals
+//           };
+//         },
 
 //         // provider funding TX has finished
 //         request_providerfunded: function(params) {
@@ -580,7 +580,21 @@
           //   this.dispatch('assign_provider', payload);
           //   break;
           case 'dealfortwo-provider-funding':
-            this.dispatch('request_provider_funding', payload);
+            var mutation = {
+              id: payload.id,
+              providerfundingtx: payload.offerproviderfundingtx,
+            };
+            this.dispatch('update_deal', mutation);
+
+            if (mutation.providerfundingtx) {
+              this.web3.waitTx(mutation.providerfundingtx, function(err, res) {
+                self.dispatch('update_deal', {
+                  id: mutation.id,
+                  providerfundingtx_mined: true
+                });
+              });
+            }
+            //this.dispatch('request_provider_funding', payload);
             break;            
           // case 'dealfortwo-approve':
           //   this.dispatch('request_approve', payload);
