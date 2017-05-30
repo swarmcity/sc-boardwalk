@@ -32,13 +32,13 @@ This component shows a reply on a request.
       .responditem {
         /*background-color: var(--sc-grey1);*/
         box-sizing:border-box;
-        padding-top: 18px;
-        padding-bottom: 18px;
-        padding-left: 37px;
-        padding-right: 25px;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        padding-left: 76px;
+        padding-right: 40px;
 /*        background-color: rgba(255,255,255,0.5);*/
 
-        border-bottom: 1px solid rgba(0,0,0,0.075);
+/*        border-bottom: 1px solid rgba(0,0,0,0.075);*/
       }
 
 
@@ -299,6 +299,14 @@ This component shows a reply on a request.
           </div>
           <p class="msg totalwidth grey4"> {{reply.msg}}<!-- <span class="bold"> for {{item.amount}} SWT</span> --></p>
         </div>
+
+            <template is="dom-if" if="{{btnshow}}">
+              <template is="dom-if" if="{{showselectbtn}}">
+                <div class="horizont center endjust">
+                  <paper-button class="darkerer blue makedealbtn shadow" on-tap="toMakedeal">Select {{replydata.provider.username}}</paper-button>
+                </div>
+              </template>
+            </template>
 
 <!--         <div class="amountstuff vertic end endjust">
           <small class="bold yellow">for</small>
