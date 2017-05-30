@@ -852,13 +852,13 @@ This is the component showing all requests of a certain hashtag. It contains a r
         this.set('route.path', '/' + this.hashtag + '/list');
       },
 
-      toMakeDeal: function(e) {
-        //debugger;
-        this.fire('redirect', {
-          target: '/dealfortwoseeker/' + this.data.hashtag + '/' + e.detail.parentrequestid + '/' + e.detail.id
-        });
-        //        this.fire('redirect',Object.assign({}, e.detail, {hashtag: this.data.hashtag}));
-      },
+      // toMakeDeal: function(e) {
+      //   //debugger;
+      //   this.fire('redirect', {
+      //     target: '/dealfortwoseeker/' + this.data.hashtag + '/' + e.detail.parentrequestid + '/' + e.detail.id
+      //   });
+      //   //        this.fire('redirect',Object.assign({}, e.detail, {hashtag: this.data.hashtag}));
+      // },
 
       toDealForTwoProvider: function(e){
         
