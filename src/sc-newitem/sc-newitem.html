@@ -374,57 +374,65 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         this.loading = true;
 
         var dealID = UUIDjs.create().toString();
-//debugger;
-        this.$.dealfortwo.makeDealForTwo(dealID,self.identity.pubkey, self.offeramount, function(err, txhash) {
-         
-          var newrequest = {
-            id: dealID,
-            type: 'dealfortwo-request-create',
-            seeker: {
-              username: self.identity.username,
-              pubkey: self.identity.pubkey,
-              avatarhash: self.identity.avatarhash,
-            },
-            offer: self.offermsg,
-            offerhashtag: self.hashtag,
-            offertime: Date.now(),
-            offeramount: self.offeramount,
-            offercreationtx: txhash
-          };
 
-          var topics = [
-            self.shhweb3.encodetopic("swarmcity-v1"),
-            self.shhweb3.encodetopic(newrequest.type),
-            self.shhweb3.encodetopic(newrequest.offerhashtag),
-            self.shhweb3.encodetopic(newrequest.id),
-            self.shhweb3.encodetopic(self.geohash.slice(0, 1)),
-            self.shhweb3.encodetopic(self.geohash.slice(0, 2)),
-            self.shhweb3.encodetopic(self.geohash.slice(0, 3)),
-            self.shhweb3.encodetopic(self.geohash.slice(0, 4)),
-          ];
-
-          if (self.shhweb3 && self.hashtag) {
-
-            var options = {
-              "from": self.shhweb3.identity,
-              "topics": topics,
-              "payload": self.shhweb3.fromAscii(JSON.stringify(newrequest)),
-              "ttl": 60 * 60 * 24,
-              "priority": 1000
+        this.$.dealfortwo.makeDealForTwo(dealID, self.identity.pubkey, self.offeramount, function(err, txhash) {
+          if (err) {
+            console.log('error happened...');
+            // HIERE REDIRECTEN NAAR KLAAR MET NEWITEM... (failed)
+          } else {
+            debugger;
+            var newrequest = {
+              id: dealID,
+              type: 'dealfortwo-request-create',
+              seeker: {
+                username: self.identity.username,
+                pubkey: self.identity.pubkey,
+                avatarhash: self.identity.avatarhash,
+              },
+              offer: self.offermsg,
+              offerhashtag: self.hashtag,
+              offertime: Date.now(),
+              offeramount: self.offeramount,
+              offercreationtx: txhash
             };
 
-            console.log('posting to topics', topics);
+            var topics = [
+              self.shhweb3.encodetopic("swarmcity-v1"),
+              self.shhweb3.encodetopic(newrequest.type),
+              self.shhweb3.encodetopic(newrequest.offerhashtag),
+              self.shhweb3.encodetopic(newrequest.id),
+              self.shhweb3.encodetopic(self.geohash.slice(0, 1)),
+              self.shhweb3.encodetopic(self.geohash.slice(0, 2)),
+              self.shhweb3.encodetopic(self.geohash.slice(0, 3)),
+              self.shhweb3.encodetopic(self.geohash.slice(0, 4)),
+            ];
 
-            return self.shhweb3.shh.post(options, function(err, res) {
-              console.log(err, res);
-              self.loading = false;
-              self.offermsg = '';
-              self.offeramount = '';
-              self.fire('new-submitted', {
-                dealid: newrequest.id
+            if (self.shhweb3 && self.hashtag) {
+
+              var options = {
+                "from": self.shhweb3.identity,
+                "topics": topics,
+                "payload": self.shhweb3.fromAscii(JSON.stringify(newrequest)),
+                "ttl": 60 * 60 * 24,
+                "priority": 1000
+              };
+
+              console.log('posting to topics', topics);
+
+              self.shhweb3.shh.post(options, function(err, res) {
+                console.log(err, res);
+                self.loading = false;
+                self.offermsg = '';
+                self.offeramount = '';
+                self.fire('new-submitted', {
+                  dealid: newrequest.id
+                });
               });
-            });
+            }
+            // HIERE REDIRECTEN NAAR KLAAR MET NEWITEM... ( succes)
+
           }
+
         });
         this.overspending = false;
 

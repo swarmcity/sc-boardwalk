@@ -71,6 +71,8 @@
       // callsback 
       waitTx: function(txHash,callback) {
         var self = this;
+        console.log('waitTx waiting for tx',txHash);
+
         scweb3_web3.eth.getTransaction(txHash, function(err, res) {
           if (res) {
             if (callback)
@@ -98,10 +100,12 @@
                 if (block.transactions.indexOf(txHash) > -1) {
                   filter.stopWatching();
                   filter = null;
-                  if (callback)
+                  if (callback){
+                    console.log('waitTx tx mined in block',block.number);
                     return callback(null,block.number);
-                  else
+                  }else{
                     return true;
+                  }
                 } else {
                   // console.log('Waiting tx..', blockCounter);
                 }

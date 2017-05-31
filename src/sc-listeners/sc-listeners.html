@@ -366,6 +366,7 @@ var deal;
             //console.error('no deal found for reply with ID=', replydata.id)
           }
 //debugger;
+
       var n = {
             id : deal.id,
             msg: replyMutation.msg,
@@ -620,7 +621,6 @@ var deal;
               hashtag: payload.offerhashtag,
               offertime: payload.offertime
             };
-
             if (newDeal.creationtx) {
               this.web3.waitTx(newDeal.creationtx, function(err, res) {
                 self.dispatch('update_deal', {
