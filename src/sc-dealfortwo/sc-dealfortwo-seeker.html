@@ -86,7 +86,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         box-sizing:border-box;
         padding: 0px 10vw 0px 10vw;
         @apply(--layout-horizontal);
-        @apply(--layout-end-justified);
+        @apply(--layout-start-justified);
         @apply(--layout-center);  
         transition: all 0.1s linear;
 
@@ -481,7 +481,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       }
 */
 
-      paper-icon-button.chatbtn {
+      paper-icon-button.chatbtn_iconbtn {
         width: 52px;
         height: 52px;
         min-width: 52px;
@@ -490,7 +490,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         margin-left: 10px;
       }
 
-        paper-button.chatbtn {
+        paper-button.chatbtn_big {
           opacity: 0.75;
           font-size: 14px;
 
@@ -500,7 +500,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
         }
 
-        paper-button.chatbtn iron-icon {
+        paper-button.chatbtn_big iron-icon {
           margin:0px 0px 2px 4px;
         }
 
@@ -517,7 +517,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
 
       .bottomhalf {
-        min-height: 40vh;
+        min-height: 30vh;
         @apply(--layout-vertical);
         @apply(--layout-center); 
         @apply(--layout-start-justified);
@@ -846,9 +846,13 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                     <iron-icon class="grey4 small" icon="sc-icons:babble">chat</iron-icon>
                   </paper-button> -->
                    
-                  <paper-icon-button class="shadow blue grey4 chatbtn" icon="sc-icons:babble"></paper-icon-button>
+                <template is="dom-if" if="{{!phoneview}}">
+                  <div class="chatbtn">
+                    <paper-icon-button class="chatbtn_iconbtn shadow blue grey4" icon="sc-icons:babble"></paper-icon-button>
+                  </div>
+                </template>
 
-                  <div class="flex"></div>
+                  <!-- <div class="flex"></div> -->
 <!--                 <template is="dom-if" if="{{!seekeraccept}}">
                         hier cancelbtn??
                 </template>
@@ -867,6 +871,15 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                   </template>
 
                 </template>
+                <template is="dom-if" if="{{phoneview}}">
+                  <div class="chatbtn">
+                    <paper-button noink class="chatbtn_big">
+                    Chat with [[replydata.provider.username]]
+                    <iron-icon class="grey4 small" icon="sc-icons:babble">chat</iron-icon>
+                  </paper-button>
+                  </div>
+                </template>
+
               </div>
 
             </div>

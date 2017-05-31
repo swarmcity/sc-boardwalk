@@ -6,7 +6,7 @@
 <link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
 <link rel="import" href="../../bower_components/iron-a11y-keys/iron-a11y-keys.html">
 
-
+<link rel="import" href="../sc-redux/sc-redux.html">
 <link rel="import" href="../sc-avatar/sc-avatar.html">
 <link rel="import" href="sc-dealchatitem.html">
 
@@ -68,16 +68,15 @@ This is dealchat.
     </style>
 
     <div class="dealchat_container vertic start startjust">
-
       <div class="msg_canvas totalwidth flex" on-tap="hanksaysfirstwords">
         <template is="dom-repeat" items="{{dummychatballoons}}">
-          <sc-dealchatitem item="[[item]]" pubk="{{pubkey}}" class="totalwidth"></sc-dealchatitem>
+          <sc-dealchatitem item="[[item]]" pubk="{{identity.pubkey}}" class="totalwidth"></sc-dealchatitem>
         </template>
       </div>
       <div class="msg_inputter totalwidth horizont center startjust whiteback">
         <sc-avatar
           ipfshash="[[identity.avatarhash]]"
-          pubkey="[[pubkey]]"
+          pubkey="[[identity.pubkey]]"
           size="small"
           on-tap="tempfunction">
         </sc-avatar>
@@ -86,7 +85,7 @@ This is dealchat.
           on-keys-pressed="addDummy"></iron-a11y-keys>
 
         <paper-input id="msginput" value="{{msg::input}}" autofocus class="flex"></paper-input>
-        <paper-icon-button disabled="{{_is(msg,'')}}"on-tap="addDummy" class="grey1back blue shadow" icon="sc-icons:v">say!</paper-icon-button>
+        <paper-icon-button disabled="{{_is(msg,'')}}" on-tap="addDummy" class="grey1back blue shadow" icon="sc-icons:v">say!</paper-icon-button>
       </div>
 
     </div>
@@ -100,8 +99,18 @@ This is dealchat.
 
       is: 'sc-dealchat',
 
+      behaviors: [
+        Polymer.NeonSharedElementAnimatableBehavior,
+        ReduxBehaviour
+      ],
+
       properties: {
 
+        identity: {
+          type: Object,
+          statePath: 'identity',
+        },
+        
         target: {
           type: Object,
           value: function() {
@@ -114,27 +123,27 @@ This is dealchat.
       ready: function(){
         this.msg = '';        
         this.dummychatballoons = [
-          // {
-          //     chatteravatar: 'QmRzCWs6F4LiEC4umwLiMB5C6MAo1bKQa4frCC1iKvntme',
-          //     chattername: 'Frank David',
-          //     chatterpubkey: '2',
-          //     chatmsg: 'This is balloon 1!',
-          //     chattime: 'today at 16:33'              
-          //   },
-          // {
-          //     chatteravatar: 'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
-          //     chattername: 'Hank Moovy',
-          //     chatterpubkey: '3',
-          //     chatmsg: 'This is balloon 2!',
-          //     chattime: 'today at 21:05'             
-          //   },
-          // {
-          //     chatteravatar: 'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
-          //     chattername: 'Hank Moovy',
-          //     chatterpubkey: '3',
-          //     chatmsg: 'This is balloon 2!',
-          //     chattime: 'today at 21:05'             
-          //   },
+          {
+              chatteravatar: 'QmRzCWs6F4LiEC4umwLiMB5C6MAo1bKQa4frCC1iKvntme',
+              chattername: 'Frank David',
+              chatterpubkey: '2',
+              chatmsg: 'This is balloon 1!',
+              chattime: 'today at 16:33'              
+            },
+          {
+              chatteravatar: 'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
+              chattername: 'Hank Moovy',
+              chatterpubkey: '3',
+              chatmsg: 'This is balloon 2!',
+              chattime: 'today at 21:05'             
+            },
+          {
+              chatteravatar: 'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
+              chattername: 'Hank Moovy',
+              chatterpubkey: '3',
+              chatmsg: 'This is balloon 2!',
+              chattime: 'today at 21:05'             
+            },
 
         ];
 
@@ -190,7 +199,7 @@ This is dealchat.
         this.unshift('dummychatballoons',newballoon);
         this.msg = '';        
         setTimeout(function() {
-            var msginput = document.getElementById('msginput');
+            var msginput = this.shadowRoot.getElementById('msginput');
             msginput.focus();
         }, 5);
       },
