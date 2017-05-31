@@ -74,7 +74,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       .tophalf h1 {
         font-size: 40px;
         line-height: 48px;
-        max-width: 700px;
+        max-width: 75%;
       }
 
       .withconfirmq {
@@ -163,7 +163,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       paper-button.details_toggler_btn {
         padding: 10px 16px 10px 13px;
         font-size: 14px;
-        margin: 10px 0px;
+        margin: 0px 0px 0px 15px;
       }
 
 
@@ -305,10 +305,11 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         box-sizing:border-box;
         padding: 0px;
         @apply(--layout-horizontal);
-        @apply(--layout-end);
+        @apply(--layout-center);
         @apply(--layout-start-justified); 
-        margin-bottom: 2vw;
-        margin-top: 5vh;
+        @apply(--layout-wrap);
+        margin-bottom: 3vw;
+        margin-top: 6vh;
       }
 
 
@@ -508,7 +509,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
       .tophalf {
         min-height: 50vh;
-        padding: 6vh 12vw 0px 12vw;
+        padding: 6vh 12vw 8vh 12vw;
         @apply(--layout-vertical);
         @apply(--layout-start-justified);
         @apply(--layout-start);  
@@ -573,6 +574,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         @apply(--layout-start);
         @apply(--layout-start-justified); */
         margin-bottom: 2vw;
+        margin-right: 15px;
        
       }
 
@@ -600,6 +602,13 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         color: var(--sc-grey3);
         width: 100%;
         text-align: left;
+      }
+
+
+      paper-button.details_toggler_btn {
+        padding: 10px 16px 10px 13px;
+        font-size: 14px;
+        margin: 20px 0px 0px 0px;
       }
 
     }
@@ -686,13 +695,21 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                 <paper-icon-button on-tap="leave" icon="sc-icons:decline" noink>back</paper-icon-button>
             </div>
 
+
+
             <div class="totalbox vertic center startjust totalwidth">
               <div class="tophalf totalwidth">
+
+
                <template is="dom-if" if="{{!provideraccept}}">
                   <h1 class="">You selected <span class="light blue replyer_username">{{replydata.provider.username}}</span> to make a deal <!-- in <span class="light">#pioneer</span> --> for <span class="">{{requestdata.amount}} SWT</span>.</h1>
-                    <div class="whitespace"></div>
+                    <div class="minispace"></div>
+                    <div class="minispace"></div>
 
-                    <p class="grey2b">Waiting for <span>{{replydata.provider.username}}</span> to respond.</p>
+<!--                     <p class="grey2">Waiting for <span>{{replydata.provider.username}}</span> to respond.</p> -->
+
+                      <sc-loader class="grey2" color="grey2" small><span class="light">Waiting for {{replydata.provider.username}} to respond</span></sc-loader>
+
 
                </template>
 
@@ -706,32 +723,11 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                     <h1 class=""><span class="bold">You're in deal</span> with <span class="light blue replyer_username">{{replydata.provider.username}}</span>.</h1>
                   </template>
 
-                <div class="avatars_funding">
-<!--                   <div class$="avatar_funding {{seekerfundclass}}">
-                    <sc-avatar
-                      ipfshash="[[identity.avatarhash]]"
-                      pubkey="[[identity.pubkey]]"
-                      id="makedeal_myavatar"
-                      size="{{seekeravatarsize}}"
-                      on-tap="tempTapto"
-                      ></sc-avatar>
-                  </div> -->
-                  <div class$="avatar_funding {{providerfundclass}}">
-                    <sc-avatar
-                      ipfshash="[[replydata.provider.avatarhash]]"
-                      pubkey="[[replydata.provider.pubkey]]"
-                      id="makedeal_otheravatar"
-                      size="{{provideravatarsize}}"
-                      on-tap="tempTap"
-                      ></sc-avatar>
-                    <iron-icon class$="v_icon {{vsize}}" icon="sc-icons:v"></iron-icon>
-                  </div>
+
 
                   <!-- <template is="dom-if" if="{{!phoneview}}"> -->
-                    <paper-button class="details_toggler_btn shadow grey3 darker" on-tap="showDetails"> Show more details</paper-button>
                   <!-- </template> -->
-
-                </div>
+<!-- 
                     <div class="dealcreate_steps">
                       <div class="horizont end startjust">
                         <div class$="triangle {{collapsestate}}" on-tap="showSteps">
@@ -754,9 +750,33 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                           </div>
                         </div>
                       </iron-collapse>
-                    </div>
+                    </div> -->
 
                 
+                <div class="avatars_funding">
+                  <div class$="avatar_funding {{seekerfundclass}}">
+                    <sc-avatar
+                      ipfshash="[[identity.avatarhash]]"
+                      pubkey="[[identity.pubkey]]"
+                      id="makedeal_myavatar"
+                      size="{{seekeravatarsize}}"
+                      on-tap="tempTapto"
+                      ></sc-avatar>
+                  </div>
+                  <div class$="avatar_funding {{providerfundclass}}">
+                    <sc-avatar
+                      ipfshash="[[replydata.provider.avatarhash]]"
+                      pubkey="[[replydata.provider.pubkey]]"
+                      id="makedeal_otheravatar"
+                      size="{{provideravatarsize}}"
+                      on-tap="tempTap"
+                      ></sc-avatar>
+                    <!-- <iron-icon class$="v_icon {{vsize}}" icon="sc-icons:v"></iron-icon> -->
+                  </div>
+
+                    <paper-button class="details_toggler_btn shadow grey3 darker" on-tap="showDetails"> Show more details</paper-button>
+
+                </div>
                 <iron-collapse id="details_collapser">
                     <div class="details_collapser_inner">
                       <div class="details_request totalwidth vertic start startjust">
@@ -1089,13 +1109,13 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         if (this.phoneview) {
           this.avatarsize = "medium";
           this.seekeravatarsize = "medium";
-          this.provideravatarsize = "small";
+          this.provideravatarsize = "medium";
           this.vsize = "medium";
           this.sendbtnsize = "";
         } else {
           this.avatarsize = "medium";
           this.seekeravatarsize = "more";
-          this.provideravatarsize = "medium";
+          this.provideravatarsize = "more";
           this.sendbtnsize = "bigbtn";
           this.vsize = "medium";
         }

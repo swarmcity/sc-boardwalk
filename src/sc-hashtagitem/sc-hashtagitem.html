@@ -91,6 +91,9 @@ This components is the representation of a request in the requests-list on sc-ha
         height: 28px;
       }
 
+      .provavatar {
+        margin-right: 15px;
+      }
 
       .myavatar {
 /*        width: 22px;
@@ -114,7 +117,7 @@ This components is the representation of a request in the requests-list on sc-ha
       .msg {
         margin-top: 4px;
         font-size: 16px;
-        line-height: 22px;
+        line-height: 20px;
           /*margin: 5px 0px 15px 0px;*/
       }
 
@@ -206,8 +209,16 @@ This components is the representation of a request in the requests-list on sc-ha
 
       .dealmessage {
           padding-left: 75px;
-          padding-top: 6px;
       }
+
+      .dealmessagechosen {
+          padding-left: 75px;
+      }
+
+      .dealmessage p {
+        padding-top: 6px;
+      }
+
 
       .dottedline {
         width: 100%;
@@ -274,7 +285,7 @@ This components is the representation of a request in the requests-list on sc-ha
                 </div>
               </template>
             </div>
-            <p class="msg totalwidth grey4"> {{item.msg}}<!-- <span class="bold"> for {{item.amount}} SWT</span> --></p>
+            <p class="msg totalwidth grey4">{{item.msg}}<!-- <span class="bold"> for {{item.amount}} SWT</span> --></p>
           </div>
           <div class="amountstuff vertic end endjust">
             <small class="bold yellow">for</small>
@@ -282,23 +293,26 @@ This components is the representation of a request in the requests-list on sc-ha
           </div>
         </div>
 
-            <template is="dom-if" if="{{item.ireplied}}">
-              <div class="dealmessage totalwidth horizontal center endjust">
-                <p class="small grey4 bold">You replied on this.</p>
-              <!-- <sc-avatar
-                ipfshash="[[identity.avatarhash]]"
-                size="verysmall"
-                class="myavatar">
-              </sc-avatar> -->
-            </div>
+
+            <template is="dom-if" if="{{showdealmsg}}">
+<!--               <iron-collapse id="dealmessagecollapser" class="totalwidth"> -->
+                <div class="dealmessage totalwidth horizontal center endjust">
+                  <p class$="small {{dealmessageclass}} bold">{{dealmessage}}</p>
+                  <!-- <sc-avatar
+                    ipfshash="[[identity.avatarhash]]"
+                    size="verysmall"
+                    class="myavatar">
+                  </sc-avatar> -->
+                </div>
+<!--               </iron-collapse> -->
             </template>
 
-        <iron-collapse id="innerCollapser" class="totalwidth">
+        <iron-collapse id="repliescollapser" class="totalwidth">
 
           <template is="dom-if" if="{{!youareowner(item.seeker.pubkey)}}">
             <template is="dom-if" if="{{!item.ireplied}}">
-              <sc-itemreplier itemdata="{{item}}">
-              </sc-itemreplier>
+                <sc-itemreplier itemdata="{{item}}">
+                </sc-itemreplier>
             </template>
           </template>
           <template is="dom-if" if="{{item.replies}}">
@@ -316,115 +330,106 @@ This components is the representation of a request in the requests-list on sc-ha
 
         </iron-collapse>
 
-
         <div class="lid totalwidth"></div>
-
       </div>
-
-<!-- 
-          <template is="dom-if" if="{{item.ireplied}}">
-            <div class="youreplied totalwidth horizont start startjust">
-            <sc-avatar
-              ipfshash="[[identity.avatarhash]]"
-              size="verysmall"
-              ></sc-avatar>
-
-              <div class="vertic start startjust flex">
-                <small class="semibold grey4">You replied:</small>
-                <p class="grey4">{{yourreply}}</p>
-              </div>
-
-            </div>
-          </template>
- -->
-
-
       </template>
 
 
 
-
-
-
-
-<!-- WHEN REPLY == SELECTED -->
       <template is="dom-if" if="{{item.selectedreply}}">
-          <template is="dom-if" if="{{!item.ireplied}}">
 
-            <div class="itemtotal vertic start startjust" on-tap="toDetail">
-              <div class="totalwidth horizont center startjust">
-                <small class="small grey3 light">          
-                  <moment-js date="{{item.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js>
-                </small>
-              </div>
-
-              <p class="totalwidth offer grey4"> {{item.msg}}<span class="semibold"> 
-                #{{item.hashtag}}</span></p>
-              <div class="minispace"></div>
-              <div class="minispace"></div>
-              <div class="minispace"></div>
-
-
-              <div class="totalwidth horizont start startjust">
+        <template is="dom-if" if="{{!youareowner(item.seeker.pubkey)}}">
+          <div class$="totalwidth vertic start centerjust {{ownerclass}}">
+              <div class="itemtotal horizont start startjust" on-tap="toggleItem">
                 <sc-avatar
                   ipfshash="[[item.seeker.avatarhash]]"
-                  size="verysmall"
-                  class="othermargins">
+                  size="small">
                 </sc-avatar>
-
-                <sc-avatar
-                  ipfshash="[[provideravatarhash]]"
-                  size="verysmall">
-                </sc-avatar>
-                <div class="flex"></div>
-                 <p class="offerer grey3 small">{{item.seeker.username}} selected {{providerusername}} to make a deal with.</p>
-
-<!--                 <div class="flex vertic centercenter">
-                  <p class="totalwidth offerer small bold grey3">{{item.seeker.username}}</p>
-                  <p class="totalwidth yourrep small bold blue"><sc-hashtagrep pubkey="{{item.seeker.pubkey}}" hashtagname="{{item.hashtag}}"></sc-hashtagrep> REP</p>
-                </div> -->
-              </div>
-            </div>
-
-          </template>
-
-          <template is="dom-if" if="{{item.ireplied}}">
-            <div class="itemtotal vertic start startjust" on-tap="toDealForTwoProvider">
-              <div class="totalwidth horizont center startjust">
-                <small class="small grey3 light">          
-                  <moment-js date="{{item.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js>
-                </small>
-              </div>
-
-              <p class="totalwidth offer grey4">{{item.msg}}<span class="semibold"> 
-                #{{item.hashtag}}</span></p>
-<!--               <div class="minispace"></div>
-              <div class="minispace"></div> -->
-            </div>
-
-
-              <div class="yourselected totalwidth horizont start startjust">
-                <sc-avatar
-                  ipfshash="[[youravatarhash]]"
-                  size="verysmall"
-                  class="othermargins">
-                </sc-avatar>
-                <sc-avatar
-                  ipfshash="[[item.seeker.avatarhash]]"
-                  size="verysmall">
-                </sc-avatar>
-                <div class="flex horizont start endjust">
-                  <p class="offerer small bold grey4">{{item.seeker.username}} selected you to make a deal with.</p>
-                  <iron-icon icon="sc-icons:v" class="blue"></iron-icon>
+                <div class="flex vertic start startjust">
+                  <div class="totalwidth horizont center startjust">
+                    <p class="seeker small reg blue">{{item.seeker.username}} • <span class="bold"><sc-hashtagrep pubkey="{{item.seeker.pubkey}}" hashtagname="{{item.hashtag}}"></sc-hashtagrep></span></p>
+                    <p class="grey2b light small"><moment-js date="{{item.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
+                    <template is="dom-if" if="{{item.replies}}">
+                      <div class="replies horizont centercenter">
+                        <p class="divider small grey2b light">|</p>
+                        <small class="small grey2b light">{{item.replies.length}}</small>
+                        <iron-icon icon="sc-icons:babble" class="grey2b verysmall">replies</iron-icon>
+                      </div>
+                    </template>
+                  </div>
+                  <p class="msg totalwidth grey4">{{item.msg}}<!-- <span class="bold"> for {{item.amount}} SWT</span> --></p>
+                </div>
+                <div class="amountstuff vertic end endjust">
+                  <small class="bold yellow">for</small>
+                  <p class="bold yellow">{{item.amount}} SWT</p>
                 </div>
               </div>
 
+              <div class="dealmessage totalwidth horizontal center endjust">
+                <p class$="small {{dealmessageclass}} bold">{{dealmessage}}</p>
+              </div>
 
-          </template>
+              <iron-collapse id="repliescollapser" class="totalwidth">
+                <div class="dealmessagechosen totalwidth horizontal center endjust">
+                  <p class="small grey3 reg">{{dealmessagechosen}}</p>
+                </div>
+              </iron-collapse>
+              <div class="lid totalwidth"></div>
+          </div>
+        </template>
+
+        <template is="dom-if" if="{{youareowner(item.seeker.pubkey)}}">
+          <div class$="totalwidth vertic start centerjust {{ownerclass}} whiteback" on-tap="toDealForTwoSeeker">
+              <div class="itemtotal horizont start startjust" on-tap="">
+                <sc-avatar
+                  ipfshash="[[item.seeker.avatarhash]]"
+                  size="small">
+                </sc-avatar>
+                <sc-avatar
+                  ipfshash="[[currentprovider.avatarhash]]"
+                  size="small"
+                  class="provavatar">
+                </sc-avatar>
+
+                <div class="flex vertic start startjust">
+                 <p class="msg totalwidth grey4">You selected {{currentprovider.username}} to make a deal with.</p>
+                 <p class="small totalwidth grey2">Waiting for {{currentprovider.username}} to respond.</p>
+
+<!--                   <div class="totalwidth horizont center startjust">
+                  <template is="dom-if" if="{{youareowner(item.seeker.pubkey)}}">
+                    <p class="you small bold grey4">you</p>
+                  </template>
+                  <template is="dom-if" if="{{!youareowner(item.seeker.pubkey)}}">
+                    <p class="seeker small reg blue">{{item.seeker.username}} • <span class="bold"><sc-hashtagrep pubkey="{{item.seeker.pubkey}}" hashtagname="{{item.hashtag}}"></sc-hashtagrep></span></p>
+                  </template>
+                    <p class="grey2b light small"><moment-js date="{{item.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
+                    <template is="dom-if" if="{{item.replies}}">
+                      <div class="replies horizont centercenter">
+                        <p class="divider small grey2b light">|</p>
+                        <small class="small grey2b light">{{item.replies.length}}</small>
+                        <iron-icon icon="sc-icons:babble" class="grey2b verysmall">replies</iron-icon>
+                      </div>
+                    </template>
+                  </div>
+                  <p class="msg totalwidth grey4">{{item.msg}}</p> -->
+                </div>
+                <div class="amountstuff vertic end endjust">
+                  <small class="bold yellow">for</small>
+                  <p class="bold yellow">{{item.amount}} SWT</p>
+                </div>
+              </div>
+
+              <div class="lid totalwidth"></div>
+          </div>
+        </template>        
+
+
+
 
       </template>
 
-  </template>
+</template>
+
 
   <script>
     Polymer({
@@ -433,7 +438,7 @@ This components is the representation of a request in the requests-list on sc-ha
 
       observers: [
         '_dealstate(dealstate)',
-        '_item(identity)'
+        '_item(item,identity)'
       ],
 
       properties: {
@@ -473,6 +478,14 @@ This components is the representation of a request in the requests-list on sc-ha
         this.fire('to-detail',this.item);
       },
 
+
+      toDealForTwoSeeker: function(e) {
+        debugger;
+        this.fire('redirect', {
+          target: '/dealfortwoseeker/' + this.item.hashtag + '/' + this.item.id + '/' + this.item.selectedreply
+        });
+      },
+
       toDealForTwoProvider: function(e) {
         this.fire('redirect', {
           target: '/dealfortwoprovider/' + this.item.hashtag + '/' + this.item.id + '/' + this.item.selectedreply
@@ -481,8 +494,14 @@ This components is the representation of a request in the requests-list on sc-ha
 
       toggleItem: function(){
         //console.log('*toggleitem*',this.item);
-        var toggler = this.shadowRoot.getElementById('innerCollapser');
-        // toggler.toggle();
+
+        var toggler = this.shadowRoot.getElementById('repliescollapser');
+        if(this.iamprovider){
+          alert("jooo");
+          this.fire('redirect', {
+            target: '/dealfortwoprovider/' + this.item.hashtag + '/' + this.item.id + '/' + this.item.selectedreply
+          });
+        } else {
 
         if (toggler.opened) {
 
@@ -495,6 +514,8 @@ This components is the representation of a request in the requests-list on sc-ha
           this.customStyle['--my-totalbg-color'] = 'var(--sc-white)';
           this.updateStyles();          
         }
+}
+        // this.checkDealmsg();
 
       },
 
@@ -503,15 +524,15 @@ This components is the representation of a request in the requests-list on sc-ha
 
       },
 
-      _dealstate: function(target){
-        if (target=='dealinit' || target=='dealcreated') {
-          this.dealstatemsg = "- Request is being created";  
-          this.amountopacity = "half"; 
-        } else {
-          this.dealstatemsg = "";
-          this.amountopacity = "full"; 
-        }
-      },
+      // _dealstate: function(target){
+      //   if (target=='dealinit' || target=='dealcreated') {
+      //     this.dealstatemsg = "- Request is being created";  
+      //     this.amountopacity = "half"; 
+      //   } else {
+      //     this.dealstatemsg = "";
+      //     this.amountopacity = "full"; 
+      //   }
+      // },
 
 
       youareowner: function(pubkey){
@@ -524,36 +545,41 @@ This components is the representation of a request in the requests-list on sc-ha
         var self = this;
         var deal = this.item;
 
-        // this.provideravatarhash = deal.replies[i].provider.avatarhash;
-        // this.providerusername = deal.replies[i].provider.username;
-        if(deal.seeker.pubkey == self.identity.pubkey) {
-          this.ownerclass = "blueborder";
-        } else {
-          this.ownerclass = "whiteborder";
-        }
+          if(deal.ireplied) {
+            self.showdealmsg = true;
+            self.dealmessage = "You replied to this.";
+            self.dealmessageclass = "grey4";
+          } else {
+            self.showdealmsg = false;
+          }
+          
 
-        if(deal.selectedreply) {
-          for (var i = 0; i < deal.replies.length; i++) {
-            if (deal.replies[i].id === deal.selectedreply){
-              this.provideravatarhash = deal.replies[i].provider.avatarhash;
-              this.providerusername = deal.replies[i].provider.username;
-            }
-          };
-        }
+          if(deal.selectedreply) {
 
+            var foundReply = deal.replies.find(function(item){
+              return item.id === deal.selectedreply;
+            });
 
-        if(deal.ireplied) {
-          for (var i = 0; i < deal.replies.length; i++) {
+            self.currentprovider = foundReply.provider;
+              if(self.currentprovider.pubkey === self.identity.pubkey) {
+                self.dealmessage = deal.seeker.username+" choose you for this request!";
+                self.dealmessagechosen = "";
+                self.dealmessageclass = "blue";
+                self.iamprovider = true;
+                debugger;
+              } else {
+              self.dealmessage = "";
+              self.dealmessagechosen = deal.seeker.username+" choose "+self.currentprovider.username+" for this request.";                  
+            } 
 
-            if (deal.replies[i].provider.pubkey === self.identity.pubkey){
-              self.yourreply = deal.replies[i].msg;
-              self.youravatarhash = deal.replies[i].provider.avatarhash;
-              self.yourusername = "you";
-            }
+          }
 
-          };     
-        }
       },
+
+
+
+
+
 
     });
   </script>

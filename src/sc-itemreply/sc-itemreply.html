@@ -292,14 +292,16 @@ This component shows a reply on a request.
 
         <div class="flex vertic start startjust">
           <div class="totalwidth horizont center startjust">
-<!--             <template is="dom-if" if="">
-              YOU
+
+            <template is="dom-if" if="{{youareowner(reply.provider.pubkey)}}">
+              <p class="replier small bold grey4">you •
+              <sc-hashtagrep pubkey="{{reply.provider.pubkey}}" hashtagname="{{item.hashtag}}"></sc-hashtagrep></p>
             </template>
 
-            <template is="dom-if" if=""> -->
+            <template is="dom-if" if="{{!youareowner(reply.provider.pubkey)}}">
               <p class="replier small reg blue">{{reply.provider.username}} •
               <span class="bold"><sc-hashtagrep pubkey="{{reply.provider.pubkey}}" hashtagname="{{item.hashtag}}"></sc-hashtagrep></span></p>
-<!--             </template> -->
+            </template>
 
 
             <p class="grey2b light small"><moment-js date="{{reply.replytime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
@@ -724,6 +726,13 @@ This component shows a reply on a request.
       // _log: function(target) {
       //   console.log("*************************** in itemreplyzzzz reply", target, "BTNSHOW",this.showselectbtn);
       // },
+
+
+      youareowner: function(pubkey){
+        //debugger;
+        return (this.identity.pubkey == pubkey);
+      },  
+
 
 
     });
