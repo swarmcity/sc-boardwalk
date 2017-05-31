@@ -438,38 +438,46 @@
     checkOrGiveAllowance: function(from, to, amount, cb) {
       var self = this;
       this.readAllowance(from, to, function(err, allowance) {
-        if (allowance && allowance.toNumber(10) == amount) {
+        if (allowance && allowance.toNumber(10) >= amount) {
+          console.log('Allowance is',allowance.toNumber(10),'is >',amount);
           return cb(null);
         }
         if (allowance && allowance.toNumber(10) != amount) {
-          // there is an allowance but for another amount
-
+          console.log('Allowance is',allowance.toNumber(10),'but needs',amount);
+          // there is an allowance but for a lower amount
+          // we need to first set allowance to 0 and then to amount
+          // (this is a limitation in the MiniMeToken contract)
           self.web3.cached.getGasPrice(function(err, gasPrice) {
+            console.log('setting allowance to 0');
             self.MiniMeContractInstance.approve.estimateGas(to, 0, function(err, gasNeeded) {
               self.MiniMeContractInstance.approve(to, 0, {
                 from: from,
                 gasPrice: gasPrice,
                 gas: gasNeeded
-              }, function(err, result) {
+              }, function(err, txhash) {
                 if (err) {
                   if (cb) {
                     return cb(err);
                   }
                 }
-                console.log('allowance set to 0');
+                console.log('allowance set to 0. txhash=',txhash);
+                console.log('Now setting allowance to',amount);
                 self.MiniMeContractInstance.approve.estimateGas(to, amount, function(err, gasNeeded) {
                   self.MiniMeContractInstance.approve(to, amount, {
                     from: from,
                     gasPrice: gasPrice,
                     gas: gasNeeded
-                  }, function(err, result) {
+                  }, function(err, txhash) {
                     if (err) {
                       if (cb) {
                         return cb(err);
                       }
                     }
-                    console.log('allowance set to', amount);
-                    cb(null, result);
+                    console.log('allowance set to',amount,'. txhash=',txhash);
+
+                    self.web3.waitTx(txhash, function(err, res) {
+                      cb(null, txhash);
+                    });                   
                   });
                 });
               });

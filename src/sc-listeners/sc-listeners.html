@@ -617,6 +617,7 @@ var deal;
               seeker: payload.seeker,
               msg: payload.offer,
               creationtx: payload.offercreationtx,
+              creationallowancetx: payload.offercreationallowancetx,
               amount: payload.offeramount,
               hashtag: payload.offerhashtag,
               offertime: payload.offertime
@@ -625,10 +626,20 @@ var deal;
               this.web3.waitTx(newDeal.creationtx, function(err, res) {
                 self.dispatch('update_deal', {
                   id: newDeal.id,
-                  creationtx_mined: true
+                  creationtx_mined: true,
+                  createsuccess: true,
+                  balance : 6,
                 });
               });
             }
+            if (newDeal.creationallowancetx) {
+              this.web3.waitTx(newDeal.creationallowancetx, function(err, res) {
+                self.dispatch('update_deal', {
+                  id: newDeal.id,
+                  creationallowancetx_mined: true
+                });
+              });
+            }            
             this.dispatch('update_deal', newDeal);
             this.requestsloaded = true;
             break;
@@ -648,17 +659,39 @@ var deal;
             var mutation = {
               id: payload.id,
               providerfundingtx: payload.offerproviderfundingtx,
+              providerfundingallowancetx : payload.offerproviderfundingallowancetx
             };
             this.dispatch('update_deal', mutation);
 
+            // watch for the TX to finish & update the state
             if (mutation.providerfundingtx) {
               this.web3.waitTx(mutation.providerfundingtx, function(err, res) {
+                if (err){
+                  console.log('error in providerfundingtx');
+                  return;
+                }
+                // TODO READ DEAL PARAMETERS NOW.
                 self.dispatch('update_deal', {
                   id: mutation.id,
-                  providerfundingtx_mined: true
+                  providerfundingtx_mined: true,
+                  fundsuccess: true,
+                  balance : 3,
                 });
               });
             }
+            // watch the TX to finish & update the state
+            if (mutation.providerfundingallowancetx) {
+              this.web3.waitTx(mutation.providerfundingallowancetx, function(err, res) {
+                if (err){
+                  console.log('error in providerfundingallowancetx');
+                  return;
+                }
+                self.dispatch('update_deal', {
+                  id: mutation.id,
+                  providerfundingallowancetx_mined: true
+                });
+              });
+            }            
             //this.dispatch('request_provider_funding', payload);
             break;            
           // case 'dealfortwo-approve':
