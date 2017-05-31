@@ -23,6 +23,10 @@
           type: Array,
           statePath: 'deals',
         },
+        notifications: {
+          type: Array,
+          statePath: 'notifications',
+        },
         mydeals: {
           type: Array,
           statePath: 'mydeals',
@@ -52,8 +56,31 @@
                 pubkey: '0x0'
               }
             }
-        }
-      },
+        },
+
+        emptyNotification: {
+          type: Object,
+          value: {
+            read: false,
+            itemhashtag: '',
+            subjectusername: '',
+            msg: '',
+            timestamp: null
+              //creationtx_mined: false,
+              //dealaddress: null,
+              //seekerfundingtx: false,
+              //seekerfundingtx_mined: false,
+              //assigntx: false,
+              //assigntx_mined: false,
+              // providerfundingtx: false,
+              // providerfundingtx_mined: false,
+              // payouttx: false,
+              // payouttx_mined: false,
+              // seeker: {
+              //   pubkey: '0x0'
+              // }
+            }
+        }      },
 
       behaviors: [
         ReduxBehaviour
@@ -82,6 +109,7 @@
           }else{
             deals.push(Object.assign({},this.emptyDeal,mutation));
           }
+
           deals.sort(function(a, b) {
             return b.offertime - a.offertime;
           });          
@@ -250,6 +278,26 @@
 //           };
 //         },
 
+        update_notification: function(mutation){
+
+          let notifications = this.notifications.slice(0);
+          var indexFound = notifications.findIndex(function(item) {
+            return item.id === mutation.id;
+          });
+          if (indexFound > -1) {
+            notifications[indexFound] = Object.assign({},this.emptyDeal, notifications[indexFound], mutation);
+          }else{
+            notifications.push(Object.assign({},this.emptyNotification,mutation));
+          }
+          notifications.sort(function(a, b) {
+            return b.offertime - a.offertime;
+          });          
+          return {
+            type: 'NOTIFICATIONS',
+            notifications: notifications
+          };
+        },
+
         // when a reply comes in to a deal
         request_reply: function(replydata) {
 
@@ -272,10 +320,11 @@
           var foundDeal = deals.findIndex(function(item) {
             return item.id === replydata.parentrequestid;
           });
-
+var deal;
           if (foundDeal > -1) {
-            var deal = Object.assign({},this.emptyDeal,deals[foundDeal]);
+            deal = Object.assign({},this.emptyDeal,deals[foundDeal]);
             if (deal.replies) {
+              // search the reply
               var foundReply = deal.replies.findIndex(function(item) {
                 return item.id === replydata.id;
               });
@@ -300,6 +349,11 @@
             }
             // put deal back into array of deals
             deals[foundDeal] = Object.assign(deal,{ireplied : ireplied});
+
+            // if it was my deal that was replied to, add a notification
+//             if ()
+
+
           } else {
             // this message comes before the deal info. Create an empty placehodler
             var newDeal = {
@@ -307,9 +361,20 @@
               replies: [replyMutation],
               ireplied : replyMutation.ismyreply
             };
-            deals.push(Object.assign({},this.emptyDeal,newDeal));
+            deal = Object.assign({},this.emptyDeal,newDeal);
+            deals.push(deal);
             //console.error('no deal found for reply with ID=', replydata.id)
           }
+//debugger;
+      var n = {
+            id : deal.id,
+            msg: replyMutation.msg,
+            itemhashtag: deal.hashtag,
+            subjectusername: this.identity.username,
+            timestamp: Date.now()
+          };
+          //debugger;
+          this.dispatch('update_notification', n);
 
           deals.sort(function(a, b) {
             return b.offertime - a.offertime;
