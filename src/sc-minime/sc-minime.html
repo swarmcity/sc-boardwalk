@@ -435,14 +435,51 @@
       },
 
       // checks and gives allowance
-      checkOrGiveAllowance: function(from, to, amount, cb) {
-        var self = this;
-        this.readAllowance(from, to, function(err, allowance) {
-          if (allowance && allowance.toNumber(10) >= amount) {
-            return cb(null);
-          }
+    checkOrGiveAllowance: function(from, to, amount, cb) {
+      var self = this;
+      this.readAllowance(from, to, function(err, allowance) {
+        if (allowance && allowance.toNumber(10) == amount) {
+          return cb(null);
+        }
+        if (allowance && allowance.toNumber(10) != amount) {
+          // there is an allowance but for another amount
+
           self.web3.cached.getGasPrice(function(err, gasPrice) {
-            //debugger;
+            self.MiniMeContractInstance.approve.estimateGas(to, 0, function(err, gasNeeded) {
+              self.MiniMeContractInstance.approve(to, 0, {
+                from: from,
+                gasPrice: gasPrice,
+                gas: gasNeeded
+              }, function(err, result) {
+                if (err) {
+                  if (cb) {
+                    return cb(err);
+                  }
+                }
+                console.log('allowance set to 0');
+                self.MiniMeContractInstance.approve.estimateGas(to, amount, function(err, gasNeeded) {
+                  self.MiniMeContractInstance.approve(to, amount, {
+                    from: from,
+                    gasPrice: gasPrice,
+                    gas: gasNeeded
+                  }, function(err, result) {
+                    if (err) {
+                      if (cb) {
+                        return cb(err);
+                      }
+                    }
+                    console.log('allowance set to', amount);
+                    cb(null, result);
+                  });
+                });
+              });
+            });
+          });
+
+
+        } else {
+          // there is no allowance
+          self.web3.cached.getGasPrice(function(err, gasPrice) {
             self.MiniMeContractInstance.approve.estimateGas(to, amount, function(err, gasNeeded) {
               self.MiniMeContractInstance.approve(to, amount, {
                 from: from,
@@ -459,8 +496,10 @@
               });
             });
           });
-        });
-      }
+        }
+
+      });
+    }
 
     });
   </script>

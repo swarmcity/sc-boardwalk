@@ -138,17 +138,29 @@
       makeDealForTwo: function(dealID, from, offerAmount, cb) {
         var self = this;
         this.$.minime.checkOrGiveAllowance(from, this.config.dealfortwofactory, offerAmount, function(err, allowanceortx) {
+          if (err){
+            debugger;
+            return cb(err);
+          }
           self.web3.cached.getGasPrice(function(err, gasPrice) {
-            self.DealForTwoFactoryContractInstance.makeDealForTwo.estimateGas(dealID, offerAmount, function(err, gasNeeded) {
+            if (err){
+              debugger;
+              return cb(err);
+            }
+            self.DealForTwoFactoryContractInstance.makeDealForTwo.estimateGas(dealID, offerAmount, {
+                  from: from
+                }, function(err, gasNeeded) {
+              if (err){
+                debugger;
+                return cb(err);
+              }
               self.DealForTwoFactoryContractInstance.makeDealForTwo.sendTransaction(dealID, offerAmount, {
                 from: from,
                 gasPrice: gasPrice,
                 gas: gasNeeded
               }, function(err, result) {
                 if (err) {
-                  if (cb) {
                     return cb(err);
-                  }
                 }
                 cb(null, result);
                 console.log(err, result);
