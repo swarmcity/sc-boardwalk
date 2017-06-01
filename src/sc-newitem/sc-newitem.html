@@ -368,7 +368,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
       confirmRequest: function() {
 
-      if (this.swtbalance >= this.offeramount) {
+      if (this.swtbalance.toNumber(10) >= parseInt(this.offeramount)) {
 
         var self = this;
 

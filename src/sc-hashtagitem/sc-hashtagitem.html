@@ -286,10 +286,10 @@ This components is the representation of a request in the requests-list on sc-ha
               <p class="seeker small reg blue">{{item.seeker.username}} • <span class="bold"><sc-hashtagrep pubkey="{{item.seeker.pubkey}}" hashtagname="{{item.hashtag}}"></sc-hashtagrep></span></p>
             </template>
               <p class="grey2b light small"><moment-js date="{{item.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
-              <template is="dom-if" if="{{item.replies}}">
+              <template is="dom-if" if="{{itemreplies}}">
                 <div class="replies horizont centercenter">
                   <p class="divider small grey2b light">|</p>
-                  <small class="small grey2b light">{{item.replies.length}}</small>
+                  <small class="small grey2b light">{{itemreplies.length}}</small>
                   <iron-icon icon="sc-icons:babble" class="grey2b verysmall">replies</iron-icon>
                 </div>
               </template>
@@ -316,10 +316,10 @@ This components is the representation of a request in the requests-list on sc-ha
                 </sc-itemreplier>
             </template>
           </template>
-          <template is="dom-if" if="{{item.replies}}">
+          <template is="dom-if" if="{{itemreplies}}">
             <div class="whitespace"></div>
           </template>
-          <template is="dom-repeat" as="currentreply" items="{{item.replies}}">
+          <template is="dom-repeat" as="currentreply" items="{{itemreplies}}">
             <sc-itemreply
             item="{{item}}"
             btnshow="{{youareowner(item.seeker.pubkey)}}"
@@ -349,10 +349,10 @@ This components is the representation of a request in the requests-list on sc-ha
                   <div class="request_info">
                     <p class="seeker small reg blue">{{item.seeker.username}} • <span class="bold"><sc-hashtagrep pubkey="{{item.seeker.pubkey}}" hashtagname="{{item.hashtag}}"></sc-hashtagrep></span></p>
                     <p class="grey2b light small"><moment-js date="{{item.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
-                    <template is="dom-if" if="{{item.replies}}">
+                    <template is="dom-if" if="{{itemreplies}}">
                       <div class="replies horizont centercenter">
                         <p class="divider small grey2b light">|</p>
-                        <small class="small grey2b light">{{item.replies.length}}</small>
+                        <small class="small grey2b light">{{itemreplies.length}}</small>
                         <iron-icon icon="sc-icons:babble" class="grey2b verysmall">replies</iron-icon>
                       </div>
                     </template>
@@ -554,6 +554,11 @@ This components is the representation of a request in the requests-list on sc-ha
             self.showdealmsg = false;
           }
           
+          // this slice is neccesary to prevent a polymer databinding flaw..
+
+          if (deal.replies){
+            this.itemreplies = deal.replies.slice(0);  
+          }
 
           if(deal.selectedreply) {
 
@@ -561,18 +566,19 @@ This components is the representation of a request in the requests-list on sc-ha
               return item.id === deal.selectedreply;
             });
 
-            self.currentprovider = foundReply.provider;
-              if(self.currentprovider.pubkey === self.identity.pubkey) {
-                self.dealmessage = deal.seeker.username+" choose you for this request!";
-                self.dealmessagechosen = "";
-                self.dealmessageclass = "blue";
-                self.iamprovider = true;
-                //debugger;
-              } else {
-              self.dealmessage = "";
-              self.dealmessagechosen = deal.seeker.username+" choose "+self.currentprovider.username+" for this request.";                  
-            } 
-
+            if (foundReply){
+              self.currentprovider = foundReply.provider;
+                if(self.currentprovider.pubkey === self.identity.pubkey) {
+                  self.dealmessage = deal.seeker.username+" choose you for this request!";
+                  self.dealmessagechosen = "";
+                  self.dealmessageclass = "blue";
+                  self.iamprovider = true;
+                  //debugger;
+                } else {
+                self.dealmessage = "";
+                self.dealmessagechosen = deal.seeker.username+" choose "+self.currentprovider.username+" for this request.";                  
+              } 
+            }
           }
 
       },

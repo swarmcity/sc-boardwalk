@@ -65,6 +65,31 @@
               "name": "_dealid",
               "type": "string"
             }, {
+              "name": "_dealowner",
+              "type": "address"
+            }],
+            "name": "readDeal",
+            "outputs": [{
+              "name": "status",
+              "type": "uint8"
+            }, {
+              "name": "commissionValue",
+              "type": "uint256"
+            }, {
+              "name": "dealValue",
+              "type": "uint256"
+            }, {
+              "name": "provider",
+              "type": "address"
+            }],
+            "payable": false,
+            "type": "function"
+          }, {
+            "constant": false,
+            "inputs": [{
+              "name": "_dealid",
+              "type": "string"
+            }, {
               "name": "_offerValue",
               "type": "uint256"
             }],
@@ -113,7 +138,6 @@
             "type": "event"
           }]
         }
-
       },
 
       observers: [
@@ -234,11 +258,16 @@
       readDeal: function(dealId, dealOwner, cb) {
         //debugger;
         var self = this;
-        self.DealForTwoFactoryContractInstance.readDeal.call(dealID, dealOwner, function(err, result) {
-          cb(null, {
+
+        cb(null, {
             balance: 666
           });
-        });
+
+        // self.DealForTwoFactoryContractInstance.readDeal.call(dealId, dealOwner, function(err, result) {
+        //   cb(null, {
+        //     balance: 666
+        //   });
+        // });
       }
       // makeDeal: function(dealID,offerAmount, cb) {
       //   var self = this;
