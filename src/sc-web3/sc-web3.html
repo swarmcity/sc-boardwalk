@@ -95,9 +95,11 @@
               //debugger;
               // Get info about latest Ethereum block
               scweb3_web3.eth.getBlock(blockHash, function(err,block) {
-                //debugger;
+                if (err){
+                  console.log('getBlock failed',err);
+                }
                 --blockCounter;
-                if (block.transactions.indexOf(txHash) > -1) {
+                if (block && block.transactions.indexOf(txHash) > -1) {
                   filter.stopWatching();
                   filter = null;
                   if (callback){

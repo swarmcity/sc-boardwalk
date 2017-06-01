@@ -475,9 +475,9 @@
                     }
                     console.log('allowance set to',amount,'. txhash=',txhash);
 
-                    self.web3.waitTx(txhash, function(err, res) {
+                    //self.web3.waitTx(txhash, function(err, res) {
                       cb(null, txhash);
-                    });                   
+                    //});                   
                   });
                 });
               });

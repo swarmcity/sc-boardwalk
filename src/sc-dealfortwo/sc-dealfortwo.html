@@ -140,22 +140,27 @@
         var extratx = {};
         this.$.minime.checkOrGiveAllowance(from, this.config.dealfortwofactory, offerAmount, function(err, tx) {
           if (err){
-            debugger;
+            //debugger;
+            console.log('giving allowance failed',err);
             return cb(err);
           }
           extratx.allowancetx = tx;
           self.web3.cached.getGasPrice(function(err, gasPrice) {
             if (err){
-              debugger;
+              console.log('getGasPrice failed',err);
               return cb(err);
             }
             self.DealForTwoFactoryContractInstance.makeDealForTwo.estimateGas(dealID, offerAmount, {
                   from: from
                 }, function(err, gasNeeded) {
-              if (err){
-                debugger;
-                return cb(err);
-              }
+              // if (err){
+              //   debugger;
+              //   return cb(err);
+              // }
+              // If the allowance is not OK yet - gas extimation will not work
+              // so use a safe value.
+              gasNeeded = gasNeeded || 175000;
+
               self.DealForTwoFactoryContractInstance.makeDealForTwo.sendTransaction(dealID, offerAmount, {
                 from: from,
                 gasPrice: gasPrice,
