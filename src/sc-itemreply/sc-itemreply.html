@@ -220,6 +220,16 @@ This component shows a reply on a request.
       }
 
 
+      .reply_info {
+        width: 100%;
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        @apply(--layout-start-justified);
+        @apply(--layout-wrap);
+      }
+
+
+
 
       @media all and (min-width: 0) and (max-width: 420px) { 
 
@@ -291,7 +301,7 @@ This component shows a reply on a request.
         </sc-avatar>
 
         <div class="flex vertic start startjust">
-          <div class="totalwidth horizont center startjust">
+          <div class="reply_info">
 
             <template is="dom-if" if="{{youareowner(reply.provider.pubkey)}}">
               <p class="replier small bold grey4">you •

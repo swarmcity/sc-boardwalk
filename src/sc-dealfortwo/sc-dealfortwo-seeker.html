@@ -534,6 +534,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       .tophalf h1 {
           font-size: 32px;
           line-height: 38px;
+          max-width: 100%;
         }
 
       .confirmbtns {
@@ -864,6 +865,10 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                   </template>
 
                   <template is="dom-if" if="{{indeal}}">
+
+                    <template is="dom-if" if="{{!phoneview}}">
+                      <div class="flex"></div>
+                    </template>
                     <div class="confirmbtns">
                       <paper-button class="confirmbtn payoutbtn green white shadow" noink>Payout
                         <iron-icon icon="sc-icons:v" class="medium white" on-tap="approveDeal"></iron-icon>
@@ -1010,11 +1015,11 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           value: false           
         },
 
-        assignmined: {
-          type: Boolean,
-          value: false,
-          observer: '_whatismined'           
-        },
+        // assignmined: {
+        //   type: Boolean,
+        //   value: false,
+        //   observer: '_whatismined'           
+        // },
 
         providerfundingmined: {
           type: Boolean,
@@ -1491,23 +1496,23 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       },
 
 
-      _whatismined:function(){
-        if(this.assignmined) {
-          this.steponestate = "stepdone";
-        };
+      // _whatismined:function(){
+      //   if(this.assignmined) {
+      //     this.steponestate = "stepdone";
+      //   };
 
-        if(this.providerfundingmined) {
-          this.steptwostate = "stepdone";
-        };    
+      //   if(this.providerfundingmined) {
+      //     this.steptwostate = "stepdone";
+      //   };    
 
-        if (this.assignmined && this.providerfundingmined) {
-          this.bottombg = 'greenback';
-          this.indeal = true;
-        } else {
-          this.bottombg = 'blueback';
-          this.indeal = false;
-        }
-      },
+      //   if (this.assignmined && this.providerfundingmined) {
+      //     this.bottombg = 'greenback';
+      //     this.indeal = true;
+      //   } else {
+      //     this.bottombg = 'blueback';
+      //     this.indeal = false;
+      //   }
+      // },
 
 
 
@@ -1547,17 +1552,21 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           this.provideraccept = true;
         }
 
-        // assigntx_mined check
-        if(this.requestdata.assigntx_mined) {
-         // debugger;
-          this.assignmined = true;
-          // console.log("REQUEST::: assigntx_mined", this.requestdata.assigntx_mined);
-        } 
+        // // assigntx_mined check
+        // if(this.requestdata.assigntx_mined) {
+        //  // debugger;
+        //   this.assignmined = true;
+        //   // console.log("REQUEST::: assigntx_mined", this.requestdata.assigntx_mined);
+        // } 
         // providerfundingtx_mined check
         if(this.requestdata.providerfundingtx_mined) {
           //debugger;
-          this.providerfundingmined = true;
-        } 
+          this.indeal = true;
+          this.bottombg = 'greenback';
+        } else {
+          this.bottombg = 'blueback';
+          this.indeal = false;          
+        }
       },
 
       toDealchat: function(){
