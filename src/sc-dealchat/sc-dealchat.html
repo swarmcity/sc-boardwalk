@@ -31,6 +31,7 @@ This is dealchat.
         @apply(--layout-horizontal);
         @apply(--layout-center-center);
         background-color: rgba(0,0,0,0.035);
+        border: 1px solid red;
       }
 
       .dealchat_container {
@@ -45,13 +46,11 @@ This is dealchat.
         @apply(--layout-start-justified);        
         @apply(--layout-start); 
         overflow-y:scroll; 
-/*        height: 80%;*/
         box-sizing:border-box;
         padding: 25px 25px 25px 25px;
       }
 
       .msg_inputter {
-        /*height: 20%;*/
         box-sizing:border-box;
         padding: 10px 25px 25px 25px;
       }
@@ -62,7 +61,7 @@ This is dealchat.
       }
 
     </style>
-    <sc-shh web3="{{shhweb3}}"></sc-shh>
+<!--     <sc-shh web3="{{shhweb3}}"></sc-shh>
     <div class="dealchat_container vertic start startjust">
       <div class="msg_canvas totalwidth flex" on-tap="hanksaysfirstwords">
         <template is="dom-repeat" items="{{dummychatballoons}}">
@@ -85,8 +84,13 @@ This is dealchat.
       </div>
 
     </div>
-
-
+ -->
+    <div class="dealchat_container vertic start startjust">
+      <p></p>
+        <template is="dom-repeat" items="{{dummychatballoons}}">
+          <sc-dealchatitem item="[[item]]" pubk="{{identity.pubkey}}" class="totalwidth"></sc-dealchatitem>
+        </template>
+</div>
 
   </template>
 
@@ -96,7 +100,7 @@ This is dealchat.
       is: 'sc-dealchat',
 
       behaviors: [
-        Polymer.NeonSharedElementAnimatableBehavior,
+        // Polymer.NeonAnimatableBehavior,
         ReduxBehaviour
       ],
 
