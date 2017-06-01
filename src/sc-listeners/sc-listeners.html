@@ -3,10 +3,11 @@
 <link rel="import" href="../sc-shh/sc-shh.html">
 <link rel="import" href="../sc-web3/sc-web3.html">
 <link rel="import" href="../sc-config/sc-config.html">
-
+<link rel="import" href="../sc-dealfortwo/sc-dealfortwo.html">
 
 <dom-module id="sc-listeners">
   <template>
+    <sc-dealfortwo id="dealfortwo"></sc-dealfortwo>
     <sc-web3 id="web3" web3="{{web3}}"></sc-web3>
     <sc-shh web3="{{shhweb3}}"></sc-shh>  
     <sc-config config="{{config}}"></sc-config>
@@ -321,7 +322,8 @@
           var foundDeal = deals.findIndex(function(item) {
             return item.id === replydata.parentrequestid;
           });
-var deal;
+          
+          var deal;
           if (foundDeal > -1) {
             deal = Object.assign({},this.emptyDeal,deals[foundDeal]);
             if (deal.replies) {
@@ -545,8 +547,6 @@ var deal;
 
       },
 
-
-
       stopFiltering: function(options,cb){
         this.options
       },
@@ -625,12 +625,24 @@ var deal;
             };
             if (newDeal.creationtx) {
               this.web3.waitTx(newDeal.creationtx, function(err, res) {
+
+
                 self.dispatch('update_deal', {
                   id: newDeal.id,
                   creationtx_mined: true,
                   createsuccess: true,
                   balance : 6,
                 });
+
+                self.$.dealfortwo.readDeal(newDeal.id,newDeal.seeker.pubkey,function(err,data){
+                  self.dispatch('update_deal', {
+                    id: newDeal.id,
+                    dealdata : data,
+                  });
+//                  debugger;
+                });
+
+
               });
             }
             if (newDeal.creationallowancetx) {

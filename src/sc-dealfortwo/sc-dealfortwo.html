@@ -230,6 +230,16 @@
         });
 
       },
+
+      readDeal: function(dealId, dealOwner, cb) {
+        //debugger;
+        var self = this;
+        self.DealForTwoFactoryContractInstance.readDeal.call(dealID, dealOwner, function(err, result) {
+          cb(null, {
+            balance: 666
+          });
+        });
+      }
       // makeDeal: function(dealID,offerAmount, cb) {
       //   var self = this;
 
