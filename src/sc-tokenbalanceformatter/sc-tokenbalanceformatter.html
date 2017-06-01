@@ -1,0 +1,20 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="sc-tokenbalanceformatter">
+<template><span>{{formattedvalue}} {{this.denomination}}</span></template>
+  <script>
+    Polymer({
+      is: 'sc-tokenbalanceformatter',
+      properties: {
+        value: {
+          type: Number,
+          observer: '_value'
+        },
+      },
+      _value: function(){
+        this.formattedvalue = this.value;
+        this.denomination = 'SWT';  
+      }
+    });
+  </script>
+</dom-module>
