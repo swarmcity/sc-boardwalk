@@ -188,6 +188,7 @@
           extratx.allowancetx = tx;
           self.web3.cached.getGasPrice(function(err, gasPrice) {
             self.DealForTwoFactoryContractInstance.fundDeal.estimateGas(dealID, dealOwner, function(err, gasNeeded) {
+              gasNeeded = gasNeeded || 175000;
               self.DealForTwoFactoryContractInstance.fundDeal.sendTransaction(dealID, dealOwner, {
                 from: from, //self.identity.pubkey,
                 gasPrice: gasPrice,

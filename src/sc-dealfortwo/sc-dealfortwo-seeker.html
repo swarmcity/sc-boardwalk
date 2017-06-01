@@ -23,6 +23,7 @@
 <link rel="import" href="../sc-dealfortwo/sc-dealfortwo.html">
 <link rel="import" href="../sc-listeners/sc-listeners.html">
 <link rel="import" href="../sc-hashtagitem/sc-hashtagitem.html">
+<link rel="import" href="../sc-dealchat/sc-dealchat.html">
 
 
 <!--<link rel="import" href="../sc-balance/sc-balance.html"> -->
@@ -848,7 +849,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                    
                 <template is="dom-if" if="{{!phoneview}}">
                   <div class="chatbtn">
-                    <paper-icon-button class="chatbtn_iconbtn shadow blue grey4" icon="sc-icons:babble"></paper-icon-button>
+                    <paper-icon-button class="chatbtn_iconbtn shadow blue grey4" icon="sc-icons:babble" on-tap="toDealchat"></paper-icon-button>
                   </div>
                 </template>
 
@@ -873,7 +874,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                 </template>
                 <template is="dom-if" if="{{phoneview}}">
                   <div class="chatbtn">
-                    <paper-button noink class="chatbtn_big">
+                    <paper-button  on-tap="toDealchat" noink class="chatbtn_big">
                     Chat with [[replydata.provider.username]]
                     <iron-icon class="grey4 small" icon="sc-icons:babble">chat</iron-icon>
                   </paper-button>
@@ -916,7 +917,10 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           </neon-animatable> -->
 
           <neon-animatable data-action="dealchat">
+            <sc-dealchat></sc-dealchat>
+
           </neon-animatable>
+
 
         </neon-animated-pages>
 
@@ -1568,7 +1572,9 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         } 
       },
 
-
+      toDealchat: function(){
+        this.selecteddealpage = 'dealchat';
+      },
 
 
     });

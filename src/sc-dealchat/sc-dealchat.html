@@ -8,7 +8,8 @@
 
 <link rel="import" href="../sc-redux/sc-redux.html">
 <link rel="import" href="../sc-avatar/sc-avatar.html">
-<link rel="import" href="sc-dealchatitem.html">
+<link rel="import" href="./sc-dealchatitem.html">
+<link rel="import" href="../sc-shh/sc-shh.html">
 
 <!--
 `sc-dealchat`
@@ -66,7 +67,7 @@ This is dealchat.
 
 
     </style>
-
+    <sc-shh web3="{{shhweb3}}"></sc-shh>
     <div class="dealchat_container vertic start startjust">
       <div class="msg_canvas totalwidth flex" on-tap="hanksaysfirstwords">
         <template is="dom-repeat" items="{{dummychatballoons}}">
@@ -197,9 +198,10 @@ This is dealchat.
         };
 
         this.unshift('dummychatballoons',newballoon);
-        this.msg = '';        
+        this.msg = '';   
+        var self = this;     
         setTimeout(function() {
-            var msginput = this.shadowRoot.getElementById('msginput');
+            var msginput = self.shadowRoot.getElementById('msginput');
             msginput.focus();
         }, 5);
       },
