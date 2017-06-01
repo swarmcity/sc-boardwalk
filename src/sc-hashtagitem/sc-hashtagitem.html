@@ -303,21 +303,13 @@ This components is the representation of a request in the requests-list on sc-ha
         </div>
 
 
-            <template is="dom-if" if="{{showdealmsg}}">
-<!--               <iron-collapse id="dealmessagecollapser" class="totalwidth"> -->
-                <div class="dealmessage totalwidth horizontal center endjust">
-                  <p class$="small {{dealmessageclass}} bold">{{dealmessage}}</p>
-                  <!-- <sc-avatar
-                    ipfshash="[[identity.avatarhash]]"
-                    size="verysmall"
-                    class="myavatar">
-                  </sc-avatar> -->
-                </div>
-<!--               </iron-collapse> -->
-            </template>
+        <template is="dom-if" if="{{showdealmsg}}">
+          <div class="dealmessage totalwidth horizontal center endjust">
+            <p class$="small {{dealmessageclass}} bold">{{dealmessage}}</p>
+          </div>
+        </template>
 
         <iron-collapse id="repliescollapser" class="totalwidth">
-
           <template is="dom-if" if="{{!youareowner(item.seeker.pubkey)}}">
             <template is="dom-if" if="{{!item.ireplied}}">
                 <sc-itemreplier itemdata="{{item}}">
@@ -327,7 +319,6 @@ This components is the representation of a request in the requests-list on sc-ha
           <template is="dom-if" if="{{item.replies}}">
             <div class="whitespace"></div>
           </template>
-          <!-- <div class="dottedline"></div> -->
           <template is="dom-repeat" as="currentreply" items="{{item.replies}}">
             <sc-itemreply
             item="{{item}}"
@@ -336,11 +327,11 @@ This components is the representation of a request in the requests-list on sc-ha
            >
             </sc-itemreply>
           </template>
-
         </iron-collapse>
 
         <div class="lid totalwidth"></div>
       </div>
+
       </template>
 
 
@@ -401,8 +392,19 @@ This components is the representation of a request in the requests-list on sc-ha
                 </sc-avatar>
 
                 <div class="flex vertic start startjust">
-                 <p class="msg totalwidth grey4">You selected {{currentprovider.username}} to make a deal with.</p>
-                 <p class="small totalwidth grey2">Waiting for {{currentprovider.username}} to respond.</p>
+
+                  <template is="dom-if" if="{{_is(dealstate,'created')}}">
+                   <p class="msg totalwidth grey4">You selected {{currentprovider.username}} to make a deal with.</p>
+                   <p class="small totalwidth grey2">Waiting for {{currentprovider.username}} to respond.</p>
+                 </template>
+
+                  <template is="dom-if" if="{{_is(dealstate,'providerfundingtx')}}">
+                   <p class="msg totalwidth grey4">{{currentprovider.username}} has accept a deal with you.</p>
+                  </template>
+
+                  <template is="dom-if" if="{{_is(dealstate,'indeal')}}">
+                    <p>jup</p>
+                  </template>
 
 <!--                   <div class="totalwidth horizont center startjust">
                   <template is="dom-if" if="{{youareowner(item.seeker.pubkey)}}">
@@ -446,7 +448,7 @@ This components is the representation of a request in the requests-list on sc-ha
       is: 'sc-hashtagitem',
 
       observers: [
-        '_dealstate(dealstate)',
+        '_log(dealstate)',
         '_item(item,identity)'
       ],
 
@@ -489,7 +491,6 @@ This components is the representation of a request in the requests-list on sc-ha
 
 
       toDealForTwoSeeker: function(e) {
-        debug
         this.fire('redirect', {
           target: '/dealfortwoseeker/' + this.item.hashtag + '/' + this.item.id + '/' + this.item.selectedreply
         });
@@ -532,15 +533,7 @@ This components is the representation of a request in the requests-list on sc-ha
 
       },
 
-      // _dealstate: function(target){
-      //   if (target=='dealinit' || target=='dealcreated') {
-      //     this.dealstatemsg = "- Request is being created";  
-      //     this.amountopacity = "half"; 
-      //   } else {
-      //     this.dealstatemsg = "";
-      //     this.amountopacity = "full"; 
-      //   }
-      // },
+
 
 
       youareowner: function(pubkey){
@@ -585,9 +578,21 @@ This components is the representation of a request in the requests-list on sc-ha
       },
 
 
+      _log: function(target){
+          console.log("HAZ THIS in hashtagitem??!!!!",target);
+      },
 
 
 
+      /**
+      * '_is', a function to bind a template to a certain value of a variable.
+      */
+      _is: function(a, b) {
+        if (b === undefined){
+          b = true;
+        }
+        return a === b;
+      },
 
     });
   </script>

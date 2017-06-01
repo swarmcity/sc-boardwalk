@@ -13,10 +13,7 @@
           type: String,
           notify: true
         },
-        seekerstate: {
-          type: String,
-          notify: true
-        },
+
         providerstate: {
           type: String,
           notify: true
@@ -26,45 +23,39 @@
       _deal: function(){
 
         var newdealstate = 'init';
-        var newseekerstate = 'init';
         var newproviderstate = 'init';
 
         if (this.deal.creationtx){
           newdealstate = 'init';
         }
-        if (this.deal.dealaddress){
+        if (this.deal.createsuccess){
           newdealstate = 'created';
         }
-        if (this.deal.seekerfundingtx){
-          newdealstate = 'seekerfunding';
-        }
-        if (this.deal.seekerfundingtx_mined){
-          newdealstate = 'seekerfunded';
-        }
-        if (this.deal.assigntx){
-          newseekerstate = 'accepted';
-        }
-        if (this.deal.assigntx_mined){
-          newseekerstate = 'mined';
-        }
+        // if (this.deal.fundsuccess){
+        //   newdealstate = 'seekerfunded';
+        // }
+
         if (this.deal.providerfundingtx){
           newproviderstate = 'accepted';
+          newdealstate = 'provideraccepted';
         }
         if (this.deal.providerfundingtx_mined){
           newproviderstate = 'mined';
-        }
-
-        if (this.deal.providerfundingtx && this.deal.assigntx){
-          newdealstate = 'bothaccepted';
-        }
-
-        if (this.deal.providerfundingtx_mined && this.deal.assigntx_mined){
           newdealstate = 'indeal';
         }
 
+        if (this.deal.payouttx){
+          newdealstate = 'payout';
+        }
+        if (this.deal.payouttx_mined){
+          newproviderstate = 'payoutmined';
+        }
+
+
         this.dealstate = newdealstate;
-        this.seekerstate = newseekerstate;
         this.providerstate = newproviderstate;
+
+        console.log("uit dealstate",this.deal);
 
       }
     });
