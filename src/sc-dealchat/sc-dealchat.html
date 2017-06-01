@@ -63,8 +63,8 @@ This is dealchat.
     </style>
 <!--     <sc-shh web3="{{shhweb3}}"></sc-shh>
     <div class="dealchat_container vertic start startjust">
-      <div class="msg_canvas totalwidth flex" on-tap="hanksaysfirstwords">
-        <template is="dom-repeat" items="{{dummychatballoons}}">
+      <div class="msg_canvas totalwidth flex">
+        <template is="dom-repeat" items="{{chatballoons}}">
           <sc-dealchatitem item="[[item]]" pubk="{{identity.pubkey}}" class="totalwidth"></sc-dealchatitem>
         </template>
       </div>
@@ -77,10 +77,10 @@ This is dealchat.
         </sc-avatar>
 
         <iron-a11y-keys id="a11y" target="[[target]]" keys="enter"
-          on-keys-pressed="addDummy"></iron-a11y-keys>
+          on-keys-pressed="postMsg"></iron-a11y-keys>
 
-        <paper-input id="msginput" value="{{msg::input}}" autofocus class="flex"></paper-input>
-        <paper-icon-button disabled="{{_is(msg,'')}}" on-tap="addDummy" class="grey1back blue shadow" icon="sc-icons:v">say!</paper-icon-button>
+        <paper-input id="msginput" autofocus class="flex"></paper-input>
+        <paper-icon-button disabled="{{_is(msg,'')}}" on-tap="postMsg" class="grey1back blue shadow" icon="sc-icons:v">say!</paper-icon-button>
       </div>
 
     </div>
@@ -129,42 +129,76 @@ This is dealchat.
         '_startListener(shhweb3)',
       ],
 
-      _startListener: function(){
+      _startListener: function() {
 
-        if (!this.sshweb3 || !this.topic){
+        if (!this.shhweb3 || !this.topic) {
           return;
         }
 
-        debugger;
+        //debugger;
+        var self = this;
+        var mytopics = [
+          self.shhweb3.encodetopic(this.topicPrefix + this.topic),
+        ];
+
+        this.filter = self.shhweb3.shh.filter({
+          "topics": mytopics,
+        });
+
+        console.log("sc-listeners: channelswitch, start listening to", mytopics);
+        this.filter.watch(this._processmessage.bind(this));
 
       },
 
-      ready: function(){
-        this.msg = '';        
-        this.dummychatballoons = [
-          {
-              chatteravatar: 'QmRzCWs6F4LiEC4umwLiMB5C6MAo1bKQa4frCC1iKvntme',
-              chattername: 'Frank David',
-              chatterpubkey: '2',
-              chatmsg: 'This is balloon 1!',
-              chattime: 'today at 16:33'              
-            },
-          {
-              chatteravatar: 'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
-              chattername: 'Hank Moovy',
-              chatterpubkey: '3',
-              chatmsg: 'This is balloon 2!',
-              chattime: 'today at 21:05'             
-            },
-          {
-              chatteravatar: 'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
-              chattername: 'Hank Moovy',
-              chatterpubkey: '3',
-              chatmsg: 'This is balloon 2!',
-              chattime: 'today at 21:05'             
-            },
+      _processmessage: function(error, result) {
+        //debugger;
+        var payload;
+        var self = this;
+        try {
+          payload = JSON.parse(self.shhweb3.toAscii(result.payload));
+          console.log('incoming in whisperer: shhweb3 ', payload);
 
-        ];
+          //this.push('deals',payload);
+        } catch (e) {
+          console.log(e);
+        }
+
+        switch (payload.type) {
+          case 'chatmsg':
+            this.unshift('chatballoons',payload.msg);
+            //this.push('chatballoons',payload.msg);
+            break;
+        }
+      },
+
+      ready: function(){
+        this.msg = '';  
+        this.chatballoons = [];  
+        this.topicPrefix = "1-";    
+        // this.chatballoons = [
+        //   {
+        //       chatteravatar: 'QmRzCWs6F4LiEC4umwLiMB5C6MAo1bKQa4frCC1iKvntme',
+        //       chattername: 'Frank David',
+        //       chatterpubkey: '2',
+        //       chatmsg: 'This is balloon 1!',
+        //       chattime: 'today at 16:33'              
+        //     },
+        //   {
+        //       chatteravatar: 'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
+        //       chattername: 'Hank Moovy',
+        //       chatterpubkey: '3',
+        //       chatmsg: 'This is balloon 2!',
+        //       chattime: 'today at 21:05'             
+        //     },
+        //   {
+        //       chatteravatar: 'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
+        //       chattername: 'Hank Moovy',
+        //       chatterpubkey: '3',
+        //       chatmsg: 'This is balloon 2!',
+        //       chattime: 'today at 21:05'             
+        //     },
+
+        // ];
 
 
 
@@ -203,72 +237,90 @@ This is dealchat.
         return a === b;
       },
 
-      addDummy: function(){
-
-          var options = {
-            "from": self.shhweb3.identity,
-            "topics": topics,
-            "payload": self.shhweb3.fromAscii(JSON.stringify(message)),
-            "ttl": 60 * 60 * 24,
-            "priority": 1000
-          };
-
-          console.log('posting to topics', topics);
-
-          self.shhweb3.shh.post(options, function(err, res) {
-            if (!err) {
-              console.log('sc->dealfortwo_seeker -> Reply posted');
-            } else {
-              console.log('sc-dealfortwo_seeker -> whisper error:', err);
-            }
-          });
+      postMsg: function(e) {
+        //debugger;
+        var self = this;
+        var message = {
+          type: 'chatmsg',
+          msg: {
+            chatteravatar: this.identity.avatarhash,
+            chattername: this.identity.username,
+            chatterpubkey: this.pubkey,
+            chatmsg: this.$.msginput.value,
+            chattime: Date.now()
+          }
+        };
+        var topics = [
+          self.shhweb3.encodetopic(this.topicPrefix + this.topic),
+        ];
 
 
-        console.log("** -- ",this.identity);
-        var newballoon = {
-          chatteravatar: this.identity.avatarhash,
-          chattername: this.identity.username,
-          chatterpubkey: this.pubkey,
-          chatterrep: '0',
-          chatmsg: this.msg,
-          chattime: '21:05'
+        var options = {
+          "from": self.shhweb3.identity,
+          "topics": topics,
+          "payload": self.shhweb3.fromAscii(JSON.stringify(message)),
+          "ttl": 60 * 60 * 24,
+          "priority": 1000
         };
 
-        this.unshift('dummychatballoons',newballoon);
-        this.msg = '';   
-        var self = this;     
-        setTimeout(function() {
-            var msginput = self.shadowRoot.getElementById('msginput');
-            msginput.focus();
-        }, 5);
+        console.log('posting to topics', topics);
+
+        self.shhweb3.shh.post(options, function(err, res) {
+          if (!err) {
+            console.log('sc->dealfortwo_seeker -> Reply posted');
+          } else {
+            console.log('sc-dealfortwo_seeker -> whisper error:', err);
+          }
+        });
+
+        this.$.msginput.value = "";
+        this.$.msginput.focus();
+
+        // console.log("** -- ",this.identity);
+        // var newballoon = {
+        //   chatteravatar: this.identity.avatarhash,
+        //   chattername: this.identity.username,
+        //   chatterpubkey: this.pubkey,
+        //   chatterrep: '0',
+        //   chatmsg: this.msg,
+        //   chattime: '21:05'
+        // };
+
+        // this.unshift('chatballoons',newballoon);
+        // this.msg = '';
+        // var self = this;
+        // setTimeout(function() {
+        //   var msginput = self.shadowRoot.getElementById('msginput');
+        //   msginput.focus();
+        // }, 5);
       },
 
 
-      hanksaysfirstwords: function() {
-        var hanksfirstwords =   {  
-              chatteravatar: 'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
-              chattername: 'Hank Moovy',
-              chatterrep: '4',
-              chatterpubkey: '2',
-              chatmsg: 'Hi there!',
-              chattime: '21:05'             
-            }
+      // hanksaysfirstwords: function() {
+      //   var hanksfirstwords =   {  
+      //         chatteravatar: 'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
+      //         chattername: 'Hank Moovy',
+      //         chatterrep: '4',
+      //         chatterpubkey: '2',
+      //         chatmsg: 'Hi there!',
+      //         chattime: '21:05'             
+      //       }
 
-        this.unshift('dummychatballoons',hanksfirstwords);
-      },
+      //   this.unshift('chatballoons',hanksfirstwords);
+      // },
 
-      tempfunction: function() {
-        var newballoonhank = {
-          chatteravatar: 'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
-          chattername: 'Hank Moovy',
-          chatterpubkey: '2',
-          chatterrep: '4',
-          chatmsg: "Yes, that's perfect. See you there in 5?",
-          chattime: '21:05'
-        };
+      // tempfunction: function() {
+      //   var newballoonhank = {
+      //     chatteravatar: 'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
+      //     chattername: 'Hank Moovy',
+      //     chatterpubkey: '2',
+      //     chatterrep: '4',
+      //     chatmsg: "Yes, that's perfect. See you there in 5?",
+      //     chattime: '21:05'
+      //   };
 
-        this.unshift('dummychatballoons',newballoonhank);
-      },
+      //   this.unshift('chatballoons',newballoonhank);
+      // },
 
 
 
