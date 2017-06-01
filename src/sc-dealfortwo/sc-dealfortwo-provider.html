@@ -709,7 +709,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                     </div>
                   </template>
                   <template is="dom-if" if="{{indeal}}">
-                    <h1 class=""><span class="bold"></span>You're in deal with <span class="light blue replyer_username">{{requestdata.seeker.username}}</span>.</h1>
+                    <h1 class=""><span class="bold">You're in deal</span> with <span class="light blue replyer_username">{{requestdata.seeker.username}}</span>.</h1>
                   </template>
 
                     <!-- <p class="grey2b">A deal is being created.</p> -->
@@ -918,17 +918,17 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           value: false           
         },
 
-        assignmined: {
-          type: Boolean,
-          value: false,
-          observer: '_whatismined'           
-        },
+        // assignmined: {
+        //   type: Boolean,
+        //   value: false,
+        //   observer: '_whatismined'           
+        // },
 
-        providerfundingmined: {
-          type: Boolean,
-          value: false  , 
-          observer: '_whatismined'           
-        },
+        // providerfundingmined: {
+        //   type: Boolean,
+        //   value: false  , 
+        //   observer: '_whatismined'           
+        // },
 
         steponestate: {
           type: String,
@@ -1109,23 +1109,23 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       },
 
 
-      _whatismined:function(){
-        if(this.assignmined) {
-          this.steponestate = "stepdone";
-        };
+      // _whatismined:function(){
+      //   if(this.assignmined) {
+      //     this.steponestate = "stepdone";
+      //   };
 
-        if(this.providerfundingmined) {
-          this.steptwostate = "stepdone";
-        };    
+      //   if(this.providerfundingmined) {
+      //     this.steptwostate = "stepdone";
+      //   };    
 
-        if (this.assignmined && this.providerfundingmined) {
-          this.bottombg = 'greenback';
-          this.indeal = true;
-        } else {
-          this.bottombg = 'blueback';
-          this.indeal = false;
-        }
-      },
+      //   if (this.assignmined && this.providerfundingmined) {
+      //     this.bottombg = 'greenback';
+      //     this.indeal = true;
+      //   } else {
+      //     this.bottombg = 'blueback';
+      //     this.indeal = false;
+      //   }
+      // },
 
 
       showDetails: function(){
@@ -1209,9 +1209,12 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         } 
         // providerfundingtx_mined check
         if(this.requestdata.providerfundingtx_mined) {
-          //debugger;
-          this.providerfundingmined = true;
-        } 
+          this.bottombg = 'greenback';
+          this.indeal = true;
+        } else {
+          this.bottombg = 'blueback';
+          this.indeal = false;
+        }
       },
 
 

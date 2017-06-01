@@ -233,6 +233,15 @@ This components is the representation of a request in the requests-list on sc-ha
 
       }
 
+      .request_info {
+        width: 100%;
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        @apply(--layout-start-justified);
+        @apply(--layout-wrap);
+      }
+
+
 /*      .blueborder {
         border-left: 2px solid var(--sc-blue);
       }
@@ -269,7 +278,7 @@ This components is the representation of a request in the requests-list on sc-ha
             size="small">
           </sc-avatar>
           <div class="flex vertic start startjust">
-            <div class="totalwidth horizont center startjust">
+            <div class="request_info">
             <template is="dom-if" if="{{youareowner(item.seeker.pubkey)}}">
               <p class="you small bold grey4">you</p>
             </template>
@@ -346,7 +355,7 @@ This components is the representation of a request in the requests-list on sc-ha
                   size="small">
                 </sc-avatar>
                 <div class="flex vertic start startjust">
-                  <div class="totalwidth horizont center startjust">
+                  <div class="request_info">
                     <p class="seeker small reg blue">{{item.seeker.username}} • <span class="bold"><sc-hashtagrep pubkey="{{item.seeker.pubkey}}" hashtagname="{{item.hashtag}}"></sc-hashtagrep></span></p>
                     <p class="grey2b light small"><moment-js date="{{item.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
                     <template is="dom-if" if="{{item.replies}}">
@@ -497,7 +506,6 @@ This components is the representation of a request in the requests-list on sc-ha
 
         var toggler = this.shadowRoot.getElementById('repliescollapser');
         if(this.iamprovider){
-          alert("jooo");
           this.fire('redirect', {
             target: '/dealfortwoprovider/' + this.item.hashtag + '/' + this.item.id + '/' + this.item.selectedreply
           });
