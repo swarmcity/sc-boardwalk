@@ -1127,11 +1127,11 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
         this.$.dealfortwo.payout(self.requestdata.id,self.identity.pubkey, function(err, payoutTx) {
 
-          if (err) {
-            if (cb) {
-              return cb(err);
-            }
-          }
+          // if (err) {
+          //   if (cb) {
+          //     return cb(err);
+          //   }
+          // }
 
 
           var message = {
@@ -1167,7 +1167,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
             }
           });
 
-          cb(null, result);
+          //cb(null, result);
           console.log(err, result);
 
         });
