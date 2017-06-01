@@ -207,7 +207,8 @@
         });
       },
 
-      payout: function(dealID cb) {
+      payout: function(dealID,from, cb) {
+        debugger;
         var self = this;
         self.web3.cached.getGasPrice(function(err, gasPrice) {
           self.DealForTwoFactoryContractInstance.payout.estimateGas(dealID, function(err, gasNeeded) {

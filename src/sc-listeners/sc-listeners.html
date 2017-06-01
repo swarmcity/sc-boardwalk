@@ -695,9 +695,26 @@ var deal;
             }            
             //this.dispatch('request_provider_funding', payload);
             break;            
-          // case 'dealfortwo-approve':
-          //   this.dispatch('request_approve', payload);
-          //   break;   
+          case 'dealfortwo-approve':
+           var mutation = {
+              id: payload.id,
+              payouttx: payload.transactionhash,
+            };
+            this.dispatch('update_deal', mutation);
+            if (mutation.payouttx) {
+              this.web3.waitTx(mutation.payouttx, function(err, res) {
+                if (err){
+                  console.log('error in payouttx');
+                  return;
+                }
+                self.dispatch('update_deal', {
+                  id: mutation.id,
+                  payouttx_mined: true,
+                  payoutsuccess: true,
+                });
+              });
+            }                 
+            break;   
           default:
           //debugger;
             console.log('unknown message:',payload);

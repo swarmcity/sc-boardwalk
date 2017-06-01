@@ -113,6 +113,25 @@ This is dealchat.
           }
         },
 
+        topic: {
+          type: String,
+          observer: '_startListener'
+        }
+
+      },
+
+      observers: [
+        '_startListener(shhweb3)',
+      ],
+
+      _startListener: function(){
+
+        if (!this.sshweb3 || !this.topic){
+          return;
+        }
+
+        debugger;
+
       },
 
       ready: function(){

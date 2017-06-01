@@ -19,7 +19,6 @@
 <link rel="import" href="../sc-helpers/sc-helpers.html">
 <link rel="import" href="../sc-hashtagcontract/sc-hashtagcontract.html">
 <link rel="import" href="../sc-dealfortwo/sc-dealfortwo.html">
-<link rel="import" href="../sc-dealchat/sc-dealchat.html">
 <link rel="import" href="../sc-listeners/sc-listeners.html">
 
 <!--<link rel="import" href="../sc-balance/sc-balance.html"> -->
@@ -846,8 +845,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           </neon-animatable>
 
           <neon-animatable data-action="dealchat">
-            <sc-dealchat></sc-dealchat>
-
+            <sc-dealchat topic="[[requestdata.id]]"></sc-dealchat>
           </neon-animatable>
 
           </neon-animated-pages>
