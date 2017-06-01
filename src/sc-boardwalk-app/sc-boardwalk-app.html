@@ -213,7 +213,7 @@
       route="{{pageTail2}}"
       id="dealfortwoseeker"
       web3="[[web3]]"
-      on-leave="dealfortwo_tohome">
+      on-leave="dealfortwo_tolist">
     </sc-dealfortwo-seeker>
 
     <app-route route="{{route}}" pattern="/dealfortwoprovider" data={{pt3}} tail="{{pageTail3}}"></app-route>
@@ -222,7 +222,7 @@
       route="{{pageTail3}}"
       id="dealfortwoprovider"
       web3="[[web3]]"
-      on-leave="dealfortwo_tohome">
+      on-leave="dealfortwo_tolist">
     </sc-dealfortwo-provider>
     
     <sc-notifications
@@ -489,8 +489,8 @@
 
 
 
-      dealfortwo_tohome: function(){
-        this.transitionto('/home');
+      dealfortwo_tolist: function(){
+        this.transitionto('/hashtag/pioneer/list');
       },
 
       notifications_tohome: function(){

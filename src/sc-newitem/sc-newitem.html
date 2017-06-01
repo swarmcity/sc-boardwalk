@@ -53,7 +53,6 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         padding: 18px 60px 30px 25px;
         background-color: var(--sc-white);
       }
-
       .totalclosed {
         padding: 14px 60px 30px 25px;
         background-color: rgba(255,255,255,0.25);
@@ -139,6 +138,17 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
         }
 
+        .totalopen {
+          padding: 18px 35px 30px 25px;
+          background-color: var(--sc-white);
+        }
+        
+        .totalclosed {
+          padding: 10px 35px 25px 25px;
+          background-color: rgba(255,255,255,0.25);
+        }
+
+
         #newitemcontent {
           width: 100%;
         }
@@ -160,6 +170,18 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
           border-bottom: 1px dotted var(--sc-grey2);
         }
 
+      .confirmbtns {
+        z-index: 2;
+        margin-top: 0px;   
+/*        width: 100%;
+        max-width: 600px;*/
+        @apply(--layout-self-end);
+
+        @apply(--layout-horizontal);
+        @apply(--layout-start);
+        @apply(--layout-end-justified);
+        box-sizing:border-box;
+      }
       }
 
     </style>

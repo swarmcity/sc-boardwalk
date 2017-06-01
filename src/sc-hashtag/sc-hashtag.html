@@ -303,7 +303,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
 
     <div class="avatar_username_balance_content totalwidth">
-        <div class="avatar_username_balance" on-tap="toProfile">
+        <div class="avatar_username_balance">
           <template is="dom-if" if="{{phoneview}}">
             <sc-notificationbadge on-tap="toNotifs" class="notifbadge noSelect" notifnumber="{{notifnumber}}" dummynotifications="{{notifs}}"></sc-notificationbadge>
           </template>
@@ -311,7 +311,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
           ipfshash="[[identity.avatarhash]]"
           id="hashtagavatar"
           size="{{currentviewmode}}"
-          ></sc-avatar>
+          on-tap="toProfile"></sc-avatar>
           <div class="horizont centercenter noSelect">
             <sc-username
             class$="{{visibleclass}}"
@@ -813,11 +813,11 @@ This is the component showing all requests of a certain hashtag. It contains a r
       /**
        * 'hashtag_to_detail' fires 'to-itemdetail' to the parent-element, and includes the animationconfig for this action.
        */
-      hashtag_to_detail: function(e) {
-        console.log("Dit is de e uit hashtgitem", e.detail);
-        this.currentitem = e.detail;
-        this.set('route.path', '/' + this.hashtag + '/detail/' + e.detail.id);
-      },
+      // hashtag_to_detail: function(e) {
+      //   console.log("Dit is de e uit hashtgitem", e.detail);
+      //   this.currentitem = e.detail;
+      //   this.set('route.path', '/' + this.hashtag + '/detail/' + e.detail.id);
+      // },
 
       // my deal -> to dealfortwo
       hashtag_to_dealfortwo: function(e) {
@@ -827,37 +827,37 @@ This is the component showing all requests of a certain hashtag. It contains a r
         });
       },
 
-      detail_to_list: function() {
-        this.set('route.path', '/' + this.hashtag + '/list');
-      },
+      // detail_to_list: function() {
+      //   this.set('route.path', '/' + this.hashtag + '/list');
+      // },
 
-      detail_to_hashtag: function() {
-        this.set('route.path', '/' + this.hashtag + '/list');
-      },
+      // detail_to_hashtag: function() {
+      //   this.set('route.path', '/' + this.hashtag + '/list');
+      // },
 
-      detail_to_reply: function(e) {
+      // detail_to_reply: function(e) {
 
-        // THIS IS A TEMP SOLUTION: IT SHOULD WORK ON THE STATE (WITH REDUX)
-        console.log("OUT OF HASHTAG:::::", e.detail)
-        this.currentreply = e.detail;
+      //   // THIS IS A TEMP SOLUTION: IT SHOULD WORK ON THE STATE (WITH REDUX)
+      //   console.log("OUT OF HASHTAG:::::", e.detail)
+      //   this.currentreply = e.detail;
 
-        this.set('route.path', '/' + this.hashtag + '/replydetail');
-      },
-
-
-      reply_to_detail: function() {
-        this.set('route.path', '/' + this.hashtag + '/detail');
-      },
+      //   this.set('route.path', '/' + this.hashtag + '/replydetail');
+      // },
 
 
-      newitem_cancel: function(e) {
-        this.set('route.path', '/' + this.hashtag + '/list');
-      },
+//       reply_to_detail: function() {
+//         this.set('route.path', '/' + this.hashtag + '/detail');
+//       },
 
-      newitem_submitted: function(e) {
-//        this.set('route.path','/'+self.hashtag+'/detail/'+e.detail.itemid);
-        this.set('route.path', '/' + this.hashtag + '/list');
-      },
+
+//       newitem_cancel: function(e) {
+//         this.set('route.path', '/' + this.hashtag + '/list');
+//       },
+
+//       newitem_submitted: function(e) {
+// //        this.set('route.path','/'+self.hashtag+'/detail/'+e.detail.itemid);
+//         this.set('route.path', '/' + this.hashtag + '/list');
+//       },
 
       // toMakeDeal: function(e) {
       //   //debugger;
@@ -867,8 +867,12 @@ This is the component showing all requests of a certain hashtag. It contains a r
       //   //        this.fire('redirect',Object.assign({}, e.detail, {hashtag: this.data.hashtag}));
       // },
 
+
+      toProfile: function(){
+        this.fire('to-profile');
+      },
+
       toDealForTwoProvider: function(e){
-        
         this.fire('redirect', {
           target: '/dealfortwoprovider/' + this.data.hashtag + '/' + e.detail.id + '/' + e.detail.selectedreply
         });
@@ -876,7 +880,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       
       toNotifs: function(){
-          this.fire('to-notifications');
+        this.fire('to-notifications');
       },
 
 

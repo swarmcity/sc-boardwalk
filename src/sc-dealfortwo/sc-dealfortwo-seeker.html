@@ -14,6 +14,7 @@
 <link rel="import" href="../sc-avatar/sc-avatar.html">
 <link rel="import" href="../sc-username/sc-username.html">
 <link rel="import" href="../sc-dealchat/sc-dealchat.html">
+<link rel="import" href="../sc-dealstate/sc-dealstate.html">
 <link rel="import" href="../sc-redux/sc-redux.html">
 <link rel="import" href="../sc-shh/sc-shh.html">
 <link rel="import" href="../sc-config/sc-config.html">
@@ -517,7 +518,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
 
       .bottomhalf {
-        min-height: 30vh;
+        min-height: 40vh;
         @apply(--layout-vertical);
         @apply(--layout-center); 
         @apply(--layout-start-justified);
@@ -540,7 +541,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         width: 100%;
         @apply(--layout-horizontal);
         @apply(--layout-center);
-        @apply(--layout-center-justified);        
+        @apply(--layout-center-justified); 
+        margin-left: 0px;               
       }
 
       paper-icon-button.confirmbtn {
@@ -612,6 +614,11 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         margin: 20px 0px 0px 0px;
       }
 
+      .tophalf h1 {
+        font-size: 40px;
+        line-height: 48px;
+        max-width: 100%;
+      }
     }
 
 
@@ -623,6 +630,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
     <sc-helpers id="helpers"></sc-helpers>    
     <sc-hashtagcontract id="hashtagcontract" hashtagname="{{data.hashtag}}"></sc-hashtagcontract>    
     <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
+    <sc-dealstate deal="{{requestdata}}" dealstate="{{dealstate}}"></sc-dealstate>
 
     <app-route route="{{route}}" pattern="/:hashtag/:requestid/:replyid" data="{{data}}"></app-route>
 
@@ -639,27 +647,35 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
             <div class="totalbox vertic center startjust totalwidth">
               <div class="tophalf totalwidth">
 
-               <template is="dom-if" if="{{!provideraccept}}">
+               <template is="dom-if" if="{{_is(dealstate,'created')}}">
                   <h1 class="">You selected <span class="light blue replyer_username">{{replydata.provider.username}}</span> to make a deal for <span class="">{{requestdata.amount}} SWT</span>.</h1>
                   <div class="minispace"></div>
                   <div class="minispace"></div>
                   <sc-loader class="grey2" color="grey2" small><span class="light">Waiting for {{replydata.provider.username}} to respond</span></sc-loader>
                </template>
 
-                <template is="dom-if" if="{{provideraccept}}">
-                  <template is="dom-if" if="{{!indeal}}">
-                    <h1 class=""><span class="bold">{{replydata.provider.username}} accepted!</span></h1>
-                  </template>
-                  <template is="dom-if" if="{{indeal}}">
-                    <h1 class=""><span class="bold">You're in deal</span> with <span class="light blue replyer_username">{{replydata.provider.username}}</span>.</h1>
-                  </template>
+               <template is="dom-if" if="{{_is(dealstate,'provideraccepted')}}">
+                  <h1 class=""><span class="bold">{{replydata.provider.username}} accepted!</span></h1>
                 </template>
+
+               <template is="dom-if" if="{{_is(dealstate,'indeal')}}">
+                  <h1 class=""><span class="bold">You're in deal</span> with <span class="light blue replyer_username">{{replydata.provider.username}}</span>.</h1>
+                </template>
+
+                <template is="dom-if" if="{{_is(dealstate,'payout')}}">
+                  <h1 class=""><span class="bold"></span>You started the payout of this deal ({requestdata.amount}} SWT).</h1>
+                </template>
+
+                <template is="dom-if" if="{{_is(dealstate,'payoutmined')}}">
+                  <h1 class=""><span class="bold">{requestdata.amount}} SWT</span> has been payed out to <span class="light blue replyer_username">{{replydata.provider.username}}</span>.</h1>
+                </template>
+
                 
                 <div class="avatars_funding">
                   <div class$="avatar_funding {{seekerfundclass}}">
                     <sc-avatar
-                      ipfshash="[[identity.avatarhash]]"
-                      pubkey="[[identity.pubkey]]"
+                      ipfshash="[[requestdata.seeker.avatarhash]]"
+                      pubkey="[[requestdata.seeker.pubkey]]"
                       id="makedeal_myavatar"
                       size="{{seekeravatarsize}}"
                       on-tap="tempTapto"
@@ -801,7 +817,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       // '_connectionline(myamount_state,otheramount_state)',
       '_data(data)',
       '_log(replydata)',
-      '_provideraccepted(provideraccept)'
+      '_provideraccepted(provideraccept)',
+      '_dealstate(dealstate)'   
 
       // '_requestdata(requestdata)'
       // '_provideraccept(provideraccept)'
@@ -888,20 +905,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       },
 
       ready: function(){
-        this.dealamount = 44;
-
-        // this.myamount_state = 'amountwaiting';
-        // this.otheramount_state = 'amountwaiting';
         this.selecteddealpage = 'dodeal';
-        this.seekerfundclass = "fund_init";
-        this.providerfundclass="fund_init";
-        this.dealactivated = false;
-        this.hashtagfee = "0.5"
-
-        this.dealstate = "init";
-
-        console.log("dcdds",this.$.seekerpages.animationConfig);
-
       },
 
       _route: function(){
@@ -1419,6 +1423,15 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           this.indeal = false;          
         }
       },
+      /**
+      * '_is', a function to bind a template to a certain value of a variable.
+      */
+      _is: function(a, b) {
+        if (b === undefined){
+          b = true;
+        }
+        return a === b;
+      },
 
       toDealchat: function(){
         this.seekerpagesentry = 'slide-from-bottom-animation';
@@ -1430,6 +1443,10 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         this.seekerpagesentry = 'slide-from-top-animation';
         this.seekerpagesexit = 'slide-down-animation';
         this.selecteddealpage = 'dodeal';
+      },
+
+      _dealstate: function(){
+        console.log("dit is deellzz88",this.dealstate);
       },
 
 

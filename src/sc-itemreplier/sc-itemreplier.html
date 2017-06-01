@@ -130,14 +130,16 @@ This components allow a Swarm Citizen to reply on a request.
 
         .yourrespond {
           box-sizing:border-box;
-          padding: 10vw;
+          padding: 0vh 8vw;
           transition: all 0.25s linear;
         }
 
-        .confirmbtns {
-          @apply(--layout-horizontal);
-          @apply(--layout-center-center);
-        }
+      .confirmbtns {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        @apply(--layout-end-justified);
+        margin-bottom: 20px;
+      }
 
 
         paper-button.addreplybtn {
@@ -213,7 +215,7 @@ This components allow a Swarm Citizen to reply on a request.
         </template> -->
       </div>
 
-  <iron-collapse>
+  </iron-collapse>
 </div>
   </template>
 
