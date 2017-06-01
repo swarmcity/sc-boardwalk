@@ -207,6 +207,29 @@
         });
       },
 
+      payout: function(dealID,from, cb) {
+        debugger;
+        var self = this;
+        self.web3.cached.getGasPrice(function(err, gasPrice) {
+          self.DealForTwoFactoryContractInstance.payout.estimateGas(dealID, function(err, gasNeeded) {
+            gasNeeded = gasNeeded || 200000;
+            self.DealForTwoFactoryContractInstance.payout.sendTransaction(dealID, {
+              from: from,
+              gasPrice: gasPrice,
+              gas: gasNeeded
+            }, function(err, result) {
+              if (err) {
+                if (cb) {
+                  return cb(err);
+                }
+              }
+              cb(null, result);
+              console.log(err, result);
+            });
+          });
+        });
+
+      },
       // makeDeal: function(dealID,offerAmount, cb) {
       //   var self = this;
 
