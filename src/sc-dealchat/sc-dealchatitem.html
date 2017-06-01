@@ -4,9 +4,10 @@
 
 <link rel="import" href="../../bower_components/sc-style/sc-style.html">
 <link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
+<link rel="import" href="../../bower_components/moment-js/moment-js.html">
 
 <link rel="import" href="../sc-avatar/sc-avatar.html">
-
+<link rel="import" href="../sc-hashtagcontract/sc-hashtagrep.html">
 <!--
 `sc-dealchatitem`
 
@@ -41,10 +42,15 @@ This is dealchatitem.
       .balloon {
         margin: 0px 10px 0px 10px;
         box-sizing:border-box;
-        padding: 3px 5px 0px 5px;
+        padding: 0px 5px 0px 5px;
+      }
+
+      sc-avatar {
+        margin-top: 6px;
       }
 
       .balloon p {
+        margin-top: 3px;
         line-height: 16px;
       }
 
@@ -53,64 +59,75 @@ This is dealchatitem.
       }
 
       .leftm {
-        margin-left: 6px;
+/*        margin-left: 6px;*/
       }
 
       .rightalign {
         text-align: right;
       }
+      .grey2b {
+        color: #999999;
+      }
 
+      .notmyballoon {
+        @apply(--layout-horizontal-reverse);
+        @apply(--layout-start-justified);        
+        @apply(--layout-center);        
+        @apply(--layout-wrap);
+      }
 
     </style>
 
-<!-- <div class="vertic centercenter">
-  <h1>seg</h1>
-  <h1>seg</h1>
-</div> -->
 
-HALLO DIT DE {{item.chatteravatar}} : {{item.msg}}
-
-          <template is="dom-if" if="{{_is(item.chatterpubkey,pubk)}}">
-            <div class="item_total itsme">
-              <sc-avatar
-                ipfshash="[[item.chatteravatar]]"
-                pubkey="[[pubkey]]"
-                size="verysmall">
-              </sc-avatar>
-              <div class="balloon">
-                <p>{{item.chatmsg}}</p>
-                <small class="semibold grey4">{{item.chattername}}<span class="reg grey3 leftm">{{item.chattime}}</span></small>
-              </div>
+      <template is="dom-if" if="{{_is(item.chatterpubkey,pubk)}}">
+        <div class="item_total itsme">
+          <sc-avatar
+            ipfshash="[[item.chatteravatar]]"
+            pubkey="[[pubkey]]"
+            size="verysmall">
+          </sc-avatar>
+          <div class="balloon totalwidth">
+            <div class="horizont center startjust wrap">
+<!--               <p class="small reg grey4">{{item.chattername}}</span></p> -->
+              <p class="grey2b light small leftm"><moment-js date="{{item.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
             </div>
-          </template>
-
-
-            <template is="dom-if" if="{{!_is(item.chatterpubkey,pubk)}}">
-          <div class="item_total">
-
-              <div class="balloon rightalign">
-                <p>{{item.chatmsg}}</p>
-                <small class="semibold grey4"><span class="reg grey3 rightm">{{item.chattime}}</span>{{item.chattername}}</small>
-              </div>
-              <sc-avatar
-                ipfshash="[[item.chatteravatar]]"
-                pubkey="[[pubkey]]"
-                size="verysmall">
-              </sc-avatar>
+            <p>{{item.chatmsg}}</p>
 
           </div>
+        </div>
+      </template>
 
-            </template>
+      <template is="dom-if" if="{{!_is(item.chatterpubkey,pubk)}}">
+        <div class="item_total">
+            <div class="balloon totalwidth rightalign">
+              <div class="horizont center endjust wrap">
+<!--                 <p class="small reg grey4">{{item.chattername}}</span></p> -->
+                <p class="grey2b light small leftm"><moment-js date="{{item.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
+              </div>
+              <p>{{item.chatmsg}}</p>
+
+            </div>
+            <sc-avatar
+              ipfshash="[[item.chatteravatar]]"
+              pubkey="[[pubkey]]"
+              size="verysmall">
+            </sc-avatar>
+        </div>
+      </template>
 
   </template>
 
   <script>
     Polymer({
-
       is: 'sc-dealchatitem',
-  behaviors: [
-    Polymer.NeonAnimationRunnerBehavior
-  ],
+
+      observers: [
+      '_log(item)'
+      ],
+
+      behaviors: [
+      ],
+
       properties: {
 
         animationConfig: {
@@ -122,18 +139,15 @@ HALLO DIT DE {{item.chatteravatar}} : {{item.msg}}
             }
           }
         }
-
       },
-  listeners: {
-    // this event is fired when the animation finishes
-    'neon-animation-finish': '_onNeonAnimationFinish',
-    'tap':'animate'
-  },
+
+      // listeners: {
+      //   'neon-animation-finish': '_onNeonAnimationFinish',
+      //   'tap':'animate',
+      // },
+
       ready: function(){
         console.log("PUUBBBKKKYYYYYYYY",this.pubk);
-        console.log("PUUBBBKKKYY",this.item);
-        this.animate();
-
       },
 
       /**
@@ -173,11 +187,10 @@ HALLO DIT DE {{item.chatteravatar}} : {{item.msg}}
         // debugger;
       },
 
-  animate: function() {
-    // run scale-down-animation
-        // debugger;
-        this.playAnimation();
-  },
+
+      _log: function(target){
+        console.log("***** log in chatitem ==",target);
+      },
 
 
     });

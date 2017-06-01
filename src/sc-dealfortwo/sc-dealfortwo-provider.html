@@ -636,7 +636,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
        <paper-icon-button icon="sc-icons:v" noink class="confirmbtn blue big white shadow" on-tap="fundThisDeal"></paper-icon-button>
     </blink> 
    --> 
-<neon-animated-pages id="hashpages" attr-for-selected="data-action" selected="{{selecteddealpage}}" entry-animation="slide-from-right-animation" exit-animation="slide-left-animation">
+<neon-animated-pages id="providerpages" attr-for-selected="data-action" selected="{{selecteddealpage}}" entry-animation="{{providerpagesentry}}" exit-animation="{{providerpagesexit}}">
           <neon-animatable data-action="dodeal">
 
             <div class="topbar" on-tap="dumpdeal">
@@ -845,7 +845,11 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           </neon-animatable>
 
           <neon-animatable data-action="dealchat">
-            <sc-dealchat topic="[[requestdata.id]]"></sc-dealchat>
+            <sc-dealchat
+            topic="[[requestdata.id]]"
+            hashtag="[[data.hashtag]]"
+            on-back="backfromChat">
+            </sc-dealchat>
           </neon-animatable>
 
           </neon-animated-pages>
@@ -1217,8 +1221,17 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
 
       toDealchat: function(){
+        this.providerpagesentry = 'slide-from-bottom-animation';
+        this.providerpagesexit = 'slide-up-animation';
         this.selecteddealpage = 'dealchat';
       },
+
+      backfromChat: function(){
+        this.providerpagesentry = 'slide-from-top-animation';
+        this.providerpagesexit = 'slide-down-animation';
+        this.selecteddealpage = 'dodeal';
+      },
+
 
     });
   </script>

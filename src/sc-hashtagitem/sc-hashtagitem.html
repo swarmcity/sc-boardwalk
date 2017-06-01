@@ -193,7 +193,7 @@ This components is the representation of a request in the requests-list on sc-ha
         height: 100%;
         @apply(--layout-self-end);
         box-sizing:border-box;
-        padding-left: 20px;
+        padding-left: 10px;
         padding-bottom: 0px;
       }
 
@@ -241,6 +241,14 @@ This components is the representation of a request in the requests-list on sc-ha
         @apply(--layout-wrap);
       }
 
+      .replycount_box {              
+/*        margin-right: 10px;*/
+        @apply(--layout-self-end);    
+      }
+      .replycount_box iron-icon {              
+        margin-left: 3px;
+        margin-bottom: 3px;            
+      }
 
 /*      .blueborder {
         border-left: 2px solid var(--sc-blue);
@@ -280,7 +288,7 @@ This components is the representation of a request in the requests-list on sc-ha
           <div class="flex vertic start startjust">
             <div class="request_info">
             <template is="dom-if" if="{{youareowner(item.seeker.pubkey)}}">
-              <p class="you small bold grey4">you</p>
+              <p class="you small bold grey4">you • <span class="bold"><sc-hashtagrep pubkey="{{item.seeker.pubkey}}" hashtagname="{{item.hashtag}}"></sc-hashtagrep></span></p>
             </template>
             <template is="dom-if" if="{{!youareowner(item.seeker.pubkey)}}">
               <p class="seeker small reg blue">{{item.seeker.username}} • <span class="bold"><sc-hashtagrep pubkey="{{item.seeker.pubkey}}" hashtagname="{{item.hashtag}}"></sc-hashtagrep></span></p>
@@ -296,10 +304,19 @@ This components is the representation of a request in the requests-list on sc-ha
             </div>
             <p class="msg totalwidth grey4">{{item.msg}}<!-- <span class="bold"> for {{item.amount}} SWT</span> --></p>
           </div>
+
+          <template is="dom-if" if="{{youareowner(item.seeker.pubkey)}}">
+            <div class="replycount_box horizont center endjust">
+              <p class="bold">{{item.replies.length}}</p>
+              <iron-icon icon="sc-icons:babble" class="small replyicon">replies</iron-icon>
+            </div>
+          </template>
           <div class="amountstuff vertic end endjust">
             <small class="bold yellow">for</small>
             <p class="bold yellow">{{item.amount}} SWT</p>
           </div>
+
+
         </div>
 
 

@@ -627,7 +627,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
     <app-route route="{{route}}" pattern="/:hashtag/:requestid/:replyid" data="{{data}}"></app-route>
 
 
-        <neon-animated-pages id="seekerpages" attr-for-selected="data-action" selected="{{selecteddealpage}}" entry-animation="slide-from-right-animation" exit-animation="slide-left-animation">
+        <neon-animated-pages id="seekerpages" attr-for-selected="data-action" selected="{{selecteddealpage}}" entry-animation="{{seekerpagesentry}}" exit-animation="{{seekerpagesexit}}">
 
           <neon-animatable data-action="dodeal">
 
@@ -766,13 +766,11 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
 
           <neon-animatable data-action="dealchat">
-          <p>ssss</p>
-          <div>
-            <h1>jkzcjkbez chnockejknz</h1>
-            <sc-dealchat topic="[[requestdata.id]]"></sc-dealchat>
-          </div>
-
-
+            <sc-dealchat
+            topic="[[requestdata.id]]"
+            hashtag="[[data.hashtag]]"
+            on-back="backfromChat">
+            </sc-dealchat>
           </neon-animatable>
 
 
@@ -1423,8 +1421,17 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       },
 
       toDealchat: function(){
+        this.seekerpagesentry = 'slide-from-bottom-animation';
+        this.seekerpagesexit = 'slide-up-animation';
         this.selecteddealpage = 'dealchat';
       },
+
+      backfromChat: function(){
+        this.seekerpagesentry = 'slide-from-top-animation';
+        this.seekerpagesexit = 'slide-down-animation';
+        this.selecteddealpage = 'dodeal';
+      },
+
 
 
     });
