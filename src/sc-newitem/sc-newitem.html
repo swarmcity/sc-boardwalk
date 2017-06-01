@@ -197,6 +197,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
 
         <template is="dom-if" if="{{loading}}">
+          <div class="whitespace"></div>
           <div class="totalwidth newitempadding">
             <sc-loader small class="grey3" color="grey3">Processing your request</sc-loader>
           </div>
@@ -376,8 +377,12 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         var dealID = UUIDjs.create().toString();
         this.$.dealfortwo.makeDealForTwo(dealID, self.identity.pubkey, self.offeramount, function(err, txhash, extratx) {
           if (err) {
-            console.log('error happened...');
+            console.log('error happened...',err);
             // HIERE REDIRECTEN NAAR KLAAR MET NEWITEM... (failed)
+            self.closeNewcollapser();
+            self.offermsg = '';
+            self.offeramount = '';
+            
           } else {
             //debugger;
             var newrequest = {
@@ -429,8 +434,9 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
                 });
               });
             }
-            // HIERE REDIRECTEN NAAR KLAAR MET NEWITEM... ( succes)
 
+          // HIERE REDIRECTEN NAAR KLAAR MET NEWITEM... ( succes)
+            self.closeNewcollapser();         
           }
 
         });
@@ -574,13 +580,25 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         } else {
 
         if (!this.$.offerinput.value) {
-          this.showavatar = false;
-          this.totalstate = "totalclosed";
-          offerinputform.opened = false;
-          this.fire('newitem-close');
+          this.closeNewcollapser();
+          // this.showavatar = false;
+          // this.totalstate = "totalclosed";
+          // offerinputform.opened = false;
+          // this.fire('newitem-close');
           }
         };
+      },
+
+      closeNewcollapser: function(){
+        var offerinputform = this.shadowRoot.getElementById('offerinputform');
+        offerinputform.opened = false;
+
+        this.showavatar = false;
+        this.totalstate = "totalclosed";
+        this.fire('newitem-close');  
       }
+
+
 
 
 
