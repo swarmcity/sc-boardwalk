@@ -442,7 +442,7 @@
           console.log('Allowance is',allowance.toNumber(10),'is >',amount);
           return cb(null);
         }
-        if (allowance && allowance.toNumber(10) != amount) {
+        if (allowance && allowance.toNumber(10) != 0 && allowance.toNumber(10) != amount) {
           console.log('Allowance is',allowance.toNumber(10),'but needs',amount);
           // there is an allowance but for a lower amount
           // we need to first set allowance to 0 and then to amount
@@ -486,7 +486,7 @@
 
 
         } else {
-          // there is no allowance
+          // there is no allowance / allowance is 0
           self.web3.cached.getGasPrice(function(err, gasPrice) {
             self.MiniMeContractInstance.approve.estimateGas(to, amount, function(err, gasNeeded) {
               self.MiniMeContractInstance.approve(to, amount, {

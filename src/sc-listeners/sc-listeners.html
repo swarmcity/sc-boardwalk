@@ -43,16 +43,16 @@
         emptyDeal: {
           type: Object,
           value: {
-              creationtx_mined: false,
+              //creationtx_mined: false,
               //dealaddress: null,
               //seekerfundingtx: false,
               //seekerfundingtx_mined: false,
               //assigntx: false,
               //assigntx_mined: false,
-              providerfundingtx: false,
-              providerfundingtx_mined: false,
-              payouttx: false,
-              payouttx_mined: false,
+              //providerfundingtx: false,
+              //providerfundingtx_mined: false,
+              //payouttx: false,
+              //payouttx_mined: false,
               replies: [],
               seeker: {
                 pubkey: '0x0'
@@ -120,165 +120,6 @@
             deals: deals
           };
         },
-
-        // request_create: function(dealdata) {
-
-        //   var newDeal = {
-        //       id: dealdata.id,
-        //       seeker: dealdata.seeker,
-        //       msg: dealdata.offer,
-        //       creationtx: dealdata.offercreationtx,
-        //       amount: dealdata.offeramount,
-        //       hashtag: dealdata.offerhashtag,
-        //       offertime: dealdata.offertime
-        //     };
-
-        //   // let deals = this.deals.slice(0);
-        //   // var foundDeal = deals.findIndex(function(item) {
-        //   //   return item.id === dealdata.id;
-        //   // });
-        //   // if (foundDeal > -1) {
-        //   //   deals[foundDeal] = Object.assign({},this.emptyDeal, deals[foundDeal], newDeal);
-        //   // } else {
-        //   //   deals.push(Object.assign({},this.emptyDeal,newDeal));
-        //   // }
-         
-        //   if (newDeal.creationtx){
-
-        //     this.web3.waitTx(newDeal.creationtx, function(err, res) {
-         
-        //       self.dispatch('update_deal', {
-        //         id: newDeal.id,
-        //         creationtx_mined: true
-        //       });
-        //     });
-
-        //   }
-
-        //   deals.sort(function(a, b) {
-        //     return b.offertime - a.offertime;
-        //   });
-
-        //   return {
-        //     type: 'DEALS',
-        //     deals: deals
-        //   };
-        // },
-
-        // ioncoming SHH that seeker has funded his deal & 
-        // provided the TXhash for that.
-//         // request_seeker_funding: function(payload){
-
-//         //   var mutation = {
-//         //     id: payload.id,
-//         //     seekerfundingtx: payload.offerseekerfundingtx,
-//         //   };
-
-//         //   var self = this;
-//         //   this.updatebalanceaddressaftertx(payload.dealaddress, payload.offerseekerfundingtx, function(err, balance) {
-  
-//         //     self.dispatch('request_seekerfunded', {
-//         //       requestid: payload.id,
-//         //       balance: balance.toNumber()
-//         //     });
-//         //   });
-
-//         //   let deals = this.deals.slice(0);
-//         //   var foundDeal = deals.findIndex(function(item) {
-//         //     return item.id === payload.id;
-//         //   });
-//         //   if (foundDeal > -1) {
-//         //     deals[foundDeal] = Object.assign({},this.emptyDeal, deals[foundDeal], mutation);
-//         //   }else{
-//         //     deals.push(Object.assign({},this.emptyDeal,mutation));
-//         //   }
-//         //   return {
-//         //     type: 'DEALS',
-//         //     deals: deals
-//         //   };
-
-//         // },
-
-//         // // seeker funding TX has finished
-//         // request_seekerfunded: function(params) {
-//         //   //debugger;
-//         //   var mutation = {
-//         //     id: params.requestid,
-//         //     dealbalance: params.balance,
-//         //     seekerfundingtx_mined: true,
-//         //   };
-
-//         //   let deals = this.deals.slice(0);
-//         //   var foundDeal = deals.findIndex(function(item) {
-//         //     return item.id === params.requestid;
-//         //   });
-//         //   if (foundDeal > -1) {
-//         //     deals[foundDeal] = Object.assign({},this.emptyDeal, deals[foundDeal], mutation);
-//         //   }else{
-//         //     deals.push(Object.assign({},this.emptyDeal,mutation));
-//         //   }
-//         //   return {
-//         //     type: 'DEALS',
-//         //     deals: deals
-//         //   };
-//         // },
-
-//         request_provider_funding: function(payload){
-// //debugger;
-//           var mutation = {
-//             id: payload.id,
-//             providerfundingtx: payload.offerproviderfundingtx,
-//           };
-
-//           var self = this;
-//           this.updatebalanceaddressaftertx(payload.dealaddress, payload.offerproviderfundingtx, function(err, balance) {
-//             //debugger;
-//             self.dispatch('request_providerfunded', {
-//               requestid: payload.id,
-//               balance: balance.toNumber()
-//             });
-//           });
-
-// //          this.updatebalanceaddressaftertx(payload.dealaddress,mutation.offerproviderfundingtx);
-
-//           let deals = this.deals.slice(0);
-//           var foundDeal = deals.findIndex(function(item) {
-//             return item.id === payload.id;
-//           });
-//           if (foundDeal > -1) {
-//             deals[foundDeal] = Object.assign({},this.emptyDeal, deals[foundDeal], mutation);
-//           }else{
-//             deals.push(Object.assign({},this.emptyDeal,mutation));
-//           }
-//           return {
-//             type: 'DEALS',
-//             deals: deals
-//           };
-//         },
-
-//         // provider funding TX has finished
-//         request_providerfunded: function(params) {
-//           //debugger;
-//           var mutation = {
-//             id: params.requestid,
-//             dealbalance: params.balance,
-//             providerfundingtx_mined: true,
-//           };
-
-//           let deals = this.deals.slice(0);
-//           var foundDeal = deals.findIndex(function(item) {
-//             return item.id === params.requestid;
-//           });
-//           if (foundDeal > -1) {
-//             deals[foundDeal] = Object.assign({},this.emptyDeal, deals[foundDeal], mutation);
-//           }else{
-//             deals.push(Object.assign({},this.emptyDeal,mutation));
-//           }
-//           return {
-//             type: 'DEALS',
-//             deals: deals
-//           };
-//         },
 
         update_notification: function(mutation){
 
@@ -353,10 +194,6 @@
             // put deal back into array of deals
             deals[foundDeal] = Object.assign(deal,{ireplied : ireplied});
 
-            // if it was my deal that was replied to, add a notification
-//             if ()
-
-
           } else {
             // this message comes before the deal info. Create an empty placehodler
             var newDeal = {
@@ -368,9 +205,8 @@
             deals.push(deal);
             //console.error('no deal found for reply with ID=', replydata.id)
           }
-//debugger;
 
-      var n = {
+          var n = {
             id : deal.id,
             msg: replyMutation.msg,
             itemhashtag: deal.hashtag,
@@ -389,34 +225,6 @@
             deals: deals
           };
         },
-
-//         // when a a creationtx has passed & a dealaddress is available
-//         request_setdealaddress: function(params) {
-// //debugger;
-//           var mutation = {
-//             id: params.dealid,
-//             dealaddress: params.address,
-//             creationtx_mined: true
-//           };
-
-//           let deals = this.deals.slice(0);
-//           var foundDeal = deals.findIndex(function(item) {
-//             return item.id === params.dealid;
-//           });
-//           if (foundDeal > -1) {
-//             deals[foundDeal] = Object.assign({},this.emptyDeal, deals[foundDeal], mutation);
-//           }else{
-//             deals.push(Object.assign({},this.emptyDeal,mutation));
-//           }
-
-//           return {
-//             type: 'DEALS',
-//             deals: deals
-//           };
-
-//         },
-
-
         
         // seeker says : I just selected this reply as my provider
         select_provider: function(payload){
@@ -439,59 +247,6 @@
             deals: deals
           };
         },
-
-//         // I have a TX that says : assign this pubkey
-//         assign_provider: function(payload){
-//           var self=this;
-//           var mutation = {
-//             id : payload.requestid,
-//             assigntx: payload.transactionhash,
-//           };
-//           let deals = this.deals.slice(0);
-//           var foundDeal = deals.findIndex(function(item) {
-//             return item.id === payload.requestid;
-//           });
-//           if (foundDeal > -1) {
-//             deals[foundDeal] = Object.assign({},this.emptyDeal, deals[foundDeal], mutation);
-//           }else{
-//             deals.push(Object.assign({},this.emptyDeal,mutation));
-//           }
-// //debugger;
-//           this.web3.waitTx(payload.transactionhash, function(err, res) {
-//           //this.readcontractaftertx(payload.requestid,payload.transactionhash,function(err,res){
-//             self.dispatch('request_setprovider_mined', {
-//               requestid: payload.requestid
-//             });
-//           });
-//           return {
-//             type: 'DEALS',
-//             deals: deals
-//           };
-//         },
-
-//         request_setprovider_mined: function(params) {
-//           //debugger;
-//           var mutation = {
-//             id: params.requestid,
-//             assigntx_mined: true
-//           };
-
-//           let deals = this.deals.slice(0);
-//           var foundDeal = deals.findIndex(function(item) {
-//             return item.id === params.requestid;
-//           });
-//           if (foundDeal > -1) {
-//             deals[foundDeal] = Object.assign({},this.emptyDeal, deals[foundDeal], mutation);
-//           }else{
-//             deals.push(Object.assign({},this.emptyDeal,mutation));
-//           }
-
-//           return {
-//             type: 'DEALS',
-//             deals: deals
-//           };
-
-//         },
 
         request_approve: function(payload){
           var self=this;
@@ -604,14 +359,13 @@
         try {
           payload = JSON.parse(self.shhweb3.toAscii(result.payload));
           console.log('incoming in whisperer: shhweb3 ', payload);
-          
-          //this.push('deals',payload);
         } catch (e) {
           console.log(e);
         }
 
         switch(payload.type){
           case 'dealfortwo-request-create':
+          debugger;
             var self = this;
             var newDeal = {
               id: payload.id,
@@ -625,8 +379,6 @@
             };
             if (newDeal.creationtx) {
               this.web3.waitTx(newDeal.creationtx, function(err, res) {
-
-
                 self.dispatch('update_deal', {
                   id: newDeal.id,
                   creationtx_mined: true,
@@ -639,10 +391,7 @@
                     id: newDeal.id,
                     dealdata : data,
                   });
-//                  debugger;
                 });
-
-
               });
             }
             if (newDeal.creationallowancetx) {
@@ -656,18 +405,15 @@
             this.dispatch('update_deal', newDeal);
             this.requestsloaded = true;
             break;
-          // case 'dealfortwo-seeker-funding':
-          //   this.dispatch('request_seeker_funding', payload);
-          //   break;
+
           case 'dealfortwo-request-reply':
             this.dispatch('request_reply', payload);
             break;
+
           case 'dealfortwo-select-provider':
             this.dispatch('select_provider', payload);
             break;
-          // case 'dealfortwo-assign-provider':
-          //   this.dispatch('assign_provider', payload);
-          //   break;
+
           case 'dealfortwo-provider-funding':
             var mutation = {
               id: payload.id,
@@ -706,7 +452,8 @@
               });
             }            
             //this.dispatch('request_provider_funding', payload);
-            break;            
+            break;
+
           case 'dealfortwo-approve':
            var mutation = {
               id: payload.id,
@@ -728,141 +475,10 @@
             }                 
             break;   
           default:
-          //debugger;
             console.log('unknown message:',payload);
             break;
         }
-
       },
-
-
-      ready: function(){
-      
-      },
-
-
-//       getdealaddressfromtx: function(dealid,tx){
-//         //debugger;
-//         console.log('Start monitoring for address from deal tx',tx);
-//         if (!tx){
-//           return;
-//         }
-//         var self = this;
-//         this.helper_getDealAddressFromTx(tx,function(err,address,blocknumber){
-//           console.log('the address of deal',dealid,'is',address);
-//           self.dispatch('request_setdealaddress',{dealid:dealid,address:address});
-// //          self.helper_watchbalance(address,blocknumber);
-//         });
-//       },
-
-      // wait for transactionhash tx to happen, and return the balance of address dealaddress
-      // in the callback (err,balance)
-      updatebalanceaddressaftertx: function(dealaddress,tx,cb){
-        var self = this;
-
-        console.log('Start monitoring for balance from deal tx',tx);
-        if (!tx){
-          return;
-        }
-
-        this.web3.waitTx(tx, function(err, res) {
-          // update balance
-          //debugger;
-          self.web3.getSWTBalance(dealaddress,function(err,balance){
-            if (err){
-              console.log('updatebalanceaddressaftertx -->',err);
-              return cb(err);
-            }
-            console.log('The balance of deal',dealaddress,'is',balance.toNumber(),'SWT');
-            return cb(null,balance);
-          })
-        });
-
-      },
-
-
-
-      readcontractaftertx: function(dealid,dealaddress,tx,cb){
-        //debugger;
-        var self = this;
-        if (!tx){
-          return;
-        }
-        console.log('Start monitoring for balance from deal tx',tx);
-
-        this.web3.waitTx(tx, function(err, res) {
-        
-        this.contracturl = this.resolveUrl('../contracts/DealForTwo.json');
-        this.importHref(this.contracturl, function(e) {
-          this.contractjson = JSON.parse(e.target.import.body.innerText);
-         
-            var MyContract = self.web3.eth.contract(self.contractjson.abi);
-            var myContractInstance = MyContract.at(dealaddress);
-            myContractInstance.provider.call(function(err, result) {
-              if (err){
-                if (cb) {
-                  //return cb(err);
-                }
-              }
-              console.log(err, result);
-              cb(err,result);
-             
-
-          });
-        });          
-          // update balance
-          //debugger;
-          // self.web3.getSWTBalance(dealaddress,function(err,balance){
-          //   console.log('The balance of deal',dealaddress,'is',balance.toNumber(),'SWT');
-          //   self.dispatch('request_seekerfunded', {
-          //     dealid: dealid,
-          //     balance: balance.toNumber()
-          //   });            
-          // })
-        });
-
-      },
-
-
-      helper_getDealAddressFromTx(tx, cb) {
-        var self = this;
-                        
-
-        this.web3.waitTx(tx, function(err,blockNumber) {
-          if (err){
-            return cb(err);
-          }
-          if (blockNumber) {
-            self.contracturl = self.resolveUrl('../contracts/DealForTwoFactory.json');
-            self.importHref(self.contracturl, function(e) {
-              var contractjson = JSON.parse(e.target.import.body.innerText);
-              var DealForTwoFactoryContract = self.web3.eth.contract(contractjson.abi);
-              var DealForTwoFactoryContractInstance = DealForTwoFactoryContract.at(self.config.dealfortwofactory);
-              var myEvent = DealForTwoFactoryContractInstance.NewSimpleDeal(null, {
-                fromBlock: blockNumber,
-                toBlock: blockNumber
-              });
-              myEvent.get(function(error, result) {
-                //debugger;
-                var myEvent = result.find(function(item) {
-                  return item.transactionHash === tx;
-                });
-                if (!myEvent || !myEvent.args || !myEvent.args.simpleDealAddress){
-                  return cb('event not found');
-                }
-                var address = myEvent.args.simpleDealAddress;
-                return cb(null, address,blockNumber);
-              });
-            });
-          } else {
-            return cb('not yet mined');
-          }
-        });
-      },
-
-
-
-
     });
   </script>
 </dom-module>
