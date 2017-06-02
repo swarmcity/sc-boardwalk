@@ -166,6 +166,10 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         border-bottom: 1px dotted #bfbfbf;
       }
 
+      .details_toggler:hover { 
+        cursor: pointer;      
+      }
+
 
       #details_collapser {
         width: 100%;   
@@ -482,9 +486,9 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       }
 */
 
-  .chatbtn {
-    @apply(--layout-self-end)
-  }
+      .chatbtn {
+        @apply(--layout-self-end)
+      }
 
       paper-icon-button.chatbtn_iconbtn {
         width: 52px;
@@ -498,6 +502,16 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       .halfopacity {
         opacity: 0.5;
       }
+
+        .dealid {
+          width: 80px;
+        }
+
+        .dealid p {
+          @apply(--sc-font-nowrap);
+        }
+
+
 /*
         paper-button.chatbtn_big {
           opacity: 0.75;
@@ -661,10 +675,13 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
             <div class="totalbox vertic center startjust totalwidth">
               <div class="tophalf totalwidth">
+
+              <div class="dealid" on-tap="showDetails">
+                <p class="small light grey2">Dealid {{requestdata.id}}</p>
+              </div>
+
                <template is="dom-if" if="{{_is(dealstate,'created')}}">
                   <h1 class="">You selected <span class="light blue replyer_username">{{replydata.provider.username}}</span> to make a deal for <span class="">{{requestdata.amount}} SWT</span>.</h1>
-<!--                   <div class="minispace"></div>
-                  <div class="minispace"></div> -->
                </template>
 
                <template is="dom-if" if="{{_is(dealstate,'provideraccepted')}}">
@@ -676,11 +693,11 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                 </template>
 
                 <template is="dom-if" if="{{_is(dealstate,'payout')}}">
-                  <h1 class=""><span class="bold"></span>You started the payout of this deal ({requestdata.amount}} SWT).</h1>
+                  <h1 class=""><span class="bold"></span>You started the payout of this deal {{requestdata.amount}} SWT).</h1>
                 </template>
 
                 <template is="dom-if" if="{{_is(dealstate,'payoutmined')}}">
-                  <h1 class=""><span class="bold">{requestdata.amount}} SWT</span> has been payed out to <span class="light blue replyer_username">{{replydata.provider.username}}</span>.</h1>
+                  <h1 class=""><span class="bold">{{requestdata.amount}} SWT</span> has been payed out to <span class="light blue replyer_username">{{replydata.provider.username}}</span>.</h1>
                 </template>
 
                 <div class="details_toggler" on-tap="showDetails">
@@ -784,7 +801,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                   </template>
                 </template>
                 <template is="dom-if" if="{{provideraccept}}">
-                  <template is="dom-if" if="{{indeal}}">
+                  <template is="dom-if" if="{{_is(dealstate,'indeal')}}">
                     <template is="dom-if" if="{{!phoneview}}">
                       <div class="flex"></div>
                     </template>

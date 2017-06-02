@@ -161,9 +161,15 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         @apply(--layout-center);
         @apply(--layout-start-justified);        
       }
+
       .details_toggler p {
         border-bottom: 1px dotted #bfbfbf;
       }
+
+      .details_toggler:hover { 
+        cursor: pointer;      
+      }
+
 
       #details_collapser {
         width: 100%;   
@@ -513,6 +519,14 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           opacity: 0.5;
         }
 
+        .dealid {
+          width: 80px;
+        }
+
+        .dealid p {
+          @apply(--sc-font-nowrap);
+        }
+
     @media all and (min-width: 0) and (max-width: 420px) { 
 
 
@@ -643,6 +657,9 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
         <div class="totalbox vertic center startjust totalwidth">
           <div class="tophalf totalwidth">
+            <div class="dealid" on-tap="showDetails">
+              <p class="small light grey2">Dealid {{requestdata.id}}</p>
+            </div>
 
             <!-- Created. -->
             <template is="dom-if" if="{{_is(dealstate,'created')}}">
@@ -687,12 +704,12 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
             <!-- Payout. -->
             <template is="dom-if" if="{{_is(dealstate,'payout')}}">
-              <h1 class=""><span class="bold"></span><span class="light blue replyer_username">{{requestdata.seeker.username}}</span> started the payout of this deal ({requestdata.amount}} SWT).</h1>
+              <h1 class=""><span class="bold"></span><span class="light blue replyer_username">{{requestdata.seeker.username}}</span> started the payout of this deal ({{requestdata.amount}} SWT).</h1>
             </template>
 
             <!-- Payed out -->
             <template is="dom-if" if="{{_is(dealstate,'payoutmined')}}">
-              <h1 class=""><span class="bold">{requestdata.amount}} SWT</span> has been payed out to you.</h1>
+              <h1 class=""><span class="bold">{{requestdata.amount}} SWT</span> has been payed out to you.</h1>
             </template>
 
             <div class="details_toggler" on-tap="showDetails">
