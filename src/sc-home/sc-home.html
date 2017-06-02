@@ -152,7 +152,7 @@
       
       <!-- <div id="currenttag" on-tap="toHashtag"><p class="bold">pioneer</p></div> -->
       
-      <div class="hashtaglist ">
+      <div class="hashtaglist">
         <div class="vertic start startjust">
         <template is="dom-repeat" items="{{hashtaglist}}">
           <div on-tap="toHashtag" id="{{item}}" class="hashtag big horizont start startjust ">
@@ -325,14 +325,13 @@
       toHashtag: function(e) {
         // if (this.phoneview) {
         var selectedhasht = e.detail.sourceEvent.target.parentElement.id;
-          console.log('*Joooo*',selectedhasht);
-        var testertje = this.shadowRoot.getElementById(selectedhasht);
+        var selhash = this.shadowRoot.getElementById(selectedhasht);
 
 
           this.sharedElements = {
               'hero': this.$.homeavatar,
               'balance': this.$.homebalance,
-              'currenttag': testertje
+              'currenttag': selhash
             };
 
           this.animationConfig = {
@@ -354,13 +353,13 @@
                     delay: 475,
                     duration: 125
                   }
-                }, {
-                  name: 'slide-from-bottom-animation',
-                  node:this.$.bottomhalf,
-                  toPage: this,
-                  timing: {
-                    duration: 700
-                  }
+                // }, {
+                //   name: 'slide-from-bottom-animation',
+                //   node:this.$.bottomhalf,
+                //   toPage: this,
+                //   timing: {
+                //     duration: 700
+                //   }
                 },{
                   name: 'hero-animation',
                   id: 'currenttag',
@@ -449,13 +448,13 @@
                     duration: 125
                   },
 
-                }, {
-                  name: 'slide-from-bottom-animation',
-                  node:this.$.bottomhalf,
-                  toPage: this,
-                  timing: {
-                    duration: 700
-                  }
+                // }, {
+                //   name: 'slide-from-bottom-animation',
+                //   node:this.$.bottomhalf,
+                //   toPage: this,
+                //   timing: {
+                //     duration: 700
+                //   }
                 },{
                   name: 'hero-animation',
                   id: 'hero',
@@ -479,13 +478,13 @@
                   timing: {
                       duration: 125
                   }
-                }, {
-                  name: 'slide-down-animation',
-                  node:this.$.bottomhalf,
-                  fromPage: this,
-                  timing: {
-                      duration: 700
-                  }
+                // }, {
+                //   name: 'slide-down-animation',
+                //   node:this.$.bottomhalf,
+                //   fromPage: this,
+                //   timing: {
+                //       duration: 700
+                //   }
                 },{
                   name: 'hero-animation',
                   id: 'hero',

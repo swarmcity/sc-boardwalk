@@ -369,36 +369,29 @@ This is the component showing all requests of a certain hashtag. It contains a r
         </div>
 
     <div class="contentcanvas">
-<!--     <neon-animated-pages id="hashpages" attr-for-selected="data-action" selected="[[data.action]]">
-
-      <neon-animatable data-action="list"> -->
-<!--           <paper-icon-button disabled="{{!hasgeohash}}" id="addbtn" icon="sc-icons:plus" class="left whiteback shadow medium addbtn" on-tap="tonewItem" noink>+ new offer</paper-icon-button> -->
-          <div id="pagecontent" class="pagecontent totalwidth">
-            <div id="{{item}}" class="hashtagtotal totalwidth horizont center startjust">
-
-                <paper-icon-button on-tap="leave" icon="sc-icons:arrowleft" class="backarrow" noink>back to hashtaglist</paper-icon-button>
-              <div class="hashtagtitle horizont start startjust" id="currenttag">
-                <div class="symbol">
-                  <p class="semibold">#</p>
-                </div>
-                <p class="bold wordbreak">{{hashtag}}</p>
-              </div>
-              <!-- <div class="flex"></div> -->
+      <div id="pagecontent" class="pagecontent totalwidth">
+        <div class="hashtagtotal totalwidth horizont center startjust">
+          <paper-icon-button on-tap="leave" icon="sc-icons:arrowleft" class="backarrow" noink>back to hashtaglist</paper-icon-button>
+          <div class="hashtagtitle horizont start startjust"  id="currenttag">
+            <div class="symbol">
+              <p class="semibold">#</p>
             </div>
+            <p class="bold wordbreak">{{hashtag}}</p>
+          </div>
+        </div>
 
-
-      <sc-newitem
-        data-action="newitem"
-        identity="[[identity]]"
-        hashtag="[[data.hashtag]]"
-        swtbalance="[[swtbalance]]"
-        on-back="newitem_cancel"
-        on-cancel=""
-        on-new-submitted="newitem_submitted"
-        on-newitem-open="opacityHalf"
-        on-newitem-close="opacityFull"
-        >
-      </sc-newitem>
+        <sc-newitem
+          data-action="newitem"
+          identity="[[identity]]"
+          hashtag="[[data.hashtag]]"
+          swtbalance="[[swtbalance]]"
+          on-back="newitem_cancel"
+          on-cancel=""
+          on-new-submitted="newitem_submitted"
+          on-newitem-open="opacityHalf"
+          on-newitem-close="opacityFull"
+          >
+        </sc-newitem>
 
 
           <div class="mydeals_repeater">
@@ -424,10 +417,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
             </template>
           </div>
 
-
-
-<!--        <template is="dom-repeat" items="{{otherdeals}}"
-              filter="ididntReply" observe="type manager.type"> -->
             <template is="dom-repeat" items="{{otherdeals}}"
               filter="notClaimed">
               <sc-hashtagitem
@@ -438,84 +427,10 @@ This is the component showing all requests of a certain hashtag. It contains a r
               </sc-hashtagitem>
             </template>
 
-<div class="tenspace"></div>
-<div class="tenspace"></div>
+          <div class="tenspace"></div>
+          <div class="tenspace"></div>
 
-
-<!--           <div class="filterbox">
-                <sc-filter id="locationfilter" currentid="locationfilter" location range="{{range}}"></sc-filter>
-              </div> -->
-
-
-
-
-
-
-
-
-<!--               
-
-
-
-              <template is="dom-if" if="{{!hasdeals(deals)}}">
-                <div class="requestsloading horizont centercenter">
-                  <sc-loader small color="grey2" class="grey2">Looking for requests</sc-loader>
-                </div>
-              </template>
-
-
-            <template is="dom-repeat" items="{{otherdeals}}"
-              filter="iReplied" observe="type manager.type">
-              <sc-hashtagitem
-                item="[[item]]"
-                identity="[[identity]]"
-                on-to-detail="hashtag_to_detail">
-              </sc-hashtagitem>
-            </template>
-
-
-            <template is="dom-repeat" items="{{otherdeals}}"
-              filter="ididntReply" observe="type manager.type">
-              <sc-hashtagitem
-                item="[[item]]"
-                identity="[[identity]]"
-                on-to-detail="hashtag_to_detail">
-              </sc-hashtagitem>
-            </template>
-
-
-
-
-            <div class="whitespace"></div>
-            <div class="whitespace"></div>
-            <div class="whitespace"></div>
-            <div class="whitespace"></div> -->
-          </div>
-<!--       </neon-animatable>
-
-      <sc-newitem
-        data-action="newitem"
-        identity="[[identity]]"
-        hashtag="[[data.hashtag]]"
-        swtbalance="[[swtbalance]]"
-        on-back="newitem_cancel"
-        on-cancel=""
-        on-new-submitted="newitem_submitted"
-        >
-      </sc-newitem>
-
-      <sc-itemdetail
-        data-action="detail"
-        itemid="[[datasubroute.itemid]]"
-        identity="[[identity]]"
-        on-back="detail_to_list"
-        on-reply-selected="detail_to_reply"
-        on-reply-to-detail="reply_to_detail"
-        on-to-makedeal="toMakeDeal"
-        on-to-dealfortwo-provider="toDealForTwoProvider"
-      ></sc-itemdetail>
-
-    </neon-animated-pages> -->
+      </div>
     </div>
     </div>
 
@@ -597,13 +512,17 @@ This is the component showing all requests of a certain hashtag. It contains a r
           value: function() {
             return {
               'entry': [{
-              //   name: 'slide-from-bottom-animation',
+              //   name: 'slide-from-left-animation',
               //   node: this.$.pagecontent,
               //   toPage: this,
               //   timing: {
               //     duration: 700
               //   }
               // }, {
+
+
+
+
                 name: 'hero-animation',
                 id: 'currenttag',
                 toPage: this,
@@ -625,6 +544,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
                 timing: {
                   duration: 600
                 }
+
+
               }],
 
               'exit': [{
@@ -634,16 +555,10 @@ This is the component showing all requests of a certain hashtag. It contains a r
               //   timing: {
               //     duration: 700
               //   }
-
-              //   // },{
-              //   //   name: 'fade-out-animation',
-              //   //   node:this.$.backbtn,
-              //   //   fromPage: this,
-              //   //   timing: {
-              //   //     duration: 125
-              //   //   }
-
               // }, {
+
+
+
                 name: 'hero-animation',
                 id: 'currenttag',
                 fromPage: this,
@@ -665,6 +580,9 @@ This is the component showing all requests of a certain hashtag. It contains a r
                 timing: {
                   duration: 600
                 }
+
+
+
               }]
             }
           },
@@ -766,6 +684,72 @@ This is the component showing all requests of a certain hashtag. It contains a r
        * 'leave' fires the 'leave' to the parent-element. (This also contains animation-config for going back to sc-home.)
        */
       leave: function() {
+
+          // this.sharedElements = {
+          //     'hero': this.$.hashtagavatar,
+          //     'balance': this.$.balancebox,
+          //     'currenttag': this.$.currenttag
+
+          //   };
+          // this.animationConfig = {
+          //       'entry': [{
+
+          //         name: 'hero-animation',
+          //         id: 'currenttag',
+          //         toPage: this,
+          //         timing: {
+          //           duration: 600
+          //         }
+          //       }, {
+
+          //         name: 'hero-animation',
+          //         id: 'hero',
+          //         toPage: this,
+          //         timing: {
+          //           duration: 600
+          //         }
+          //       }, {
+          //         name: 'hero-animation',
+          //         id: 'balance',
+          //         toPage: this,
+          //         timing: {
+          //           duration: 600
+          //         }
+
+          //       }],
+
+          //       'exit': [{
+
+
+          //       name: 'hero-animation',
+          //       id: 'currenttag',
+          //       fromPage: this,
+          //       timing: {
+          //         duration: 600
+          //       }
+          //     }, {
+
+          //       name: 'hero-animation',
+          //       id: 'hero',
+          //       fromPage: this,
+          //       timing: {
+          //         duration: 600
+          //       }
+          //     }, {
+          //       name: 'hero-animation',
+          //       id: 'balance',
+          //       fromPage: this,
+          //       timing: {
+          //         duration: 600
+          //       }
+
+
+          //       }]
+          //   };
+
+
+
+
         this.fire('leave');
       },
 
