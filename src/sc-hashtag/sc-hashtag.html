@@ -414,7 +414,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
             </template>
 
             <template is="dom-repeat" items="{{otherdeals}}"
-              filter="claimedTx">
+              filter="claimedByme">
               <sc-hashtagitem
                 item="[[item]]"
                 identity="[[identity]]"
@@ -913,14 +913,13 @@ This is the component showing all requests of a certain hashtag. It contains a r
         this.fire('to-notifications');
       },
 
-        claimedTx: function(item) {
-          var test = !item.providerfundingtx == false || !item.providerfundingtx == undefined;
-            return test;
+        claimedByme: function(item) {
+            return !item.providerfundingtx == false || !item.providerfundingtx == undefined;
         },
 
+
         notClaimed: function(item) {
-          var test = item.providerfundingtx == false || item.providerfundingtx == undefined;
-            return test;
+            return item.providerfundingtx == false || item.providerfundingtx == undefined;
         },
 
 
