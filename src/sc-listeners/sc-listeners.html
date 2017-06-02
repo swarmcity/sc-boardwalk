@@ -238,6 +238,24 @@
             return item.id === payload.requestid;
           });
           if (foundDeal > -1) {
+            var deal = deals[foundDeal];
+            var iamprovider = false;
+            // now check if the reply is ours.
+            //debugger;
+            if (deal.replies) {
+              // find the reply
+              var foundReply = deal.replies.find(function(item) {
+                return item.id === payload.replyid;
+              });
+              if (foundReply){
+                if (foundReply.provider && foundReply.provider.pubkey === this.identity.pubkey){
+                    iamprovider = true;
+                }
+              }
+            }           
+            mutation.iamprovider = iamprovider;
+
+
             deals[foundDeal] = Object.assign({},this.emptyDeal, deals[foundDeal], mutation);
           }else{
             deals.push(Object.assign({},this.emptyDeal,mutation));
@@ -464,7 +482,7 @@
             break;
 
           case 'dealfortwo-approve':
-          debugger;
+         
            var mutation = {
               id: payload.requestid,
               payouttx: payload.transactionhash,
