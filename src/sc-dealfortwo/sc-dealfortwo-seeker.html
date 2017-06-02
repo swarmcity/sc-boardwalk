@@ -494,6 +494,10 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         padding: 12px;
         margin-left: 10px;
       }
+
+      .halfopacity {
+        opacity: 0.5;
+      }
 /*
         paper-button.chatbtn_big {
           opacity: 0.75;
@@ -768,7 +772,16 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
               <div class$="bottomhalf {{bottombg}} totalwidth"> 
                 <template is="dom-if" if="{{!provideraccept}}">
-                  <sc-loader class="white" color="white" small><span class="light">Waiting for {{replydata.provider.username}} to respond</span></sc-loader>
+                  <template is="dom-if" if="{{!phoneview}}">
+                    <sc-loader class="white halfopacity" color="white" small><span class="light">Waiting for {{replydata.provider.username}} to respond</span></sc-loader>
+                  </template>
+                  <template is="dom-if" if="{{phoneview}}">
+                    <div class="totalwidth vertic centercenter halfopacity">
+                      <p class="white light">Waiting for {{replydata.provider.username}} to respond</p>
+                      <div class="whitespace"></div>
+                      <sc-loader class="white" color="white" small></sc-loader>
+                    </div>
+                  </template>
                 </template>
                 <template is="dom-if" if="{{provideraccept}}">
                   <template is="dom-if" if="{{indeal}}">

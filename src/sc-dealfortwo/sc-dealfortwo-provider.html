@@ -531,7 +531,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         @apply(--layout-center); 
         @apply(--layout-center-justified);
         box-sizing:border-box;
-        padding: 6vh 10vw;
+        padding: 6vh 16vw;
       }
 
 
@@ -550,7 +550,11 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         @apply(--layout-horizontal);
         @apply(--layout-center);
         @apply(--layout-center-justified);
-        margin-bottom: 6vh;        
+        margin-bottom: 6vh; 
+        margin-top: 4vh; 
+
+        margin-left: 0vw;        
+       
       }
 
       paper-icon-button.confirmbtn {
@@ -628,207 +632,198 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
     <sc-dealstate deal="{{requestdata}}" dealstate="{{dealstate}}"></sc-dealstate>
 
 
-<!-- 
-    SPONNET RAKET
-    //////
-    //////
+    <neon-animated-pages id="providerpages" attr-for-selected="data-action" selected="{{selecteddealpage}}" entry-animation="{{providerpagesentry}}" exit-animation="{{providerpagesexit}}">
+          
+      <neon-animatable data-action="dodeal">
 
-    <blink>
-      FUND "{{requestdata.msg}}" ... with {{requestdata.seeker.username}} by sending {{requestdata.amount}} SWT to the dealaddress {{requestdata.dealaddress}} ?
-       <paper-icon-button icon="sc-icons:v" noink class="confirmbtn blue big white shadow" on-tap="fundThisDeal"></paper-icon-button>
-    </blink> 
-   --> 
-<neon-animated-pages id="providerpages" attr-for-selected="data-action" selected="{{selecteddealpage}}" entry-animation="{{providerpagesentry}}" exit-animation="{{providerpagesexit}}">
-          <neon-animatable data-action="dodeal">
+        <div class="topbar" on-tap="dumpdeal">
+          <span class="flex"></span>
+            <paper-icon-button on-tap="leave" icon="sc-icons:decline" noink>back</paper-icon-button>
+        </div>
 
-            <div class="topbar" on-tap="dumpdeal">
-              <span class="flex"></span>
-                <paper-icon-button on-tap="leave" icon="sc-icons:decline" noink>back</paper-icon-button>
-            </div>
+        <div class="totalbox vertic center startjust totalwidth">
+          <div class="tophalf totalwidth">
 
-            <div class="totalbox vertic center startjust totalwidth">
-              <div class="tophalf totalwidth">
-               <template is="dom-if" if="{{_is(dealstate,'created')}}">
-                  <h1 class="">Do you accept a deal  with <span class="light blue replyer_username">{{requestdata.seeker.username}}</span> for <span class="">{{requestdata.amount}} SWT</span>?</h1>
-<!--                   <div class="minispace"></div>
-                  <div class="minispace"></div> -->
-                </template>
-                
-                <template is="dom-if" if="{{_is(dealstate,'provideraccepted')}}">
-                  <h1 class=""><span class="bold">You accepted!</span></h1>
-                  <div class="whitespace"></div>
-                  <sc-loader class="grey3" color="grey3" small on-tap="showSteps"><p class="light bottommarg">Processing deal</p></sc-loader>
-
-
-<!--                   <div class="dealcreate_steps">
-                    <div class="horizont end startjust">
-                      <div class$="triangle {{collapsestate}}" on-tap="showSteps">
-                        <svg id="triangle_icon" x="0px" y="0px" viewBox="0 0 50 50" fill="#24B1FF">
-                        <polygon points="6.5,4.9 6.5,44.5 42,24.9 "/>
-                        </svg>
-                      </div>
-                      <p class="creatingadeal bold blue" on-tap="showSteps">Processing your deal</p> 
-                      <sc-loader class="blue" color="blue" small on-tap="showSteps"></sc-loader>
-                    </div>
-                    <iron-collapse id="steps_collapser">
-                      <div class="allsteps">
-                        <div class$="step totalwidth horizont centercenter {{steponestate}}" on-tap="tempTapthree">
-                          <p class="flex">Assigning counterparty to deal</p>
-                          <iron-icon class="" icon="sc-icons:v"></iron-icon>
-                        </div>
-                        <div class$="step totalwidth horizont centercenter {{steptwostate}}" on-tap="tempTapfour">
-                          <p class="flex">Sending SWT of counterparty to deal</p>
-                          <iron-icon class="" icon="sc-icons:v"></iron-icon>
-                        </div>
-                      </div>
-                    </iron-collapse>
-                  </div> -->
-                </template>
-
-                <template is="dom-if" if="{{_is(dealstate,'indeal')}}">
-                  <h1 class=""><span class="bold">You're in deal</span> with <span class="light blue replyer_username">{{requestdata.seeker.username}}</span>.</h1>
-                </template>
-
-                <template is="dom-if" if="{{_is(dealstate,'payout')}}">
-                  <h1 class=""><span class="bold"></span><span class="light blue replyer_username">{{requestdata.seeker.username}}</span> started the payout of this deal ({requestdata.amount}} SWT).</h1>
-                </template>
-
-                <template is="dom-if" if="{{_is(dealstate,'payoutmined')}}">
-                  <h1 class=""><span class="bold">{requestdata.amount}} SWT</span> has been payed out to you.</h1>
-                </template>
-
-                <div class="details_toggler" on-tap="showDetails">
-                  <div class$="triangle {{collapsestate}}">
-                    <svg id="triangle_icon" x="0px" y="0px" viewBox="0 0 50 50" fill="#B3B3B3">
+            <!-- Created. -->
+            <template is="dom-if" if="{{_is(dealstate,'created')}}">
+              <h1 class="">Do you accept a deal  with <span class="light blue replyer_username">{{requestdata.seeker.username}}</span> for <span class="">{{requestdata.amount}} SWT</span>?</h1>
+            </template>
+            
+            <!-- Provider accepted. -->
+            <template is="dom-if" if="{{_is(dealstate,'provideraccepted')}}">
+              <h1 class=""><span class="bold">You accepted!</span></h1>
+              <div class="whitespace"></div>
+              <sc-loader class="grey3" color="grey3" small on-tap="showSteps"><p class="light bottommarg">Processing deal</p></sc-loader>
+              <!--                   
+              <div class="dealcreate_steps">
+                <div class="horizont end startjust">
+                  <div class$="triangle {{collapsestate}}" on-tap="showSteps">
+                    <svg id="triangle_icon" x="0px" y="0px" viewBox="0 0 50 50" fill="#24B1FF">
                     <polygon points="6.5,4.9 6.5,44.5 42,24.9 "/>
                     </svg>
                   </div>
-                  <p class="grey2b">{{dealdetailsmsg}}</p>
+                  <p class="creatingadeal bold blue" on-tap="showSteps">Processing your deal</p> 
+                  <sc-loader class="blue" color="blue" small on-tap="showSteps"></sc-loader>
                 </div>
-                <iron-collapse id="details_collapser">
-                    <div class="details_collapser_inner">
-                      <div class="details_request totalwidth vertic start startjust">
-
-                        <div class="detail">
-                          <p class="cat">Offer</p>
-                          <p class="reg bold">[[requestdata.amount]] SWT</p>
-                        </div>
-
-                        <div class="detail">
-                          <p class="cat">Hashtag</p>
-                          <p class="reg bold">#[[requestdata.hashtag]]</p>
-                        </div>
-
-
-                        <div class="detail">
-                          <p class="cat">Requester</p>
-                          <a href="" class="reg blue">[[requestdata.seeker.username]]<span>( [[requestdata.seeker.pubkey]] )</span></a>
-                        </div>
-
-                        <div class="detail">
-                          <p class="cat">Provider</p>
-                          <a href="" class="reg blue">[[replydata.provider.username]]<span>( [[replydata.provide.pubkey]] )</span></a>
-                        </div>                        
-
-
-                        <div class="detail">
-                          <p class="cat">Dealid</p>
-                          <p class="reg">[[requestdata.id]]</p>
-                        </div>
-                        <div class="whitespace"></div>
-
-                        <div class="detail">
-                          <p class="cat">Initial request</p>
-                          <p class="reg">[[requestdata.msg]]</p>
-                        </div>
-
-                        <div class="detail">
-                          <p class="cat">Initial reply</p>
-                          <p class="reg">[[replydata.msg]]</p>
-                        </div>
-                        <div class="whitespace"></div>
-
-                        <div class="detail">
-                          <p class="cat">Blockchain transactions</p>
-                          <p class="reg">[[requestdata.id]]</p>
-                        </div>
-                      </div>
+                <iron-collapse id="steps_collapser">
+                  <div class="allsteps">
+                    <div class$="step totalwidth horizont centercenter {{steponestate}}" on-tap="tempTapthree">
+                      <p class="flex">Assigning counterparty to deal</p>
+                      <iron-icon class="" icon="sc-icons:v"></iron-icon>
                     </div>
-                </iron-collapse>           
-
-                <div class="avatars_funding">
-                  <div class$="avatar_funding {{providerfundclass}}">
-                    <sc-avatar
-                      ipfshash="[[replydata.provider.avatarhash]]"
-                      pubkey="[[replydata.provider.pubkey]]"
-                      id="makedeal_otheravatar"
-                      size="{{provideravatarsize}}"
-                      on-tap="tempTap"
-                      ></sc-avatar>
+                    <div class$="step totalwidth horizont centercenter {{steptwostate}}" on-tap="tempTapfour">
+                      <p class="flex">Sending SWT of counterparty to deal</p>
+                      <iron-icon class="" icon="sc-icons:v"></iron-icon>
+                    </div>
                   </div>
-                  <div class$="avatar_funding {{providerfundclass}}">
-                    <sc-avatar
-                      ipfshash="[[requestdata.seeker.avatarhash]]"
-                      pubkey="[[requestdata.seeker.pubkey]]"
-                      id="makedeal_myavatar"
-                      size="{{seekeravatarsize}}"
-                      on-tap="tempTapto"
-                      ></sc-avatar>
-                  </div>
-                  <div class="chatbtn">
-                    <paper-icon-button class="chatbtn_iconbtn shadow blue grey4" icon="sc-icons:babble" on-tap="toDealchat"></paper-icon-button>
-                  </div>
+                </iron-collapse>
+              </div> -->
+            </template>
 
-                </div>
+            <!-- In deal. -->
+            <template is="dom-if" if="{{_is(dealstate,'indeal')}}">
+              <h1 class=""><span class="bold">You're in deal</span> with <span class="light blue replyer_username">{{requestdata.seeker.username}}</span>.</h1>
+            </template>
 
+            <!-- Payout. -->
+            <template is="dom-if" if="{{_is(dealstate,'payout')}}">
+              <h1 class=""><span class="bold"></span><span class="light blue replyer_username">{{requestdata.seeker.username}}</span> started the payout of this deal ({requestdata.amount}} SWT).</h1>
+            </template>
 
-                
+            <!-- Payed out -->
+            <template is="dom-if" if="{{_is(dealstate,'payoutmined')}}">
+              <h1 class=""><span class="bold">{requestdata.amount}} SWT</span> has been payed out to you.</h1>
+            </template>
 
+            <div class="details_toggler" on-tap="showDetails">
+              <div class$="triangle {{collapsestate}}">
+                <svg id="triangle_icon" x="0px" y="0px" viewBox="0 0 50 50" fill="#B3B3B3">
+                <polygon points="6.5,4.9 6.5,44.5 42,24.9 "/>
+                </svg>
               </div>
+              <p class="grey2b">{{dealdetailsmsg}}</p>
+            </div>
+            <iron-collapse id="details_collapser">
+                <div class="details_collapser_inner">
+                  <div class="details_request totalwidth vertic start startjust">
 
-              <div class$="bottomhalf {{bottombg}} totalwidth">
-<!--                     <paper-button class="details_toggler_btn green white" on-tap="showDetails"> Show deal details</paper-button> -->
-                  <p class="white light centertxt">By accepting, {{requestdata.amount}} of your SWT will be locked on this deal until payout.</p>
-
-
-                <template is="dom-if" if="{{!provideraccept}}">
-                  <div class="confirmbtns">
-                    <iron-icon icon="sc-icons:decline" class="decliner medium white" on-tap="cancelDeal"></iron-icon>
-                    <paper-icon-button icon="sc-icons:v" noink class="confirmbtn blue big white shadow" on-tap="fundThisDeal"></paper-icon-button>
-                  </div>
-                </template>
-                <template is="dom-if" if="{{provideraccept}}">
-                  <template is="dom-if" if="{{_is(dealstate,'indeal')}}">
-
-                    <div class="confirmbtns">
-                      <p class="halfopacity white bold centertxt">{{requestdata.amount}} of your SWT is locked on this deal until {{requestdata.seeker.username}} initiates payout.</p>
-<!--                       <paper-button class="confirmbtn payoutbtn green grey4 shadow" noink>Payout
-                        <iron-icon icon="sc-icons:v" class="medium white" on-tap="cancelDeal"></iron-icon>
-                      </paper-button> -->
+                    <div class="detail">
+                      <p class="cat">Offer</p>
+                      <p class="reg bold">[[requestdata.amount]] SWT</p>
                     </div>
-                  </template>
 
-                </template>
+                    <div class="detail">
+                      <p class="cat">Hashtag</p>
+                      <p class="reg bold">#[[requestdata.hashtag]]</p>
+                    </div>
 
 
+                    <div class="detail">
+                      <p class="cat">Requester</p>
+                      <a href="" class="reg blue">[[requestdata.seeker.username]]<span>( [[requestdata.seeker.pubkey]] )</span></a>
+                    </div>
 
+                    <div class="detail">
+                      <p class="cat">Provider</p>
+                      <a href="" class="reg blue">[[replydata.provider.username]]<span>( [[replydata.provide.pubkey]] )</span></a>
+                    </div>                        
+
+
+                    <div class="detail">
+                      <p class="cat">Dealid</p>
+                      <p class="reg">[[requestdata.id]]</p>
+                    </div>
+                    <div class="whitespace"></div>
+
+                    <div class="detail">
+                      <p class="cat">Initial request</p>
+                      <p class="reg">[[requestdata.msg]]</p>
+                    </div>
+
+                    <div class="detail">
+                      <p class="cat">Initial reply</p>
+                      <p class="reg">[[replydata.msg]]</p>
+                    </div>
+                    <div class="whitespace"></div>
+
+                    <div class="detail">
+                      <p class="cat">Blockchain transactions</p>
+                      <p class="reg">[[requestdata.id]]</p>
+                    </div>
+                  </div>
+                </div>
+            </iron-collapse>           
+
+            <div class="avatars_funding">
+              <div class$="avatar_funding {{providerfundclass}}">
+                <sc-avatar
+                  ipfshash="[[replydata.provider.avatarhash]]"
+                  pubkey="[[replydata.provider.pubkey]]"
+                  id="makedeal_otheravatar"
+                  size="{{provideravatarsize}}"
+                  on-tap="tempTap"
+                  ></sc-avatar>
+              </div>
+              <div class$="avatar_funding {{providerfundclass}}">
+                <sc-avatar
+                  ipfshash="[[requestdata.seeker.avatarhash]]"
+                  pubkey="[[requestdata.seeker.pubkey]]"
+                  id="makedeal_myavatar"
+                  size="{{seekeravatarsize}}"
+                  on-tap="tempTapto"
+                  ></sc-avatar>
+              </div>
+              <div class="chatbtn">
+                <paper-icon-button class="chatbtn_iconbtn shadow blue grey4" icon="sc-icons:babble" on-tap="toDealchat"></paper-icon-button>
               </div>
 
             </div>
 
+
             
 
-          </neon-animatable>
+          </div>
 
-          <neon-animatable data-action="dealchat">
-            <sc-dealchat
-            topic="[[requestdata.id]]"
-            hashtag="[[data.hashtag]]"
-            on-back="backfromChat">
-            </sc-dealchat>
-          </neon-animatable>
+          <div class$="bottomhalf {{bottombg}} totalwidth">
+            <template is="dom-if" if="{{!provideraccept}}">
+              <p class="white light centertxt">By accepting, {{requestdata.amount}} of your SWT will be locked on this deal until payout.</p>
+              <div class="confirmbtns">
+                <iron-icon icon="sc-icons:decline" class="decliner medium white" on-tap="cancelDeal"></iron-icon>
+                <paper-icon-button icon="sc-icons:v" noink class="confirmbtn blue big white shadow" on-tap="fundThisDeal"></paper-icon-button>
+              </div>
+            </template>
+            <template is="dom-if" if="{{provideraccept}}">
+              <template is="dom-if" if="{{_is(dealstate,'indeal')}}">
 
-          </neon-animated-pages>
+                <div class="confirmbtns">
+                  <p class="halfopacity white bold centertxt">{{requestdata.amount}} of your SWT is locked on this deal until {{requestdata.seeker.username}} initiates payout.</p>
+<!--                       <paper-button class="confirmbtn payoutbtn green grey4 shadow" noink>Payout
+                    <iron-icon icon="sc-icons:v" class="medium white" on-tap="cancelDeal"></iron-icon>
+                  </paper-button> -->
+                </div>
+              </template>
+
+            </template>
+
+
+
+          </div>
+
+        </div>
+
+        
+
+      </neon-animatable>
+
+      <neon-animatable data-action="dealchat">
+        <sc-dealchat
+        topic="[[requestdata.id]]"
+        hashtag="[[data.hashtag]]"
+        on-back="backfromChat">
+        </sc-dealchat>
+      </neon-animatable>
+
+    </neon-animated-pages>
 
 
 
