@@ -464,8 +464,9 @@
             break;
 
           case 'dealfortwo-approve':
+          debugger;
            var mutation = {
-              id: payload.id,
+              id: payload.requestid,
               payouttx: payload.transactionhash,
             };
             this.dispatch('update_deal', mutation);
