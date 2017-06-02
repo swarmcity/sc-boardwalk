@@ -62,7 +62,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
       .tophalf {
         min-height: 55vh;
-        padding: 8vh 10vw 0px 10vw;
+        padding: 8vh 10vw 6vh 10vw;
         @apply(--layout-vertical);
         @apply(--layout-start-justified);
         @apply(--layout-start);  
@@ -154,18 +154,16 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
 
       .details_toggler { 
-        /*text-decoration: underline;*/        
-        border-bottom: 1px dotted var(--sc-grey3);
+        padding: 0px;
         font-size: 14px;
-        line-height: 20px;   
+        margin: 20px 0px 20px 0px;
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        @apply(--layout-start-justified);        
       }
-
-      paper-button.details_toggler_btn {
-        padding: 10px 16px 10px 13px;
-        font-size: 14px;
-        margin: 0px 0px 0px 15px;
+      .details_toggler p {
+        border-bottom: 1px dotted #bfbfbf;
       }
-
 
       #details_collapser {
         width: 100%;   
@@ -422,13 +420,11 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         border-bottom: 2px dotted rgba(36,177,255,0.5);
       }
 
-
       .triangle {
         width: 12px;
         transition: all 0.075s linear;
-        margin-right: 8px;
-        margin-left: 8px;
-        margin-bottom: 2px;
+        margin-right: 10px;
+        margin-left: 2px;
         opacity: 1;
       }
 
@@ -513,6 +509,10 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           margin-bottom: 3px;
         }
 
+        .halfopacity {
+          opacity: 0.5;
+        }
+
     @media all and (min-width: 0) and (max-width: 420px) { 
 
 
@@ -529,8 +529,9 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         min-height: 40vh;
         @apply(--layout-vertical);
         @apply(--layout-center); 
-        @apply(--layout-start-justified);
-        padding-top: 6vh;
+        @apply(--layout-center-justified);
+        box-sizing:border-box;
+        padding: 6vh 10vw;
       }
 
 
@@ -598,11 +599,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         @apply(--layout-center-justified);
       }
 
-      paper-button.details_toggler_btn {
-        padding: 10px 16px 10px 13px;
-        font-size: 14px;
-        margin: 20px 0px 0px 0px;
-      }
 
 
 
@@ -652,7 +648,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
             <div class="totalbox vertic center startjust totalwidth">
               <div class="tophalf totalwidth">
-
                <template is="dom-if" if="{{_is(dealstate,'created')}}">
                   <h1 class="">Do you accept a deal  with <span class="light blue replyer_username">{{requestdata.seeker.username}}</span> for <span class="">{{requestdata.amount}} SWT</span>?</h1>
                   <div class="minispace"></div>
@@ -703,34 +698,14 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                   <h1 class=""><span class="bold">{requestdata.amount}} SWT</span> has been payed out to you.</h1>
                 </template>
 
-                <div class="avatars_funding">
-                  <div class$="avatar_funding {{providerfundclass}}">
-                    <sc-avatar
-                      ipfshash="[[requestdata.seeker.avatarhash]]"
-                      pubkey="[[requestdata.seeker.pubkey]]"
-                      id="makedeal_myavatar"
-                      size="{{seekeravatarsize}}"
-                      on-tap="tempTapto"
-                      ></sc-avatar>
+                <div class="details_toggler" on-tap="showDetails">
+                  <div class$="triangle {{collapsestate}}">
+                    <svg id="triangle_icon" x="0px" y="0px" viewBox="0 0 50 50" fill="#B3B3B3">
+                    <polygon points="6.5,4.9 6.5,44.5 42,24.9 "/>
+                    </svg>
                   </div>
-                  <div class$="avatar_funding {{providerfundclass}}">
-                    <sc-avatar
-                      ipfshash="[[replydata.provider.avatarhash]]"
-                      pubkey="[[replydata.provider.pubkey]]"
-                      id="makedeal_otheravatar"
-                      size="{{provideravatarsize}}"
-                      on-tap="tempTap"
-                      ></sc-avatar>
-<!--                     <iron-icon class$="v_icon {{vsize}}" icon="sc-icons:v"></iron-icon> -->
-                  </div>
-
-                  <!-- <template is="dom-if" if="{{!phoneview}}"> -->
-                    <paper-button class="details_toggler_btn shadow grey3 darker" on-tap="showDetails"> Show more details</paper-button>
-                  <!-- </template> -->
+                  <p class="grey2b">{{dealdetailsmsg}}</p>
                 </div>
-
-
-                
                 <iron-collapse id="details_collapser">
                     <div class="details_collapser_inner">
                       <div class="details_request totalwidth vertic start startjust">
@@ -780,15 +755,40 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                         </div>
                       </div>
                     </div>
-                </iron-collapse>
-              </div>
+                </iron-collapse>           
 
-              <div class$="bottomhalf {{bottombg}} totalwidth">
-                <template is="dom-if" if="{{!phoneview}}">
+                <div class="avatars_funding">
+                  <div class$="avatar_funding {{providerfundclass}}">
+                    <sc-avatar
+                      ipfshash="[[replydata.provider.avatarhash]]"
+                      pubkey="[[replydata.provider.pubkey]]"
+                      id="makedeal_otheravatar"
+                      size="{{provideravatarsize}}"
+                      on-tap="tempTap"
+                      ></sc-avatar>
+                  </div>
+                  <div class$="avatar_funding {{providerfundclass}}">
+                    <sc-avatar
+                      ipfshash="[[requestdata.seeker.avatarhash]]"
+                      pubkey="[[requestdata.seeker.pubkey]]"
+                      id="makedeal_myavatar"
+                      size="{{seekeravatarsize}}"
+                      on-tap="tempTapto"
+                      ></sc-avatar>
+                  </div>
                   <div class="chatbtn">
                     <paper-icon-button class="chatbtn_iconbtn shadow blue grey4" icon="sc-icons:babble" on-tap="toDealchat"></paper-icon-button>
                   </div>
-                </template>
+
+                </div>
+
+
+                
+
+              </div>
+
+              <div class$="bottomhalf {{bottombg}} totalwidth">
+<!--                     <paper-button class="details_toggler_btn green white" on-tap="showDetails"> Show deal details</paper-button> -->
 
 
                 <template is="dom-if" if="{{!provideraccept}}">
@@ -798,12 +798,10 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                   </div>
                 </template>
                 <template is="dom-if" if="{{provideraccept}}">
-
-                  <template is="dom-if" if="{{!_is(dealstate,'indeal')}}">
-                  </template>
-
                   <template is="dom-if" if="{{_is(dealstate,'indeal')}}">
+
                     <div class="confirmbtns">
+                      <p class="halfopacity white bold centertxt">{{requestdata.amount}} of your SWT is locked on this deal until {{requestdata.seeker.username}} initiates payout.</p>
 <!--                       <paper-button class="confirmbtn payoutbtn green grey4 shadow" noink>Payout
                         <iron-icon icon="sc-icons:v" class="medium white" on-tap="cancelDeal"></iron-icon>
                       </paper-button> -->
@@ -811,14 +809,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                   </template>
 
                 </template>
-                <template is="dom-if" if="{{phoneview}}">
-                  <div class="chatbtn">
-                    <paper-button noink class="chatbtn_big" on-tap="toDealchat">
-                    Chat with [[replydata.provider.username]]
-                    <iron-icon class="grey4 small" icon="sc-icons:babble">chat</iron-icon>
-                  </paper-button>
-                  </div>
-                </template>
+
 
 
               </div>
@@ -939,8 +930,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
       ready: function(){
         this.selecteddealpage = 'dodeal';
-        this.seekerfundclass = "fund_init";
-        this.providerfundclass="fund_init";
+        this.dealdetailsmsg = "Show details";
       },
 
       /**
@@ -1119,6 +1109,13 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       showDetails: function(){
         var details = this.shadowRoot.getElementById('details_collapser');
         details.toggle();
+        if (details.opened){
+          this.dealdetailsmsg = "Hide details";
+          this.collapsestate = 'opened';
+        } else {
+          this.dealdetailsmsg = "Show details";
+          this.collapsestate = '';
+        }
         // console.log(details);
       },
 
@@ -1217,14 +1214,14 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
 
       toDealchat: function(){
-        this.providerpagesentry = 'slide-from-bottom-animation';
-        this.providerpagesexit = 'slide-up-animation';
+        this.providerpagesentry = 'slide-from-right-animation';
+        this.providerpagesexit = 'slide-left-animation';
         this.selecteddealpage = 'dealchat';
       },
 
       backfromChat: function(){
-        this.providerpagesentry = 'slide-from-top-animation';
-        this.providerpagesexit = 'slide-down-animation';
+        this.providerpagesentry = 'slide-from-left-animation';
+        this.providerpagesexit = 'slide-right-animation';
         this.selecteddealpage = 'dodeal';
       },
 
