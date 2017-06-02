@@ -542,36 +542,48 @@ This components is the representation of a request in the requests-list on sc-ha
                   class="provavatar">
                 </sc-avatar>
 
-                <div class="flex vertic start startjust">
 
                   <!-- Created. -->
                   <template is="dom-if" if="{{_is(dealstate,'created')}}">
-                   <p class="hashtagdealmsg totalwidth grey4">You selected {{currentprovider.username}} to make a deal with.</p>
-                   <p class="small totalwidth grey2">Waiting for {{currentprovider.username}} to respond.</p>
+                    <div class="flex vertic start startjust">
+                       <p class="hashtagdealmsg totalwidth grey4">You selected {{currentprovider.username}} to make a deal with.</p>
+                       <p class="small totalwidth grey2">Waiting for {{currentprovider.username}} to respond.</p>
+                    </div>
+                    <div class="amountstuff vertic end endjust">
+                      <small class="bold blue">for</small>
+                      <p class="bold blue">{{item.amount}} SWT</p>
+                    </div>
                   </template>
 
                   <!-- Provider accepted -->
                   <template is="dom-if" if="{{_is(dealstate,'provideraccepted')}}">
-                    <p class="hashtagdealmsg totalwidth grey4">{{currentprovider.username}} has accept a deal with you.</p>
+                    <div class="flex vertic start startjust">
+                        <p class="hashtagdealmsg totalwidth grey4">{{currentprovider.username}} has accept a deal with you.</p>
+                    </div>
+                    <div class="amountstuff vertic end endjust">
+                      <small class="bold green">for</small>
+                      <p class="bold green">{{item.amount}} SWT</p>
+                    </div>
                   </template>
 
                   <!-- In deal. -->
                   <template is="dom-if" if="{{_is(dealstate,'indeal')}}">
-                      <template is="dom-if" if="{{!phoneview}}">
-                        <p class="hashtagdealmsg totalwidth grey4">You're <span class="bold">in deal</span> with {{currentprovider.username}}.</p>
-                      </template>
-                      <template is="dom-if" if="{{phoneview}}">
-                        <p class="hashtagdealmsg totalwidth grey4"><span class="bold">In deal</span> with {{currentprovider.username}}.</p>
-                      </template>
-                    <p class="small totalwidth grey3">#{{item.hashtag}}</p>
+                    <div class="flex vertic start startjust">
+                        <template is="dom-if" if="{{!phoneview}}">
+                          <p class="hashtagdealmsg totalwidth grey4">You're <span class="bold">in deal</span> with {{currentprovider.username}}.</p>
+                        </template>
+                        <template is="dom-if" if="{{phoneview}}">
+                          <p class="hashtagdealmsg totalwidth grey4"><span class="bold">In deal</span> with {{currentprovider.username}}.</p>
+                        </template>
+                        <p class="small totalwidth grey3">#{{item.hashtag}}</p>
+                    </div>
+                    <div class="amountstuff vertic end endjust">
+                      <small class="bold green">for</small>
+                      <p class="bold green">{{item.amount}} SWT</p>
+                    </div>
                   </template>
-                </div>
 
 
-                <div class="amountstuff vertic end endjust">
-                  <small class="bold green">for</small>
-                  <p class="bold green">{{item.amount}} SWT</p>
-                </div>
               </div>
 
               <div class="lid totalwidth"></div>
