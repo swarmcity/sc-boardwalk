@@ -231,12 +231,17 @@
         });
       },
 
-      payout: function(dealID,from, cb) {
-        debugger;
+      payout: function(dealID, from, cb) {
         var self = this;
         self.web3.cached.getGasPrice(function(err, gasPrice) {
-          self.DealForTwoFactoryContractInstance.payout.estimateGas(dealID, function(err, gasNeeded) {
-            gasNeeded = gasNeeded || 200000;
+          self.DealForTwoFactoryContractInstance.payout.estimateGas(dealID, {
+            from: from
+          }, function(err, gasNeeded) {
+            if (gasNeeded) {
+              gasNeeded = Math.floor(gasNeeded * 1.2);
+            } else {
+              gasNeeded = 300000;
+            }
             self.DealForTwoFactoryContractInstance.payout.sendTransaction(dealID, {
               from: from,
               gasPrice: gasPrice,
@@ -252,22 +257,23 @@
             });
           });
         });
-
       },
 
       readDeal: function(dealId, dealOwner, cb) {
         //debugger;
         var self = this;
+//DealStatuses status, uint commissionValue, uint dealValue, address provider){
+//    bytes32 key = sha3(_dealowner,_dealid);
 
-        cb(null, {
-            balance: 666
+        self.DealForTwoFactoryContractInstance.readDeal.call(dealId, dealOwner, function(err, result) {
+
+          cb(null, {
+            status: result[0].toNumber(10),
+            commissionValue: result[1].toNumber(10),
+            dealValue: result[2].toNumber(10),
+            provider: result[3]
           });
-
-        // self.DealForTwoFactoryContractInstance.readDeal.call(dealId, dealOwner, function(err, result) {
-        //   cb(null, {
-        //     balance: 666
-        //   });
-        // });
+        });
       }
       // makeDeal: function(dealID,offerAmount, cb) {
       //   var self = this;

@@ -234,8 +234,9 @@ This component shows the SWT-balance and the reference currency (when in sc-wall
       * 'formatpong' sets the format of the balance to the right amount of decimals (18). This shows the SWT-balance as pongs.
       */
       formatpong: function(val){
-      return val.dividedBy(1e18).toFormat(2);
-
+        if (val){
+          return val.dividedBy(1e18).toFormat(2);
+        }
       },
 
       // /**
