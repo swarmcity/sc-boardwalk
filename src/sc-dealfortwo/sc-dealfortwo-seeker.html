@@ -659,9 +659,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
               <div class="tophalf totalwidth">
                <template is="dom-if" if="{{_is(dealstate,'created')}}">
                   <h1 class="">You selected <span class="light blue replyer_username">{{replydata.provider.username}}</span> to make a deal for <span class="">{{requestdata.amount}} SWT</span>.</h1>
-                  <div class="minispace"></div>
-                  <div class="minispace"></div>
-                  <sc-loader class="grey2" color="grey2" small><span class="light">Waiting for {{replydata.provider.username}} to respond</span></sc-loader>
+<!--                   <div class="minispace"></div>
+                  <div class="minispace"></div> -->
                </template>
 
                <template is="dom-if" if="{{_is(dealstate,'provideraccepted')}}">
@@ -767,7 +766,10 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
               </div>
 
-              <div class$="bottomhalf {{bottombg}} totalwidth">      
+              <div class$="bottomhalf {{bottombg}} totalwidth"> 
+                <template is="dom-if" if="{{!provideraccept}}">
+                  <sc-loader class="white" color="white" small><span class="light">Waiting for {{replydata.provider.username}} to respond</span></sc-loader>
+                </template>
                 <template is="dom-if" if="{{provideraccept}}">
                   <template is="dom-if" if="{{indeal}}">
                     <template is="dom-if" if="{{!phoneview}}">

@@ -914,11 +914,13 @@ This is the component showing all requests of a certain hashtag. It contains a r
       },
 
         claimedTx: function(item) {
-            return !item.providerfundingtx == false || !item.providerfundingtx == undefined;
+          var test = !item.providerfundingtx == false || !item.providerfundingtx == undefined;
+            return test;
         },
 
         notClaimed: function(item) {
-            return item.providerfundingtx == false || item.providerfundingtx == undefined;
+          var test = item.providerfundingtx == false || item.providerfundingtx == undefined;
+            return test;
         },
 
 

@@ -650,9 +650,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
               <div class="tophalf totalwidth">
                <template is="dom-if" if="{{_is(dealstate,'created')}}">
                   <h1 class="">Do you accept a deal  with <span class="light blue replyer_username">{{requestdata.seeker.username}}</span> for <span class="">{{requestdata.amount}} SWT</span>?</h1>
-                  <div class="minispace"></div>
-                  <div class="minispace"></div>
-                  <p class="grey2 light">By accepting, {{requestdata.amount}} of your SWT will be locked on this deal until payout.</p>
+<!--                   <div class="minispace"></div>
+                  <div class="minispace"></div> -->
                 </template>
                 
                 <template is="dom-if" if="{{_is(dealstate,'provideraccepted')}}">
@@ -789,6 +788,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
               <div class$="bottomhalf {{bottombg}} totalwidth">
 <!--                     <paper-button class="details_toggler_btn green white" on-tap="showDetails"> Show deal details</paper-button> -->
+                  <p class="white light centertxt">By accepting, {{requestdata.amount}} of your SWT will be locked on this deal until payout.</p>
 
 
                 <template is="dom-if" if="{{!provideraccept}}">

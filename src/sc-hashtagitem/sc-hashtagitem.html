@@ -372,6 +372,9 @@ This components is the representation of a request in the requests-list on sc-ha
           </template>
 
           <iron-collapse id="repliescollapser" class="totalwidth">
+            <template is="dom-if" if="{{!phoneview}}">
+              <div class="whitespace"></div>
+            </template>
             <template is="dom-if" if="{{!youareowner(item.seeker.pubkey)}}">
               <template is="dom-if" if="{{!item.ireplied}}">
                   <sc-itemreplier itemdata="{{item}}">
