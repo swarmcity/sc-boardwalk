@@ -25,35 +25,26 @@ This component shows a reply on a request.
       :host {
         display: block;
         width: 100%;
-/*        @apply(--base-structure);*/
       }
 
 
       .responditem {
-        /*background-color: var(--sc-grey1);*/
         box-sizing:border-box;
         padding-top: 8px;
         padding-bottom: 8px;
         padding-left: 76px;
         padding-right: 30px;
-/*        background-color: rgba(255,255,255,0.5);*/
-
-/*        border-bottom: 1px solid rgba(0,0,0,0.075);*/
+        margin-bottom: 0px;
       }
-
-
 
       .replyeravatar {
         margin-right: 10px;
-
       }
 
       .replyamount {
-        
       }
       
       .replyer {
-/*        margin: 12px 0px 0px 0px;*/
         font-size: 11px;
         line-height: 14px;
       }
@@ -250,11 +241,12 @@ This component shows a reply on a request.
         .responditem {
           /*  background-color: var(--sc-grey1);*/
           box-sizing:border-box;
-          padding-top: 8vw;
-          padding-bottom: 8vw;
+          padding-top: 2vh;
+          padding-bottom: 2vh;
           padding-left: 10vw;
           padding-right: 10vw;
           border-bottom: none;
+          margin-bottom: 10px;
         }
 
 
@@ -318,16 +310,30 @@ This component shows a reply on a request.
 
           </div>
           <p class="msg totalwidth grey4"> {{reply.msg}}<!-- <span class="bold"> for {{item.amount}} SWT</span> --></p>
-        </div>
 
+          <template is="dom-if" if="{{phoneview}}">
             <template is="dom-if" if="{{btnshow}}">
               <template is="dom-if" if="{{showselectbtn}}">
+                <div class="minispace"></div>
                 <div class="horizont center endjust">
-
                   <paper-button class="darker grey4 makedealbtn shadow" on-tap="toMakeDeal">Select {{reply.provider.username}}</paper-button>
                 </div>
               </template>
             </template>
+          </template>
+
+
+        </div>
+
+          <template is="dom-if" if="{{!phoneview}}">
+            <template is="dom-if" if="{{btnshow}}">
+              <template is="dom-if" if="{{showselectbtn}}">
+                <div class="horizont center endjust">
+                  <paper-button class="darker grey4 makedealbtn shadow" on-tap="toMakeDeal">Select {{reply.provider.username}}</paper-button>
+                </div>
+              </template>
+            </template>
+          </template>
 
 <!--         <div class="amountstuff vertic end endjust">
           <small class="bold yellow">for</small>

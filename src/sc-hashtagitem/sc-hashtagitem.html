@@ -1,6 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
 
 <link rel="import" href="../../bower_components/moment-js/moment-js.html">
 
@@ -28,10 +29,13 @@ This components is the representation of a request in the requests-list on sc-ha
       :host {
         display: block;
         width: 100%;
-        @apply(--base-shadow); 
-
         --my-totalbg-color: rgba(255,255,255,0.25);
         background-color: var(--my-totalbg-color);
+      }
+
+
+      .totalcontainer {
+/*        @apply(--base-shadow); */
 
       }
 
@@ -88,7 +92,6 @@ This components is the representation of a request in the requests-list on sc-ha
 
       sc-avatar { 
         margin-right: 10px;
-        height: 28px;
       }
 
       .provavatar {
@@ -121,6 +124,11 @@ This components is the representation of a request in the requests-list on sc-ha
           /*margin: 5px 0px 15px 0px;*/
       }
 
+      .hashtagdealmsg {
+        margin-bottom: 4px;
+        font-size: 16px;
+        line-height: 20px; 
+      }
 
       .offeramount {
           font-size: 30px;
@@ -259,7 +267,12 @@ This components is the representation of a request in the requests-list on sc-ha
       }*/
 
       @media all and (min-width: 0) and (max-width: 420px) { 
-      
+        .totalcontainer {
+          box-shadow: none;
+          -webkit-box-shadow: none;
+          -moz-box-shadow: none;
+          -o-box-shadow: none;
+        }      
         .smalltxt {
           font-size: 13px;
           line-height: 17px;
@@ -268,133 +281,254 @@ This components is the representation of a request in the requests-list on sc-ha
         .amountstuff {
           padding-bottom: 2px;
         }
-      
+
+        .dealmessage p {
+          padding-top: 12px;
+        }
+ 
+        .request_info {
+          width: 100%;
+          @apply(--layout-vertical);
+          @apply(--layout-start);
+          @apply(--layout-start-justified);
+        }
+
+
       }
 
     </style>
  
     <sc-dealstate deal="{{item}}" dealstate="{{dealstate}}"></sc-dealstate>
- 
+    <iron-media-query query="(min-width:0px) and (max-width: 540px)" query-matches="{{phoneview}}"></iron-media-query>
 
-<!-- WHEN REPLY == NOT SELECTED YET -->
+
+      <!-- WHEN REPLY == NOT SELECTED YET -->
       <template is="dom-if" if="{{!item.selectedreply}}">
-      <div class$="totalwidth vertic start centerjust {{ownerclass}}">
+        <div class$="totalcontainer totalwidth vertic start centerjust {{ownerclass}}">
 
-        <div class="itemtotal horizont start startjust" on-tap="toggleItem">
-          <sc-avatar
-            ipfshash="[[item.seeker.avatarhash]]"
-            size="small">
-          </sc-avatar>
-          <div class="flex vertic start startjust">
-            <div class="request_info">
-            <template is="dom-if" if="{{youareowner(item.seeker.pubkey)}}">
-              <p class="you small bold grey4">you • <span class="bold"><sc-hashtagrep pubkey="{{item.seeker.pubkey}}" hashtagname="{{item.hashtag}}"></sc-hashtagrep></span></p>
-            </template>
-            <template is="dom-if" if="{{!youareowner(item.seeker.pubkey)}}">
-              <p class="seeker small reg blue">{{item.seeker.username}} • <span class="bold"><sc-hashtagrep pubkey="{{item.seeker.pubkey}}" hashtagname="{{item.hashtag}}"></sc-hashtagrep></span></p>
-            </template>
-              <p class="grey2b light small"><moment-js date="{{item.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
-              <template is="dom-if" if="{{itemreplies}}">
-                <div class="replies horizont centercenter">
-                  <p class="divider small grey2b light">|</p>
-                  <small class="small grey2b light">{{itemreplies.length}}</small>
-                  <iron-icon icon="sc-icons:babble" class="grey2b verysmall">replies</iron-icon>
+          <div class="itemtotal horizont start startjust" on-tap="toggleItem">
+            <sc-avatar
+              ipfshash="[[item.seeker.avatarhash]]"
+              size="small">
+            </sc-avatar>
+            <div class="flex vertic start startjust">
+              <div class="request_info">
+              <template is="dom-if" if="{{youareowner(item.seeker.pubkey)}}">
+                <p class="you small bold grey4">you • <span class="bold"><sc-hashtagrep pubkey="{{item.seeker.pubkey}}" hashtagname="{{item.hashtag}}"></sc-hashtagrep></span></p>
+              </template>
+              <template is="dom-if" if="{{!youareowner(item.seeker.pubkey)}}">
+                <p class="seeker small reg blue">{{item.seeker.username}} • <span class="bold"><sc-hashtagrep pubkey="{{item.seeker.pubkey}}" hashtagname="{{item.hashtag}}"></sc-hashtagrep></span></p>
+              </template>
+
+              <template is="dom-if" if="{{phoneview}}">
+                <div class="totalwidth horizont center startjust">
+                <p class="grey2b light small"><moment-js date="{{item.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
+                <template is="dom-if" if="{{itemreplies}}">
+                  <div class="replies horizont centercenter">
+                    <p class="divider small grey2b light">|</p>
+                    <small class="small grey2b light">{{itemreplies.length}}</small>
+                    <iron-icon icon="sc-icons:babble" class="grey2b verysmall">replies</iron-icon>
+                  </div>
+                </template>
                 </div>
               </template>
+              <template is="dom-if" if="{{!phoneview}}">
+                <p class="grey2b light small"><moment-js date="{{item.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
+                <template is="dom-if" if="{{itemreplies}}">
+                  <div class="replies horizont centercenter">
+                    <p class="divider small grey2b light">|</p>
+                    <small class="small grey2b light">{{itemreplies.length}}</small>
+                    <iron-icon icon="sc-icons:babble" class="grey2b verysmall">replies</iron-icon>
+                  </div>
+                </template>
+              </template>
+
+
+              </div>
+              <p class="msg totalwidth grey4">{{item.msg}}</p>
             </div>
-            <p class="msg totalwidth grey4">{{item.msg}}<!-- <span class="bold"> for {{item.amount}} SWT</span> --></p>
-          </div>
-
-          <template is="dom-if" if="{{youareowner(item.seeker.pubkey)}}">
-            <div class="replycount_box horizont center endjust">
-              <p class="bold">{{item.replies.length}}</p>
-              <iron-icon icon="sc-icons:babble" class="small replyicon">replies</iron-icon>
-            </div>
-          </template>
-          <div class="amountstuff vertic end endjust">
-            <small class="bold yellow">for</small>
-            <p class="bold yellow">{{item.amount}} SWT</p>
-          </div>
-
-
-        </div>
-
-
-        <template is="dom-if" if="{{showdealmsg}}">
-          <div class="dealmessage totalwidth horizontal center endjust">
-            <p class$="small {{dealmessageclass}} bold">{{dealmessage}}</p>
-          </div>
-        </template>
-
-        <iron-collapse id="repliescollapser" class="totalwidth">
-          <template is="dom-if" if="{{!youareowner(item.seeker.pubkey)}}">
-            <template is="dom-if" if="{{!item.ireplied}}">
-                <sc-itemreplier itemdata="{{item}}">
-                </sc-itemreplier>
+            <template is="dom-if" if="{{!phoneview}}">
+            <template is="dom-if" if="{{youareowner(item.seeker.pubkey)}}">
+              <div class="replycount_box horizont center endjust">
+                <p class="bold">{{item.replies.length}}</p>
+                <iron-icon icon="sc-icons:babble" class="small replyicon">replies</iron-icon>
+              </div>
             </template>
-          </template>
-          <template is="dom-if" if="{{itemreplies}}">
-            <div class="whitespace"></div>
-          </template>
-          <template is="dom-repeat" as="currentreply" items="{{itemreplies}}">
-            <sc-itemreply
-            item="{{item}}"
-            btnshow="{{youareowner(item.seeker.pubkey)}}"
-            reply="{{currentreply}}"
-           >
-            </sc-itemreply>
-          </template>
-        </iron-collapse>
+            </template>
 
-        <div class="lid totalwidth"></div>
-      </div>
+            <div class="amountstuff vertic end endjust">
+              <small class="bold yellow">for</small>
+              <p class="bold yellow">{{item.amount}} SWT</p>
+            </div>
 
+
+          </div>
+
+
+          <template is="dom-if" if="{{showdealmsg}}">
+            <div class="dealmessage totalwidth horizontal center endjust">
+              <p class$="small {{dealmessageclass}} bold">{{dealmessage}}</p>
+            </div>
+          </template>
+
+          <iron-collapse id="repliescollapser" class="totalwidth">
+            <template is="dom-if" if="{{!youareowner(item.seeker.pubkey)}}">
+              <template is="dom-if" if="{{!item.ireplied}}">
+                  <sc-itemreplier itemdata="{{item}}">
+                  </sc-itemreplier>
+              </template>
+            </template>
+            <template is="dom-repeat" as="currentreply" items="{{itemreplies}}">
+              <sc-itemreply
+              item="{{item}}"
+              btnshow="{{youareowner(item.seeker.pubkey)}}"
+              reply="{{currentreply}}"
+             >
+              </sc-itemreply>
+            </template>
+          </iron-collapse>
+
+          <div class="lid totalwidth"></div>
+        </div>
       </template>
 
 
-
+      <!-- WHEN REPLY == SELECTED -->
       <template is="dom-if" if="{{item.selectedreply}}">
 
+        <!-- U R NOOOT seeker -->
         <template is="dom-if" if="{{!youareowner(item.seeker.pubkey)}}">
+
           <div class$="totalwidth vertic start centerjust {{ownerclass}}">
               <div class="itemtotal horizont start startjust" on-tap="toggleItem">
                 <sc-avatar
                   ipfshash="[[item.seeker.avatarhash]]"
                   size="small">
                 </sc-avatar>
-                <div class="flex vertic start startjust">
-                  <div class="request_info">
-                    <p class="seeker small reg blue">{{item.seeker.username}} • <span class="bold"><sc-hashtagrep pubkey="{{item.seeker.pubkey}}" hashtagname="{{item.hashtag}}"></sc-hashtagrep></span></p>
-                    <p class="grey2b light small"><moment-js date="{{item.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
-                    <template is="dom-if" if="{{itemreplies}}">
-                      <div class="replies horizont centercenter">
-                        <p class="divider small grey2b light">|</p>
-                        <small class="small grey2b light">{{itemreplies.length}}</small>
-                        <iron-icon icon="sc-icons:babble" class="grey2b verysmall">replies</iron-icon>
-                      </div>
+
+                <!-- Created. -->
+                <template is="dom-if" if="{{_is(dealstate,'created')}}">
+                  <div class="flex vertic start startjust">
+                    <div class="request_info">
+                      <p class="seeker small reg blue">{{item.seeker.username}} • <span class="bold"><sc-hashtagrep pubkey="{{item.seeker.pubkey}}" hashtagname="{{item.hashtag}}"></sc-hashtagrep></span></p>
+                      <template is="dom-if" if="{{phoneview}}">
+                        <div class="totalwidth horizont center startjust">
+                        <p class="grey2b light small"><moment-js date="{{item.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
+                        <template is="dom-if" if="{{itemreplies}}">
+                          <div class="replies horizont centercenter">
+                            <p class="divider small grey2b light">|</p>
+                            <small class="small grey2b light">{{itemreplies.length}}</small>
+                            <iron-icon icon="sc-icons:babble" class="grey2b verysmall">replies</iron-icon>
+                          </div>
+                        </template>
+                        </div>
+                      </template>
+                      <template is="dom-if" if="{{!phoneview}}">
+                        <p class="grey2b light small"><moment-js date="{{item.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
+                        <template is="dom-if" if="{{itemreplies}}">
+                          <div class="replies horizont centercenter">
+                            <p class="divider small grey2b light">|</p>
+                            <small class="small grey2b light">{{itemreplies.length}}</small>
+                            <iron-icon icon="sc-icons:babble" class="grey2b verysmall">replies</iron-icon>
+                          </div>
+                        </template>
+                      </template>
+                    </div>
+                    <p class="msg totalwidth grey4">{{item.msg}}</p>
+                  </div>
+                  <div class="amountstuff vertic end endjust">
+                    <small class="bold yellow">for</small>
+                    <p class="bold yellow">{{item.amount}} SWT</p>
+                  </div>
+                </template>
+
+                <!-- Provider accepted. -->
+                <template is="dom-if" if="{{_is(dealstate,'provideraccepted')}}">
+                  <!-- U R provider -->
+                  <template is="dom-if" if="{{youareowner(currentprovider.pubkey)}}">
+                    <sc-avatar
+                      ipfshash="[[currentprovider.avatarhash]]"
+                      size="small">
+                    </sc-avatar>
+                  </template>
+
+                  <div class="flex vertic start startjust">
+                    <div class="request_info">
+                      <p class="seeker small reg blue">{{item.seeker.username}} • <span class="bold"><sc-hashtagrep pubkey="{{item.seeker.pubkey}}" hashtagname="{{item.hashtag}}"></sc-hashtagrep></span></p>
+                      <template is="dom-if" if="{{phoneview}}">
+                        <div class="totalwidth horizont center startjust">
+                        <p class="grey2b light small"><moment-js date="{{item.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
+                        <template is="dom-if" if="{{itemreplies}}">
+                          <div class="replies horizont centercenter">
+                            <p class="divider small grey2b light">|</p>
+                            <small class="small grey2b light">{{itemreplies.length}}</small>
+                            <iron-icon icon="sc-icons:babble" class="grey2b verysmall">replies</iron-icon>
+                          </div>
+                        </template>
+                        </div>
+                      </template>
+                      <template is="dom-if" if="{{!phoneview}}">
+                        <p class="grey2b light small"><moment-js date="{{item.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
+                        <template is="dom-if" if="{{itemreplies}}">
+                          <div class="replies horizont centercenter">
+                            <p class="divider small grey2b light">|</p>
+                            <small class="small grey2b light">{{itemreplies.length}}</small>
+                            <iron-icon icon="sc-icons:babble" class="grey2b verysmall">replies</iron-icon>
+                          </div>
+                        </template>
+                      </template>
+                    </div>
+                    <p class="msg totalwidth grey4">{{item.msg}}</p>
+                  </div>
+                </template>
+
+                <!-- In deal. -->
+                <template is="dom-if" if="{{_is(dealstate,'indeal')}}">
+                  <!-- U R provider -->
+                  <template is="dom-if" if="{{youareowner(currentprovider.pubkey)}}">
+                    <sc-avatar
+                      ipfshash="[[currentprovider.avatarhash]]"
+                      size="small">
+                    </sc-avatar>
+                  </template>
+ 
+                  <div class="flex vertic start startjust">
+                    <template is="dom-if" if="{{!phoneview}}">
+                      <p class="hashtagdealmsg totalwidth grey4">You're <span class="bold">in deal</span> with {{item.seeker.username}}.</p>
+                    </template>
+                    <template is="dom-if" if="{{phoneview}}">
+                      <p class="hashtagdealmsg totalwidth grey4"><span class="bold">In deal</span> with {{item.seeker.username}}.</p>
                     </template>
                   </div>
-                  <p class="msg totalwidth grey4">{{item.msg}}<!-- <span class="bold"> for {{item.amount}} SWT</span> --></p>
-                </div>
-                <div class="amountstuff vertic end endjust">
-                  <small class="bold yellow">for</small>
-                  <p class="bold yellow">{{item.amount}} SWT</p>
-                </div>
+
+                  <div class="amountstuff vertic end endjust">
+                    <small class="bold green">for</small>
+                    <p class="bold green">{{item.amount}} SWT</p>
+                  </div>
+
+                </template>
+
               </div>
 
-              <div class="dealmessage totalwidth horizontal center endjust">
-                <p class$="small {{dealmessageclass}} bold">{{dealmessage}}</p>
-              </div>
 
-              <iron-collapse id="repliescollapser" class="totalwidth">
-                <div class="dealmessagechosen totalwidth horizontal center endjust">
-                  <p class="small grey3 reg">{{dealmessagechosen}}</p>
+              <template is="dom-if" if="{{_is(dealstate,'created')}}">
+                <div class="dealmessage totalwidth horizontal center endjust">
+                  <p class$="small {{dealmessageclass}} bold">{{dealmessage}}</p>
                 </div>
-              </iron-collapse>
-              <div class="lid totalwidth"></div>
+                <iron-collapse id="repliescollapser" class="totalwidth">
+                  <div class="dealmessagechosen totalwidth horizontal center endjust">
+                    <p class="small grey3 reg">{{dealmessagechosen}}</p>
+                  </div>
+                </iron-collapse>
+              </template>
+
+
+            <div class="lid totalwidth"></div>
           </div>
         </template>
 
+
+        <!-- U R seeker -->
         <template is="dom-if" if="{{youareowner(item.seeker.pubkey)}}">
           <div class$="totalwidth vertic start centerjust {{ownerclass}} whiteback" on-tap="toDealForTwoSeeker">
               <div class="itemtotal horizont start startjust" on-tap="">
@@ -410,49 +544,39 @@ This components is the representation of a request in the requests-list on sc-ha
 
                 <div class="flex vertic start startjust">
 
+                  <!-- Created. -->
                   <template is="dom-if" if="{{_is(dealstate,'created')}}">
-                   <p class="msg totalwidth grey4">You selected {{currentprovider.username}} to make a deal with.</p>
+                   <p class="hashtagdealmsg totalwidth grey4">You selected {{currentprovider.username}} to make a deal with.</p>
                    <p class="small totalwidth grey2">Waiting for {{currentprovider.username}} to respond.</p>
-                 </template>
-
-                  <template is="dom-if" if="{{_is(dealstate,'providerfundingtx')}}">
-                   <p class="msg totalwidth grey4">{{currentprovider.username}} has accept a deal with you.</p>
                   </template>
 
+                  <!-- Provider accepted -->
+                  <template is="dom-if" if="{{_is(dealstate,'provideraccepted')}}">
+                    <p class="hashtagdealmsg totalwidth grey4">{{currentprovider.username}} has accept a deal with you.</p>
+                  </template>
+
+                  <!-- In deal. -->
                   <template is="dom-if" if="{{_is(dealstate,'indeal')}}">
-                    <p>jup</p>
+                      <template is="dom-if" if="{{!phoneview}}">
+                        <p class="hashtagdealmsg totalwidth grey4">You're <span class="bold">in deal</span> with {{currentprovider.username}}.</p>
+                      </template>
+                      <template is="dom-if" if="{{phoneview}}">
+                        <p class="hashtagdealmsg totalwidth grey4"><span class="bold">In deal</span> with {{currentprovider.username}}.</p>
+                      </template>
+                    <p class="small totalwidth grey3">#{{item.hashtag}}</p>
                   </template>
-
-<!--                   <div class="totalwidth horizont center startjust">
-                  <template is="dom-if" if="{{youareowner(item.seeker.pubkey)}}">
-                    <p class="you small bold grey4">you</p>
-                  </template>
-                  <template is="dom-if" if="{{!youareowner(item.seeker.pubkey)}}">
-                    <p class="seeker small reg blue">{{item.seeker.username}} • <span class="bold"><sc-hashtagrep pubkey="{{item.seeker.pubkey}}" hashtagname="{{item.hashtag}}"></sc-hashtagrep></span></p>
-                  </template>
-                    <p class="grey2b light small"><moment-js date="{{item.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
-                    <template is="dom-if" if="{{item.replies}}">
-                      <div class="replies horizont centercenter">
-                        <p class="divider small grey2b light">|</p>
-                        <small class="small grey2b light">{{item.replies.length}}</small>
-                        <iron-icon icon="sc-icons:babble" class="grey2b verysmall">replies</iron-icon>
-                      </div>
-                    </template>
-                  </div>
-                  <p class="msg totalwidth grey4">{{item.msg}}</p> -->
                 </div>
+
+
                 <div class="amountstuff vertic end endjust">
-                  <small class="bold yellow">for</small>
-                  <p class="bold yellow">{{item.amount}} SWT</p>
+                  <small class="bold green">for</small>
+                  <p class="bold green">{{item.amount}} SWT</p>
                 </div>
               </div>
 
               <div class="lid totalwidth"></div>
           </div>
         </template>        
-
-
-
 
       </template>
 
@@ -534,11 +658,15 @@ This components is the representation of a request in the requests-list on sc-ha
           this.customStyle['--my-totalbg-color'] = 'rgba(255,255,255,0.25)';
           this.updateStyles();
           toggler.opened = false;
-
+          if (this.dealmessage) {
+            this.showdealmsg = true;
+          };
         } else {
           toggler.opened = true;
           this.customStyle['--my-totalbg-color'] = 'var(--sc-white)';
-          this.updateStyles();          
+          this.updateStyles();   
+          this.showdealmsg = false;
+       
         }
 }
         // this.checkDealmsg();
@@ -590,6 +718,7 @@ This components is the representation of a request in the requests-list on sc-ha
                   self.dealmessagechosen = "";
                   self.dealmessageclass = "blue";
                   self.iamprovider = true;
+                  self.showdealmsg = false;
                   //debugger;
                 } else {
                 self.dealmessage = "";
@@ -602,7 +731,7 @@ This components is the representation of a request in the requests-list on sc-ha
 
 
       _log: function(target){
-          console.log("HAZ THIS in hashtagitem??!!!!",target);
+          console.log("HAZ THIS in hashtagitem??!!!!",this.item.msg, target);
       },
 
 

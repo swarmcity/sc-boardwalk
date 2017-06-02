@@ -54,6 +54,11 @@ This is the component showing all requests of a certain hashtag. It contains a r
         height: 100%;
       }
 
+      #pagecontent {
+        box-sizing:border-box;
+        padding: 18vh 0px 0px 0px;
+      }
+
       .hashtagtitle {
         margin: 0px 0px 5px 0px;
 
@@ -100,15 +105,15 @@ This is the component showing all requests of a certain hashtag. It contains a r
       sc-hashtagitem {
         width: 100%;
         max-width: 600px;
-        margin: 10px 0px;
+/*        margin: 10px 0px;*/
         transition: all 0.25s linear;
-
+        border-bottom: 1px solid rgba(0,0,0,0.05);
       }
 
       sc-newitem {
         width: 100%;
         max-width: 600px;
-        margin: 20px 0px 0px 0px;
+        margin: 20px 0px 30px 0px;
       }
 
       sc-dealitem {
@@ -187,6 +192,11 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
     @media all and (min-width: 0) and (max-width: 540px) { 
 
+      #pagecontent {
+        box-sizing:border-box;
+        padding: 0px 4vw;
+      }
+      
       .paddingsides {
         padding-left: 6vw;
         padding-right: 6vw;
@@ -288,6 +298,20 @@ This is the component showing all requests of a certain hashtag. It contains a r
       .backhash {
         margin: 2px 0px 0px 5px;
       }
+
+
+      sc-hashtagitem {
+        width: 100%;
+        max-width: 600px;
+        margin: 0px;
+        transition: all 0.25s linear;
+        border-bottom: 1px solid rgba(0,0,0,0.15);
+      }
+      sc-newitem {
+        width: 100%;
+        margin: 20px 0px 30px 0px;
+      }
+
     }
 
     </style>
@@ -303,7 +327,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
 
     <div class="avatar_username_balance_content totalwidth">
-        <div class="avatar_username_balance" on-tap="toProfile">
+        <div class="avatar_username_balance">
           <template is="dom-if" if="{{phoneview}}">
             <sc-notificationbadge on-tap="toNotifs" class="notifbadge noSelect" notifnumber="{{notifnumber}}" dummynotifications="{{notifs}}"></sc-notificationbadge>
           </template>
@@ -311,7 +335,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
           ipfshash="[[identity.avatarhash]]"
           id="hashtagavatar"
           size="{{currentviewmode}}"
-          ></sc-avatar>
+          on-tap="toProfile"></sc-avatar>
           <div class="horizont centercenter noSelect">
             <sc-username
             class$="{{visibleclass}}"
@@ -376,29 +400,21 @@ This is the component showing all requests of a certain hashtag. It contains a r
         >
       </sc-newitem>
 
+
+          <div class="mydeals_repeater">
             <template is="dom-if" if="{{hasmydeals(mydeals)}}">
-
-            <div class="mydeals_repeater">
-
-            <template is="dom-repeat" items="{{mydeals}}">
-<!--               <sc-dealitem
-                item="[[item]]"
-                on-to-detail="hashtag_to_detail"
-                on-to-dealfortwo="hashtag_to_dealfortwo"
-                class$="{{dealsopacity}}">
-              </sc-dealitem> -->
-              <sc-hashtagitem
-                item="[[item]]"
-                identity="[[identity]]"
-                on-to-detail="hashtag_to_detail"
-                class$="{{dealsopacity}}">
-              </sc-hashtagitem>              
+              <template is="dom-repeat" items="{{mydeals}}">
+                <sc-hashtagitem
+                  item="[[item]]"
+                  identity="[[identity]]"
+                  on-to-detail="hashtag_to_detail"
+                  class$="{{dealsopacity}}">
+                </sc-hashtagitem>              
+              </template>
             </template>
-            </div>
-            </template>
-<!--             <template is="dom-repeat" items="{{otherdeals}}"
-              filter="ididntReply" observe="type manager.type"> -->
-            <template is="dom-repeat" items="{{otherdeals}}">
+
+            <template is="dom-repeat" items="{{otherdeals}}"
+              filter="claimedTx">
               <sc-hashtagitem
                 item="[[item]]"
                 identity="[[identity]]"
@@ -406,7 +422,21 @@ This is the component showing all requests of a certain hashtag. It contains a r
                 class$="{{dealsopacity}}">
               </sc-hashtagitem>
             </template>
+          </div>
 
+
+
+<!--        <template is="dom-repeat" items="{{otherdeals}}"
+              filter="ididntReply" observe="type manager.type"> -->
+            <template is="dom-repeat" items="{{otherdeals}}"
+              filter="notClaimed">
+              <sc-hashtagitem
+                item="[[item]]"
+                identity="[[identity]]"
+                on-to-detail="hashtag_to_detail"
+                class$="{{dealsopacity}}">
+              </sc-hashtagitem>
+            </template>
 
 <div class="tenspace"></div>
 <div class="tenspace"></div>
@@ -813,11 +843,11 @@ This is the component showing all requests of a certain hashtag. It contains a r
       /**
        * 'hashtag_to_detail' fires 'to-itemdetail' to the parent-element, and includes the animationconfig for this action.
        */
-      hashtag_to_detail: function(e) {
-        console.log("Dit is de e uit hashtgitem", e.detail);
-        this.currentitem = e.detail;
-        this.set('route.path', '/' + this.hashtag + '/detail/' + e.detail.id);
-      },
+      // hashtag_to_detail: function(e) {
+      //   console.log("Dit is de e uit hashtgitem", e.detail);
+      //   this.currentitem = e.detail;
+      //   this.set('route.path', '/' + this.hashtag + '/detail/' + e.detail.id);
+      // },
 
       // my deal -> to dealfortwo
       hashtag_to_dealfortwo: function(e) {
@@ -827,37 +857,37 @@ This is the component showing all requests of a certain hashtag. It contains a r
         });
       },
 
-      detail_to_list: function() {
-        this.set('route.path', '/' + this.hashtag + '/list');
-      },
+      // detail_to_list: function() {
+      //   this.set('route.path', '/' + this.hashtag + '/list');
+      // },
 
-      detail_to_hashtag: function() {
-        this.set('route.path', '/' + this.hashtag + '/list');
-      },
+      // detail_to_hashtag: function() {
+      //   this.set('route.path', '/' + this.hashtag + '/list');
+      // },
 
-      detail_to_reply: function(e) {
+      // detail_to_reply: function(e) {
 
-        // THIS IS A TEMP SOLUTION: IT SHOULD WORK ON THE STATE (WITH REDUX)
-        console.log("OUT OF HASHTAG:::::", e.detail)
-        this.currentreply = e.detail;
+      //   // THIS IS A TEMP SOLUTION: IT SHOULD WORK ON THE STATE (WITH REDUX)
+      //   console.log("OUT OF HASHTAG:::::", e.detail)
+      //   this.currentreply = e.detail;
 
-        this.set('route.path', '/' + this.hashtag + '/replydetail');
-      },
-
-
-      reply_to_detail: function() {
-        this.set('route.path', '/' + this.hashtag + '/detail');
-      },
+      //   this.set('route.path', '/' + this.hashtag + '/replydetail');
+      // },
 
 
-      newitem_cancel: function(e) {
-        this.set('route.path', '/' + this.hashtag + '/list');
-      },
+//       reply_to_detail: function() {
+//         this.set('route.path', '/' + this.hashtag + '/detail');
+//       },
 
-      newitem_submitted: function(e) {
-//        this.set('route.path','/'+self.hashtag+'/detail/'+e.detail.itemid);
-        this.set('route.path', '/' + this.hashtag + '/list');
-      },
+
+//       newitem_cancel: function(e) {
+//         this.set('route.path', '/' + this.hashtag + '/list');
+//       },
+
+//       newitem_submitted: function(e) {
+// //        this.set('route.path','/'+self.hashtag+'/detail/'+e.detail.itemid);
+//         this.set('route.path', '/' + this.hashtag + '/list');
+//       },
 
       // toMakeDeal: function(e) {
       //   //debugger;
@@ -867,8 +897,12 @@ This is the component showing all requests of a certain hashtag. It contains a r
       //   //        this.fire('redirect',Object.assign({}, e.detail, {hashtag: this.data.hashtag}));
       // },
 
+
+      toProfile: function(){
+        this.fire('to-profile');
+      },
+
       toDealForTwoProvider: function(e){
-        
         this.fire('redirect', {
           target: '/dealfortwoprovider/' + this.data.hashtag + '/' + e.detail.id + '/' + e.detail.selectedreply
         });
@@ -876,19 +910,26 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       
       toNotifs: function(){
-          this.fire('to-notifications');
+        this.fire('to-notifications');
       },
 
-
-
-
-        iReplied: function(item) {
-            return item.ireplied == true;
+        claimedTx: function(item) {
+            return !item.providerfundingtx == false || !item.providerfundingtx == undefined;
         },
 
-        ididntReply: function(item) {
-            return item.ireplied == false || item.ireplied == undefined;
+        notClaimed: function(item) {
+            return item.providerfundingtx == false || item.providerfundingtx == undefined;
         },
+
+
+
+        // iReplied: function(item) {
+        //     return item.ireplied == true;
+        // },
+
+        // ididntReply: function(item) {
+        //     return item.ireplied == false || item.ireplied == undefined;
+        // },
 
         // notmyIssue: function(item) {
         //     return item.ireplied == false || item.ireplied == undefined;
