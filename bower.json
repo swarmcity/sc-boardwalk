@@ -27,11 +27,11 @@
     "paper-item": "^1.2.2",
     "paper-listbox": "^1.1.2",
     "uuid-js": "^0.7.5",
-    "moment-js": "^0.7.2",
     "paper-slider": "^1.0.15",
     "bower": "*",
     "install": "^1.0.4",
-    "uuid.js": "v3.0"
+    "uuid.js": "v3.0",
+    "moment-js": "https://github.com/swarmcity/moment-js.git"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
