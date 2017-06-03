@@ -62,7 +62,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
       .tophalf {
         min-height: 55vh;
-        padding: 8vh 10vw 6vh 10vw;
+        padding: 6vh 10vw 6vh 10vw;
         @apply(--layout-vertical);
         @apply(--layout-start-justified);
         @apply(--layout-start);  
@@ -805,8 +805,13 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
             <template is="dom-if" if="{{!provideraccept}}">
               <p class="white light centertxt">By accepting, {{requestdata.amount}} of your SWT will be locked on this deal until payout.</p>
               <div class="confirmbtns">
-                <iron-icon icon="sc-icons:decline" class="decliner medium white" on-tap="cancelDeal"></iron-icon>
-                <paper-icon-button icon="sc-icons:v" noink class="confirmbtn blue big white shadow" on-tap="fundThisDeal"></paper-icon-button>
+                <template is="dom-if" if="{{btntapped}}">
+                  <sc-loader small color="white"></sc-loader>
+                </template>
+                <template is="dom-if" if="{{!btntapped}}">
+                  <iron-icon icon="sc-icons:decline" class="decliner medium white" on-tap="cancelDeal"></iron-icon>
+                  <paper-icon-button icon="sc-icons:v" noink class="confirmbtn blue big white shadow" on-tap="fundThisDeal"></paper-icon-button>
+                </template>
               </div>
             </template>
             <template is="dom-if" if="{{provideraccept}}">
@@ -943,6 +948,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       ready: function(){
         this.selecteddealpage = 'dodeal';
         this.dealdetailsmsg = "Show details";
+        this.btntapped = false;
       },
 
       /**
@@ -994,6 +1000,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       },
 
       fundThisDeal: function() {
+        this.btntapped = true;
         var self = this;
 
         var offerAmount = this.requestdata.amount;
