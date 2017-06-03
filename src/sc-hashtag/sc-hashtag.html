@@ -393,10 +393,12 @@ This is the component showing all requests of a certain hashtag. It contains a r
           >
         </sc-newitem>
 
-
+          <!-- my deals -->
           <div class="mydeals_repeater">
-            <template is="dom-if" if="{{hasmydeals(mydeals)}}">
-              <template is="dom-repeat" items="{{mydeals}}">
+          
+          
+            <!-- <template is="dom-if" if="{{hasmydeals(mydeals)}}"> -->
+              <template is="dom-repeat" items="{{deals}}" filter="isMyDeal" sort="sortDeal">
                 <sc-hashtagitem
                   item="[[item]]"
                   identity="[[identity]]"
@@ -404,9 +406,10 @@ This is the component showing all requests of a certain hashtag. It contains a r
                   class$="{{dealsopacity}}">
                 </sc-hashtagitem>              
               </template>
-            </template>
+            <!-- </template> -->
 
-            <template is="dom-repeat" items="{{otherdeals}}"
+            <!-- other deals - claimed by me -->
+            <template is="dom-repeat" items="{{deals}}" sort="sortDeal"
               filter="claimedByme">
               <sc-hashtagitem
                 item="[[item]]"
@@ -417,15 +420,16 @@ This is the component showing all requests of a certain hashtag. It contains a r
             </template>
           </div>
 
-            <template is="dom-repeat" items="{{otherdeals}}"
-              filter="notClaimed">
-              <sc-hashtagitem
-                item="[[item]]"
-                identity="[[identity]]"
-                on-to-detail="hashtag_to_detail"
-                class$="{{dealsopacity}}">
-              </sc-hashtagitem>
-            </template>
+          <!-- other deals - and not claimed by me -->
+          <template is="dom-repeat" items="{{deals}}"  sort="sortDeal"
+            filter="notClaimedByMe">
+            <sc-hashtagitem
+              item="[[item]]"
+              identity="[[identity]]"
+              on-to-detail="hashtag_to_detail"
+              class$="{{dealsopacity}}">
+            </sc-hashtagitem>
+          </template>
 
           <div class="tenspace"></div>
           <div class="tenspace"></div>
@@ -448,7 +452,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
 
       observers: [
-//        '_shhweb3(shhweb3)',
         '_routedata(data)',
         '_log(range)',
         '_geohash(geohash)'
@@ -473,14 +476,14 @@ This is the component showing all requests of a certain hashtag. It contains a r
           type: Array,
           statePath: 'deals',
         },
-        mydeals: {
-          type: Array,
-          statePath: 'mydeals',
-        },
-        otherdeals: {
-          type: Array,
-          statePath: 'otherdeals',
-        },        
+        // mydeals: {
+        //   type: Array,
+        //   statePath: 'mydeals',
+        // },
+        // otherdeals: {
+        //   type: Array,
+        //   statePath: 'otherdeals',
+        // },        
         /**
          * `phoneview` is a boolean to determine the viewport.
          */
@@ -597,7 +600,17 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       },
 
+      isMyDeal: function(item){
+        return (item.seeker.pubkey === this.identity.pubkey);
+      },
+      
+      isNotMyDeal: function(item){
+        return (item.seeker.pubkey !== this.identity.pubkey);
+      },
 
+      sortDeal: function(a,b){
+        return b.offertime - a.offertime;
+      },
 
       _routedata: function() {
         if (this.data && this.data.hashtag) {
@@ -641,9 +654,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
       },
 
       _web3: function() {
-//        debugger;
-      
-
 
       },
 
@@ -652,8 +662,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
         this.hasgeohash = true;
         //this._starthastaglistener();
       },
-
-  
 
       /**
        * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
@@ -684,154 +692,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
        * 'leave' fires the 'leave' to the parent-element. (This also contains animation-config for going back to sc-home.)
        */
       leave: function() {
-
-          // this.sharedElements = {
-          //     'hero': this.$.hashtagavatar,
-          //     'balance': this.$.balancebox,
-          //     'currenttag': this.$.currenttag
-
-          //   };
-          // this.animationConfig = {
-          //       'entry': [{
-
-          //         name: 'hero-animation',
-          //         id: 'currenttag',
-          //         toPage: this,
-          //         timing: {
-          //           duration: 600
-          //         }
-          //       }, {
-
-          //         name: 'hero-animation',
-          //         id: 'hero',
-          //         toPage: this,
-          //         timing: {
-          //           duration: 600
-          //         }
-          //       }, {
-          //         name: 'hero-animation',
-          //         id: 'balance',
-          //         toPage: this,
-          //         timing: {
-          //           duration: 600
-          //         }
-
-          //       }],
-
-          //       'exit': [{
-
-
-          //       name: 'hero-animation',
-          //       id: 'currenttag',
-          //       fromPage: this,
-          //       timing: {
-          //         duration: 600
-          //       }
-          //     }, {
-
-          //       name: 'hero-animation',
-          //       id: 'hero',
-          //       fromPage: this,
-          //       timing: {
-          //         duration: 600
-          //       }
-          //     }, {
-          //       name: 'hero-animation',
-          //       id: 'balance',
-          //       fromPage: this,
-          //       timing: {
-          //         duration: 600
-          //       }
-
-
-          //       }]
-          //   };
-
-
-
-
         this.fire('leave');
       },
-
-      /**
-       * 'tonewItem' .
-       */
-      // tonewItem: function() {
-      //   this.sharedElements = {
-      //     'hero': this.$.hashtagavatar,
-      //     'balance': this.$.balancebox
-      //   };
-
-      //   this.animationConfig = {
-
-      //     'entry': [{
-      //       name: 'slide-from-bottom-animation',
-      //       node: this.$.pagecontent,
-      //       toPage: this,
-      //       timing: {
-      //         duration: 700
-      //       }
-      //     }, {
-      //       name: 'hero-animation',
-      //       id: 'hero',
-      //       toPage: this,
-      //       timing: {
-      //         duration: 600
-      //       }
-      //     }, {
-      //       name: 'hero-animation',
-      //       id: 'balance',
-      //       toPage: this,
-      //       timing: {
-      //         duration: 600
-      //       }
-      //     }],
-
-
-      //     'exit': [{
-      //       name: 'slide-down-animation',
-      //       node: this.$.pagecontent,
-      //       fromPage: this,
-      //       timing: {
-      //         duration: 700
-      //       }
-
-      //     }, {
-      //       //   name: 'fade-out-animation',
-      //       //   node:this.$.backbtn,
-      //       //   fromPage: this,
-      //       //   timing: {
-      //       //     duration: 125
-      //       //   }
-
-      //       // }, {
-      //       name: 'hero-animation',
-      //       id: 'hero',
-      //       fromPage: this,
-      //       timing: {
-      //         duration: 600
-      //       }
-      //     }, {
-      //       name: 'hero-animation',
-      //       id: 'balance',
-      //       fromPage: this,
-      //       timing: {
-      //         duration: 600
-      //       }
-      //     }]
-      //   };
-
-      //   this.set('route.path', '/' + this.hashtag + '/newitem');
-      // },
-
-      /**
-       * 'hashtag_to_detail' fires 'to-itemdetail' to the parent-element, and includes the animationconfig for this action.
-       */
-      // hashtag_to_detail: function(e) {
-      //   console.log("Dit is de e uit hashtgitem", e.detail);
-      //   this.currentitem = e.detail;
-      //   this.set('route.path', '/' + this.hashtag + '/detail/' + e.detail.id);
-      // },
 
       // my deal -> to dealfortwo
       hashtag_to_dealfortwo: function(e) {
@@ -841,46 +703,11 @@ This is the component showing all requests of a certain hashtag. It contains a r
         });
       },
 
-      // detail_to_list: function() {
-      //   this.set('route.path', '/' + this.hashtag + '/list');
-      // },
-
-      // detail_to_hashtag: function() {
-      //   this.set('route.path', '/' + this.hashtag + '/list');
-      // },
-
-      // detail_to_reply: function(e) {
-
-      //   // THIS IS A TEMP SOLUTION: IT SHOULD WORK ON THE STATE (WITH REDUX)
-      //   console.log("OUT OF HASHTAG:::::", e.detail)
-      //   this.currentreply = e.detail;
-
-      //   this.set('route.path', '/' + this.hashtag + '/replydetail');
-      // },
-
-
-//       reply_to_detail: function() {
-//         this.set('route.path', '/' + this.hashtag + '/detail');
-//       },
-
-
-//       newitem_cancel: function(e) {
-//         this.set('route.path', '/' + this.hashtag + '/list');
-//       },
-
-//       newitem_submitted: function(e) {
-// //        this.set('route.path','/'+self.hashtag+'/detail/'+e.detail.itemid);
-//         this.set('route.path', '/' + this.hashtag + '/list');
-//       },
-
-      // toMakeDeal: function(e) {
-      //   //debugger;
-      //   this.fire('redirect', {
-      //     target: '/dealfortwoseeker/' + this.data.hashtag + '/' + e.detail.parentrequestid + '/' + e.detail.id
-      //   });
-      //   //        this.fire('redirect',Object.assign({}, e.detail, {hashtag: this.data.hashtag}));
-      // },
-
+      toWalletview: function(){
+         this.fire('redirect', {
+          target: '/walletview'
+        });
+      },
 
       toProfile: function(){
         this.fire('to-profile');
@@ -891,48 +718,31 @@ This is the component showing all requests of a certain hashtag. It contains a r
           target: '/dealfortwoprovider/' + this.data.hashtag + '/' + e.detail.id + '/' + e.detail.selectedreply
         });
       },
-
       
       toNotifs: function(){
         this.fire('to-notifications');
       },
+      claimedByme: function(item) {
+        if (this.isMyDeal(item)){
+          return false;
+        }
+        return !item.providerfundingtx == false || !item.providerfundingtx == undefined;
+      },
 
-        claimedByme: function(item) {
-            return !item.providerfundingtx == false || !item.providerfundingtx == undefined;
-        },
+      notClaimedByMe: function(item) {
+        if (this.isMyDeal(item)){
+          return false;
+        }
+        return item.providerfundingtx == false || item.providerfundingtx == undefined;
+      },
 
+      opacityHalf: function(){
+        this.dealsopacity = "half";
+      },
 
-        notClaimed: function(item) {
-            return item.providerfundingtx == false || item.providerfundingtx == undefined;
-        },
-
-
-
-        // iReplied: function(item) {
-        //     return item.ireplied == true;
-        // },
-
-        // ididntReply: function(item) {
-        //     return item.ireplied == false || item.ireplied == undefined;
-        // },
-
-        // notmyIssue: function(item) {
-        //     return item.ireplied == false || item.ireplied == undefined;
-        // },
-
-
-        opacityHalf: function(){
-          this.dealsopacity = "half";
-        },
-
-
-        opacityFull: function(){
-          this.dealsopacity = "full";
-        },
-
-        
-
-
+      opacityFull: function(){
+        this.dealsopacity = "full";
+      },
     });
   </script>
 </dom-module>

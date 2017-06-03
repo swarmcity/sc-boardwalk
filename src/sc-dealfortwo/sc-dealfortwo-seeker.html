@@ -698,7 +698,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                 </template>
 
                 <template is="dom-if" if="{{_is(dealstate,'payoutmined')}}">
-                  <h1 class=""><span class="bold"><sc-tokenbalanceformatter value="{{requestdata.amount}}"></sc-tokenbalanceformatter></span> has been payed out to <span class="light blue replyer_username">{{replydata.provider.username}}</span>.</h1>
+                  <h1 class=""><span class="bold"><sc-tokenbalanceformatter value="{{requestdata.amount}}"></sc-tokenbalanceformatter></span> has been paid out to <span class="light blue replyer_username">{{replydata.provider.username}}</span>.</h1>
                 </template>
 
                 <div class="details_toggler" on-tap="showDetails">
@@ -1074,13 +1074,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
       createDeal: function(){
 
-        // TODO : 
-        // 1.deploy a dealfortwo
-        // 2.call this.$.hashtagcontract(dealfortwoaddress,pubkey of counterparty)
-        // 3.do allowance
-        // 4.call fund() on dealfortwo
-        // and then continue...
-
         this.selecteddealpage = 'waiting';
         this.myamount_state = 'amountconfirmed';  
       },
@@ -1115,55 +1108,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         if (!this.shhweb3) {
           throw new Error('shhweb3 not set while requesting whisper listener');
         }
-
-        //this._starthastaglistener();
       },
 
-
-
-      //_starthastaglistener: function() {
-
-        // if (this.filter) {
-        //   return;
-        // }
-
-        // var self = this;
-        // if (this.shhweb3 && this.replyid && this.requestid) {
-
-        //   var mytopics = [
-        //     null, [self.shhweb3.encodetopic(this.requestid),
-        //       self.shhweb3.encodetopic(this.replyid)
-        //     ]
-        //   ];
-
-        //   this.filter = self.shhweb3.shh.filter({
-        //     "topics": mytopics,
-        //   });
-
-        //   console.log("sc-dealfortwo-seeker: channelswitch, start listening to", mytopics);
-        //   this.filter.watch(this._processmessage.bind(this));
-        // }
-      //},
-
-      // _processmessage: function(error, result) {
-      //   var self = this;
-      //   //debugger;
-      //   try {
-      //     var payload = JSON.parse(self.shhweb3.toAscii(result.payload));
-      //     console.log('incoming in whisperer: web3 ', result,self.shhweb3.toAscii(result.payload));
-
-      //     if (payload.id == this.requestid){
-      //       //debugger;
-      //       this.requestdata = payload;            
-      //     }
-      //     if (payload.id == this.replyid){
-      //       //debugger;
-      //       this.replydata = payload; 
-      //     }
-      //   } catch (e) {
-      //     console.log(e);
-      //   }
-      // },
 
       showDetails: function(){
         var details = this.shadowRoot.getElementById('details_collapser');
@@ -1175,9 +1121,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           this.dealdetailsmsg = "Show details";
           this.collapsestate = '';
         }
-
-
-        // console.log(details);
       },
 
 
@@ -1202,13 +1145,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         var self = this;
 
         this.$.dealfortwo.payout(self.requestdata.id,self.identity.pubkey, function(err, payoutTx) {
-
-          // if (err) {
-          //   if (cb) {
-          //     return cb(err);
-          //   }
-          // }
-
 
           var message = {
             type: 'dealfortwo-approve',
@@ -1242,206 +1178,20 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
               console.log('approveDeal -> whisper error:', err);
             }
           });
-
-          //cb(null, result);
-          //console.log(err, result);
-
         });
       },
-
-      // assignDeal: function(dealaddress, provideraddress, seekeramount, provideramount, cb) {
-      //   var self = this;
-      //   this.contracturl = this.resolveUrl('../contracts/DealForTwoFactory.json');
-      //   this.importHref(this.contracturl, function(e) {
-      //     this.contractjson = JSON.parse(e.target.import.body.innerText);
-      //     self.web3.eth.getGasPrice(function(err, result) {
-      //       var gasPrice = result.toNumber(10);
-      //       var DealForTwoFactoryContract = self.web3.eth.contract(self.contractjson.abi);
-      //       var DealForTwoFactoryContractInstance = DealForTwoFactoryContract.at(self.config.dealfortwofactory);
-      //       DealForTwoFactoryContractInstance.assignProvider.sendTransaction(dealaddress, provideraddress, seekeramount, provideramount, {
-      //         from: self.identity.pubkey,
-      //         gasPrice: gasPrice,
-      //         gas: 1000000
-      //       }, function(err, result) {
-      //         if (err) {
-      //           if (cb) {
-      //             return cb(err);
-      //           }
-      //         }
-      //         cb(null, result);
-      //         console.log(err, result);
-      //       });
-      //     });
-      //   });
-      // },
-
-      // helper_getSWTBalanceFromAddress(address,cb) {
-      //   var self = this;
-      //   self.contracturl = self.resolveUrl('../contracts/MiniMeToken.json');
-      //   self.importHref(self.contracturl, function(e) {
-      //     var contractjson = JSON.parse(e.target.import.body.innerText);
-      //     var SWTTokenContract = self.web3.eth.contract(contractjson.abi);
-      //     var SWTTokenContractInstance = SWTTokenContract.at(self.config.swttokencontractaddress);
-      //     SWTTokenContractInstance.balanceOf(address, function(err, swtbalance) {
-      //       return cb(null, swtbalance);
-      //     });
-      //   });
-      // },
-
-
-      // startDeal: function() {
-  
-      //   var dealaddress = this.requestdata.dealaddress;
-      //   var provideraddress = this.replydata.provider.pubkey;
-      //   var seekeramount = this.requestdata.amount;
-      //   var provideramount = this.requestdata.amount;
-
-      //   var self = this;
-
-      //   this.assignDeal(dealaddress, provideraddress, seekeramount, provideramount, function(err, res) {
-
-      //     if (err) {
-      //       if (err.message === 'Insufficient funds for gas * price + value') {
-      //         // notify UI that I don't have enough funds.
-      //       }
-      //       return console.log(err);
-      //     }
-
-      //     // send whisper to provider
-
-      //     var message = {
-      //       type: 'dealfortwo-assign-provider',
-      //       requestid: self.requestdata.id,
-      //       replyid: self.replydata.id,
-      //       transactionhash: res,
-      //       timestamp: Date.now(),
-      //       dealaddress: self.requestdata.dealaddress
-      //     };
-
-
-      //     var topics = [
-      //       self.shhweb3.encodetopic('swarmcity-v1'),
-      //       self.shhweb3.encodetopic(message.type),
-      //       self.shhweb3.encodetopic(self.requestdata.hashtag),
-      //       self.shhweb3.encodetopic(self.requestdata.id),
-      //     ];
-
-      //     var options = {
-      //       "from": self.shhweb3.identity,
-      //       "topics": topics,
-      //       "payload": self.shhweb3.fromAscii(JSON.stringify(message)),
-      //       "ttl": 60 * 60 * 24,
-      //       "priority": 1000
-      //     };
-
-      //     console.log('posting to topics', topics);
-
-      //     self.shhweb3.shh.post(options, function(err, res) {
-      //       if (!err) {
-      //         console.log('sc->dealfortwo_seeker -> Reply posted');
-      //       } else {
-      //         console.log('sc-dealfortwo_seeker -> whisper error:', err);
-      //       }
-      //     });
-      //   });
-      // },
-
-
-      // handle: function(e) {
-      //   // debugger;
-      //   var deal = e.detail;
-      //   console.log('DealID=', deal.dealID);
-      //       this.dealactivated = true;
-
-      //   switch (deal.step) {
-      //     case 'deal-created':
-      //       // this.dealmsg
-      //       break;
-      //     case 'deal-deploy-start':
-      //       console.log(deal.txhash);
-      //       this.stepscount = "1"
-      //       break;
-      //     case 'deal-deploy-end':
-      //       break;
-      //     case 'deal-register-start':
-      //       this.stepscount = "2"
-      //       // console.log(deal.txhash);
-      //       break;
-      //     case 'deal-register-end':
-      //       break;
-      //     case 'deal-myallowance-start':
-      //       this.stepscount = "3"
-      //       console.log(deal.txhash);
-      //       break;
-      //     case 'deal-myallowance-end':
-      //       break;
-      //     case 'deal-fund-start':
-      //       this.stepscount = "4"
-      //       console.log(deal.txhash);
-      //       break;
-      //     case 'deal-fund-end':
-      //       // nu zou er een SHH message n/d andere moeten gaan om te zeggen : nu gij funden JONGE
-      //       break;
-      //   }
-      // },
 
       _log: function(target){
         console.log("***** log in deal42seeker ==",target);
       },
 
-      // _replydata: function(target){
-      //   // if (this.replydata.replyer.username == this.identity.username){
-      //   //   this.dealmsg = "At payout, you will receive the funds.";
-      //   // } else {
-      //   //   this.dealmsg = "At payout, the funds will be received by " + this.replydata.replyer.username + ".";
-      //   // }
-      // },
-
-
-
       _provideraccepted: function(){
-
-        // if (this.seekeraccept){
-        //   this.seekerfundclass = "fund_accepted";
-        // } else {
-        //   this.seekerfundclass = "fund_init";
-        //   this.bottombg = "blueback";
-        // }
-
         if (this.provideraccept){
           this.providerfundclass = "fund_accepted";
         } else {
           this.providerfundclass = "fund_init";
         }
-
-        // if (this.seekeraccept && this.provideraccept){
-        //   this.bothaccepted = true;
-        // } else {
-        //   this.bothaccepted = false;
-        // }
-
       },
-
-
-      // _whatismined:function(){
-      //   if(this.assignmined) {
-      //     this.steponestate = "stepdone";
-      //   };
-
-      //   if(this.providerfundingmined) {
-      //     this.steptwostate = "stepdone";
-      //   };    
-
-      //   if (this.assignmined && this.providerfundingmined) {
-      //     this.bottombg = 'greenback';
-      //     this.indeal = true;
-      //   } else {
-      //     this.bottombg = 'blueback';
-      //     this.indeal = false;
-      //   }
-      // },
-
-
 
 
       // TEMP FUNCTION: to be removed
@@ -1479,13 +1229,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           this.provideraccept = true;
         }
 
-        // // assigntx_mined check
-        // if(this.requestdata.assigntx_mined) {
-        //  // debugger;
-        //   this.assignmined = true;
-        //   // console.log("REQUEST::: assigntx_mined", this.requestdata.assigntx_mined);
-        // } 
-        // providerfundingtx_mined check
+      
         if(this.requestdata.providerfundingtx_mined) {
           //debugger;
           this.indeal = true;

@@ -707,9 +707,9 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
               <h1 class=""><span class="bold"></span><span class="light blue replyer_username">{{requestdata.seeker.username}}</span> started the payout of this deal ({{requestdata.amount}} SWT).</h1>
             </template>
 
-            <!-- Payed out -->
+            <!-- Paid out -->
             <template is="dom-if" if="{{_is(dealstate,'payoutmined')}}">
-              <h1 class=""><span class="bold">{{requestdata.amount}} SWT</span> has been payed out to you.</h1>
+              <h1 class=""><span class="bold">{{requestdata.amount}} SWT</span> has been paid out to you.</h1>
             </template>
 
             <div class="details_toggler" on-tap="showDetails">
