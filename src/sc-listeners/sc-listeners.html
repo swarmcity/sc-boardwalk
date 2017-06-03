@@ -40,49 +40,50 @@
           type: Object,
           statePath: 'identity'
         },        
-        emptyDeal: {
-          type: Object,
-          value: {
-              //creationtx_mined: false,
-              //dealaddress: null,
-              //seekerfundingtx: false,
-              //seekerfundingtx_mined: false,
-              //assigntx: false,
-              //assigntx_mined: false,
-              //providerfundingtx: false,
-              //providerfundingtx_mined: false,
-              //payouttx: false,
-              //payouttx_mined: false,
-              replies: [],
-              seeker: {
-                pubkey: '0x0'
-              }
-            }
-        },
+        // emptyDeal: {
+        //   type: Object,
+        //   value: {
+        //       //creationtx_mined: false,
+        //       //dealaddress: null,
+        //       //seekerfundingtx: false,
+        //       //seekerfundingtx_mined: false,
+        //       //assigntx: false,
+        //       //assigntx_mined: false,
+        //       //providerfundingtx: false,
+        //       //providerfundingtx_mined: false,
+        //       //payouttx: false,
+        //       //payouttx_mined: false,
+        //       replies: [],
+        //       seeker: {
+        //         pubkey: '0x0'
+        //       }
+        //     }
+        // },
 
-        emptyNotification: {
-          type: Object,
-          value: {
-            read: false,
-            itemhashtag: '',
-            subjectusername: '',
-            msg: '',
-            timestamp: null
-              //creationtx_mined: false,
-              //dealaddress: null,
-              //seekerfundingtx: false,
-              //seekerfundingtx_mined: false,
-              //assigntx: false,
-              //assigntx_mined: false,
-              // providerfundingtx: false,
-              // providerfundingtx_mined: false,
-              // payouttx: false,
-              // payouttx_mined: false,
-              // seeker: {
-              //   pubkey: '0x0'
-              // }
-            }
-        }      },
+        // emptyNotification: {
+        //   type: Object,
+        //   value: {
+        //     read: false,
+        //     itemhashtag: '',
+        //     subjectusername: '',
+        //     msg: '',
+        //     timestamp: null
+        //       //creationtx_mined: false,
+        //       //dealaddress: null,
+        //       //seekerfundingtx: false,
+        //       //seekerfundingtx_mined: false,
+        //       //assigntx: false,
+        //       //assigntx_mined: false,
+        //       // providerfundingtx: false,
+        //       // providerfundingtx_mined: false,
+        //       // payouttx: false,
+        //       // payouttx_mined: false,
+        //       // seeker: {
+        //       //   pubkey: '0x0'
+        //       // }
+        //     }
+        // }      
+      },
 
       behaviors: [
         ReduxBehaviour
@@ -107,14 +108,18 @@
             return item.id === mutation.id;
           });
           if (foundDeal > -1) {
-            deals[foundDeal] = Object.assign({},this.emptyDeal, deals[foundDeal], mutation);
+//            deals[foundDeal] = Object.assign(getEmptyDeal(), deals[foundDeal], mutation);
+              Object.assign(deals[foundDeal], mutation);
           }else{
-            deals.push(Object.assign({},this.emptyDeal,mutation));
+            deals.push(Object.assign(this.getEmptyDeal(),mutation));
           }
 
-          deals.sort(function(a, b) {
-            return b.offertime - a.offertime;
-          });          
+          // deals.sort(function(a, b) {
+          //   return b.offertime - a.offertime;
+          // }); 
+
+          console.log('update_deals',mutation);
+
           return {
             type: 'DEALS',
             deals: deals
@@ -128,13 +133,14 @@
             return item.id === mutation.id;
           });
           if (indexFound > -1) {
-            notifications[indexFound] = Object.assign({},this.emptyDeal, notifications[indexFound], mutation);
+            // notifications[indexFound] = Object.assign(getEmptyDeal(), notifications[indexFound], mutation);
+            Object.assign(notifications[indexFound], mutation);
           }else{
-            notifications.push(Object.assign({},this.emptyNotification,mutation));
+            notifications.push(Object.assign(this.getEmptyNotification(),mutation));
           }
-          notifications.sort(function(a, b) {
-            return b.offertime - a.offertime;
-          });          
+          // notifications.sort(function(a, b) {
+          //   return b.offertime - a.offertime;
+          // });          
           return {
             type: 'NOTIFICATIONS',
             notifications: notifications
@@ -166,7 +172,7 @@
           
           var deal;
           if (foundDeal > -1) {
-            deal = Object.assign({},this.emptyDeal,deals[foundDeal]);
+            deal = deals[foundDeal]; // Object.assign(getEmptyDeal(),deals[foundDeal]);
             if (deal.replies) {
               // search the reply
               var foundReply = deal.replies.findIndex(function(item) {
@@ -182,17 +188,16 @@
             }
 
             // check if I already replied to this deal
-            var ireplied = false;
+            deal.ireplied = false;
             if (deal.replies){
               for (var i = 0; i < deal.replies.length; i++) {
                 if (deal.replies[i].provider.pubkey === this.identity.pubkey){
-                  //debugger;
-                  ireplied = true;
+                  deal.ireplied = true;
                 }
               }
             }
             // put deal back into array of deals
-            deals[foundDeal] = Object.assign(deal,{ireplied : ireplied});
+            deals[foundDeal] = deal; //Object.assign({},deal,{ireplied : ireplied});
 
           } else {
             // this message comes before the deal info. Create an empty placehodler
@@ -201,7 +206,7 @@
               replies: [replyMutation],
               ireplied : replyMutation.ismyreply
             };
-            deal = Object.assign({},this.emptyDeal,newDeal);
+            deal = Object.assign(this.getEmptyDeal(),newDeal);
             deals.push(deal);
             //console.error('no deal found for reply with ID=', replydata.id)
           }
@@ -216,9 +221,9 @@
           //debugger;
           this.dispatch('update_notification', n);
 
-          deals.sort(function(a, b) {
-            return b.offertime - a.offertime;
-          });
+          // deals.sort(function(a, b) {
+          //   return b.offertime - a.offertime;
+          // });
          
           return {
             type: 'DEALS',
@@ -255,10 +260,11 @@
             }           
             mutation.iamprovider = iamprovider;
 
+            Object.assign(deals[foundDeal],mutation);
 
-            deals[foundDeal] = Object.assign({},this.emptyDeal, deals[foundDeal], mutation);
+            //deals[foundDeal] = Object.assign(getEmptyDeal(), deals[foundDeal], mutation);
           }else{
-            deals.push(Object.assign({},this.emptyDeal,mutation));
+            deals.push(Object.assign(this.getEmptyDeal(),mutation));
           }
           return {
             type: 'DEALS',
@@ -277,9 +283,10 @@
             return item.id === payload.requestid;
           });
           if (foundDeal > -1) {
-            deals[foundDeal] = Object.assign({},this.emptyDeal, deals[foundDeal], mutation);
+            Object.assign(deals[foundDeal],mutation);
+            //deals[foundDeal] = Object.assign(getEmptyDeal(), deals[foundDeal], mutation);
           }else{
-            deals.push(Object.assign({},this.emptyDeal,mutation));
+            deals.push(Object.assign(this.getEmptyDeal(),mutation));
           }
 
           this.web3.waitTx(payload.transactionhash, function(err, res) {
@@ -306,9 +313,10 @@
             return item.id === params.requestid;
           });
           if (foundDeal > -1) {
-            deals[foundDeal] = Object.assign({},this.emptyDeal, deals[foundDeal], mutation);
+            Object.assign(deals[foundDeal],mutation);
+            //deals[foundDeal] = Object.assign(getEmptyDeal(), deals[foundDeal], mutation);
           }else{
-            deals.push(Object.assign({},this.emptyDeal,mutation));
+            deals.push(Object.assign(this.getEmptyDeal(),mutation));
           }
 
           return {
@@ -317,7 +325,25 @@
           };
 
         },
+      },
 
+      getEmptyDeal: function() {
+        return Object.assign({}, {
+          replies: [],
+          seeker: {
+            pubkey: '0x0'
+          }
+        });
+      },
+
+      getEmptyNotification: function() {
+        return Object.assign({}, {
+          read: false,
+          itemhashtag: '',
+          subjectusername: '',
+          msg: '',
+          timestamp: null
+        });
       },
 
       stopFiltering: function(options,cb){
@@ -400,7 +426,6 @@
                   id: newDeal.id,
                   creationtx_mined: true,
                   createsuccess: true,
-                  balance : 6,
                 });
 
                 self.$.dealfortwo.readDeal(newDeal.id,newDeal.seeker.pubkey,function(err,data){

@@ -24,6 +24,7 @@
 <link rel="import" href="../sc-dealfortwo/sc-dealfortwo.html">
 <link rel="import" href="../sc-listeners/sc-listeners.html">
 <link rel="import" href="../sc-hashtagitem/sc-hashtagitem.html">
+<link rel="import" href="../sc-tokenbalanceformatter/sc-tokenbalanceformatter.html">
 
 
 <!--<link rel="import" href="../sc-balance/sc-balance.html"> -->
@@ -681,7 +682,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
               </div>
 
                <template is="dom-if" if="{{_is(dealstate,'created')}}">
-                  <h1 class="">You selected <span class="light blue replyer_username">{{replydata.provider.username}}</span> to make a deal for <span class="">{{requestdata.amount}} SWT</span>.</h1>
+                  <h1 class="">You selected <span class="light blue replyer_username">{{replydata.provider.username}}</span> to make a deal for <span class=""><sc-tokenbalanceformatter value="{{requestdata.amount}}"></sc-tokenbalanceformatter></span>.</h1>
                </template>
 
                <template is="dom-if" if="{{_is(dealstate,'provideraccepted')}}">
@@ -693,11 +694,11 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                 </template>
 
                 <template is="dom-if" if="{{_is(dealstate,'payout')}}">
-                  <h1 class=""><span class="bold"></span>You started the payout of this deal {{requestdata.amount}} SWT).</h1>
+                  <h1 class=""><span class="bold"></span>You started the payout of this deal (<sc-tokenbalanceformatter value="{{requestdata.amount}}"></sc-tokenbalanceformatter>).</h1>
                 </template>
 
                 <template is="dom-if" if="{{_is(dealstate,'payoutmined')}}">
-                  <h1 class=""><span class="bold">{{requestdata.amount}} SWT</span> has been payed out to <span class="light blue replyer_username">{{replydata.provider.username}}</span>.</h1>
+                  <h1 class=""><span class="bold"><sc-tokenbalanceformatter value="{{requestdata.amount}}"></sc-tokenbalanceformatter></span> has been payed out to <span class="light blue replyer_username">{{replydata.provider.username}}</span>.</h1>
                 </template>
 
                 <div class="details_toggler" on-tap="showDetails">
@@ -716,7 +717,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
                         <div class="detail">
                           <p class="cat">Offer</p>
-                          <p class="reg bold">[[requestdata.amount]] SWT</p>
+                          <p class="reg bold"><sc-tokenbalanceformatter value="{{requestdata.amount}}"></sc-tokenbalanceformatter></p>
                         </div>
 
                         <div class="detail">
@@ -727,12 +728,12 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
                         <div class="detail">
                           <p class="cat">Requester</p>
-                          <a href="" class="reg blue">[[requestdata.seeker.username]]<span>( [[requestdata.seeker.pubkey]] )</span></a>
+                          <a href="https://etherscan.io/address/[[requestdata.seeker.pubkey]]" target="_new" class="reg blue">[[requestdata.seeker.username]]</a>
                         </div>
 
                         <div class="detail">
                           <p class="cat">Provider</p>
-                          <a href="" class="reg blue">[[replydata.provider.username]]<span>( [[replydata.provide.pubkey]] )</span></a>
+                          <a href="https://etherscan.io/address/[[replydata.provider.pubkey]]" target="_new"  class="reg blue">[[replydata.provider.username]]</a>
                         </div>                        
 
 
@@ -748,15 +749,32 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                         </div>
 
                         <div class="detail">
-                          <p class="cat">Initial reply</p>
+                          <p class="cat">Selected reply</p>
                           <p class="reg">[[replydata.msg]]</p>
                         </div>
                         <div class="whitespace"></div>
 
-                        <div class="detail">
-                          <p class="cat">Blockchain transactions</p>
-                          <p class="reg">[[requestdata.id]]</p>
-                        </div>
+                        <template is="dom-if" if="{{requestdata.creationtx}}">
+                          <div class="detail">
+                            <p class="cat">Deal creation</p>
+                            <a href="https://etherscan.io/tx/{{requestdata.creationtx}}" target="_new"  class="reg blue">{{requestdata.creationtx}}</a>
+                          </div>
+                        </template>
+
+                        <template is="dom-if" if="{{requestdata.providerfundingtx}}">
+                          <div class="detail">
+                            <p class="cat">Provider funding</p>
+                            <a href="https://etherscan.io/tx/{{requestdata.providerfundingtx}}" target="_new"  class="reg blue">{{requestdata.providerfundingtx}}</a>
+                          </div>
+                        </template>
+
+                        <template is="dom-if" if="{{requestdata.dealdata}}">
+                          <div class="detail">
+                            <p class="cat">Commission</p>
+                            <p class="reg"><sc-tokenbalanceformatter value="{{requestdata.dealdata.commissionValue}}"></sc-tokenbalanceformatter></p>
+                          </div>
+                        </template>
+
                       </div>
                     </div>
                 </iron-collapse>

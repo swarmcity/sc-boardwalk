@@ -1,7 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 
 <dom-module id="sc-tokenbalanceformatter">
-<template><span>{{formattedvalue}} {{this.denomination}}</span></template>
+<template><span>{{formattedvalue}} {{denomination}}</span></template>
   <script>
     Polymer({
       is: 'sc-tokenbalanceformatter',
@@ -11,9 +11,20 @@
           observer: '_value'
         },
       },
-      _value: function(){
-        this.formattedvalue = this.value;
-        this.denomination = 'SWT';  
+      _value: function() {
+        if (this.value && !isNaN(this.value)) {
+          if (this.value > 1e18) {
+            this.formattedvalue = (this.value / 1e18).toFormat(2);
+            this.denomination = 'SWT';
+          } else {
+            this.formattedvalue = this.value;
+            this.denomination = 'PONG';
+          }
+
+        } else {
+          this.formattedvalue = '';
+          this.denomination = '';
+        }
       }
     });
   </script>

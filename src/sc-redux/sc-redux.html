@@ -16,9 +16,9 @@
     var initialmydeals = [];
     var initialotherdeals = [];
 
-    // var initialdeals = getLS('sc-deals') || [];
-    // var initialmydeals = getLS('sc-mydeals') || [];
-    // var initialotherdeals = getLS('sc-otherdeals') || [];
+    var initialdeals = getLS('sc-deals') || [];
+    var initialmydeals = getLS('sc-mydeals') || [];
+    var initialotherdeals = getLS('sc-otherdeals') || [];
 
     let initialState = {
         deals: initialdeals,
@@ -44,6 +44,8 @@
                 return Object.assign({}, state, {notifications: notifications});
                 break;
             case 'DEALS':
+
+//                console.log('redux_deals',action);
                 //let deals = state.deals;
                 //var deals  = action.deals;
                
@@ -66,7 +68,6 @@
                 setLS('sc-deals',deals);
                 setLS('sc-mydeals',mydeals);
                 setLS('sc-otherdeals',otherdeals);
-                //setLS('sc-deals-len',deals.length);
 
                 var newstate = Object.assign({}, state, {
                     deals: deals,
