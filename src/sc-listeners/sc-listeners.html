@@ -210,18 +210,18 @@
           }
 
 
-          if (deal.ismydeal){
-            debugger;
-            var n = {
-              id : replydata.id + '-' + replydata.parentrequestid, //UUIDjs.create().toString(),
-              msg: 'You received a new reply to your deal',
-              //target: '/hashtag/' + deal.hashtag + '/list',
-//              itemhashtag: deal.hashtag,
-//              subjectusername: this.identity.username,
-              timestamp: Date.now()
-            }; 
-            this.dispatch('update_notification', n);
-          }
+//           if (deal.ismydeal){
+//             //debugger;
+//             var n = {
+//               id : replydata.id + '-' + replydata.parentrequestid, //UUIDjs.create().toString(),
+//               msg: 'You received a new reply to your deal',
+//               //target: '/hashtag/' + deal.hashtag + '/list',
+// //              itemhashtag: deal.hashtag,
+// //              subjectusername: this.identity.username,
+//               timestamp: Date.now()
+//             }; 
+//             this.dispatch('update_notification', n);
+//           }
 
           return {
             type: 'DEALS',
