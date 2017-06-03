@@ -40,7 +40,7 @@
       },
 
       ready: function(){
-      
+
         var environment = 'livenet';
 
         switch (environment){
@@ -60,7 +60,7 @@
 
             break;
           case 'livenet':
-            
+
             this.set('ipfs', {
               host: 'ipfsapi.swarm.city',
               protocol: 'https',
@@ -69,8 +69,8 @@
 
             this.ipfsgateway = 'https://ipfs.swarm.city/ipfs/';
 
-            this.web3host = 'https://ethpool.swarm.city/';            
-            this.shhhost = 'https://eth.swarm.city/';            
+            this.web3host = 'https://ethpool.swarm.city/';
+            this.shhhost = 'https://eth.swarm.city/';
             this.shhprefix = 'w56-';
             this.etherscanroot = 'https://etherscan.io/';
             this.tokencontractaddress = '0xAc709FcB44a43c35F0DA4e3163b117A17F3770f5';
@@ -79,7 +79,7 @@
             this.dealfortwofactory = '0x370624B2F2471B4995ad83D7d9Ed101ad9E2327F';
             this.hashtagcontracts = {
 //              pioneer: "0x5c21b622ac0a51d5b02060d2c483b26252939eee"
-              testing: "0x5c21b622ac0a51d5b02060d2c483b26252939eee"
+              BoardwalkTesting: "0x5c21b622ac0a51d5b02060d2c483b26252939eee"
             };
 
             this.set('config', {
