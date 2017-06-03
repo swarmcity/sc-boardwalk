@@ -31,7 +31,7 @@
     "bower": "*",
     "install": "^1.0.4",
     "uuid.js": "v3.0",
-    "moment-js": "https://github.com/swarmcity/moment-js.git"
+    "moment-js": "https://github.com/swarmcity/moment-js.git#^0.7.3"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
