@@ -38,7 +38,7 @@
 
 This is the component showing all requests of a certain hashtag. It contains a repeater of sc-hashtagitem fot that and a sc-filter for filtering this list of requests.
 
-@demo src/sc-hashtag/demo/index.html 
+@demo src/sc-hashtag/demo/index.html
 -->
 
 <dom-module id="sc-hashtag">
@@ -72,7 +72,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       .symbol p {
         font-size: 27px;
-        line-height: 27px;  
+        line-height: 27px;
         margin: 0px 6px 0px 0px;
 
       }
@@ -94,7 +94,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
         margin: 0px 0px 20px 0px;
       }
       .backhash {
-        margin:6px 0px 0px 8px;    
+        margin:6px 0px 0px 8px;
       }
 
       .backhash:hover {
@@ -119,7 +119,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
       sc-dealitem {
         width: 100%;
         max-width: 600px;
-        margin: 0px;        
+        margin: 0px;
       }
 
 
@@ -190,13 +190,13 @@ This is the component showing all requests of a certain hashtag. It contains a r
       }
 
 
-    @media all and (min-width: 0) and (max-width: 540px) { 
+    @media all and (min-width: 0) and (max-width: 540px) {
 
       #pagecontent {
         box-sizing:border-box;
         padding: 0px 4vw;
       }
-      
+
       .paddingsides {
         padding-left: 6vw;
         padding-right: 6vw;
@@ -271,7 +271,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
         box-sizing:border-box;
         padding: 18px;
         border-radius: 5px;
-        margin: 20px 0px 20px 0px; 
+        margin: 20px 0px 20px 0px;
       }
 
 
@@ -315,11 +315,11 @@ This is the component showing all requests of a certain hashtag. It contains a r
     }
 
     </style>
- 
+
     <!-- <sc-shh web3="{{shhweb3}}"></sc-shh> -->
     <sc-config config="{{config}}"></sc-config>
     <sc-helpers id="helpers"></sc-helpers>
-    
+
     <iron-media-query query="(min-width:0px) and (max-width: 540px)" query-matches="{{phoneview}}"></iron-media-query>
 
     <app-route route="{{route}}" pattern="/:hashtag/:action" data="{{data}}" tail="{{subroute}}"></app-route>
@@ -395,8 +395,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
           <!-- my deals -->
           <div class="mydeals_repeater">
-          
-          
+
+          <!-- KF comment // vroeger ware dit verschillende aparte lijsten, dat is nu 1 grote lijst / performanter / filtert en sort dat vanzelf -->
             <!-- <template is="dom-if" if="{{hasmydeals(mydeals)}}"> -->
               <template is="dom-repeat" items="{{deals}}" filter="isMyDeal" sort="sortDeal">
                 <sc-hashtagitem
@@ -404,7 +404,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
                   identity="[[identity]]"
                   on-to-detail="hashtag_to_detail"
                   class$="{{dealsopacity}}">
-                </sc-hashtagitem>              
+                </sc-hashtagitem>
               </template>
             <!-- </template> -->
 
@@ -441,7 +441,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
   </template>
 
   <script>
-   
+
     Polymer({
       is: 'sc-hashtag',
 
@@ -483,7 +483,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
         // otherdeals: {
         //   type: Array,
         //   statePath: 'otherdeals',
-        // },        
+        // },
         /**
          * `phoneview` is a boolean to determine the viewport.
          */
@@ -607,7 +607,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
       isMyDeal: function(item){
         return (item.seeker.pubkey === this.identity.pubkey);
       },
-      
+
       isNotMyDeal: function(item){
         return (item.seeker.pubkey !== this.identity.pubkey);
       },
@@ -668,13 +668,13 @@ This is the component showing all requests of a certain hashtag. It contains a r
       },
 
       /**
-       * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
+       * 'onEnter' are the behaviors that occur when the router tells this component enters the stage
        * use this to initialize any variables to start the component
        */
       onEnter: function() {},
 
       /**
-       * 'onExit' are the behaviors that occur when the router tells this component to leave the stage 
+       * 'onExit' are the behaviors that occur when the router tells this component to leave the stage
        * use this to reset any variables when leaving this component while it remains loaded.
        */
       onExit: function() {},
@@ -722,7 +722,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
           target: '/dealfortwoprovider/' + this.data.hashtag + '/' + e.detail.id + '/' + e.detail.selectedreply
         });
       },
-      
+
       toNotifs: function(){
         this.fire('to-notifications');
       },
