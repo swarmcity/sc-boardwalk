@@ -458,7 +458,7 @@
       home_tohashtag: function(e){
         // console.log("yes, home_tohashtag");
         this.currenthasht = e.detail;
-        this.transitionto('/hashtag/pioneer/list');
+        this.transitionto('/hashtag/'+this.currenthasht+'/list');
       },
 
       home_tonotifications: function(){
@@ -490,7 +490,7 @@
 
 
       dealfortwo_tolist: function(){
-        this.transitionto('/hashtag/pioneer/list');
+        this.transitionto('/hashtag/'+this.currenthasht+'/list');
       },
 
       notifications_tohome: function(){

@@ -113,6 +113,7 @@
 
     </style>
     <sc-ipfs id="ipfs"></sc-ipfs>
+    <sc-config config="{{config}}"></sc-config>
     <iron-media-query query="(min-width:0px) and (max-width: 540px)" query-matches="{{phoneview}}"></iron-media-query>
 
     <div class="avatar_username_balance_content horizont start startjust wrap">
@@ -257,19 +258,19 @@
         ReduxBehaviour
       ],
 
-      attached: function(){
+      attached: function() {
         // TODO : remove this
         this.onEnter();
 
-          this.hashtaglist = [
-              'pioneer'
-            // 'ridesharing',
-            // 'dev-ops',
-            // 'testingSC',
-            // 'dogwalking',
-            // 'food-delivery',
-            // 'it-hive'
-        ];
+        this.hashtaglist = Object.keys(this.config.hashtagcontracts);
+
+        // 'ridesharing',
+        // 'dev-ops',
+        // 'testingSC',
+        // 'dogwalking',
+        // 'food-delivery',
+        // 'it-hive'
+
 
       },
 

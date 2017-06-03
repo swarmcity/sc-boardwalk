@@ -4,6 +4,7 @@
 <link rel="import" href="../sc-web3/sc-web3.html">
 <link rel="import" href="../sc-config/sc-config.html">
 <link rel="import" href="../sc-dealfortwo/sc-dealfortwo.html">
+<script type="text/javascript" src="../../bower_components/uuid-js/lib/uuid.js"></script>
 
 <dom-module id="sc-listeners">
   <template>
@@ -108,18 +109,15 @@
             return item.id === mutation.id;
           });
           if (foundDeal > -1) {
-//            deals[foundDeal] = Object.assign(getEmptyDeal(), deals[foundDeal], mutation);
-              Object.assign(deals[foundDeal], mutation);
+            if (deals[foundDeal].seeker.pubkey === this.identity.pubkey){
+              mutation.ismydeal = true;
+            }else{
+              mutation.ismydeal = false;
+            }
+            Object.assign(deals[foundDeal], mutation);
           }else{
             deals.push(Object.assign(this.getEmptyDeal(),mutation));
           }
-
-          // deals.sort(function(a, b) {
-          //   return b.offertime - a.offertime;
-          // }); 
-
-          console.log('update_deals',mutation);
-
           return {
             type: 'DEALS',
             deals: deals
@@ -211,20 +209,20 @@
             //console.error('no deal found for reply with ID=', replydata.id)
           }
 
-          var n = {
-            id : deal.id,
-            msg: replyMutation.msg,
-            itemhashtag: deal.hashtag,
-            subjectusername: this.identity.username,
-            timestamp: Date.now()
-          };
-          //debugger;
-          this.dispatch('update_notification', n);
 
-          // deals.sort(function(a, b) {
-          //   return b.offertime - a.offertime;
-          // });
-         
+          if (deal.ismydeal){
+            debugger;
+            var n = {
+              id : replydata.id + '-' + replydata.parentrequestid, //UUIDjs.create().toString(),
+              msg: 'You received a new reply to your deal',
+              //target: '/hashtag/' + deal.hashtag + '/list',
+//              itemhashtag: deal.hashtag,
+//              subjectusername: this.identity.username,
+              timestamp: Date.now()
+            }; 
+            this.dispatch('update_notification', n);
+          }
+
           return {
             type: 'DEALS',
             deals: deals

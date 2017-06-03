@@ -5,6 +5,11 @@
 
 
     function getLS(key){
+
+        // if you want to disable caching return null
+        // to enable caching - put the line below in comment
+        return null;
+
         var v = window.localStorage.getItem(key);
         return JSON.parse(v);
     }
@@ -41,49 +46,24 @@
             case 'NOTIFICATIONS':
                 let notifications = state.notifications;
                 notifications  = action.notifications;
-                return Object.assign({}, state, {notifications: notifications});
+                return Object.assign({}, state, { notifications: notifications });
                 break;
+
             case 'DEALS':
                 let deals = state.deals;
-//                console.log('redux_deals',action);
-                //let deals = state.deals;
-                //var deals  = action.deals;
-               
-                //debugger;
-                //var deals = [];
-                //var mydeals = [];
-                //var otherdeals = [];
-
-                // if (state.identity && state.identity.pubkey) {
-                //     for (var i = 0; i < action.deals.length; i++) {
-                //         deals.push(action.deals[i]);
-                //         if (state.identity.pubkey === action.deals[i].seeker.pubkey) {
-                //             mydeals.push(Object.assign({}, action.deals[i]));
-                //         }else{
-                //             otherdeals.push(Object.assign({}, action.deals[i]));
-                //         }
-                //     }
-                // }
-            
                 setLS('sc-deals',deals);
-                //setLS('sc-mydeals',mydeals);
-                //setLS('sc-otherdeals',otherdeals);
-
-                var newstate = Object.assign({}, state, {
-                    deals: deals,
-                });
-                //debugger;
+                var newstate = Object.assign({}, state, { deals: action.deals });
                 return newstate;
-
                 break;
 
             case 'IDENTITY':
                 let identity = state.identity;
                 identity  = action.identity;
-                return Object.assign({}, state, {identity: identity})
+                return Object.assign({}, state, {identity: identity});
                 break;
         }
     }
+
     const store = Redux.createStore(reducer, /* preloadedState, */
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
     );
