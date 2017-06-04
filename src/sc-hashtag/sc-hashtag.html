@@ -397,10 +397,9 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
           <!-- KF comment // vroeger ware dit verschillende aparte lijsten, dat is nu 1 grote lijst / performanter / filtert en sort dat vanzelf -->
             <!-- <template is="dom-if" if="{{hasmydeals(mydeals)}}"> -->
-              <template is="dom-repeat" items="{{deals}}" filter="isMyDeal" sort="sortDeal">
+              <template is="dom-repeat" as="deal" items="{{deals}}" filter="isMyDeal" sort="sortDeal">
                 <sc-hashtagitem
-                  item="[[item]]"
-                  itemreplies="[[item.replies]]"
+                  item="{{deal}}"
                   identity="[[identity]]"
                   on-to-detail="hashtag_to_detail"
                   class$="{{dealsopacity}}">
@@ -409,11 +408,10 @@ This is the component showing all requests of a certain hashtag. It contains a r
             <!-- </template> -->
 
             <!-- other deals - claimed by me -->
-            <template is="dom-repeat" items="{{deals}}" sort="sortDeal"
+            <template is="dom-repeat" as="deal" items="{{deals}}" sort="sortDeal"
               filter="claimedByme">
               <sc-hashtagitem
-                item="[[item]]"
-                 itemreplies="[[item.replies]]"
+                item="{{deal}}"
                 identity="[[identity]]"
                 on-to-detail="hashtag_to_detail"
                 class$="{{dealsopacity}}">
@@ -422,11 +420,10 @@ This is the component showing all requests of a certain hashtag. It contains a r
           </div>
 
           <!-- other deals - and not claimed by me -->
-          <template is="dom-repeat" items="{{deals}}"  sort="sortDeal"
+          <template is="dom-repeat" as="deal" items="{{deals}}"  sort="sortDeal"
             filter="notClaimedByMe">
             <sc-hashtagitem
-              item="[[item]]"
-               itemreplies="[[item.replies]]"
+              item="{{deal}}"
               identity="[[identity]]"
               on-to-detail="hashtag_to_detail"
               class$="{{dealsopacity}}">

@@ -44,22 +44,23 @@
         };
         switch(action.type){
             case 'NOTIFICATIONS':
-                let notifications = state.notifications;
-                notifications  = action.notifications;
-                return Object.assign({}, state, { notifications: notifications });
+                //let notifications = state.notifications;
+                //notifications  = action.notifications;
+                return Object.assign({}, state, { notifications: action.notifications });
                 break;
 
             case 'DEALS':
-                let deals = state.deals;
-                setLS('sc-deals',deals);
+                //let deals = state.deals;
+
                 var newstate = Object.assign({}, state, { deals: action.deals });
+                setLS('sc-deals',newstate.deals);
                 return newstate;
                 break;
 
             case 'IDENTITY':
-                let identity = state.identity;
-                identity  = action.identity;
-                return Object.assign({}, state, {identity: identity});
+//                let identity = state.identity;
+//                identity  = action.identity;
+                return Object.assign({}, state, {identity: action.identity});
                 break;
         }
     }
