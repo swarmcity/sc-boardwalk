@@ -187,8 +187,6 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
     </style>
     <div class$="totalcontainer {{totalstate}}">
-
-
           <div class="totalwidth horizont end startjust">
             <template is="dom-if" if="{{showavatar}}">
               <sc-avatar
@@ -197,36 +195,27 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
                 size="small">
               </sc-avatar>
             </template>
-
             <template is="dom-if" if="{{!showavatar}}">
               <div class="plusicon horizont centercenter whiteback" on-tap="doFocus">
                 <iron-icon icon="sc-icons:plus" class="blue medium"></iron-icon>
               </div>
             </template>
-
             <paper-textarea id="offerinput" label="What are you looking for? #{{selectedhashtag}}" class="totalwidth offermsg grey2unfocus"  on-focused-changed="checkFocus" value="{{offermsg}}">
             </paper-textarea>
           </div>
-
       <iron-collapse id="offerinputform" class="totalwidth">
-
         <div class="incollapser totalwidth vertic centercenter">
-
           <div class="horizont end startjust totalwidth">
             <paper-input label="What do you offer?" class="swtamount" value="{{offeramount}}" type="number">
             </paper-input>
             <p class="swtwithoffer bold">SWT</p>
           </div>
-
-
         <template is="dom-if" if="{{loading}}">
           <div class="whitespace"></div>
           <div class="totalwidth newitempadding">
             <sc-loader small class="grey3" color="grey3">Processing your request</sc-loader>
           </div>
         </template>
-
-
         <template is="dom-if" if="{{!loading}}">
           <div class="confirmbtns">
             <div class="confirmbtn">
@@ -234,44 +223,9 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
             </div>
           </div>
         </template>
-
-
-
         </div>
-
       </iron-collapse>
-
-<!-- 
-        <template is="dom-if" if="{{overspending}}">
-          <div class="totalwidth newitempadding">
-              <div class="minispace"></div>
-              <div class="minispace"></div>
-              <p class="bold red">You don't have enough SWT!</p>
-              <div class="tenspace"></div>
-          </div>
-        </template>
-
-        <template is="dom-if" if="{{!overspending}}">
-          <div class="tenspace"></div>
-        </template>
-        
-        <template is="dom-if" if="{{loading}}">
-          <div class="totalwidth newitempadding">
-            <sc-loader small class="grey3" color="grey3">Processing your request</sc-loader>
-          </div>
-        </template>
-
-
-        <template is="dom-if" if="{{!loading}}">
-          <div class="confirmbtns">
-            <div class="confirmbtn">
-              <paper-icon-button icon="sc-icons:v" class="big blueback white" on-tap="confirmRequest" noink disabled="{{!btnable}}">show</paper-icon-button>
-            </div>
-          </div>
-        </template>
- -->
     </div> 
-
   </template>
 
   <script>
@@ -298,32 +252,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
           type: Boolean,
           value: false
         }
-
       },
-
-      // animationConfig: {
-      //   type: Object,
-      //   value: function() {
-      //     return {
-      //       'entry': [{
-      //         name: 'slide-from-bottom-animation',
-      //         node: this.$.newitemcontent,
-      //         toPage: this,
-      //         timing: {
-      //           duration: 600
-      //         }
-      //       }],
-
-      //       'exit': [{
-      //         name: 'fade-out-animation',
-      //         node: this.$.newitemcontent,
-      //         fromPage: this,
-      //         timing: {
-      //           duration: 125
-      //         }
-      //       }]
-      //     }
-      //   },
 
       observers: [
         '_btnable(offermsg,offeramount,geohash)',
@@ -342,9 +271,6 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       },
 
       attached: function(){
-        // this.$.dealfortwo.getContractAddress(this.identity.pubkey,function(err,res){
-        //   console.log(err,res);
-        // })
       },
 
       /**
@@ -391,210 +317,91 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
       confirmRequest: function() {
 
-      if (this.swtbalance.toNumber(10) >= parseInt(this.offeramount)) {
+        var amount = parseFloat(this.offeramount);
+        if (amount === NaN) {
+          this.erroramount = 'Please enter an amount';
+          // TODO : report to user that hsi input in invalid.
+          return;
+        }
 
-        var self = this;
-
-        this.loading = true;
-
-        var dealID = UUIDjs.create().toString();
-        this.$.dealfortwo.makeDealForTwo(dealID, self.identity.pubkey, self.offeramount, function(err, txhash, extratx) {
-          if (err) {
-            console.log('error happened...',err);
-            // HIERE REDIRECTEN NAAR KLAAR MET NEWITEM... (failed)
-            self.closeNewcollapser();
-            self.offermsg = '';
-            self.offeramount = '';
-            
-          } else {
-            //debugger;
-            var newrequest = {
-              id: dealID,
-              type: 'dealfortwo-request-create',
-              seeker: {
-                username: self.identity.username,
-                pubkey: self.identity.pubkey,
-                avatarhash: self.identity.avatarhash,
-              },
-              offer: self.offermsg,
-              offerhashtag: self.hashtag,
-              offertime: Date.now(),
-              offeramount: self.offeramount,
-              offercreationtx: txhash,
-              offercreationallowancetx: extratx.allowancetx              
-            };
-
-            var topics = [
-              self.shhweb3.encodetopic("swarmcity-v1"),
-              self.shhweb3.encodetopic(newrequest.type),
-              self.shhweb3.encodetopic(newrequest.offerhashtag),
-              self.shhweb3.encodetopic(newrequest.id),
-              self.shhweb3.encodetopic(self.geohash.slice(0, 1)),
-              self.shhweb3.encodetopic(self.geohash.slice(0, 2)),
-              self.shhweb3.encodetopic(self.geohash.slice(0, 3)),
-              self.shhweb3.encodetopic(self.geohash.slice(0, 4)),
-            ];
-
-            if (self.shhweb3 && self.hashtag) {
-
-              var options = {
-                "from": self.shhweb3.identity,
-                "topics": topics,
-                "payload": self.shhweb3.fromAscii(JSON.stringify(newrequest)),
-                "ttl": 60 * 60 * 24,
-                "priority": 1000
+        amount = amount * this.config.swtinputunit;
+        //debugger;
+        if (this.swtbalance.toNumber(10) >= amount) {
+          var self = this;
+          this.loading = true;
+          var dealID = UUIDjs.create().toString();
+          this.$.dealfortwo.makeDealForTwo(dealID, self.identity.pubkey, amount, function(err, txhash, extratx) {
+            if (err) {
+              console.log('error happened...', err);
+              // READY WITH NEWITEM... (failed)
+              self.closeNewcollapser();
+              self.offermsg = '';
+              self.offeramount = '';
+              return;
+            } else {
+              var newrequest = {
+                id: dealID,
+                type: 'dealfortwo-request-create',
+                seeker: {
+                  username: self.identity.username,
+                  pubkey: self.identity.pubkey,
+                  avatarhash: self.identity.avatarhash,
+                },
+                offer: self.offermsg,
+                offerhashtag: self.hashtag,
+                offertime: Date.now(),
+                offeramount: amount,
+                offercreationtx: txhash,
+                offercreationallowancetx: extratx.allowancetx
               };
 
-              console.log('posting to topics', topics);
+              var topics = [
+                self.shhweb3.encodetopic("swarmcity-v1"),
+                self.shhweb3.encodetopic(newrequest.type),
+                self.shhweb3.encodetopic(newrequest.offerhashtag),
+                self.shhweb3.encodetopic(newrequest.id),
+                self.shhweb3.encodetopic(self.geohash.slice(0, 1)),
+                self.shhweb3.encodetopic(self.geohash.slice(0, 2)),
+                self.shhweb3.encodetopic(self.geohash.slice(0, 3)),
+                self.shhweb3.encodetopic(self.geohash.slice(0, 4)),
+              ];
 
-              self.shhweb3.shh.post(options, function(err, res) {
-                console.log(err, res);
-                self.loading = false;
-                self.offermsg = '';
-                self.offeramount = '';
-                self.fire('new-submitted', {
-                  dealid: newrequest.id
+              if (self.shhweb3 && self.hashtag) {
+
+                var options = {
+                  "from": self.shhweb3.identity,
+                  "topics": topics,
+                  "payload": self.shhweb3.fromAscii(JSON.stringify(newrequest)),
+                  "ttl": 60 * 60 * 24,
+                  "priority": 1000
+                };
+                console.log('posting to topics', topics);
+                self.shhweb3.shh.post(options, function(err, res) {
+                  console.log(err, res);
+                  self.loading = false;
+                  self.offermsg = '';
+                  self.offeramount = '';
+                  self.fire('new-submitted', {
+                    dealid: newrequest.id
+                  });
                 });
-              });
+              }
+              // READY WITH NEWITEM... (success)
+              self.closeNewcollapser();
             }
-
-          // HIERE REDIRECTEN NAAR KLAAR MET NEWITEM... ( succes)
-            self.closeNewcollapser();         
-          }
-
-        });
-        this.overspending = false;
-
-      } else {
-        this.overspending = true;
-      };
-
+          });
+          this.overspending = false;
+        } else {
+          this.overspending = true;
+        };
       },
-
-
-
-      // helper_getDealAddressFromTx(tx, cb) {
-      //   var self = this;
-                        
-
-      //   this.web3.waitTx(tx, function(err,blockNumber) {
-      //     if (err){
-      //       return cb(err);
-      //     }
-      //     if (blockNumber) {
-      //       self.contracturl = self.resolveUrl('../contracts/DealForTwoFactory.json');
-      //       self.importHref(self.contracturl, function(e) {
-      //         var contractjson = JSON.parse(e.target.import.body.innerText);
-      //         var DealForTwoFactoryContract = self.web3.eth.contract(contractjson.abi);
-      //         var DealForTwoFactoryContractInstance = DealForTwoFactoryContract.at(self.config.dealfortwofactory);
-      //         var myEvent = DealForTwoFactoryContractInstance.NewSimpleDeal(null, {
-      //           fromBlock: blockNumber,
-      //           toBlock: blockNumber
-      //         });
-      //         myEvent.get(function(error, result) {
-      //           //debugger;
-      //           var myEvent = result.find(function(item) {
-      //             return item.transactionHash === tx;
-      //           });
-      //           if (!myEvent || !myEvent.args || !myEvent.args.simpleDealAddress){
-      //             return cb('event not found');
-      //           }
-      //           var address = myEvent.args.simpleDealAddress;
-      //           return cb(null, address,blockNumber);
-      //         });
-      //       });
-      //     } else {
-      //       return cb('not yet mined');
-      //     }
-      //   });
-      // },
-
-
-
-
-      /**
-      * 'transfer' does the actual transfer by calling the SWT-contract and using its sendTransaction-function.
-      */
-      // transfer: function(amount, pubkey, cb) {
-      //   var self = this;
-      //   //this.sendcoinstate = 'sending';
-      //   this.contracturl = this.resolveUrl('../contracts/MiniMeToken.json');
-      //   this.importHref(this.contracturl, function(e) {
-      //     this.contractjson = JSON.parse(e.target.import.body.innerText);
-      //     self.web3.eth.getGasPrice(function(err, result) {
-      //       var gasPrice = result.toNumber(10);
-      //       // console.log('gasprice: ', gasPrice);
-      //       var MyContract = self.web3.eth.contract(self.contractjson.abi);
-      //       var myContractInstance = MyContract.at(self.config.swttokencontractaddress);
-      //       console.log('doing transfer of ', amount, ' LC to: ', pubkey, 'from: ', self.identity.pubkey,);
-      //       myContractInstance.transfer.sendTransaction(pubkey, amount, {
-      //         from: self.identity.pubkey,
-      //         gasPrice: gasPrice,
-      //         gas: 200000
-      //       }, function(err, result) {
-      //         if (err){
-      //           if (cb) {
-      //             return cb(err);
-      //           }
-      //         }
-      //         console.log(err, result);
-      //         console.log('Tokens transfer started. TXhash=',result);
-      //         cb(err,result);
-
-      //       });
-      //     });
-      //   });
-      // },
-
-
-    //  waitTx : function(txHash, callback) {
-    //   /*
-    //   * Watch for a particular transaction hash and call the awaiting function when done;
-    //   * Ether-pudding uses another method, with web3.eth.getTransaction(...) and checking the txHash;
-    //   * on https://github.com/ConsenSys/ether-pudding/blob/master/index.js
-    //   */
-    //   var self=this;
-    //   var blockCounter = 15;
-    //   // Wait for tx to be finished
-    //   var filter = this.web3.eth.filter('latest').watch(function(err, blockHash) {
-    //     if (blockCounter<=0) {
-    //       filter.stopWatching();
-    //       filter = null;
-    //       console.warn('!! Tx expired !!');
-    //       if (callback)
-    //         return callback(false);
-    //       else
-    //         return false;
-    //     }
-    //     // Get info about latest Ethereum block
-    //     var block = self.web3.eth.getBlock(blockHash);
-    //     --blockCounter;
-    //     // Found tx hash?
-    //     if (block.transactions.indexOf(txHash) > -1) {
-    //       // Tx is finished
-    //       filter.stopWatching();
-    //       filter = null;
-    //       if (callback)
-    //         return callback(true);
-    //       else
-    //         return true;
-    //     // Tx hash not found yet?
-    //     } else {
-    //       // console.log('Waiting tx..', blockCounter);
-    //     }
-    //   });
-    // },
-
 
       doFocus: function(){
         this.$.offerinput.focus();
       },
 
-
-      checkFocus: function(){
+      checkFocus: function() {
         var offerinputform = this.shadowRoot.getElementById('offerinputform');
-
-
         if (this.$.offerinput.focused) {
           this.showavatar = true;
           this.totalstate = "totalopen";
@@ -602,29 +409,19 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
           this.fire('newitem-open');
         } else {
 
-        if (!this.$.offerinput.value) {
-          this.closeNewcollapser();
-          // this.showavatar = false;
-          // this.totalstate = "totalclosed";
-          // offerinputform.opened = false;
-          // this.fire('newitem-close');
+          if (!this.$.offerinput.value) {
+            this.closeNewcollapser();
           }
         };
       },
 
-      closeNewcollapser: function(){
+      closeNewcollapser: function() {
         var offerinputform = this.shadowRoot.getElementById('offerinputform');
         offerinputform.opened = false;
-
         this.showavatar = false;
         this.totalstate = "totalclosed";
-        this.fire('newitem-close');  
+        this.fire('newitem-close');
       }
-
-
-
-
-
     });
   </script>
 </dom-module>

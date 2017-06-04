@@ -203,16 +203,8 @@ This components allow a Swarm Citizen to reply on a request.
 
             <div class="totalwidth confirmbtns">
               <iron-icon icon="sc-icons:decline" class="grey3" on-tap="toggleForm">close collapse</iron-icon>
-              <paper-icon-button icon="sc-icons:v" noink class="white medium blueback shadow confirmbtn" on-tap="submitReply"> Reply with offer</paper-icon-button>
+              <paper-icon-button id="replybtn" icon="sc-icons:v" noink class="white medium blueback shadow confirmbtn" on-tap="submitReply"> Reply with offer</paper-icon-button>
             </div>
-
-
-        <!-- </template>
-
-
-        <template is="dom-if" if="{{_is(replystate,'sendingreply')}}">
-            <sc-loader small color="blue" class="blue" on-tap="replyLoaded">Submitting your reply</sc-loader> 
-        </template> -->
       </div>
 
   </iron-collapse>
@@ -278,8 +270,6 @@ This components allow a Swarm Citizen to reply on a request.
         this.backtoInit();
       },
 
-
-
       /**
       * '_is', a function to bind a template to a certain value of a variable.
       */
@@ -290,42 +280,9 @@ This components allow a Swarm Citizen to reply on a request.
         return a === b;
       },
 
-
-      /**
-      * When the action is trigger, 'submitReply' checks the replystate and does a certain action accordingly
-      */
-
-
-    // submitReply: function(){
-    //     var self= this;
-
-    //     switch (this.replystate) {
-    //       case 'init':
-    //         this.replystate = 'replying'
-    //         this.bgcolor = "whiteback";
-    //         this.borderz = "greytopborder";
-    //         break;
-
-    //       case 'replying':
-
-    //         this.replystate = 'sendingreply'
-    //         this.bgcolor = "basestructure";
-    //         this.borderz = "notopborder";
-
-
-
-
-            //debugger;
-
-            // if (!this.shhidentity) {
-            //   this.shhidentity = this.shhweb3.shh.newIdentity();
-            // }
-
       _itemdata: function(target){
         this.replyamount = target.amount;
       },
-
-
 
       toggleForm: function(){
         var replyform = this.shadowRoot.getElementById('replyform');
@@ -333,107 +290,65 @@ This components allow a Swarm Citizen to reply on a request.
         this.btnvisible = !this.btnvisible;     
       },
 
+      submitReply: function() {
+        this.$.replybtn.disabled = true;
 
-      submitReply: function(){
-            var message = {
-              type: 'dealfortwo-request-reply',
-              id: UUIDjs.create().toString(),
-              parentrequestid: this.itemdata.id,
-              hashtag: this.itemdata.hashtag,
-              replyer: {
-                avatarhash: this.identity.avatarhash,
-                username: this.identity.username,
-                pubkey: this.identity.pubkey
-              },
-              reply: this.replytext,
-              replyamount: this.replyamount,
-              replytime: Date.now()
-            };
+        var amount = parseFloat(this.replyamount);
+        if (amount === NaN ){
+          this.erroramount = 'Please enter an amount';
+          // TODO : report to user that his input in invalid.
+          return;
+        }
 
+        amount = amount * this.config.swtinputunit;
 
-            var topics = [
-              this.shhweb3.encodetopic('swarmcity-v1'),
-              this.shhweb3.encodetopic('dealfortwo-request-reply'),
-              this.shhweb3.encodetopic(message.hashtag),
-              this.shhweb3.encodetopic(message.dealid),
-            ];  
+        debugger;
 
-            // var topics = [
-            //   this.shhweb3.encodetopic(message.type),
-            //   this.shhweb3.encodetopic(this.itemdata.id),
-            //   this.shhweb3.encodetopic(message.id),
-            // ];
-
-            var options = {
-              "from": this.shhweb3.identity,
-              "topics": topics,
-              "payload": this.shhweb3.fromAscii(JSON.stringify(message)),
-              "ttl": 60 * 60 * 24,
-              "priority": 1000
-            };
-
-            console.log('posting to topics', topics);
-
-            this.shhweb3.shh.post(options, function(err, res) {
-              if (!err){
-                console.log('sc->itemreplier -> Reply posted');
-                self.replystate = 'init';
-              }else{
-                console.log('sc-itemreplier -> whisper error:',err);
-              }
-              self.bgcolor = "whiteback";
-              self.borderz = "lightgreytopborder";
-            });
-
-            // // send notification
-            // var reply_to_deal_notification = {
-            //   type: 'reply-to-deal',
-            //   subjectavatar: this.identity.avatarhash, //'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
-            //   subjectpub: this.identity.pubkey, //'0x4458...',
-            //   subjectusername: this.identity.username, //'Hank Moovy',
-            //   timestamp: Date.now(),
-            //   dealhashtag: this.itemdata.offerhashtag,
-            //   msg: 'replied to your deal: ' + this.replytext,
-            //   // now the specific fields for this type
-            //   dealid: this.itemdata.id,
-            //   replyid: offer_reply.id
-             
-            // };
+        var message = {
+          type: 'dealfortwo-request-reply',
+          id: UUIDjs.create().toString(),
+          parentrequestid: this.itemdata.id,
+          hashtag: this.itemdata.hashtag,
+          replyer: {
+            avatarhash: this.identity.avatarhash,
+            username: this.identity.username,
+            pubkey: this.identity.pubkey
+          },
+          reply: this.replytext,
+          replyamount: this.replyamount,
+          replytime: Date.now()
+        };
 
 
-            // var topics = [
-            //   this.shhweb3.encodetopic('notification'),
-            //   this.shhweb3.encodetopic(this.itemdata.offererpubkey)
-            // ];
+        var topics = [
+          this.shhweb3.encodetopic('swarmcity-v1'),
+          this.shhweb3.encodetopic('dealfortwo-request-reply'),
+          this.shhweb3.encodetopic(message.hashtag),
+          this.shhweb3.encodetopic(message.dealid),
+        ];
 
-            // var options = {
-            //   "from": this.shhidentity,
-            //   "topics": topics,
-            //   "payload": this.shhweb3.fromAscii(JSON.stringify(reply_to_deal_notification)),
-            //   "ttl": 60 * 60 * 24,
-            //   "priority": 1000
-            // };
+        var options = {
+          "from": this.shhweb3.identity,
+          "topics": topics,
+          "payload": this.shhweb3.fromAscii(JSON.stringify(message)),
+          "ttl": 60 * 60 * 24,
+          "priority": 1000
+        };
 
-            // console.log('posting to topics', topics);
+        console.log('posting to topics', topics);
 
-        //     break;
-        
-        // }
-    },
-
-
-    // backtoInit: function(){
-    //   this.replystate = 'init'
-    //   this.bgcolor = "whiteback";
-    //   this.borderz = "lightgreytopborder";
-    // },
-
-    // replyLoaded: function(){
-    //   //this.submittingreply = false;
-    // },
-
-
-
+        this.shhweb3.shh.post(options, function(err, res) {
+          if (!err) {
+            console.log('sc->itemreplier -> Reply posted');
+            self.replystate = 'init';
+          } else {
+            console.log('sc-itemreplier -> whisper error:', err);
+          }
+          self.bgcolor = "whiteback";
+          self.borderz = "lightgreytopborder";
+          this.$.replybtn.disabled = false;
+        });
+      },
 
       _log: function(target) {
         console.log("*************************** in itemreplierzzzz", target);
@@ -441,8 +356,6 @@ This components allow a Swarm Citizen to reply on a request.
 
       checkFocus: function(){
         var replyform = this.shadowRoot.getElementById('replyform');
-
-
         if (this.$.replyinput.focused) {
           this.focusclass = "infocus";
           replyform.opened = true;
@@ -452,7 +365,6 @@ This components allow a Swarm Citizen to reply on a request.
               replyform.opened = false;
             }
         };
-
       }
 
 
