@@ -358,6 +358,9 @@ This is the component showing all requests of a certain hashtag. It contains a r
             </div>
           </template>
  -->
+
+
+
           <div id="balancebox" class="balance_box" on-tap="toWalletview">
             <sc-balance
               refcur="EUR"
@@ -378,6 +381,11 @@ This is the component showing all requests of a certain hashtag. It contains a r
             </div>
             <p class="bold wordbreak">{{hashtag}}</p>
           </div>
+        </div>
+
+        <!-- filterbox -->
+        <div class="filterbox">
+          <sc-filter id="locationfilter" currentid="locationfilter" location range="{{range}}"></sc-filter>
         </div>
 
         <sc-newitem
