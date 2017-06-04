@@ -16,9 +16,9 @@
 <!--
 `sc-dealitem`
 
-This components is the representation of a request in the requests-list on sc-hashtag. 
+This components is the representation of a request in the requests-list on sc-hashtag.
 
-@demo src/sc-dealitem/demo/index.html 
+@demo src/sc-dealitem/demo/index.html
 -->
 
 <dom-module id="sc-dealitem">
@@ -27,7 +27,7 @@ This components is the representation of a request in the requests-list on sc-ha
       :host {
         display: block;
         width: 100%;
-        @apply(--base-shadow); 
+        @apply(--base-shadow);
 /*        background-color: rgba(255,255,255,0.35);*/
       }
 
@@ -45,7 +45,7 @@ This components is the representation of a request in the requests-list on sc-ha
         width: 28px;
         height: 28px;
         min-width: 28px;
-        min-height: 28px;        
+        min-height: 28px;
       }
 
 
@@ -70,31 +70,31 @@ This components is the representation of a request in the requests-list on sc-ha
 
 
       .mymsg {
-        margin-top: 4px;      
-        margin-bottom: 4px;        
-        margin-left: 10px;        
-        margin-right: 10px;        
+        margin-top: 4px;
+        margin-bottom: 4px;
+        margin-left: 10px;
+        margin-right: 10px;
       }
 
       .myoffer {
-        margin-top: 4px;      
+        margin-top: 4px;
         margin-right: 10px;
       }
 
       .dealstatusmsg_box {
-        margin-top: 10px;      
+        margin-top: 10px;
       }
 
       .dealstatusmsg {
-        margin-bottom: 2px;      
+        margin-bottom: 2px;
       }
 
       .replycount_box {
-        margin-top: 4px;      
+        margin-top: 4px;
       }
 
-      .replycount_box iron-icon {              
-        margin-left: 5px;            
+      .replycount_box iron-icon {
+        margin-left: 5px;
       }
 
       .rightmarg {
@@ -124,8 +124,8 @@ This components is the representation of a request in the requests-list on sc-ha
         margin-bottom: 3px;
       }*/
 
-      @media all and (min-width: 0) and (max-width: 420px) { 
-      
+      @media all and (min-width: 0) and (max-width: 420px) {
+
 
       }
 
@@ -180,7 +180,7 @@ This components is the representation of a request in the requests-list on sc-ha
               </sc-avatar>
               <iron-icon icon="sc-icons:v" class$="{{providervcolor}} {{providervopacity}} medium"></iron-icon>
             </div>
-          </div> 
+          </div>
         </template>
 
 
@@ -244,16 +244,16 @@ This components is the representation of a request in the requests-list on sc-ha
         showmsg: {
           type: Boolean,
           value: false
-        }, 
+        },
 
         dealstatesecondbg: {
           type: String,
-          value: 'white'  
+          value: 'white'
         },
 
         vopacity: {
           type: String,
-          value: 'half'  
+          value: 'half'
         },
       },
 
@@ -265,14 +265,14 @@ This components is the representation of a request in the requests-list on sc-ha
       },
 
       /**
-      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
+      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage
       * use this to initialize any variables to start the component
       */
       onEnter: function(){
       },
 
       /**
-      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage 
+      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage
       * use this to reset any variables when leaving this component while it remains loaded.
       */
       onExit: function(){
@@ -298,7 +298,7 @@ This components is the representation of a request in the requests-list on sc-ha
 
         var self = this;
 
-        if (this.item.replies){        
+        if (this.item.replies){
           this.replycount = this.item.replies.length;
         } else {
           this.replycount = 0;
@@ -306,16 +306,16 @@ This components is the representation of a request in the requests-list on sc-ha
 
         console.log("uit dealitem ****", this.item);
 
-        if (this.item.selectedreply){        
+        if (this.item.selectedreply){
           var foundReply = this.item.replies.find(function(item){
             return item.id === self.item.selectedreply;
         });
           this.currentprovider = foundReply.provider;
-      
+
         if (this.dealstate=='indeal') {
           this.amountopacity = "full";
           this.dealstatusmsgclass = "bold green";
-          this.dealstatusmsg = "You're in deal with "+foundReply.provider.username+" for "+self.item.amount+" SWT.";
+          this.dealstatusmsg = "You're in a deal with "+foundReply.provider.username+" for "+self.item.amount+" SWT.";
           this.dealstatesecondbg = "whiteback";
         } else {
 
@@ -341,22 +341,22 @@ This components is the representation of a request in the requests-list on sc-ha
         // if (this.item.dealstate=='providerassigned') {
         //   this.dealstatusmsg = "You agreed to a deal with " + provider + "for " + this.item.amount + "SWT.";
         //   this.dealstatusmsgclass = "reg grey4";
-        //   this.seekervcolor = "green";       
+        //   this.seekervcolor = "green";
         // }
 
 
         // if (this.item.dealstate=='dealfundedbyprovider') {
         //   this.dealstatusmsg = "Making a deal with " + provider + "for " + this.item.amount + "SWT.";
         //   this.dealstatusmsgclass = "reg grey4";
-        //   this.providervcolor = "green";       
+        //   this.providervcolor = "green";
         // }
 
 
         // if (this.item.dealstate=='dealtopayout') {
         //   this.dealstatusmsg = "You're agreed to a deal with " + provider + "for " + this.item.amount + "SWT.";
         //   this.dealstatusmsgclass = "bold blue";
-        //   this.seekervcolor = "green";  
-        //   this.providervcolor = "green"; 
+        //   this.seekervcolor = "green";
+        //   this.providervcolor = "green";
 
         // }
 
@@ -397,18 +397,18 @@ This components is the representation of a request in the requests-list on sc-ha
 
         if (this.seekerstate === 'accepted' || this.seekerstate === 'mined') {
           this.seekervopacity = "full";
-          this.seekervcolor = "green";       
+          this.seekervcolor = "green";
         } else {
           this.seekervopacity = "half";
-          this.seekervcolor = "grey2";    
+          this.seekervcolor = "grey2";
         };
 
         if (this.providerstate === 'accepted' || this.providerstate === 'mined') {
           this.providervopacity = "full";
-          this.providervcolor = "green";       
+          this.providervcolor = "green";
         } else {
           this.providervopacity = "half";
-          this.providervcolor = "grey2";    
+          this.providervcolor = "grey2";
         };
 
         if (this.seekerstate === 'accepted' && this.providerstate === 'accepted') {
