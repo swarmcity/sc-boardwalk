@@ -13,7 +13,8 @@
 <link rel="import" href="../sc-loader/sc-loader.html">
 <link rel="import" href="../sc-shh/sc-shh.html">
 <link rel="import" href="../sc-redux/sc-redux.html">
-
+<link rel="import" href="../sc-config/sc-config.html">
+  
 <script type="text/javascript" src="../../bower_components/uuid-js/lib/uuid.js"></script>
 
 <!--
@@ -27,7 +28,7 @@ This components allow a Swarm Citizen to reply on a request.
 <dom-module id="sc-itemreplier">
 
   <template>
-
+    <sc-config id="config" config="{{config}}"></sc-config>
     <sc-shh web3="{{shhweb3}}"></sc-shh>
     <style include="sc-styles">
       :host {
@@ -281,7 +282,7 @@ This components allow a Swarm Citizen to reply on a request.
       },
 
       _itemdata: function(target){
-        this.replyamount = target.amount;
+        this.replyamount = target.amount / this.$.config.swtinputunit;
       },
 
       toggleForm: function(){
@@ -300,7 +301,7 @@ This components allow a Swarm Citizen to reply on a request.
           return;
         }
 
-        amount = amount * this.config.swtinputunit;
+        amount = amount * this.$.config.swtinputunit;
 
         debugger;
 
@@ -346,7 +347,7 @@ This components allow a Swarm Citizen to reply on a request.
           }
           self.bgcolor = "whiteback";
           self.borderz = "lightgreytopborder";
-          this.$.replybtn.disabled = false;
+          self.$.replybtn.disabled = false;
         });
       },
 
