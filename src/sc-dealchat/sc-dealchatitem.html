@@ -13,7 +13,7 @@
 
 This is dealchatitem.
 
-@demo src/sc-dealchatitem/demo/index.html 
+@demo src/sc-dealchatitem/demo/index.html
 -->
 
 <dom-module id="sc-dealchatitem">
@@ -27,14 +27,14 @@ This is dealchatitem.
       .item_total {
         width: 100%;
         @apply(--layout-horizontal);
-        @apply(--layout-end-justified);        
+        @apply(--layout-end-justified);
         @apply(--layout-start);
         margin: 6px 0px 6px 0px;
       }
 
       .itsme {
         @apply(--layout-horizontal);
-        @apply(--layout-start-justified);        
+        @apply(--layout-start-justified);
         @apply(--layout-start);
       }
 
@@ -71,8 +71,8 @@ This is dealchatitem.
 
       .notmyballoon {
         @apply(--layout-horizontal-reverse);
-        @apply(--layout-start-justified);        
-        @apply(--layout-center);        
+        @apply(--layout-start-justified);
+        @apply(--layout-center);
         @apply(--layout-wrap);
       }
 
@@ -89,7 +89,7 @@ This is dealchatitem.
           <div class="balloon totalwidth">
             <div class="horizont center startjust wrap">
 <!--               <p class="small reg grey4">{{item.chattername}}</span></p> -->
-              <p class="grey2b light small leftm"><moment-js date="{{item.offertime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
+              <p class="grey2b light small leftm"><moment-js date="{{item.offertime}}" format="HH:mm"></moment-js></p>
             </div>
             <p>{{item.chatmsg}}</p>
 
@@ -151,14 +151,14 @@ This is dealchatitem.
       },
 
       /**
-      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
+      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage
       * use this to initialize any variables to start the component
       */
       onEnter: function(){
       },
 
       /**
-      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage 
+      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage
       * use this to reset any variables when leaving this component while it remains loaded.
       */
       onExit: function(){
