@@ -200,7 +200,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
                 <iron-icon icon="sc-icons:plus" class="blue medium"></iron-icon>
               </div>
             </template>
-            <paper-textarea id="offerinput" label="What are you looking for? #{{selectedhashtag}}" class="totalwidth offermsg grey2unfocus"  on-focused-changed="checkFocus" value="{{offermsg}}">
+            <paper-textarea id="offerinput" label="What are you looking for? {{selectedhashtag}}" class="totalwidth offermsg grey2unfocus"  on-focused-changed="checkFocus" value="{{offermsg}}">
             </paper-textarea>
           </div>
       <iron-collapse id="offerinputform" class="totalwidth">
@@ -279,7 +279,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       */
       onEnter: function(){
         // This is DUMMY!!!
-        this.selectedhashtag = "pioneer";
+        this.selectedhashtag = "";
 
         // These are for REALS
         this.btnable = false;
