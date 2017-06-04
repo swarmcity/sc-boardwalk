@@ -519,6 +519,8 @@ This components is the representation of a request in the requests-list on sc-ha
                   <div class="flex vertic start startjust">
                     <div class="request_info">
                       <p class="seeker small reg blue">{{item.seeker.username}} • <span class="bold"><sc-hashtagrep pubkey="{{item.seeker.pubkey}}" hashtagname="{{item.hashtag}}"></sc-hashtagrep></span></p>
+
+
                       <template is="dom-if" if="{{phoneview}}">
                         <div class="totalwidth horizont center startjust">
                         <p class="grey2b light small"><moment-js date="{{item.offertime}}" format="HH:mm"></moment-js></p>
@@ -548,10 +550,19 @@ This components is the representation of a request in the requests-list on sc-ha
                     <small class="bold yellow">for</small>
                     <p class="bold yellow"><sc-tokenbalanceformatter value="{{item.amount}}"></sc-tokenbalanceformatter></p>
                   </div>
+
                 </template>
 
 
+
               </div>
+
+              <template is="dom-if" if="{{_is(item.dealstate,'payout')}}">
+                <div class="dealmessage totalwidth horizontal center endjust">
+                  <p class$="small {{dealmessageclass}} bold">This deal has been completed.</p>
+                </div>
+
+              </template>
 
 
               <template is="dom-if" if="{{_is(item.dealstate,'created')}}">
@@ -626,15 +637,9 @@ This components is the representation of a request in the requests-list on sc-ha
                     </div>
                   </template>
 
-                  <!-- Provider accepted -->
+                  <!-- Payout -->
                   <template is="dom-if" if="{{_is(item.dealstate,'payout')}}">
-                    <div class="flex vertic start startjust">
-                        <p class="hashtagdealmsg totalwidth grey4">{{currentprovider.username}} and {{item.seeker.username}} finished this deal.</p>
-                    </div>
-                    <div class="amountstuff vertic end endjust">
-                      <small class="bold green">for</small>
-                      <p class="bold green"><sc-tokenbalanceformatter value="{{item.amount}}"></sc-tokenbalanceformatter></p>
-                    </div>
+                    <p class="hashtagdealmsg totalwidth grey4">You completed a deal with {{currentprovider.username}}.</p>
                   </template>
 
 
