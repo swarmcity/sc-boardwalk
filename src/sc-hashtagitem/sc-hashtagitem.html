@@ -18,9 +18,9 @@
 <!--
 `sc-hashtagitem`
 
-This components is the representation of a request in the requests-list on sc-hashtag. 
+This components is the representation of a request in the requests-list on sc-hashtag.
 
-@demo src/sc-hashtagitem/demo/index.html 
+@demo src/sc-hashtagitem/demo/index.html
 -->
 
 <dom-module id="sc-hashtagitem">
@@ -57,7 +57,7 @@ This components is the representation of a request in the requests-list on sc-ha
 
       .categorie {
         box-sizing:border-box;
-        padding: 4px 4px 4px 4px; 
+        padding: 4px 4px 4px 4px;
         font-size: 14px;
         line-height: 16px;
       }
@@ -68,7 +68,7 @@ This components is the representation of a request in the requests-list on sc-ha
 
 
       .margtop {
-        margin-top: 6px;     
+        margin-top: 6px;
       }
 
       .margbot {
@@ -80,7 +80,7 @@ This components is the representation of a request in the requests-list on sc-ha
       }
 
       .timestamp {
-        margin: 0px 4px 6px 0px;     
+        margin: 0px 4px 6px 0px;
       }
 
       .replyitem {
@@ -90,7 +90,7 @@ This components is the representation of a request in the requests-list on sc-ha
 
 
 
-      sc-avatar { 
+      sc-avatar {
         margin-right: 10px;
       }
 
@@ -100,7 +100,7 @@ This components is the representation of a request in the requests-list on sc-ha
 
       .myavatar {
 /*        width: 22px;
-        height: 22px;        
+        height: 22px;
 */      }
 
       .othermargins {
@@ -116,7 +116,7 @@ This components is the representation of a request in the requests-list on sc-ha
         margin-right: 10px;
         margin-left: 2px;
       }
-      
+
       .msg {
         margin-top: 4px;
         font-size: 16px;
@@ -127,7 +127,7 @@ This components is the representation of a request in the requests-list on sc-ha
       .hashtagdealmsg {
         margin-bottom: 4px;
         font-size: 16px;
-        line-height: 20px; 
+        line-height: 20px;
       }
 
       .offeramount {
@@ -249,13 +249,13 @@ This components is the representation of a request in the requests-list on sc-ha
         @apply(--layout-wrap);
       }
 
-      .replycount_box {              
+      .replycount_box {
 /*        margin-right: 10px;*/
-        @apply(--layout-self-end);    
+        @apply(--layout-self-end);
       }
-      .replycount_box iron-icon {              
+      .replycount_box iron-icon {
         margin-left: 3px;
-        margin-bottom: 3px;            
+        margin-bottom: 3px;
       }
 
 /*      .blueborder {
@@ -266,13 +266,13 @@ This components is the representation of a request in the requests-list on sc-ha
         border-left: 2px solid transparent;
       }*/
 
-      @media all and (min-width: 0) and (max-width: 420px) { 
+      @media all and (min-width: 0) and (max-width: 420px) {
         .totalcontainer {
           box-shadow: none;
           -webkit-box-shadow: none;
           -moz-box-shadow: none;
           -o-box-shadow: none;
-        }      
+        }
         .smalltxt {
           font-size: 13px;
           line-height: 17px;
@@ -285,7 +285,7 @@ This components is the representation of a request in the requests-list on sc-ha
         .dealmessage p {
           padding-top: 12px;
         }
- 
+
         .request_info {
           width: 100%;
           @apply(--layout-vertical);
@@ -297,7 +297,7 @@ This components is the representation of a request in the requests-list on sc-ha
       }
 
     </style>
- 
+
     <sc-dealstate deal="{{item}}" dealstate="{{dealstate}}"></sc-dealstate>
     <iron-media-query query="(min-width:0px) and (max-width: 540px)" query-matches="{{phoneview}}"></iron-media-query>
 
@@ -494,7 +494,7 @@ This components is the representation of a request in the requests-list on sc-ha
                       size="small">
                     </sc-avatar>
                   </template>
- 
+
                   <div class="flex vertic start startjust">
                     <template is="dom-if" if="{{!phoneview}}">
                       <p class="hashtagdealmsg totalwidth grey4"><span class="bold">You're in deal</span> with {{item.seeker.username}}.</p>
@@ -563,7 +563,7 @@ This components is the representation of a request in the requests-list on sc-ha
                   <!-- Provider accepted -->
                   <template is="dom-if" if="{{_is(dealstate,'provideraccepted')}}">
                     <div class="flex vertic start startjust">
-                        <p class="hashtagdealmsg totalwidth grey4">{{currentprovider.username}} has accept a deal with you.</p>
+                        <p class="hashtagdealmsg totalwidth grey4">{{currentprovider.username}} has accepted a deal with you.</p>
                     </div>
                     <div class="amountstuff vertic end endjust">
                       <small class="bold green">for</small>
@@ -575,7 +575,7 @@ This components is the representation of a request in the requests-list on sc-ha
                   <template is="dom-if" if="{{_is(dealstate,'indeal')}}">
                     <div class="flex vertic start startjust">
                         <template is="dom-if" if="{{!phoneview}}">
-                          <p class="hashtagdealmsg totalwidth grey4"><span class="bold">You're in deal</span> with {{currentprovider.username}}.</p>
+                          <p class="hashtagdealmsg totalwidth grey4"><span class="bold">You're in a deal</span> with {{currentprovider.username}}.</p>
                         </template>
                         <template is="dom-if" if="{{phoneview}}">
                           <p class="hashtagdealmsg totalwidth grey4"><span class="bold">In deal</span> with {{currentprovider.username}}.</p>
@@ -593,7 +593,7 @@ This components is the representation of a request in the requests-list on sc-ha
 
               <div class="lid totalwidth"></div>
           </div>
-        </template>        
+        </template>
 
       </template>
 
@@ -630,14 +630,14 @@ This components is the representation of a request in the requests-list on sc-ha
       },
 
       /**
-      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
+      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage
       * use this to initialize any variables to start the component
       */
       onEnter: function(){
       },
 
       /**
-      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage 
+      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage
       * use this to reset any variables when leaving this component while it remains loaded.
       */
       onExit: function(){
@@ -681,9 +681,9 @@ This components is the representation of a request in the requests-list on sc-ha
         } else {
           toggler.opened = true;
           this.customStyle['--my-totalbg-color'] = 'var(--sc-white)';
-          this.updateStyles();   
+          this.updateStyles();
           this.showdealmsg = false;
-       
+
         }
 }
         // this.checkDealmsg();
@@ -701,7 +701,7 @@ This components is the representation of a request in the requests-list on sc-ha
       youareowner: function(pubkey){
         //debugger;
         return (this.identity.pubkey == pubkey);
-      },  
+      },
 
 
       _item: function(){
@@ -714,11 +714,11 @@ This components is the representation of a request in the requests-list on sc-ha
           } else {
             self.showdealmsg = false;
           }
-          
+
           // this slice is neccesary to prevent a polymer databinding flaw..
 
           if (deal.replies){
-            this.itemreplies = deal.replies.slice(0);  
+            this.itemreplies = deal.replies.slice(0);
           }
 
           if(deal.selectedreply) {
@@ -730,7 +730,7 @@ This components is the representation of a request in the requests-list on sc-ha
             if (foundReply){
               self.currentprovider = foundReply.provider;
                 if(self.currentprovider.pubkey === self.identity.pubkey) {
-                  self.dealmessage = deal.seeker.username+" choose you for this request!";
+                  self.dealmessage = deal.seeker.username+" chose you for this request!";
                   self.dealmessagechosen = "";
                   self.dealmessageclass = "blue";
                   self.iamprovider = true;
@@ -738,8 +738,8 @@ This components is the representation of a request in the requests-list on sc-ha
                   //debugger;
                 } else {
                 self.dealmessage = "";
-                self.dealmessagechosen = deal.seeker.username+" choose "+self.currentprovider.username+" for this request.";                  
-              } 
+                self.dealmessagechosen = deal.seeker.username+" chose "+self.currentprovider.username+" for this request.";
+              }
             }
           }
 
