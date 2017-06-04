@@ -410,7 +410,7 @@ This components is the representation of a request in the requests-list on sc-ha
                 </sc-avatar>
 
                 <!-- Created. -->
-                <template is="dom-if" if="{{_is(dealstate,'created')}}">
+                <template is="dom-if" if="{{_is(item.dealstate,'created')}}">
                   <div class="flex vertic start startjust">
                     <div class="request_info">
                       <p class="seeker small reg blue">{{item.seeker.username}} • <span class="bold"><sc-hashtagrep pubkey="{{item.seeker.pubkey}}" hashtagname="{{item.hashtag}}"></sc-hashtagrep></span></p>
@@ -446,7 +446,7 @@ This components is the representation of a request in the requests-list on sc-ha
                 </template>
 
                 <!-- Provider accepted. -->
-                <template is="dom-if" if="{{_is(dealstate,'provideraccepted')}}">
+                <template is="dom-if" if="{{_is(item.dealstate,'provideraccepted')}}">
                   <!-- U R provider -->
                   <template is="dom-if" if="{{youareowner(currentprovider.pubkey)}}">
                     <sc-avatar
@@ -486,7 +486,7 @@ This components is the representation of a request in the requests-list on sc-ha
                 </template>
 
                 <!-- In deal. -->
-                <template is="dom-if" if="{{_is(dealstate,'indeal')}}">
+                <template is="dom-if" if="{{_is(item.dealstate,'indeal')}}">
                   <!-- U R provider -->
                   <template is="dom-if" if="{{youareowner(currentprovider.pubkey)}}">
                     <sc-avatar
@@ -516,7 +516,7 @@ This components is the representation of a request in the requests-list on sc-ha
               </div>
 
 
-              <template is="dom-if" if="{{_is(dealstate,'created')}}">
+              <template is="dom-if" if="{{_is(item.dealstate,'created')}}">
                 <div class="dealmessage totalwidth horizontal center endjust">
                   <p class$="small {{dealmessageclass}} bold">{{dealmessage}}</p>
                 </div>
@@ -549,7 +549,7 @@ This components is the representation of a request in the requests-list on sc-ha
 
 
                   <!-- Created. -->
-                  <template is="dom-if" if="{{_is(dealstate,'created')}}">
+                  <template is="dom-if" if="{{_is(item.dealstate,'created')}}">
                     <div class="flex vertic start startjust">
                        <p class="hashtagdealmsg totalwidth grey4">You selected {{currentprovider.username}} to make a deal with.</p>
                        <p class="small totalwidth grey2b">Waiting for {{currentprovider.username}} to respond.</p>
@@ -561,7 +561,7 @@ This components is the representation of a request in the requests-list on sc-ha
                   </template>
 
                   <!-- Provider accepted -->
-                  <template is="dom-if" if="{{_is(dealstate,'provideraccepted')}}">
+                  <template is="dom-if" if="{{_is(item.dealstate,'provideraccepted')}}">
                     <div class="flex vertic start startjust">
                         <p class="hashtagdealmsg totalwidth grey4">{{currentprovider.username}} has accepted a deal with you.</p>
                     </div>
@@ -572,7 +572,7 @@ This components is the representation of a request in the requests-list on sc-ha
                   </template>
 
                   <!-- In deal. -->
-                  <template is="dom-if" if="{{_is(dealstate,'indeal')}}">
+                  <template is="dom-if" if="{{_is(item.dealstate,'indeal')}}">
                     <div class="flex vertic start startjust">
                         <template is="dom-if" if="{{!phoneview}}">
                           <p class="hashtagdealmsg totalwidth grey4"><span class="bold">You're in a deal</span> with {{currentprovider.username}}.</p>
