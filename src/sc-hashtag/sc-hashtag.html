@@ -405,7 +405,9 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
           <!-- KF comment // vroeger ware dit verschillende aparte lijsten, dat is nu 1 grote lijst / performanter / filtert en sort dat vanzelf -->
             <!-- <template is="dom-if" if="{{hasmydeals(mydeals)}}"> -->
-              <template is="dom-repeat" as="deal" items="{{deals}}" filter="isMyDeal" sort="sortDeal">
+              <template is="dom-repeat" as="deal" items="{{dealslist}}" filter="isMyDeal" sort="sortDeal">
+                            R={{deal.replies.length}}
+
                 <sc-hashtagitem
                   item="{{deal}}"
                   identity="[[identity]]"
@@ -416,8 +418,9 @@ This is the component showing all requests of a certain hashtag. It contains a r
             <!-- </template> -->
 
             <!-- other deals - claimed by me -->
-            <template is="dom-repeat" as="deal" items="{{deals}}" sort="sortDeal"
+            <template is="dom-repeat" as="deal" items="{{dealslist}}" sort="sortDeal"
               filter="claimedByme">
+              R={{deal.replies.length}}
               <sc-hashtagitem
                 item="{{deal}}"
                 identity="[[identity]]"
@@ -428,8 +431,10 @@ This is the component showing all requests of a certain hashtag. It contains a r
           </div>
 
           <!-- other deals - and not claimed by me -->
-          <template is="dom-repeat" as="deal" items="{{deals}}"  sort="sortDeal"
+          <template is="dom-repeat" as="deal" items="{{dealslist}}"  sort="sortDeal"
             filter="notClaimedByMe">
+                          R={{deal.replies.length}}
+
             <sc-hashtagitem
               item="{{deal}}"
               identity="[[identity]]"
@@ -482,6 +487,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
         deals: {
           type: Array,
           statePath: 'deals',
+          observer: '_deals'
         },
         // mydeals: {
         //   type: Array,
@@ -605,6 +611,21 @@ This is the component showing all requests of a certain hashtag. It contains a r
           value: false
         },
 
+      },
+
+      _deals: function(){
+        console.log('DEALS IS VERANDERD JONGE',this.deals,Date.now());
+        this.dealslist = [];
+        for (var i=0;i<this.deals.length;i++){
+          var d = this.deals[i];
+          if (d.replies){
+            d.replies = this.deals[i].replies.slice(0);
+          }
+//          this.dealslist.push(this.deals[i]);
+//          this.dealslist
+          this.push('dealslist',d);
+        }
+        //this.dealslist = this.deals.slice(0);
       },
 
 
