@@ -162,7 +162,7 @@ This is dealchat.
         var self = this;
         try {
           payload = JSON.parse(self.shhweb3.toAscii(result.payload));
-          console.log('incoming in whisperer: shhweb3 ', payload);
+          console.log('sc-dealchat -> incoming whisper message ', payload);
 
           //this.push('deals',payload);
         } catch (e) {

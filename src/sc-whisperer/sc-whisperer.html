@@ -15,7 +15,8 @@ Example:
 -->
 <dom-module id="sc-whisperer">
   <template>
-      <ac-shh web3="{{web3}}"></ac-shh>
+      <sc-shh web3="{{web3}}"></sc-shh>  
+      <!-- <ac-shh web3="{{web3}}"></ac-shh> -->
   </template>
 </dom-module>
 
@@ -208,6 +209,7 @@ Polymer({
   _web3: function() {
     var self = this;
     console.log('whisperer web3 started');
+    debugger;
   },
 
   _topic: function(newval,oldval) {

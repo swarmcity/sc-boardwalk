@@ -524,7 +524,7 @@
         var self = this;
         try {
           payload = JSON.parse(self.shhweb3.toAscii(result.payload));
-          console.log('incoming in whisperer: shhweb3 ', payload);
+          console.log('incoming whisper message', payload);
         } catch (e) {
           console.log(e);
         }
