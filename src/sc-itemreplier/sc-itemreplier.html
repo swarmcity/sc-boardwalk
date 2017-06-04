@@ -14,15 +14,15 @@
 <link rel="import" href="../sc-shh/sc-shh.html">
 <link rel="import" href="../sc-redux/sc-redux.html">
 <link rel="import" href="../sc-config/sc-config.html">
-  
+
 <script type="text/javascript" src="../../bower_components/uuid-js/lib/uuid.js"></script>
 
 <!--
 `sc-itemreplier`
 
-This components allow a Swarm Citizen to reply on a request. 
+This components allow a Swarm Citizen to reply on a request.
 
-@demo src/sc-itemreplier/demo/index.html 
+@demo src/sc-itemreplier/demo/index.html
 -->
 
 <dom-module id="sc-itemreplier">
@@ -73,7 +73,7 @@ This components allow a Swarm Citizen to reply on a request.
       }
       .bluebottomborder {
         border-bottom: 2px solid var(--sc-blue);
-      }  
+      }
       paper-input.swtamount {
         --paper-input-container-input: {
           font-family:montserratbold;
@@ -127,7 +127,7 @@ This components allow a Swarm Citizen to reply on a request.
       paper-icon-button.confirmbtn {
         margin-left: 5px;
       }
-      @media all and (min-width: 0) and (max-width: 420px) { 
+      @media all and (min-width: 0) and (max-width: 420px) {
 
         .yourrespond {
           box-sizing:border-box;
@@ -152,7 +152,7 @@ This components allow a Swarm Citizen to reply on a request.
 
 
     </style>
-    
+
       <div class$="{{focusclass}} yourrespond totalwidth vertic centercenter">
 
           <!-- <paper-button noink class="darker totalwidth blue shadow respondbtn big" on-tap="toggleForm">Reply</paper-button> -->
@@ -164,7 +164,7 @@ This components allow a Swarm Citizen to reply on a request.
             </sc-avatar>
             <paper-input id="replyinput" label="Your reply" class="flex grey2unfocus replyinput" value="{{replytext}}"  on-focused-changed="checkFocus"></paper-input>
 
-<!--             <paper-button on-tap="toggleForm" noink class="addreplybtn grey4 shadow darker"> 
+<!--             <paper-button on-tap="toggleForm" noink class="addreplybtn grey4 shadow darker">
             <sc-avatar
               class="replyeravatar"
               ipfshash="[[identity.avatarhash]]"
@@ -241,7 +241,7 @@ This components allow a Swarm Citizen to reply on a request.
           type: Boolean,
           value:true
         },
-          
+
       },
 
       behaviors: [
@@ -253,7 +253,7 @@ This components allow a Swarm Citizen to reply on a request.
       },
 
       /**
-      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
+      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage
       * use this to initialize any variables to start the component
       */
       onEnter: function(){
@@ -264,7 +264,7 @@ This components allow a Swarm Citizen to reply on a request.
       },
 
       /**
-      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage 
+      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage
       * use this to reset any variables when leaving this component while it remains loaded.
       */
       onExit: function(){
@@ -288,10 +288,11 @@ This components allow a Swarm Citizen to reply on a request.
       toggleForm: function(){
         var replyform = this.shadowRoot.getElementById('replyform');
         replyform.toggle();
-        this.btnvisible = !this.btnvisible;     
+        this.btnvisible = !this.btnvisible;
       },
 
       submitReply: function() {
+        var self = this;
         this.$.replybtn.disabled = true;
 
         var amount = parseFloat(this.replyamount);
