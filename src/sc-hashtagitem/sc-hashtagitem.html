@@ -661,7 +661,7 @@ This components is the representation of a request in the requests-list on sc-ha
 
       observers: [
         '_log(dealstate)',
-        '_item(item,identity)'
+        '_item(item,item.replies,identity)'
       ],
 
       properties: {
@@ -671,6 +671,10 @@ This components is the representation of a request in the requests-list on sc-ha
         item: {
           type: Object,
         },
+        itemreplies: {
+          type: Object,
+          observer: '_itemreply'
+        },
         identity: {
           type: Object,
           statePath: 'identity',
@@ -678,6 +682,11 @@ This components is the representation of a request in the requests-list on sc-ha
         yourreply: {
           type: String
         }
+      },
+
+      _itemreply: function(){
+        //debugger;
+        console.log('itemreply changed...');
       },
 
       ready: function(){
@@ -759,7 +768,7 @@ This components is the representation of a request in the requests-list on sc-ha
 
 
       _item: function(){
-        //debugger;
+        
         var self = this;
         var deal = this.item;
           if(deal.ireplied) {

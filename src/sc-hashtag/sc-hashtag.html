@@ -400,6 +400,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
               <template is="dom-repeat" items="{{deals}}" filter="isMyDeal" sort="sortDeal">
                 <sc-hashtagitem
                   item="[[item]]"
+                  itemreplies="[[item.replies]]"
                   identity="[[identity]]"
                   on-to-detail="hashtag_to_detail"
                   class$="{{dealsopacity}}">
@@ -412,6 +413,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
               filter="claimedByme">
               <sc-hashtagitem
                 item="[[item]]"
+                 itemreplies="[[item.replies]]"
                 identity="[[identity]]"
                 on-to-detail="hashtag_to_detail"
                 class$="{{dealsopacity}}">
@@ -424,6 +426,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
             filter="notClaimedByMe">
             <sc-hashtagitem
               item="[[item]]"
+               itemreplies="[[item.replies]]"
               identity="[[identity]]"
               on-to-detail="hashtag_to_detail"
               class$="{{dealsopacity}}">
@@ -598,6 +601,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
         },
 
       },
+
 
       newitem_submitted: function(){
 
