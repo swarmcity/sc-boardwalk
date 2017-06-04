@@ -14,6 +14,12 @@
           type: Number,
           observer: '_value'
         },
+        onlybalance: {
+          type: Boolean,
+        },
+        onlydenomination: {
+          type: Boolean,
+        }
       },
       observers: [
         '_value(config)'
@@ -42,6 +48,13 @@
         } else {
           this.formattedvalue = '?';
           this.denomination = 'SWT';
+        }
+
+        if (this.onlybalance){
+          this.denomination = '';
+        }
+        if (this.onlydenomination){
+          this.formattedvalue = '';
         }
       }
     });
