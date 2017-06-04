@@ -514,6 +514,43 @@ This components is the representation of a request in the requests-list on sc-ha
 
                 </template>
 
+                <!-- Payout. -->
+                <template is="dom-if" if="{{_is(item.dealstate,'payout')}}">
+                  <div class="flex vertic start startjust">
+                    <div class="request_info">
+                      <p class="seeker small reg blue">{{item.seeker.username}} • <span class="bold"><sc-hashtagrep pubkey="{{item.seeker.pubkey}}" hashtagname="{{item.hashtag}}"></sc-hashtagrep></span></p>
+                      <template is="dom-if" if="{{phoneview}}">
+                        <div class="totalwidth horizont center startjust">
+                        <p class="grey2b light small"><moment-js date="{{item.offertime}}" format="HH:mm"></moment-js></p>
+                        <template is="dom-if" if="{{itemreplies}}">
+                          <div class="replies horizont centercenter">
+                            <p class="divider small grey2b light">|</p>
+                            <small class="small grey2b light">{{itemreplies.length}}</small>
+                            <iron-icon icon="sc-icons:babble" class="grey2b verysmall">replies</iron-icon>
+                          </div>
+                        </template>
+                        </div>
+                      </template>
+                      <template is="dom-if" if="{{!phoneview}}">
+                        <p class="grey2b light small"><moment-js date="{{item.offertime}}" format="HH:mm"></moment-js></p>
+                        <template is="dom-if" if="{{itemreplies}}">
+                          <div class="replies horizont centercenter">
+                            <p class="divider small grey2b light">|</p>
+                            <small class="small grey2b light">{{itemreplies.length}}</small>
+                            <iron-icon icon="sc-icons:babble" class="grey2b verysmall">replies</iron-icon>
+                          </div>
+                        </template>
+                      </template>
+                    </div>
+                    <p class="msg totalwidth grey4">{{item.msg}}</p>
+                  </div>
+                  <div class="amountstuff vertic end endjust">
+                    <small class="bold yellow">for</small>
+                    <p class="bold yellow"><sc-tokenbalanceformatter value="{{item.amount}}"></sc-tokenbalanceformatter></p>
+                  </div>
+                </template>
+
+
               </div>
 
 
@@ -582,6 +619,17 @@ This components is the representation of a request in the requests-list on sc-ha
                           <p class="hashtagdealmsg totalwidth grey4"><span class="bold">In deal</span> with {{currentprovider.username}}.</p>
                         </template>
                         <p class="small totalwidth grey2b">Ready to be paid out.</p>
+                    </div>
+                    <div class="amountstuff vertic end endjust">
+                      <small class="bold green">for</small>
+                      <p class="bold green"><sc-tokenbalanceformatter value="{{item.amount}}"></sc-tokenbalanceformatter></p>
+                    </div>
+                  </template>
+
+                  <!-- Provider accepted -->
+                  <template is="dom-if" if="{{_is(item.dealstate,'payout')}}">
+                    <div class="flex vertic start startjust">
+                        <p class="hashtagdealmsg totalwidth grey4">{{currentprovider.username}} and {{item.seeker.username}} finished this deal.</p>
                     </div>
                     <div class="amountstuff vertic end endjust">
                       <small class="bold green">for</small>
@@ -706,6 +754,7 @@ This components is the representation of a request in the requests-list on sc-ha
 
 
       _item: function(){
+        //debugger;
         var self = this;
         var deal = this.item;
           if(deal.ireplied) {
