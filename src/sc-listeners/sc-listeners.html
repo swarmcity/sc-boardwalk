@@ -105,10 +105,11 @@
         update_deal: function(mutation){
           
           let deals = this.deals.slice(0);
-          mutation.lastupdate = Date.now();
+          mutation.lastupdate = Date.now();          
           var foundDeal = deals.findIndex(function(item) {
             return item.id === mutation.id;
           });
+
           if (foundDeal > -1) {
             if (mutation.targetdealstate){
               var targetstate;
@@ -232,6 +233,7 @@
 
           var replyMutation = {
             id: replydata.id,
+            lastupdate : Date.now(),
             ismyreply: ismyreply,
             msg: replydata.reply,
             provider: replydata.replyer,
@@ -305,58 +307,14 @@
             deals: deals
           };
         },
-        gettargetdealstate: function(fromstate,tostate){
-          var targetstate;
-          break;
-          switch (fromstate + '_' + tostate) {
-            case 'created_accepted':
-              targetstate = 'accepted';
-              break;
-            case 'created_indeal':
-              targetstate = 'indeal';
-              break;
-            case 'created_payout':
-              targetstate = 'payout';
-              break;
-            case 'accepted_created':
-              targetstate = 'accepted';
-              break;
-            case 'accepted_indeal':
-              targetstate = 'indeal';
-              break;
-            case 'accepted_payout':
-              targetstate = 'payout';
-              break;
-            case 'indeal_created':
-              targetstate = 'indeal';
-              break;
-            case 'indeal_accepted':
-              targetstate = 'indeal';
-              break;
-            case 'indeal_payout':
-              targetstate = 'payout';
-              break;
-            case 'payout_created':
-              targetstate = 'payout';
-              break;
-            case 'payout_indeal':
-              targetstate = 'payout';
-              break;
-            case 'payout_accepted':
-              targetstate = 'payout';
-              break;
-            default:
-              targetstate = 'init';
-              debugger;
-              break;
-          }
-        },
+     
 
         // seeker says : I just selected this reply as my provider
         select_provider: function(payload){
           
           var mutation = {
             id : payload.requestid,
+            lastupdate : Date.now(),
             selectedreply: payload.replyid,
           };
           let deals = this.deals.slice(0);
