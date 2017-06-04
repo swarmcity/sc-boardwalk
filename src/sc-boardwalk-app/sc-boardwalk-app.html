@@ -198,7 +198,6 @@
       swtbalance="[[swtbalance]]"
       on-leave="hashtag_tohome"
       on-redirect="hashtag_redirect"
-      currenthasht="{{currenthasht}}"
       on-to-notifications="hashtag_tonotifications"
       on-to-profile="hashtag_toProfile"
       >
@@ -213,7 +212,8 @@
       route="{{pageTail2}}"
       id="dealfortwoseeker"
       web3="[[web3]]"
-      on-leave="dealfortwo_tolist">
+      on-redirect="hashtag_redirect"
+    >
     </sc-dealfortwo-seeker>
 
     <app-route route="{{route}}" pattern="/dealfortwoprovider" data={{pt3}} tail="{{pageTail3}}"></app-route>
@@ -222,7 +222,8 @@
       route="{{pageTail3}}"
       id="dealfortwoprovider"
       web3="[[web3]]"
-      on-leave="dealfortwo_tolist">
+      on-redirect="hashtag_redirect"
+     >
     </sc-dealfortwo-provider>
     
     <sc-notifications
@@ -485,12 +486,6 @@
 
       hashtag_toProfile: function(){
         this.transitionto('/profile');
-      },
-
-
-
-      dealfortwo_tolist: function(){
-        this.transitionto('/hashtag/'+this.currenthasht+'/list');
       },
 
       notifications_tohome: function(){

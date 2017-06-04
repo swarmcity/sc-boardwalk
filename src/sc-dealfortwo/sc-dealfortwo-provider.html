@@ -21,6 +21,7 @@
 <link rel="import" href="../sc-hashtagcontract/sc-hashtagcontract.html">
 <link rel="import" href="../sc-dealfortwo/sc-dealfortwo.html">
 <link rel="import" href="../sc-listeners/sc-listeners.html">
+<link rel="import" href="../sc-tokenbalanceformatter/sc-tokenbalanceformatter.html">
 
 <!--<link rel="import" href="../sc-balance/sc-balance.html"> -->
 
@@ -704,12 +705,12 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
             <!-- Payout. -->
             <template is="dom-if" if="{{_is(dealstate,'payout')}}">
-              <h1 class=""><span class="bold"></span><span class="light blue replyer_username">{{requestdata.seeker.username}}</span> started the payout of this deal ({{requestdata.amount}} SWT).</h1>
+              <h1 class=""><span class="bold"></span><span class="light blue replyer_username">{{requestdata.seeker.username}}</span> started the payout of this deal (<sc-tokenbalanceformatter value="{{requestdata.amount}}"></sc-tokenbalanceformatter>).</h1>
             </template>
 
             <!-- Paid out -->
             <template is="dom-if" if="{{_is(dealstate,'payoutmined')}}">
-              <h1 class=""><span class="bold">{{requestdata.amount}} SWT</span> has been paid out to you.</h1>
+              <h1 class=""><span class="bold"><sc-tokenbalanceformatter value="{{requestdata.amount}}"></sc-tokenbalanceformatter></span> has been paid out to you.</h1>
             </template>
 
             <div class="details_toggler" on-tap="showDetails">
@@ -726,7 +727,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
                     <div class="detail">
                       <p class="cat">Offer</p>
-                      <p class="reg bold">[[requestdata.amount]] SWT</p>
+                      <p class="reg bold"><sc-tokenbalanceformatter value="{{requestdata.amount}}"></sc-tokenbalanceformatter></p>
                     </div>
 
                     <div class="detail">
@@ -803,7 +804,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
           <div class$="bottomhalf {{bottombg}} totalwidth">
             <template is="dom-if" if="{{!provideraccept}}">
-              <p class="white light centertxt">By accepting, {{requestdata.amount}} of your SWT will be locked on this deal until payout.</p>
+              <p class="white light centertxt">By accepting, <sc-tokenbalanceformatter value="{{requestdata.amount}}"></sc-tokenbalanceformatter> will be locked on this deal until payout.</p>
               <div class="confirmbtns">
                 <template is="dom-if" if="{{btntapped}}">
                   <sc-loader small color="white"></sc-loader>
@@ -818,7 +819,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
               <template is="dom-if" if="{{_is(dealstate,'indeal')}}">
 
                 <div class="confirmbtns">
-                  <p class="halfopacity white bold centertxt">{{requestdata.amount}} of your SWT is locked on this deal until {{requestdata.seeker.username}} initiates payout.</p>
+                  <p class="halfopacity white bold centertxt"><sc-tokenbalanceformatter value="{{requestdata.amount}}"></sc-tokenbalanceformatter> is locked on this deal until {{requestdata.seeker.username}} initiates payout.</p>
 <!--                       <paper-button class="confirmbtn payoutbtn green grey4 shadow" noink>Payout
                     <iron-icon icon="sc-icons:v" class="medium white" on-tap="cancelDeal"></iron-icon>
                   </paper-button> -->
@@ -955,7 +956,9 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       * 'leave' fires the 'leave' to the parent-element. (This also contains animation-config for going back to sc-home.)
       */
       leave: function(){
-        this.fire('leave');
+        this.fire('redirect', {
+          target: '/hashtag/' + this.routedata.hashtag + '/list' 
+        });        
       },
 
       _route: function(){

@@ -110,6 +110,10 @@
             return item.id === mutation.id;
           });
           if (foundDeal > -1) {
+            // TODO : verify if this transition makes sense
+            mutation.dealstate = mutation.targetdealstate;
+            delete mutation.targetdealstate;
+
             if (deals[foundDeal].seeker.pubkey === this.identity.pubkey){
               mutation.ismydeal = true;
             }else{
@@ -117,6 +121,9 @@
             }
             Object.assign(deals[foundDeal], mutation);
           }else{
+            // this is a new deal
+            mutation.dealstate = mutation.targetdealstate;
+            delete mutation.targetdealstate;
             deals.push(Object.assign(this.getEmptyDeal(),mutation));
           }
           return {
@@ -235,7 +242,7 @@
           
           var mutation = {
             id : payload.requestid,
-            selectedreply: payload.replyid
+            selectedreply: payload.replyid,
           };
           let deals = this.deals.slice(0);
           var foundDeal = deals.findIndex(function(item) {
@@ -417,7 +424,8 @@
               creationallowancetx: payload.offercreationallowancetx,
               amount: payload.offeramount,
               hashtag: payload.offerhashtag,
-              offertime: payload.offertime
+              offertime: payload.offertime,
+              targetdealstate: 'created'
             };
             if (newDeal.creationtx) {
               this.web3.waitTx(newDeal.creationtx, function(err, res) {
@@ -459,7 +467,8 @@
             var mutation = {
               id: payload.id,
               providerfundingtx: payload.offerproviderfundingtx,
-              providerfundingallowancetx : payload.offerproviderfundingallowancetx
+              providerfundingallowancetx : payload.offerproviderfundingallowancetx,
+              provideraccepted: true,
             };
             this.dispatch('update_deal', mutation);
 
@@ -474,6 +483,7 @@
                 self.dispatch('update_deal', {
                   id: mutation.id,
                   providerfundingtx_mined: true,
+                  targetdealstate: 'indeal',
                   // fundsuccess: true,
                   // balance : 3,
                 });
@@ -510,6 +520,8 @@
            var mutation = {
               id: payload.requestid,
               payouttx: payload.transactionhash,
+              targetdealstate: 'payout',
+
             };
             this.dispatch('update_deal', mutation);
             if (mutation.payouttx) {
@@ -522,6 +534,7 @@
                   id: mutation.id,
                   payouttx_mined: true,
                   payoutsuccess: true,
+                  targetdealstate: 'payoutmined',
                 });
               });
             }                 
