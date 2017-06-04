@@ -110,9 +110,76 @@
             return item.id === mutation.id;
           });
           if (foundDeal > -1) {
-            // TODO : verify if this transition makes sense
-            mutation.dealstate = mutation.targetdealstate;
-            delete mutation.targetdealstate;
+            if (mutation.targetdealstate){
+              var targetstate;
+
+          switch ((deals[foundDeal].dealstate || 'init') + '_' + mutation.targetdealstate) {
+
+            case 'init_created':
+            case 'init_accepted':
+            case 'init_indeal':
+            case 'init_payout':
+              targetstate = mutation.targetdealstate;
+              break;
+            case 'created_created':
+              targetstate = 'created';
+              break;              
+            case 'created_accepted':
+              targetstate = 'accepted';
+              break;
+            case 'created_indeal':
+              targetstate = 'indeal';
+              break;
+            case 'created_payout':
+              targetstate = 'payout';
+              break;
+            case 'accepted_accepted':
+              targetstate = 'accepted';
+              break;
+            case 'accepted_created':
+              targetstate = 'accepted';
+              break;
+            case 'accepted_indeal':
+              targetstate = 'indeal';
+              break;
+            case 'accepted_payout':
+              targetstate = 'payout';
+              break;
+            case 'indeal_indeal':
+              targetstate = 'indeal';
+              break;
+            case 'indeal_created':
+              targetstate = 'indeal';
+              break;
+            case 'indeal_accepted':
+              targetstate = 'indeal';
+              break;
+            case 'indeal_payout':
+              targetstate = 'payout';
+              break;
+            case 'payout_created':
+              targetstate = 'payout';
+              break;
+            case 'payout_indeal':
+              targetstate = 'payout';
+              break;
+            case 'payout_accepted':
+              targetstate = 'payout';
+              break;
+            case 'payout_payout':
+              targetstate = 'payout';
+              break;
+            default:
+              targetstate = 'init';
+              debugger;
+              break;
+          }
+
+          mutation.dealstate = targetstate;
+
+//              mutation.dealstate = this.gettargetdealstate(deals[foundDeal].dealstate,mutation.targetdealstate);
+              delete mutation.targetdealstate;
+            }
 
             if (deals[foundDeal].seeker.pubkey === this.identity.pubkey){
               mutation.ismydeal = true;
@@ -122,8 +189,10 @@
             Object.assign(deals[foundDeal], mutation);
           }else{
             // this is a new deal
-            mutation.dealstate = mutation.targetdealstate;
-            delete mutation.targetdealstate;
+            if (mutation.targetdealstate){
+              mutation.dealstate = mutation.targetdealstate;
+              delete mutation.targetdealstate;
+            }
             deals.push(Object.assign(this.getEmptyDeal(),mutation));
           }
           return {
@@ -236,7 +305,53 @@
             deals: deals
           };
         },
-        
+        gettargetdealstate: function(fromstate,tostate){
+          var targetstate;
+          break;
+          switch (fromstate + '_' + tostate) {
+            case 'created_accepted':
+              targetstate = 'accepted';
+              break;
+            case 'created_indeal':
+              targetstate = 'indeal';
+              break;
+            case 'created_payout':
+              targetstate = 'payout';
+              break;
+            case 'accepted_created':
+              targetstate = 'accepted';
+              break;
+            case 'accepted_indeal':
+              targetstate = 'indeal';
+              break;
+            case 'accepted_payout':
+              targetstate = 'payout';
+              break;
+            case 'indeal_created':
+              targetstate = 'indeal';
+              break;
+            case 'indeal_accepted':
+              targetstate = 'indeal';
+              break;
+            case 'indeal_payout':
+              targetstate = 'payout';
+              break;
+            case 'payout_created':
+              targetstate = 'payout';
+              break;
+            case 'payout_indeal':
+              targetstate = 'payout';
+              break;
+            case 'payout_accepted':
+              targetstate = 'payout';
+              break;
+            default:
+              targetstate = 'init';
+              debugger;
+              break;
+          }
+        },
+
         // seeker says : I just selected this reply as my provider
         select_provider: function(payload){
           
@@ -249,6 +364,7 @@
             return item.id === payload.requestid;
           });
           if (foundDeal > -1) {
+
             var deal = deals[foundDeal];
             var iamprovider = false;
             // now check if the reply is ours.
@@ -278,59 +394,59 @@
           };
         },
 
-        request_approve: function(payload){
-          var self=this;
-          var mutation = {
-            id : payload.requestid,
-            payouttx: payload.transactionhash,
-          };
-          let deals = this.deals.slice(0);
-          var foundDeal = deals.findIndex(function(item) {
-            return item.id === payload.requestid;
-          });
-          if (foundDeal > -1) {
-            Object.assign(deals[foundDeal],mutation);
-            //deals[foundDeal] = Object.assign(getEmptyDeal(), deals[foundDeal], mutation);
-          }else{
-            deals.push(Object.assign(this.getEmptyDeal(),mutation));
-          }
+        // request_approve: function(payload){
+        //   var self=this;
+        //   var mutation = {
+        //     id : payload.requestid,
+        //     payouttx: payload.transactionhash,
+        //   };
+        //   let deals = this.deals.slice(0);
+        //   var foundDeal = deals.findIndex(function(item) {
+        //     return item.id === payload.requestid;
+        //   });
+        //   if (foundDeal > -1) {
+        //     Object.assign(deals[foundDeal],mutation);
+        //     //deals[foundDeal] = Object.assign(getEmptyDeal(), deals[foundDeal], mutation);
+        //   }else{
+        //     deals.push(Object.assign(this.getEmptyDeal(),mutation));
+        //   }
 
-          this.web3.waitTx(payload.transactionhash, function(err, res) {
-          //this.readcontractaftertx(payload.requestid,payload.transactionhash,function(err,res){
-            self.dispatch('request_approve_mined', {
-              requestid: payload.requestid
-            });
-          });
-          return {
-            type: 'DEALS',
-            deals: deals
-          };
-        },
+        //   this.web3.waitTx(payload.transactionhash, function(err, res) {
+        //   //this.readcontractaftertx(payload.requestid,payload.transactionhash,function(err,res){
+        //     self.dispatch('request_approve_mined', {
+        //       requestid: payload.requestid
+        //     });
+        //   });
+        //   return {
+        //     type: 'DEALS',
+        //     deals: deals
+        //   };
+        // },
 
-        request_approve_mined: function(params) {
-          //debugger;
-          var mutation = {
-            id: params.requestid,
-            payouttx_mined: true
-          };
+        // request_approve_mined: function(params) {
+        //   //debugger;
+        //   var mutation = {
+        //     id: params.requestid,
+        //     payouttx_mined: true
+        //   };
 
-          let deals = this.deals.slice(0);
-          var foundDeal = deals.findIndex(function(item) {
-            return item.id === params.requestid;
-          });
-          if (foundDeal > -1) {
-            Object.assign(deals[foundDeal],mutation);
-            //deals[foundDeal] = Object.assign(getEmptyDeal(), deals[foundDeal], mutation);
-          }else{
-            deals.push(Object.assign(this.getEmptyDeal(),mutation));
-          }
+        //   let deals = this.deals.slice(0);
+        //   var foundDeal = deals.findIndex(function(item) {
+        //     return item.id === params.requestid;
+        //   });
+        //   if (foundDeal > -1) {
+        //     Object.assign(deals[foundDeal],mutation);
+        //     //deals[foundDeal] = Object.assign(getEmptyDeal(), deals[foundDeal], mutation);
+        //   }else{
+        //     deals.push(Object.assign(this.getEmptyDeal(),mutation));
+        //   }
 
-          return {
-            type: 'DEALS',
-            deals: deals
-          };
+        //   return {
+        //     type: 'DEALS',
+        //     deals: deals
+        //   };
 
-        },
+        // },
       },
 
       getEmptyDeal: function() {
@@ -438,7 +554,7 @@
                 self.$.dealfortwo.readDeal(newDeal.id,newDeal.seeker.pubkey,function(err,data){
                   self.dispatch('update_deal', {
                     id: newDeal.id,
-                    dealdata : data,
+                    dealdata : data,                   
                   });
                 });
               });
@@ -534,7 +650,6 @@
                   id: mutation.id,
                   payouttx_mined: true,
                   payoutsuccess: true,
-                  targetdealstate: 'payoutmined',
                 });
               });
             }                 

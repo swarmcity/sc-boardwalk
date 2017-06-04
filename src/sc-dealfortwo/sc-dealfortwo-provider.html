@@ -664,7 +664,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
             <!-- Created. -->
             <template is="dom-if" if="{{_is(dealstate,'created')}}">
-              <h1 class="">Do you accept a deal  with <span class="light blue replyer_username">{{requestdata.seeker.username}}</span> for <span class="">{{requestdata.amount}} SWT</span>?</h1>
+              <h1 class="">Do you accept a deal  with <span class="light blue replyer_username">{{requestdata.seeker.username}}</span> for <span class=""><sc-tokenbalanceformatter value="{{requestdata.amount}}"></sc-tokenbalanceformatter></span>?</h1>
             </template>
             
             <!-- Provider accepted. -->
