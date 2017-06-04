@@ -105,6 +105,7 @@
         update_deal: function(mutation){
           
           let deals = this.deals.slice(0);
+          mutation.lastupdate = Date.now();
           var foundDeal = deals.findIndex(function(item) {
             return item.id === mutation.id;
           });
