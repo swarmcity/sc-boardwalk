@@ -838,7 +838,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                       ></sc-avatar>
                   </div>
                   <div class="chatbtn">
-                    <paper-icon-button class="chatbtn_iconbtn shadow blue grey4" icon="sc-icons:babble" on-tap="toDealchat"></paper-icon-button>
+                    <paper-icon-button id="chatbutton" class="chatbtn_iconbtn shadow blue grey4" icon="sc-icons:babble" on-tap="toDealchat"></paper-icon-button>
                   </div>
                 </div>
 
@@ -1312,6 +1312,11 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           this.provideraccept = true;
         }
 
+        if(this.requestdata.dealstate == 'indeal'){
+          this.$.chatbutton.enabled = true; 
+        }else{
+          this.$.chatbutton.enabled = false; 
+        }
 
         if(this.requestdata.providerfundingtx_mined) {
           //debugger;
