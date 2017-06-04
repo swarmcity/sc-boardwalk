@@ -637,15 +637,9 @@ This components is the representation of a request in the requests-list on sc-ha
                     </div>
                   </template>
 
-                  <!-- Provider accepted -->
+                  <!-- Payout -->
                   <template is="dom-if" if="{{_is(item.dealstate,'payout')}}">
-                    <div class="flex vertic start startjust">
-                        <p class="hashtagdealmsg totalwidth grey4">{{currentprovider.username}} and {{item.seeker.username}} finished this deal.</p>
-                    </div>
-                    <div class="amountstuff vertic end endjust">
-                      <small class="bold green">for</small>
-                      <p class="bold green"><sc-tokenbalanceformatter value="{{item.amount}}"></sc-tokenbalanceformatter></p>
-                    </div>
+                    <p class="hashtagdealmsg totalwidth grey4">You completed a deal with {{currentprovider.username}}.</p>
                   </template>
 
 
