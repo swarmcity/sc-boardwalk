@@ -21,33 +21,33 @@
 
 This component lets a Swarm Citizen create a new offer under the selected hashtag.
 
-@demo src/sc-newitem/demo/index.html 
+@demo src/sc-newitem/demo/index.html
 -->
 
 <dom-module id="sc-newitem">
   <template>
     <sc-geohash geohash="{{geohash}}" locate-on-start></sc-geohash>
-    <sc-dealfortwo id="dealfortwo"></sc-dealfortwo> 
+    <sc-dealfortwo id="dealfortwo"></sc-dealfortwo>
     <sc-web3 id="web3" web3="{{web3}}"></sc-web3>
     <sc-config config="{{config}}"></sc-config>
-    <sc-shh web3="{{shhweb3}}"></sc-shh>    
+    <sc-shh web3="{{shhweb3}}"></sc-shh>
     <style include="sc-styles">
       :host {
         display: block;
         width: 100%;
         transition: all 0.1s linear;
-        @apply(--base-shadow); 
+        @apply(--base-shadow);
       }
 
       .totalcontainer {
         width: 100%;
         @apply(--layout-vertical);
         @apply(--layout-start);
-        @apply(--layout-start-justified); 
+        @apply(--layout-start-justified);
         box-sizing:border-box;
         transition: all 0.15s ease-in;
 
-/*        padding-top: 18vh; */ 
+/*        padding-top: 18vh; */
       }
 
       .totalopen {
@@ -65,7 +65,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
 
       .swtamount {
-        width: 140px; 
+        width: 140px;
       }
 
 
@@ -79,7 +79,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
       .confirmbtns {
         z-index: 2;
-        margin-top: -30px;   
+        margin-top: -30px;
 /*        width: 100%;
         max-width: 600px;*/
         @apply(--layout-self-end);
@@ -111,7 +111,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         box-shadow: 0px 3px 3px -3px rgba(0, 0, 0, 0.25);
         -webkit-box-shadow: 0px 3px 3px -3px rgba(0, 0, 0, 0.25);
         -moz-box-shadow: 0px 3px 3px -3px rgba(0, 0, 0, 0.25);
-        -o-box-shadow: 0px 3px 3px -3px rgba(0, 0, 0, 0.25); 
+        -o-box-shadow: 0px 3px 3px -3px rgba(0, 0, 0, 0.25);
 
       }
 
@@ -128,13 +128,13 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
           border-bottom: 1px dotted var(--sc-grey2);
         }
 */
-      @media all and (min-width: 0) and (max-width: 420px) { 
+      @media all and (min-width: 0) and (max-width: 420px) {
 
 
         .totalcontainer {
           width: 100%;
           @apply(--layout-vertical);
-          @apply(--layout-center-center);        
+          @apply(--layout-center-center);
           box-sizing:border-box;
 
         }
@@ -143,7 +143,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
           padding: 18px 35px 30px 25px;
           background-color: var(--sc-white);
         }
-        
+
         .totalclosed {
           padding: 10px 35px 25px 25px;
           background-color: rgba(255,255,255,0.25);
@@ -173,7 +173,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
       .confirmbtns {
         z-index: 2;
-        margin-top: 0px;   
+        margin-top: 0px;
 /*        width: 100%;
         max-width: 600px;*/
         @apply(--layout-self-end);
@@ -206,7 +206,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       <iron-collapse id="offerinputform" class="totalwidth">
         <div class="incollapser totalwidth vertic centercenter">
           <div class="horizont end startjust totalwidth">
-            <paper-input label="What do you offer?" class="swtamount" value="{{offeramount}}" type="number">
+            <paper-input on-focused-changed="checkFocus" id="offerinputamount" label="What do you offer?" class="swtamount" value="{{offeramount}}" type="number">
             </paper-input>
             <p class="swtwithoffer bold">SWT</p>
           </div>
@@ -225,7 +225,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         </template>
         </div>
       </iron-collapse>
-    </div> 
+    </div>
   </template>
 
   <script>
@@ -274,7 +274,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       },
 
       /**
-      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
+      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage
       * use this to initialize any variables to start the component
       */
       onEnter: function(){
@@ -288,7 +288,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       },
 
       /**
-      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage 
+      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage
       * use this to reset any variables when leaving this component while it remains loaded.
       */
       onExit: function(){
@@ -402,7 +402,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
       checkFocus: function() {
         var offerinputform = this.shadowRoot.getElementById('offerinputform');
-        if (this.$.offerinput.focused) {
+        if (this.$.offerinput.focused || this.$.offerinputamount.focused) {
           this.showavatar = true;
           this.totalstate = "totalopen";
           offerinputform.opened = true;
