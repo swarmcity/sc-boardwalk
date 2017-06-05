@@ -24,7 +24,6 @@
       ],
 
       ready: function(){
-        console.log('sc-hashtagrep -> ready');
         var self=this;
         this.$.hashtagcontract.getRep(this.pubkey).then(function(rep){
           self.rep = rep;

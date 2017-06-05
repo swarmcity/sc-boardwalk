@@ -295,25 +295,14 @@
       },
 
       attached: function(){
-        console.log('sc-boardwalk-app -> loaded');
         this.fire('loaded');
         this.checkready();
-
-
-        // const resolvedPageUrl = this.resolveUrl('../bundle-boardwalk.html');
-
-        // this.$.helpers.getfile(resolvedPageUrl,function(){
-        //   debugger;
-        //   console.log('loaded...',resolvedPageUrl);
-        // });
       },
 
       onEnter: function(){
-        console.log('sc-boardwalk -> onEnter');  
       },
 
       onExit: function(){
-        console.log('sc-boardwalk -> onExit');
       },
 
       exit: function() {
@@ -321,17 +310,7 @@
       },
 
       checkready: function(e) {
-
-        console.log('checkready -> ',this.route);
-
-        // does not work when coming from /vault.importPK when fires ready...
-        // if (this.route && this.route.path !== ""){
-        //   console.log('path specified...');
-        //   return;
-        // }
-
         if (!this.vaultstatus) {
-          console.log('no vaultstatus... just return');
           return;
         }
 
@@ -343,26 +322,17 @@
         }
 
         if (this.vaultstatus == 'unlocked') {
-
-          // this.$.vault.exportPrivateKey(function(err,pk){
-          //   console.log('pk=',pk);
-          // });
-
           if (!this.walletstatus){
             return;
           }
           if (this.walletstatus == 'ready'){
             // no NOW we can check ARC/SWT balance
             if (this.arcbalance>0){
-              console.log('having SRC balance -> to convert');
               return this.transitionto('/swtconversion/intro');
             }else{
-              console.log('no SRC balance -> head home');
               if (this.route && this.route.path !== "" && this.route.path !== "/vault/unlock" && this.route.path !== "/vault/createnew" && this.route.path !== "/vault/restore" && this.route.path !== "/vault/importethwallet" && this.route.path !== "/vault/importpk"  && this.route.path !== "/vault/importfile"){
-                console.log('all ready -> go to ',this.route.path);
                 return;
               }else{
-                console.log('all ready -> head home');
                 return this.transitionto('/home');
               }
             }
@@ -385,7 +355,6 @@
         this.fire('exit');
       },
       transitionto: function(target){
-        console.log('sc-boardwalk-app -> transitionTo',target);
         this.set('route.path',target);
       },
 
@@ -397,7 +366,6 @@
         if (!page){
           return;
         }
-        console.log('sc-boardwalk-app -> _onRouteDataChanged',oldpage,'->',page);
 
         if (page == "home"){
           // when arriving at the homepage.. load some more components
@@ -409,9 +377,7 @@
         }
 
         const resolvedPageUrl = this.resolveUrl('../sc-' + page + '/sc-' + page + '.html');
-        console.log('loading',resolvedPageUrl);
         this.$.helpers.getfile(resolvedPageUrl,function(){
-          console.log('loaded...',resolvedPageUrl);
         });
       },
 
@@ -453,12 +419,10 @@
       },
 
       home_towalletview: function(){
-        console.log("yes, home_towalletview");
         this.transitionto('/walletview');
       },
 
       home_tohashtag: function(e){
-        // console.log("yes, home_tohashtag");
         this.currenthasht = e.detail;
         this.transitionto('/hashtag/'+this.currenthasht+'/list');
       },
@@ -520,7 +484,6 @@
       },
 
       _readNotifs: function(){
-        // console.log("Ik heb zeeeeeeee !!!!!!!", this.notifs);
       },
 
       hashtag_redirect: function(e){

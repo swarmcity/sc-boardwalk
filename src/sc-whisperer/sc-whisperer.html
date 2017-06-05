@@ -76,31 +76,23 @@ Polymer({
   },
 
   showchannels: function(){
-    console.log('---channels---');
     if (this.localchannels){
-      console.log('local channels');
       for (var key in this.localchannels) {
-        console.log(key,'=>',this.localchannels[key]);
       }
     }
     if (this.remotechannels){
-     console.log('remote channels');
       for (var key in this.remotechannels) {
-        console.log(key,'=>',this.remotechannels[key]);
       }
     }
-    console.log('---/channels---');
   },
 
   closeallchannels: function(){
     if (this.localchannels){
-      console.log('closing local channels');
       for (var key in this.localchannels) {
         this.closelocalchannel(key);
       }
     }
     if (this.remotechannels){
-     console.log('closing remote channels');
       for (var key in this.remotechannels) {
         this.closeremotechannel(key);
       }
@@ -124,9 +116,7 @@ Polymer({
     return randomstring;
   },
 
-  _listeninterval: function(newval,oldval){
-    // console.log('sc-whisperer -> listeninterval value changed from',oldval,'to',newval);
-    
+  _listeninterval: function(newval,oldval){    
     if (oldval == 0 && newval > 0){
       // activate request
       this.listenintervalInitialValue = newval;
@@ -164,7 +154,6 @@ Polymer({
   // close and clean up a remote channel ( with a listener )
   closelocalchannel: function(_pin,fromTimer){
     if (fromTimer){
-      console.log('timeout on localchannel ',_pin);
     }
     if (this.localchannels[_pin]){
        this.localchannels[_pin].filter.stopWatching();
@@ -174,7 +163,6 @@ Polymer({
   // close and clean up a remote channel
   closeremotechannel: function(_pin,fromTimer){
     if (fromTimer){
-      console.log('timeout on remotechannel ',_pin);
     }
     if (this.remotechannels[_pin] && this.remotechannels[_pin].filter){
        this.remotechannels[_pin].filter.stopWatching();
@@ -188,11 +176,9 @@ Polymer({
   // stops the topic filter immediately
   _stopTopicFilter: function() {
     if (this.filter) {
-      console.log('sc-whisperer: stop watching channel',this.topic);
       try{
         this.filter.stopWatching();
       }catch(e){
-        console.log(e);
       }
     }
   },
@@ -208,7 +194,6 @@ Polymer({
 
   _web3: function() {
     var self = this;
-    console.log('whisperer web3 started');
     debugger;
   },
 
@@ -231,14 +216,12 @@ Polymer({
         "topics": [self.web3.fromAscii(topic)],
       });
 
-      console.log("sc-whisperer: channelswitch, start listening to", this.topic, ' knows web3 ', this.web3);
       this.filter.watch(this._processmessage.bind(this));
     }
   },
 
   // processinging of channel setup messages.
   _processmessage: function(error, result) {
-      console.log('incoming in whisperer: web3 ', this.web3);
       var self = this;
         if (!error) {
           var payload = JSON.parse(self.web3.toAscii(result.payload));
@@ -254,12 +237,7 @@ Polymer({
               crypt.setPublicKey(payload.pubkey);
 
               var aeskey = self._generateKey(50);
-              console.log('myAES=',aeskey);
-
               var encryptedkey = crypt.encrypt(aeskey);
-              console.log('myAES encrypted=',encryptedkey);
-
-              // create a new channel
               var datatopic = this._getpincode(20);
               this.localchannels[datatopic] = {
                 aes: aeskey
@@ -296,9 +274,7 @@ Polymer({
               break;
 
            case 'aes':
-              console.log('encrypted AES recieved',payload.encryptedaes);
               var hisAES = self.localchannels[payload.to].crypt.decrypt(payload.encryptedaes);
-              console.log('decrypted AES',hisAES);
               self.remotechannels[payload.from]= {
                 aes : hisAES
               };
@@ -309,12 +285,8 @@ Polymer({
               break;
 
             case 'message':
-              console.log('encrypted message recieved from ',payload.from,payload.msg);
               easKey = this.remotechannels[payload.from].aes;
               var decryptedmsg = CryptoJS.AES.decrypt(payload.msg,easKey).toString(CryptoJS.enc.Utf8);
-              console.log('decrypted message:',decryptedmsg);
-
-              // save recepient
               this.remotechannels[payload.from].to = payload.to;
               self.fire('message-received', {
                 from: payload.from,
@@ -337,8 +309,6 @@ Polymer({
   },
 
   whisperpost: function(topic, input) {
-
-    console.log('whisperpost: ', topic, ' - ', input, ' web3: ', this.web3);
 
     topic = topic.toString();
 
@@ -377,7 +347,6 @@ Polymer({
 
   encryptandsend: function(from,topic,input){
       var aeskey = this.remotechannels[topic].aes;
-      console.log('Encrypting message to ',topic,'with key',aeskey);
       var encrypted_objectdata = CryptoJS.AES.encrypt(input, aeskey).toString();
       this.raw_whisperpost(topic,{
         command: 'message',
@@ -401,7 +370,6 @@ Polymer({
     };
 
     return this.web3.shh.post(options, function(err, res) {
-      console.log(err, res);
     });
   }
 

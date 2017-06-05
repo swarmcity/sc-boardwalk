@@ -554,10 +554,8 @@
           this.contractjson = JSON.parse(e.target.import.body.innerText);
           self.web3.eth.getGasPrice(function(err, result) {
             var gasPrice = result.toNumber(10);
-            // console.log('gasprice: ', gasPrice);
             var MyContract = self.web3.eth.contract(self.contractjson.abi);
             var myContractInstance = MyContract.at(self.config.swttokencontractaddress);
-            console.log('doing transfer of ', amount, ' LC to: ', pubkey, 'from: ', self.account);
             myContractInstance.transfer.sendTransaction(pubkey, amount, {
               from: self.$.helpers.fixaddress(self.account),
               gasPrice: gasPrice,
@@ -568,8 +566,6 @@
                   return cb(err);
                 }
               }
-              console.log(err, result);
-              console.log('waiting for TX to happen');
               self.currenttxhash = result;
 
               // if sending token to a pubkey, no whisper data is found.
@@ -580,7 +576,6 @@
                 }));                 
               }
               self.waitTx(result, function(success) {
-                console.log('TX mined!');
                 self.fire('tokenssent');
                 self.currenttxhash = '';
                 if (cb) {
@@ -628,7 +623,6 @@
               return true;
             // Tx hash not found yet?
           } else {
-            // console.log('Waiting tx..', blockCounter);
           }
         });
       },
@@ -642,7 +636,6 @@
           this.sendcoinstate = 'sendform';
           this.fire('activated');          
         }else{
-          console.log('no swt balance available yet.');
         }
       },
 
@@ -654,7 +647,6 @@
         this.transfer(this.amount * 1e18, this.$.helpers.fixaddress(self.receiver.account), function(err, result) {
 
           if (err) {
-            console.log('tx in error...');
             self.$.whisper.whisperpost(self.receiver.from, JSON.stringify({
               'command': 'transfererror',
               'error': self.$.helpers.translateEthErrors(err)
@@ -689,7 +681,6 @@
       this.transfer(this.amount * 1e18, this.$.helpers.fixaddress(self.sendtowallet_account), function(err, result) {
 
         if (err) {
-          console.log('tx in error...');
           self.sendcoinstate = 'transfererror';
           self.transfererrormessage = self.$.helpers.translateEthErrors(err);
         } else {
@@ -704,7 +695,6 @@
       handlewhispermessage: function(m) {
         var self = this;
         var message = JSON.parse(m.detail.message);
-        console.log('incoming tokentransfer msg: ', message);
         switch (message.command) {
           case 'userinfo':
             this.receiver = message;
@@ -721,12 +711,7 @@
               //'txhash': result
             }));            
             break;
-          // case 'confirmtransfer':
-          //   // TODO : show transfer in history...
-          //   console.log('transfer confirmed...', message.amount, 'received');
-          //   break;
           default:
-            console.log('unknown message', message);
         }
       },
 
@@ -741,12 +726,12 @@
         try{
           amount = new this.web3.BigNumber(this.amount).times(1e18);
         }catch(e){
-          return console.log('amount unreadable',this.amount);
+          return 
           amount = new this.web3.BigNumber(0);
         }
 
         if (amount.equals(0)){
-          return console.log('amount = 0');
+          return 
         }
 
         // Verify sufficient funds
@@ -767,22 +752,15 @@
 
 
         if (!this.pincode || this.pincode.length !== 5){
-          console.log('pincode too short.');
           return;
         }
 
         try{
           this.pincode = parseInt(this.pincode);
         }catch(e){
-          console.log('pincode incorrect.');
           return;
         }
-
-
-        console.log(amount.toString(10));
-        console.log(this.swtbalance.toString(10));
-        //debugger;        
-
+    
         var self = this;
         this.$.whisper.whisperpost(this.pincode, JSON.stringify({
                 'command': 'requestuserinfo',

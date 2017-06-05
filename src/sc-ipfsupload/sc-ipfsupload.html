@@ -95,7 +95,6 @@
             if (evt.target.readyState == FileReader.DONE) { // DONE == 2
               self.fire('upload-started',file);
               toDataUrl(file, function(e) {
-                console.log(e);
               });
               self.$.ipfs.ipfs.add([new self.$.ipfs.ipfs.Buffer(evt.target.result)], function(err, res) {
                 if (err || !res){

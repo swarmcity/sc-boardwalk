@@ -618,7 +618,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
       },
 
       _deals: function(){
-        console.log('DEALS IS VERANDERD JONGE',this.deals,Date.now());
         this.dealslist = [];
         for (var i=0;i<this.deals.length;i++){
           var d = this.deals[i];
@@ -698,7 +697,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
       },
 
       _geohash: function() {
-        console.log('sc-hashtag -> your geohash is', this.geohash);
         this.hasgeohash = true;
         //this._starthastaglistener();
       },

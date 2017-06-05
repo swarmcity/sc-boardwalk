@@ -164,14 +164,11 @@
         var extratx = {};
         this.$.minime.checkOrGiveAllowance(from, this.config.dealfortwofactory, offerAmount, function(err, tx) {
           if (err){
-            //debugger;
-            console.log('giving allowance failed',err);
             return cb(err);
           }
           extratx.allowancetx = tx;
           self.web3.cached.getGasPrice(function(err, gasPrice) {
             if (err){
-              console.log('getGasPrice failed',err);
               return cb(err);
             }
             self.DealForTwoFactoryContractInstance.makeDealForTwo.estimateGas(dealID, offerAmount, {
@@ -194,7 +191,6 @@
                     return cb(err);
                 }
                 cb(null, makeDealForTwoTx,extratx);
-                console.log(err, makeDealForTwoTx);
               });
             });
           });
@@ -224,7 +220,6 @@
                   }
                 }
                 cb(null, result, extratx);
-                console.log(err, result);
               });
             });
           });
@@ -253,7 +248,6 @@
                 }
               }
               cb(null, result);
-              console.log(err, result);
             });
           });
         });
@@ -275,115 +269,6 @@
           });
         });
       }
-      // makeDeal: function(dealID,offerAmount, cb) {
-      //   var self = this;
-
-      //   this.contracturl = this.resolveUrl('../contracts/DealForTwoFactory.json');
-      //   this.importHref(this.contracturl, function(e) {
-      //     this.contractjson = JSON.parse(e.target.import.body.innerText);
-      //     self.web3.eth.getGasPrice(function(err, result) {
-      //       var gasPrice = result.toNumber(10);
-      //       // console.log('gasprice: ', gasPrice);
-      //       var DealForTwoFactoryContract = self.web3.eth.contract(self.contractjson.abi);
-      //       var DealForTwoFactoryContractInstance = DealForTwoFactoryContract.at(self.config.dealfortwofactory);
-      //       //address _hashtag, address _counterparty,uint _counterpartyThreshold, bytes32 _dealID
-      //       //console.log('doing transfer of ', amount, ' LC to: ', pubkey, 'from: ', self.account);
-      //       DealForTwoFactoryContractInstance.makeDealForTwo.sendTransaction(self.config.hashtagcontracts[self.selectedhashtag], 1, {
-      //         from: self.identity.pubkey,
-      //         gasPrice: gasPrice,
-      //         gas: 1000000
-      //       }, function(err, result) {
-      //         if (err) {
-      //           if (cb) {
-      //             return cb(err);
-      //           }
-      //         }
-      //         cb(null, result);
-      //         console.log(err, result);
-      //         console.log('waiting for TX to happen');
-      //         self.waitTx(result, function(err, res) {
-      //           self.helper_getDealAddressFromTx(result, function(err, dealaddress) {
-      //              //debugger;
-      //             if (!dealaddress){
-      //               return console.log('Cannot find deal address for tx. Skipping token transfer',result);
-      //             }
-                 
-      //             self.transfer(offerAmount, dealaddress, function(err, res) {
-
-      //               // ok so the create deal TX is done. Now notify that we're funding this deal.
-      //             var newrequest = {
-      //               id: dealID,
-      //               type: 'dealfortwo-seeker-funding',
-      //               time: Date.now(),
-      //               offerseekerfundingtx: res,
-      //               dealaddress: dealaddress,
-      //               // seeker: {
-      //               //   username: self.identity.username,
-      //               //   pubkey: self.identity.pubkey,
-      //               //   avatarhash: self.identity.avatarhash,
-      //               // },
-      //             };
-
-      //               var topics = [
-      //                 self.shhweb3.encodetopic("swarmcity-v1"),
-      //                 self.shhweb3.encodetopic(newrequest.type),
-      //                 self.shhweb3.encodetopic(self.hashtag),
-      //                 self.shhweb3.encodetopic(newrequest.id),
-      //                 self.shhweb3.encodetopic(self.geohash.slice(0, 1)),
-      //                 self.shhweb3.encodetopic(self.geohash.slice(0, 2)),
-      //                 self.shhweb3.encodetopic(self.geohash.slice(0, 3)),
-      //                 self.shhweb3.encodetopic(self.geohash.slice(0, 4)),
-      //               ];
-
-      //               if (self.shhweb3 && self.hashtag) {
-
-      //                 var options = {
-      //                   "from": self.shhweb3.identity,
-      //                   "topics": topics,
-      //                   "payload": self.shhweb3.fromAscii(JSON.stringify(newrequest)),
-      //                   "ttl": 60 * 60 * 24,
-      //                   "priority": 1000
-      //                 };
-
-      //                 console.log('posting to topics', topics);
-
-      //                 return self.shhweb3.shh.post(options, function(err, res) {
-      //                   console.log(err, res);
-      //                   //self.fire('new-submitted', {dealid:newrequest.id});
-      //                 });
-      //               }
-      //             });
-      //           });
-
-      //         });
-      //         //self.currenttxhash = result;
-
-      //       });
-      //     });
-      //   });
-      // },      
-
-
-      // getContractAddress(account) {
-      //   var self = this;
-      //   return new Promise(function(resolve, reject) {
-      //     self.getNonce(account).then(function(nonce) {
-      //       resolve(window.EthJS.Util.bufferToHex(window.EthJS.Util.generateAddress(account, nonce)));
-      //     });
-      //   });
-      // },
-
-      // getNonce: function(account) {
-      //   var self = this;
-      //   return new Promise(function(resolve, reject) {
-      //     self.web3.eth.getTransactionCount(account, null, function(err, res) {
-      //       var nonce = res || 0;
-      //       console.log('nonce=', nonce);
-      //       resolve(nonce);
-      //     });
-      //   });
-      // },
-
     });
   </script>
 </dom-module>

@@ -354,7 +354,6 @@
      handlewhispermessage: function(m) {
         var self = this;
         var message = JSON.parse(m.detail.message);
-        console.log('incoming tokentransfer msg: ', message);
         switch (message.command) {
           case 'requestuserinfo':
             // topic listening on the main channel
@@ -385,7 +384,6 @@
             break;
           case 'confirmtransfer':
             // TODO : show transfer in history...
-            console.log('transfer confirmed...', message.amount, 'received');
             this.transactiondetails = message;
             this.transactiondetails.avatarurl = this.$.ipfs.geturl(this.transactiondetails.avatarhash);
             this.receivecoinstate = 'txconfirmed';
@@ -421,7 +419,6 @@
             break;
 
           default:
-            console.log('unknown message', message);
         }
       },
 

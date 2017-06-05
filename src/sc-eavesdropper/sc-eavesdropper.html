@@ -50,13 +50,11 @@
     		'_messages(messages)'
     	],
     	attached: function() {
-    		console.log('sc-eavesdropper -> ready.', this.routedata);
     	},
     	detached: function(){
     		this._stophastaglistener();
     	},
     	_messages: function(){
-    		console.log('array changed');
     	},
 
     	_openwhisperchannel: function() {
@@ -81,15 +79,12 @@
 				
 			this.debounce('_starthastaglistener', function() {
 	    		self._stophastaglistener();
-				console.log('start listening to', this.hashtag);
     			self.messages = [];
 	    		if (self.web3 && self.hashtag) {
 
 	    			self.filter = self.web3.shh.filter({
 	    				"topics": [self.web3.fromAscii(self.hashtag)],
 	    			});
-
-	    			console.log("sc-whisperer: channelswitch, start listening to", self.hashtag);
 	    			self.filter.watch(self._processmessage.bind(self));
 	    		}
 	    	}.bind(this),500);
@@ -99,7 +94,6 @@
     	_processmessage: function(error, result) {
     		var self = this;
     		var payload = JSON.parse(self.web3.toAscii(result.payload));
-    		console.log('incoming in whisperer: web3 ', payload);
 			this.unshift('messages', {
 				datetime: new Date(),
 				payload: payload

@@ -337,14 +337,10 @@ This components allow a Swarm Citizen to reply on a request.
           "priority": 1000
         };
 
-        console.log('posting to topics', topics);
-
         this.shhweb3.shh.post(options, function(err, res) {
           if (!err) {
-            console.log('sc->itemreplier -> Reply posted');
             self.replystate = 'init';
           } else {
-            console.log('sc-itemreplier -> whisper error:', err);
           }
           self.bgcolor = "whiteback";
           self.borderz = "lightgreytopborder";
@@ -354,7 +350,6 @@ This components allow a Swarm Citizen to reply on a request.
       },
 
       _log: function(target) {
-        console.log("*************************** in itemreplierzzzz", target);
       },
 
       checkFocus: function(){

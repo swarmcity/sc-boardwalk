@@ -291,7 +291,6 @@ This components is the representation of a request in the requests-list on sc-ha
 
 
       _log: function(target) {
-        console.log("*************************** in dealitem", target);
       },
 
       _item: function(){
@@ -304,7 +303,6 @@ This components is the representation of a request in the requests-list on sc-ha
           this.replycount = 0;
         }
 
-        console.log("uit dealitem ****", this.item);
 
         if (this.item.selectedreply){
           var foundReply = this.item.replies.find(function(item){
@@ -366,7 +364,6 @@ This components is the representation of a request in the requests-list on sc-ha
 
       // DIT MOET UIT DE REDUX KOMEN !!!!!!!!!!!!!!!!
       _dealstate: function(target){
-      console.log("uit dealstate ===", target);
 
         if (target=='init' || target=='created' || target=='seekerfunding' || target=='seekerfunded') {
           this.appearance = 'first';
@@ -414,10 +411,6 @@ This components is the representation of a request in the requests-list on sc-ha
         if (this.seekerstate === 'accepted' && this.providerstate === 'accepted') {
           this.dealstatusmsg = "You both accepted. Processing your deal...";
         };
-
-
-        // console.log("seekerstate in dealitem==", this.seekerstate);
-        // console.log("providerstate in dealitem==", this.providerstate);
       },
 
 

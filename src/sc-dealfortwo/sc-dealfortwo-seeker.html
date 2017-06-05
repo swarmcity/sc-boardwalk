@@ -1046,7 +1046,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         this.replyid = this.data.replyid;
         //this._starthastaglistener();
         this._getdata();
-        console.log("joooo uit deal42seeker", this.data);
       },
 
       _getdata: function(){
@@ -1073,10 +1072,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
             return item.id === self.replyid;
           });
           this.replydata = reply;
-
-          console.log('request:',this.requestdata);
-          //this._requestdata(this.requestdata);
-
         }else{
           //debugger;
           console.error('what now.. ?');
@@ -1111,7 +1106,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
 
       _checksize: function(){
-        // console.log('Jooooooooo phoneview?', this.phoneview);
         if (this.phoneview) {
           this.avatarsize = "medium";
           this.seekeravatarsize = "medium";
@@ -1135,7 +1129,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         if (b === undefined){
           b = true;
         }
-        //console.log(a ,'(',typeof a,') is',b,'(',typeof b,') they are equal for ==',a == b,', they are equal for ===',a === b);
         return a === b;
       },
 
@@ -1253,13 +1246,10 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
             "priority": 1000
           };
 
-          console.log('posting to topics', topics);
 
           self.shhweb3.shh.post(options, function(err, res) {
             if (!err) {
-              console.log('approveDeal -> Reply posted');
             } else {
-              console.log('approveDeal -> whisper error:', err);
             }
           });
         });
@@ -1273,7 +1263,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       },
 
       _log: function(target){
-        console.log("***** log in deal42seeker ==",target);
       },
 
       _provideraccepted: function(){
@@ -1356,12 +1345,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         this.seekerpagesexit = 'slide-right-animation';
         this.selecteddealpage = 'dodeal';
       },
-
-      // _dealstate: function(){
-      //   console.log("dit is deellzz88",this.dealstate);
-      // },
-
-
 
     });
   </script>

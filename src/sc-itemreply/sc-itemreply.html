@@ -565,76 +565,17 @@ This component shows a reply on a request.
         if (b === undefined){
           b = true;
         }
-        //console.log(a ,'(',typeof a,') is',b,'(',typeof b,') they are equal for ==',a == b,', they are equal for ===',a === b);
         return a === b;
       },
 
       fireBack: function(){
         this.fire('item-detail');
-//        debugger;
-//        console.log("Jooo");
       },
 
       // TEMP FUNCTION
       fireTodetail: function(){
         this.fire('to-detail',this.reply);
       },
-
-      // toMakedeal: function() {
-
-
-        // if (!this.shhidentity) {
-        //   this.shhidentity = this.shhweb3.shh.newIdentity();
-        // }
-
-        // //debugger;
-
-        // var message = {
-        //   type: 'engage-in-deal',
-        //   provider: {
-        //     avatarhash: this.identity.avatarhash, //'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
-        //     pubkey: this.identity.pubkey, //'0x4458...',
-        //     username: this.identity.username, //'Hank Moovy',
-        //   },
-        //   timestamp: Date.now(),
-        //   dealhashtag: this.item.offerhashtag,
-        //   msg: this.item.offer,
-        //   // now the specific fields for this type
-        //   dealid: this.item.id,
-        //   replyid: this.reply.id
-        // };
-
-        // var topics = [
-        //   this.shhweb3.encodetopic('swarmcity-v1'),
-        //   this.shhweb3.encodetopic('dealfortwo-request-reply'),
-        //   this.shhweb3.encodetopic(message.dealhashtag),
-        //   this.shhweb3.encodetopic(message.dealid),
-        // ];
-
-        // var options = {
-        //   "from": this.shhidentity,
-        //   "topics": topics,
-        //   "payload": this.shhweb3.fromAscii(JSON.stringify(message)),
-        //   "ttl": 60 * 60 * 24,
-        //   "priority": 1000
-        // };
-
-        // console.log('posting to topics', topics);
-
-        // this.shhweb3.shh.post(options, function(err, res) {
-        //   //debugger;
-        //   if (!err) {
-        //     console.log('sc->itemreplier -> Reply posted');
-
-        //   } else {
-        //     console.log('sc-itemreplier -> whisper error:', err);
-        //   }
-
-        // });
-
-
-      //   this.fire('to-makedeal', this.reply);
-      // },
 
       _yourethechoosenone: function() {
         var self = this;
@@ -654,7 +595,6 @@ This component shows a reply on a request.
           });
 
           this.currentprovider = foundReply.provider.pubkey;
-          console.log("*************************** in itemreplyzzzz currentprovider", this.currentprovider);
           this._isthismyreply();
         }
       },
@@ -670,7 +610,6 @@ This component shows a reply on a request.
             this.chosenonemsg = "You selected";
             if (this.item.selectedreply) {
               this.showselectbtn = false;
-              console.log("ZOOooooooo Jongeè!");
             }
           } else {
             this.chosenonemsg = this.item.seeker.username + " has selected";
@@ -714,14 +653,9 @@ This component shows a reply on a request.
           "ttl": 60 * 60 * 24,
           "priority": 1000
         };
-
-        console.log('posting to topics', topics);
-
         self.shhweb3.shh.post(options, function(err, res) {
           if (!err) {
-            console.log(message.type, '-> Reply posted');
           } else {
-            console.log(message.type, '-> whisper error:', err);
           }
         });
 
@@ -731,18 +665,6 @@ This component shows a reply on a request.
 
         //this.fire('to-makedeal', e.detail);
       },
-
-
-      // toDealfortwoprovider: function(){
-      //   //debugger;
-      //   this.fire('to-dealfortwo-provider', this.item);
-      // },
-
-
-      // _log: function(target) {
-      //   console.log("*************************** in itemreplyzzzz reply", target, "BTNSHOW",this.showselectbtn);
-      // },
-
 
       youareowner: function(pubkey){
         //debugger;

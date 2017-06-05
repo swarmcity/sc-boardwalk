@@ -944,9 +944,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       },
 
       dumpdeal: function(){
-        console.log('----------------------------------------');
-        console.log(this.requestdata);
-        console.log('----------------------------------------');
       },
 
       ready: function(){
@@ -1028,7 +1025,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         this.$.dealfortwo.fundDeal(dealID,this.requestdata.seeker.pubkey, this.requestdata.amount,this.identity.pubkey, function(err, providerfundingTx, extraTx) { 
 
          if (err){
-            console.log('tx error',err);
             return;
           }
          
@@ -1058,11 +1054,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
               "priority": 1000
             };
 
-            console.log('posting to topics', topics);
 
             return self.shhweb3.shh.post(options, function(err, res) {
-              console.log(err, res);
-              //self.fire('new-submitted', {dealid:newrequest.id});
             });
           }
         });
@@ -1080,11 +1073,9 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           this.contractjson = JSON.parse(e.target.import.body.innerText);
           self.web3.eth.getGasPrice(function(err, result) {
             var gasPrice = result.toNumber(10);
-            // console.log('gasprice: ', gasPrice);
             var MyContract = self.web3.eth.contract(self.contractjson.abi);
             var myContractInstance = MyContract.at(self.config.swttokencontractaddress);
-            console.log('doing transfer of ', amount, ' LC to: ', pubkey, 'from: ', self.identity.pubkey,);
-            myContractInstance.transfer.sendTransaction(pubkey, amount, {
+              myContractInstance.transfer.sendTransaction(pubkey, amount, {
               from: self.identity.pubkey,
               gasPrice: gasPrice,
               gas: 200000
@@ -1094,8 +1085,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                   return cb(err);
                 }
               }
-              console.log(err, result);
-              console.log('Tokens transfer started. TXhash=',result);
               cb(err,result);
 
             });
@@ -1148,7 +1137,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           this.dealdetailsmsg = "Show details";
           this.collapsestate = '';
         }
-        // console.log(details);
       },
 
 
@@ -1162,7 +1150,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           this.collapsestate = '';
         }
 
-        // console.log(details);
       },
 
 
@@ -1172,7 +1159,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
 
       _checksize: function(){
-        // console.log('Jooooooooo phoneview?', this.phoneview);
         if (this.phoneview) {
           this.avatarsize = "medium";
           this.seekeravatarsize = "medium";
@@ -1228,7 +1214,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         if(this.requestdata.assigntx_mined) {
          // debugger;
           this.assignmined = true;
-          // console.log("REQUEST::: assigntx_mined", this.requestdata.assigntx_mined);
         } 
         // providerfundingtx_mined check
         if(this.requestdata.providerfundingtx_mined) {
@@ -1264,7 +1249,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       },
 
       _dealstate: function(){
-        console.log("dit is deellzz",this.dealstate);
       },
 
 

@@ -736,14 +736,12 @@
       ],
 
       _onRoutePathChanged: function(page,d) {
-        // console.log('sc-vault _onRoutePathChanged',d,page);
         switch (page) {
           case 'importpk':
           case 'importpkmakewallet':
           case 'importfile':
           case 'createnew':
             if (this.hasVault()) {
-              // console.log('You already have a vault');
             }
             break;
           case 'unlock':
@@ -754,7 +752,6 @@
 
             break;
           default:
-            // console.log('unknown path ', page);
             break;
         }
       },
@@ -845,7 +842,6 @@
       },
 
       importipfshashuploadclick: function() {
-        // console.log('download IPFS hash', this.importipfshash);
         var self= this;
         this.importipfsstatus = 'downloading';
         this.$.ipfs.cat(this.importipfshash, function(err, data) {
@@ -933,7 +929,6 @@
         var patt = new RegExp(/^[a-f0-9]{64}$/i);
         var res = patt.test(this.privatekey);
         if (!res){
-          // console.log('foute key');
           this.invalidpk = true;
         }else{
           this.set('route.path', '/importpkmakewallet');
@@ -985,12 +980,10 @@
         
         if (!this.hasVault()) {
           this.status = 'novault';
-          // console.log('sc-vault: status=',this.status,'fires READY');
           return this.fire('ready');
         };
         if (!this.password) {
           this.status = 'locked';
-          // console.log('sc-vault: status=',this.status,'fires READY');
           return this.fire('ready');
         }
         // so we have a vault and a password... try to open it.
@@ -998,20 +991,16 @@
         this.checkpassword(function(err, pwdcorrect) {
           if (pwdcorrect) {
             self.status = 'unlocked';
-            // console.log('sc-vault: status=',self.status,'fires READY');
             self.currentaccount = self.$.helpers.fixaddress(self.keystore.getAddresses()[0]);
             return self.fire('ready');
           } else {
             self.status = 'locked';
-            // console.log('sc-vault: status=',self.status,'fires READY');
             return self.fire('ready');
           }
         });
       },
 
       attached: function(){
-        // console.log('sc-vault attached');
-
         this.reset();
 
         if (this.browser.family == 'Safari' || this.browser.family == 'Mobile Safari'){
@@ -1030,8 +1019,6 @@
       },
 
       _currentidentity: function(){
-        // console.log('sc-vault ->','currentidentity updated',this.currentidentity);
-//        self.saveVault();
       },
 
       unlockvault: function(e) {
@@ -1040,8 +1027,6 @@
         var self=this;
         self.unlockpasswordwrong = false;
         if (!this.hasVault()) {
-          //return page.redirect('/');
-          // console.log("there is no vault!");
         }
         this.password = e.detail.password;
 
@@ -1111,10 +1096,8 @@
 
         this.$.ipfs.add(vaultbuffer, function(err, result) {
           if (err || !result || !result[0]){
-            // console.log('cannot upload avatar',err);
             this.vaulttoipfsstatus = 'error';
           }else{
-            // console.log(err, result[0].hash);
             this.vaulttoipfshash = result[0].hash;
             this.vaulttoipfsstatus='success';
             this.setvaultDownloaded();
@@ -1189,14 +1172,12 @@
               this.keystore = lightwallet.keystore.deserialize(vaultdata.keystore);
               var addresses = this.keystore.getAddresses();
               if (!addresses || addresses.length === 0){
-                // console.log('sc-vault -> ERROR, no addresses found in vault.');
                 return false;
               }
               this._setpasswordProvider();
               this.set('currentkeystore',this.keystore);
               this.currentaccount = this.$.helpers.fixaddress(this.keystore.getAddresses()[0]);
               this.dispatch('update',vaultdata.identity);
-              // console.log('sc-vault -> Vault loaded. Account=', this.currentaccount);
               return true;
               break;
 
@@ -1352,7 +1333,6 @@
       _password: function(){
         this.pwDerivedKey = null;
         this._setpasswordProvider();
-        // console.log('sc-vault -> new password assigned.');
       },
 
       _setpasswordProvider: function() {
@@ -1361,10 +1341,8 @@
         }
         var self=this;
         this.set('keystore.passwordProvider', function(callback) {
-          // console.log('sc-vault -> passwordProvider : signing tx');
           callback(null, self.password);
         });
-        // console.log('sc-vault -> new passwordProvider set.');
       },
 
       _getpwDerivedKey: function(cb){
@@ -1374,13 +1352,11 @@
         if (!this.password){
           throw new Error('no password set');
         }
-        // console.log('sc-vault -> generating new pwDerivedKey');
         var self=this;
         self.keystore.keyFromPassword(self.password, function(err, pwDerivedKey) {
             if (err){
               return cb(err);
             }
-            // console.log('sc-vault -> new pwDerivedKey set. Ready to sign transactions');
             self.pwDerivedKey = pwDerivedKey;
             cb(null,pwDerivedKey);
           });
@@ -1414,7 +1390,6 @@
       },
 
       _logThis: function(target){
-        console.log("**** uit sc-vault",target);
       },
 
 

@@ -33,78 +33,12 @@ Example:
       },
 
       _web3: function(){
-        console.log('Web3 is here...');
-        //this.processLLQueue();
       },
 
-      _configchanged: function(){
-        // console.log('config loaded - now I will be reading the contract...',this.config.backbonecontractaddress);
-        // var self=this;
-        // this.loadbackbonecontract(function(){
-        //   self.ParametersInstance.getParameter.call('dapp.root',function(a,b){
-        //     //console.log('resturned',a,b);
-        //     self.processLLQueue();
-        //   });  
-        // });
-        
+      _configchanged: function(){        
       },
 
-      // loadbackbonecontract: function(cb){
-      //   var self=this;
-      //   if (!this.web3 || !this.config){
-      //     return;
-      //   }
-      //   this.$.helpers.getjson('../contracts/Parameters.json', function(err, contractjson) {
-      //     var MyContract = self.web3.eth.contract(contractjson.abi);
-      //     self.ParametersInstance = MyContract.at(self.config.backbonecontractaddress);
-      //     cb();
-      //   });      
-      // },
-
-      // lazyload: function(name){
-      //   this.push('LLQueue',name);
-      //   this._lazyLoad(name,'../' + name + '.html');
-      //   this.$.helpers.lazyload(elementid, filename, cb)
-      // },
-
-      // processLLQueue: function(){
-      //   if (this.web3 && this.config && this.LLQueue){
-      //     console.log('processing Lazy loading...');
-      //   }
-      // },
-
-      // _lazyLoad: function(elementid, filename, cb) {
-
-
-      //   this.$.helpers.lazyload(elementid, filename, cb).bind(this);
-
-        // var t0 = performance.now();
-        
-        // if (Polymer.isInstance(this.$[elementid])) {
-        //   if (cb) {
-        //     cb(null,this.$[elementid]);
-        //     //} && this.$[elementid][method]) {
-        //     //this.$[elementid][method]();
-        //   }
-        //   return;
-        // }
-        // var url = this.resolveUrl(filename);
-
-        // Polymer.Base.importHref(
-        //   url,
-        //   function(e) {
-        //     console.log('LAZYLOADER --> ', elementid, 'loaded & added to DOM');
-        //     if (cb) {
-        //       cb(null,this.$[elementid]);
-        //     }
-        //     var t1 = performance.now();
-        //     console.log('Lazy loading',elementid,'took',(t1 - t0),'milliseconds.');
-        //   }.bind(this),
-        //   function() {
-        //     console.log('Something failed!');
-        //   }, true
-        // );
-      // },      
+    
 
 
     });

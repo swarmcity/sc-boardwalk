@@ -424,13 +424,6 @@
           observer: '_init'          
         }
       },
-
-      ready: function(){
-        console.log('sc-hashtagcontract -> ready');
-      
-
-      },
-
      
       _init: function(){
         var self = this;
@@ -447,7 +440,6 @@
        
           this.hashtagcontract = this.config.hashtagcontracts[this.hashtagname];
           if (!this.hashtagcontract){
-            console.log('sc-hashtagcontract -> ERROR hashtag \''+this.hashtagname+'\' not found');
             return;
           }
        
