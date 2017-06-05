@@ -408,20 +408,20 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
 
           <div class="mydeals_repeater">
-         <!--    <p class="red">ALL DEALS</p>
-             <template is="dom-repeat" items="{{deals}}">
-                <sc-hashtagitem
-                  item="[[item]]"
-                  identity="[[identity]]"
-                  on-to-detail="hashtag_to_detail"
-                  class$="{{dealsopacity}}">
-                </sc-hashtagitem>
-              </template>
-            <p class="red">/ALL DEALS</p> -->
 
-            <p class="red">My deals</p>
+            <p class="red">deals you responded to and were accepted as the provider</p>
+            <template is="dom-repeat" items="{{deals}}" filter="filter1" sort="sortOnTimestamp">
+              <sc-hashtagitem
+                item="[[item]]"
+                identity="[[identity]]"
+                on-to-detail="hashtag_to_detail"
+                class$="{{dealsopacity}}">
+              </sc-hashtagitem>
+            </template>
+
+            <p class="red">My active deals ( = engaged with someone else )</p>
             <!-- <template is="dom-if" if="{{hasmydeals(mydeals)}}"> -->
-            <template is="dom-repeat" items="{{deals}}" filter="isMyDeal" sort="sortOnTimestamp">
+            <template is="dom-repeat" items="{{deals}}" filter="filter2" sort="sortOnTimestamp">
               <sc-hashtagitem
                 item="[[item]]"
                 identity="[[identity]]"
@@ -431,22 +431,33 @@ This is the component showing all requests of a certain hashtag. It contains a r
             </template>
             <!-- </template> -->
 
-            <div class="tester">
-             <p class="red">Deals claimed by me</p>
-              <template is="dom-repeat" items="{{deals}}" filter="isClaimedByMe" sort="sortOnTimestamp">
-                <sc-hashtagitem
-                  item="[[item]]"
-                  identity="[[identity]]"
-                  on-to-detail="hashtag_to_detail"
-                  class$="{{dealsopacity}}">
-                </sc-hashtagitem>
-              </template>
-            </div>
+            <p class="red">Other's deals I am engaged in</p>
+            <!-- <template is="dom-if" if="{{hasmydeals(mydeals)}}"> -->
+            <template is="dom-repeat" items="{{deals}}" filter="filter3" sort="sortOnTimestamp">
+              <sc-hashtagitem
+                item="[[item]]"
+                identity="[[identity]]"
+                on-to-detail="hashtag_to_detail"
+                class$="{{dealsopacity}}">
+              </sc-hashtagitem>
+            </template>
+
+            <!-- </template> -->
+            <p class="red">Last finished deals I engaged with ( mine or not mine ) </p>
+            <!-- <template is="dom-if" if="{{hasmydeals(mydeals)}}"> -->
+            <template is="dom-repeat" items="{{deals}}" filter="filter4" sort="sortOnTimestamp">
+              <sc-hashtagitem
+                item="[[item]]"
+                identity="[[identity]]"
+                on-to-detail="hashtag_to_detail"
+                class$="{{dealsopacity}}">
+              </sc-hashtagitem>
+            </template>
           </div>
 
           <div class="testerzzz">
-            <p class="red">Open deals of others - claimable by me</p>
-            <template is="dom-repeat" items="{{deals}}" filter="isClaimable" sort="sortOnTimestamp">
+            <p class="red">Open deals of others - respondable by me</p>
+            <template is="dom-repeat" items="{{deals}}" filter="filter5" sort="sortOnTimestamp">
               <sc-hashtagitem
                 item="[[item]]"
                 identity="[[identity]]"
@@ -650,8 +661,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       },
 
-      isMyDeal: function(item){
-        return (item.seeker.pubkey === this.identity.pubkey);
+      isMyNotCompletedDeal: function(item){
+        if (item.seeker.pubkey !== this.identity.pubkey) return false;
       },
 
       isNotMyDeal: function(item){
@@ -847,18 +858,64 @@ This is the component showing all requests of a certain hashtag. It contains a r
       //   return item.providerfundingtx == false || item.providerfundingtx == undefined;
       // },
 
-        isClaimedByMe: function(item) {
-            return item.iamprovider == true;
-        },
+
+      // deals you responded to and were accepted as the provider
+      filter1: function(item){
+        return item.iamprovider == true;
+      },
+
+      // My active deals ( = engaged with someone else )
+      filter2: function(item){
+        //debugger;
+        if (!this.isMyDeal(item)) return false;
+        if (item.dealstate == 'created' ||item.dealstate == 'accepted' ||item.dealstate == 'indeal') return true;
+         return false;
+      },
+      
+      // Other's deals I am engaged in
+      filter3: function(item){
+        if (this.isMyDeal(item)) return false;
+        if (item.dealstate == 'payout') return false;
+        if (item.iamprovider != true) return false;
+        return true;
+      },
+      
+      // Last finished deals I engaged with ( mine or not mine ) 
+      filter4: function(item){
+        if (item.dealstate != 'payout') return false;
+        if (this.isMyDeal(item)) return true;
+        if (!this.isMyDeal(item) && item.iamprovider == true) return true;
+        return false;
+      },
+
+      // Open deals of others - respondable by me
+      filter5: function(item){
+        if (this.isMyDeal(item)) return false;
+        return (item.dealstate == 'created');
+      },
+      
+      isMyDeal: function(item){
+        return (item.seeker.pubkey === this.identity.pubkey);
+      },
+
+        // isClaimedByMe: function(item) {
+        //     return item.iamprovider == true;
+        // },
 
 
-        isClaimable: function(item) {
-          //debugger;
+//       isClaimable: function(item) {
+//         //debugger;
+//         if (this.isMyDeal(item)) return false;
+//         return (item.dealstate == 'created');
+// //            return item.providerfundingtx == false || item.providerfundingtx == undefined;
+//       },
+        
+        // this is a deal where I am the provider of
+        // and that is in state accepted
+        isAcceptedDeal: function(){
           if (this.isMyDeal(item)) return false;
-          return (item.dealstate == 'created');
-//            return item.providerfundingtx == false || item.providerfundingtx == undefined;
+          return (item.dealstate == 'accepted');
         },
-
 
       opacityHalf: function(){
         this.dealsopacity = "half";
