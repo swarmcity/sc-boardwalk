@@ -198,7 +198,7 @@
             </div>
             <div class="flex"></div>
             <div class="totalwidth horizont end startjust maxwidth">
-              <paper-input id="privatekeyinput" label="Private key" type="password" bind-value="{{privatekey::input}}"></paper-input>
+              <paper-input id="privatekeyinput" label="Private key" type="password" bind-value="{{privatekey::input}}" on-keypress="pkreceivedsubmit"></paper-input>
               <paper-icon-button icon="sc-icons:looky" class="grey1back grey4 saveyourwidth" on-tap="pktoggle" noink>show</paper-icon-button>
             </div>
             <div class="whitespace"></div>
@@ -237,7 +237,7 @@
             </div>
             <div class="flex"></div>
             <div class="totalwidth horizont end startjust maxwidth">
-              <paper-input id="privatekeyethinput" label="Private key" type="password" bind-value="{{privatekeyeth::input}}"></paper-input>
+              <paper-input id="privatekeyethinput" label="Private key" type="password" bind-value="{{privatekeyeth::input}}" on-keypress="pkreceivedethsubmit"></paper-input>
               <paper-icon-button icon="sc-icons:looky" class="grey1back grey4 saveyourwidth" on-tap="pkethtoggle" noink>show</paper-icon-button>
             </div>
             <div class="whitespace"></div>
@@ -325,7 +325,7 @@
         <template is="dom-if" if="{{_is(importipfsstatus,'init')}}">
 
           <p class="reg grey4 maxwidth">Enter your IPFS-hash</p>
-          <paper-input class="" id="importipfshash" label="Your ipfs-hash" type="text" value="{{importipfshash}}"></paper-input>
+          <paper-input class="" id="importipfshash" label="Your ipfs-hash" type="text" value="{{importipfshash}}" on-keypress="importipfshashuploadclicksubmit"></paper-input>
             <div class="whitespace"></div>
 
           <paper-button on-tap="importipfshashuploadclick" class="blue lighter bigbtn shadow centertxt" noink>restore</paper-button>
@@ -868,6 +868,11 @@
           }
         });
       },
+      importipfshashuploadclicksubmit: function(e){
+        if (13 === e.charCode) {
+            this.importipfshashuploadclick();
+        }
+      },
       readSingleFile_vault: function(e){
         var self = this;
         var file = e.target.files[0];
@@ -926,6 +931,11 @@
         this.privatekey = this.$.privatekeyinput.value;
         this.pkreceivedeth();
       },
+      pkreceivedsubmit: function(e){
+        if (13 === e.charCode) {
+            this.pkreceived();
+        }
+      },
 
       pkreceivedeth: function(){
         this.privatekey = this.$.privatekeyethinput.value;
@@ -937,6 +947,11 @@
           this.invalidpk = true;
         }else{
           this.set('route.path', '/importpkmakewallet');
+        }
+      },
+      pkreceivedethsubmit: function(e){
+        if (13 === e.charCode) {
+            this.pkreceivedeth();
         }
       },
 
