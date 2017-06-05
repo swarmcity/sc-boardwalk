@@ -694,8 +694,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
 
     </style>
-<!--     D={{requestdata.dealstate}}
-    D2={{requestdatadealstate}} -->
+    D={{requestdata.dealstate}}
+    D2={{requestdatadealstate}}
     <sc-shh web3="{{shhweb3}}"></sc-shh>
     <sc-listeners id="listeners"></sc-listeners>
     <sc-config config="{{config}}"></sc-config>
@@ -723,7 +723,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                 <p class="small light grey2">Dealid {{requestdata.id}}</p>
               </div>
 
-               <template is="dom-if" if="{{_is(requestdatadealstate,'created')}}">
+               <template is="dom-if" if="{{_is(requestdatadealstate,'accepted')}}">
                   <h1 class="">You selected <span class="light blue replyer_username">{{replydata.provider.username}}</span> to make a deal for <span class=""><sc-tokenbalanceformatter value="{{requestdata.amount}}"></sc-tokenbalanceformatter></span>.</h1>
                </template>
 

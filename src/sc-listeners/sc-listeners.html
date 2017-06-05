@@ -316,6 +316,7 @@
             id : payload.requestid,
             lastupdate : Date.now(),
             selectedreply: payload.replyid,
+            targetdealstate: 'accepted'
           };
           let deals = this.deals.slice(0);
           var foundDeal = deals.findIndex(function(item) {
@@ -323,6 +324,73 @@
           });
           if (foundDeal > -1) {
 
+            if (mutation.targetdealstate) {
+              var targetstate;
+
+              switch ((deals[foundDeal].dealstate || 'init') + '_' + mutation.targetdealstate) {
+
+                case 'init_created':
+                case 'init_accepted':
+                case 'init_indeal':
+                case 'init_payout':
+                  targetstate = mutation.targetdealstate;
+                  break;
+                case 'created_created':
+                  targetstate = 'created';
+                  break;
+                case 'created_accepted':
+                  targetstate = 'accepted';
+                  break;
+                case 'created_indeal':
+                  targetstate = 'indeal';
+                  break;
+                case 'created_payout':
+                  targetstate = 'payout';
+                  break;
+                case 'accepted_accepted':
+                  targetstate = 'accepted';
+                  break;
+                case 'accepted_created':
+                  targetstate = 'accepted';
+                  break;
+                case 'accepted_indeal':
+                  targetstate = 'indeal';
+                  break;
+                case 'accepted_payout':
+                  targetstate = 'payout';
+                  break;
+                case 'indeal_indeal':
+                  targetstate = 'indeal';
+                  break;
+                case 'indeal_created':
+                  targetstate = 'indeal';
+                  break;
+                case 'indeal_accepted':
+                  targetstate = 'indeal';
+                  break;
+                case 'indeal_payout':
+                  targetstate = 'payout';
+                  break;
+                case 'payout_created':
+                  targetstate = 'payout';
+                  break;
+                case 'payout_indeal':
+                  targetstate = 'payout';
+                  break;
+                case 'payout_accepted':
+                  targetstate = 'payout';
+                  break;
+                case 'payout_payout':
+                  targetstate = 'payout';
+                  break;
+                default:
+                  targetstate = 'init';
+                  debugger;
+                  break;
+              }
+
+              mutation.dealstate = targetstate;
+            }
             var deal = deals[foundDeal];
             var iamprovider = false;
             // now check if the reply is ours.
@@ -344,6 +412,7 @@
 
             //deals[foundDeal] = Object.assign(getEmptyDeal(), deals[foundDeal], mutation);
           }else{
+            mutation.dealstate = 'accepted';
             deals.push(Object.assign(this.getEmptyDeal(),mutation));
           }
           return {

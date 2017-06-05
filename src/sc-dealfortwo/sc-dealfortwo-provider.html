@@ -867,7 +867,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       '_checksize(phoneview)',
       '_provideraccept(provideraccept)',
       '_hashtag(routedata.hashtag)', 
-      '_dealstate(dealstate)'   
+      '_dealstate(dealstate)' ,
+      '_resetme(routedata.requestid,routedata.replyid)'  
       ],
 
 
@@ -951,6 +952,13 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         this.dealdetailsmsg = "Show details";
         this.btntapped = false;
       },
+
+      _resetme: function(){
+
+         this.btntapped = false;
+         this.provideraccept = false;
+         
+       },
 
       /**
       * 'leave' fires the 'leave' to the parent-element. (This also contains animation-config for going back to sc-home.)

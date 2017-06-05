@@ -241,7 +241,7 @@ This components shows the detailed view of a request.
 
     </style>
     <sc-shh web3="{{shhweb3}}"></sc-shh>
-    <sc-dealstate deal="{{itemdata}}" dealstate="{{dealstate}}"></sc-dealstate>
+    <!-- <sc-dealstate deal="{{itemdata}}" dealstate="{{dealstate}}"></sc-dealstate> -->
     <iron-media-query query="(min-width:0px) and (max-width: 540px)" query-matches="{{phoneview}}"></iron-media-query>
 
     <div class="totalcontainer">
@@ -369,7 +369,7 @@ This components shows the detailed view of a request.
       is: 'sc-itemdetail',
 
       observers: [
-      '_dealstate(dealstate)'
+      //'_dealstate(itemdata.dealstate)'
         //'_web3(shhweb3)',
         //'_pubkeyCompare(itemdata)'
       ],
@@ -483,6 +483,7 @@ This components shows the detailed view of a request.
           if (this.itemdata.replies){
             this.itemreplies = this.itemdata.replies.slice(0);  // this slice is neccesary to prevent a polymer databinding flaw..
           }
+          this._dealstate();
         }else{
           this.itemdata = null;
           this.itemreplies = null;
@@ -566,28 +567,28 @@ This components shows the detailed view of a request.
       // },
 
       _dealstate: function(target) {
-        switch(target){
-          case 'init': 
-            this.totalopacity = 'halfop';
-            this.amountopacity = 'halfop';
-            this.notreadyyet = true;
-            this.dealstatemsg = "Creating this request - 1/2";
-          break;
+        switch(this.itemdata.dealstate){
+          // case 'init': 
+          //   this.totalopacity = 'halfop';
+          //   this.amountopacity = 'halfop';
+          //   this.notreadyyet = true;
+          //   this.dealstatemsg = "Creating this request - 1/2";
+          // break;
           case 'created': 
             this.totalopacity = 'fullop';
             this.amountopacity = 'halfop';
             this.steponestate = 'stepdone';
             this.notreadyyet = true;
           break;
-          case 'seekerfunding': 
-            this.totalopacity = 'fullop';
-            this.amountopacity = 'halfop';
-            this.dealstatemsg = "Creating this request - 2/2";
-            this.steponestate = 'stepdone';
-            this.notreadyyet = true;
-          break;
-          case 'seekerfunded': 
-          case 'bothaccepted': 
+          // case 'seekerfunding': 
+          //   this.totalopacity = 'fullop';
+          //   this.amountopacity = 'halfop';
+          //   this.dealstatemsg = "Creating this request - 2/2";
+          //   this.steponestate = 'stepdone';
+          //   this.notreadyyet = true;
+          // break;
+          case 'accepted': 
+          // case 'bothaccepted': 
           case 'indeal': 
             this.totalopacity = 'fullop';
             this.amountopacity = 'fullop';

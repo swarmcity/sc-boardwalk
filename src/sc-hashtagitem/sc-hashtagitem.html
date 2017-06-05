@@ -299,7 +299,7 @@ This components is the representation of a request in the requests-list on sc-ha
 
     </style>
 
-    <sc-dealstate deal="{{item}}" dealstate="{{dealstate}}"></sc-dealstate>
+    <!-- <sc-dealstate deal="{{item}}" dealstate="{{dealstate}}"></sc-dealstate> -->
     <iron-media-query query="(min-width:0px) and (max-width: 540px)" query-matches="{{phoneview}}"></iron-media-query>
 
 
@@ -366,7 +366,7 @@ This components is the representation of a request in the requests-list on sc-ha
           </div>
 
 
-          <template is="dom-if" if="{{showdealmsg}}">
+          <template is="dom-if" if="{{_is(item.dealstate,'accepted')}}">
             <div class="dealmessage totalwidth horizontal center endjust">
               <p class$="small {{dealmessageclass}} bold">{{dealmessage}}</p>
             </div>
@@ -598,7 +598,7 @@ This components is the representation of a request in the requests-list on sc-ha
 
 
                   <!-- Created. -->
-                  <template is="dom-if" if="{{_is(item.dealstate,'created')}}">
+                  <template is="dom-if" if="{{_is(item.dealstate,'accepted')}}">
                     <div class="flex vertic start startjust">
                        <p class="hashtagdealmsg totalwidth grey4">You selected {{currentprovider.username}} to make a deal with.</p>
                        <p class="small totalwidth grey2b">Waiting for {{currentprovider.username}} to respond.</p>
