@@ -30,10 +30,8 @@
         this.initweb3();        
       },
       ready: function(){
-        console.log('sc-web3 -> ready');
       },
       _keystore: function(){
-        console.log('sc-web3 -> new keystore attached!')
         this.initweb3();        
       },
       initweb3: function(){
@@ -47,11 +45,9 @@
             getGasPrice: this.getGasPrice
           };
 
-          console.log('sc-web3 -> created Web3 (',this.host,')');
         }
         // If no HookedWeb3Provider was assigned yet - assign it using the given keystore.
         if (scweb3_web3 && this.keystore && this.host && !acweb3_customproviderset){
-          console.log('sc-web3 -> Creating new HookedWeb3Provider');
           this.web3Provider = new HookedWeb3Provider({
             host: this.host,
             transaction_signer: this.keystore
@@ -71,8 +67,6 @@
       // callsback 
       waitTx: function(txHash,callback) {
         var self = this;
-        console.log('waitTx waiting for tx',txHash);
-
         scweb3_web3.eth.getTransaction(txHash, function(err, res) {
           if (res) {
             if (callback)
@@ -96,20 +90,17 @@
               // Get info about latest Ethereum block
               scweb3_web3.eth.getBlock(blockHash, function(err,block) {
                 if (err){
-                  console.log('getBlock failed',err);
                 }
                 --blockCounter;
                 if (block && block.transactions.indexOf(txHash) > -1) {
                   filter.stopWatching();
                   filter = null;
                   if (callback){
-                    console.log('waitTx tx mined in block',block.number);
                     return callback(null,block.number);
                   }else{
                     return true;
                   }
                 } else {
-                  // console.log('Waiting tx..', blockCounter);
                 }
               });
             });

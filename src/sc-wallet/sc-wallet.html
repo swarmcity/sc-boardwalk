@@ -59,12 +59,10 @@
       },
 
       attached: function() {
-        console.log('sc-wallet attached');
       },
 
       checkreadystate: function(){
         if (!this.status && this.arcbalance != undefined && this.swtbalance != undefined && this.ethbalance != undefined){
-          console.log('vals:',this.swtbalance,this.ethbalance,this.arcbalance);
           this.status = 'ready';
           this.fire('ready');
         }
@@ -76,13 +74,11 @@
       },
 
       _pubkey: function(){
-        console.log('sc-wallet -> received new pubkey. Fetch balances');
         this.setup();
       },
 
       setup: function() {
         if (!this.web3 || !this.pubkey) {
-          console.log('sc-wallet -> ERROR no web3 or pubkey on setup web3=',this.web3,'pubkey=',this.pubkey);
           return;
         }
         var self = this;
@@ -113,10 +109,8 @@
       updateBalanceIntervalHandler: function(){
         this.updateBalance();
         this.monitorcount--;
-        console.log('monitorcount',this.monitorcount)
         if (this.monitorcount < 1){
             clearInterval(this.monitorInterval);
-            console.log('clearing interval');
         }
       },
 
@@ -166,8 +160,6 @@
             self.ARCTokeninstance.balanceOf(self.$.helpers.fixaddress(self.pubkey),function(err,arcbalance){
 
               self.arcbalance = arcbalance;
-              console.log('ETH balance is', self.ethbalance.toFormat(2));
-              console.log('ARC balance is', self.arcbalance.toFormat(2));
               
               if (self.arcbalance>0){
                 self.fire('needsswtconverting');
@@ -196,7 +188,6 @@
           self.SWTTokeninstance.balanceOf(self.$.helpers.fixaddress(self.pubkey), function(err, swtbalance) {
             self.swtbalance = swtbalance;
             self.updating = false;
-            console.log('SWT balance is', self.swtbalance.toFormat(2));
             if (cb) {
               cb();
             }

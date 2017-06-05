@@ -454,7 +454,6 @@ Polymer({
   },
 
   attached: function() {
-    console.log('sc-swtconversion attached');
 
     this.exitAnimation = "slide-left-animation";
     this.entryAnimation = "slide-from-right-animation";
@@ -474,10 +473,8 @@ Polymer({
 
   update: function() {
     if (!this.account || !this.web3 || !this.config) {
-      console.log('sc-swtconversion -> not READY',this.account,this.web3);
       return;
     }
-    console.log('sc-swtconversion -> WE ARE READY');
     var self = this;
     if (!self.SWTTokenInstance) {
       this.$.helpers.getjson('../contracts/ARCToken.json', function(err, tokendata) {
@@ -533,10 +530,8 @@ Polymer({
 
     if (this.ETHbalance !== undefined && this.ETHbalance > ethrequired) {
       this.hasenoughgas = true;
-      console.log('sc-swtconversion -> You have enough ETH to perform a conversion');
     } else {
       this.hasenoughgas = false;
-      console.log('sc-swtconversion -> You don\'t have enough ETH to perform a conversion');
       this.ethshort = (ethrequired || 0) - this.ETHbalance;
     }
     return this.hasenoughgas;
@@ -637,34 +632,26 @@ Polymer({
     }
 
     this.getAllowance(function(err, allowance) {
-      console.log('allowance=', allowance.toString(10), ' ARC balance=', self.arcbalance.toString(10), ')');
       if (allowance >= self.arcbalance) {
-        console.log('allowance is OK');
         return callback();
       }
-      console.log('need to get allowance');
-
       var requiredallowance = self.arcbalance;
 
       self.gasforapprove = self.ARCTokenInstance.approve.estimateGas(self.config.swtconversioncontractaddress, requiredallowance, {
         from: self.$.helpers.fixaddress(self.account),
       });
-      console.log('gas needed for approval=',self.gasforapprove);
 
       self.ARCTokenInstance.approve.sendTransaction(self.config.swtconversioncontractaddress, requiredallowance, {
         from: self.$.helpers.fixaddress(self.account),
         gasPrice: self.gasPrice,
         gas: self.gasforapprove
       }, function(err, result) {
-        console.log(err, result);
         if (err) {
           return callback(err);
         }
-        console.log('approval started. txhash=', result);
         self.waitTx(result, function(success) {
           if (success) {
             self.getAllowance(function(err, allowance) {
-              console.log('allowance given (Allowance = ', allowance, ' balance=', self.arcbalance, ')');
               return callback();
             });
           } else {
@@ -682,18 +669,15 @@ Polymer({
     this.gasforconvert = this.SWTConverterInstance.convert.estimateGas(this.arcbalance, {
       from: this.$.helpers.fixaddress(this.account),
     });
-    console.log('gas needed for convert=',self.gasforconvert);
 
     self.SWTConverterInstance.convert.sendTransaction(self.arcbalance, {
       from: self.$.helpers.fixaddress(self.account),
       gasPrice: self.gasPrice,
       gas: self.gasforconvert
     }, function(err, result) {
-      console.log(err, result);
       if (err) {
         return callback(err);
       }
-      console.log('convert started. txhash=', result);
       self.waitTx(result, function(success) {
         if (success) {
           return callback();
@@ -706,10 +690,6 @@ Polymer({
 
   // the token balances have been 
   verify: function(){
-
-      console.log('your ARC balance=',this.arcbalance);
-      console.log('your SWT balance=',this.swtbalance);
-
     if (this.swtbalance > 0){
       this.conversiondone = true;
     }
@@ -752,9 +732,7 @@ Polymer({
           return callback(true);
         else
           return true;
-      // Tx hash not found yet?
       } else {
-        // console.log('Waiting tx..', blockCounter);
       }
     });
   },
@@ -769,12 +747,10 @@ Polymer({
 
   back: function(){
     this.fire('exit');
-//    console.log("Kunde gij efkes MAKE DA GE TERUGGA?");
   },
 
 
   _convertingstarted: function(){
-    console.log("yaaaatochhh, ", this.convertingstarted);
   }
 
 });

@@ -33,11 +33,7 @@
         }
       },
 
-      // add data to IPFS
-      //
-      // usage : <sc-ipfs id="ipfs"></sc-ipfs>
-      //         this.$.ipfs.add(new this.$.ipfs.ipfs.Buffer(JSON.stringify(myJSONdata)), function(err, result) { console.log(result[0].hash); });
-      add: function(data, cb) {
+    add: function(data, cb) {
         //var b = new this.ipfs.Buffer(data);
         this.ipfs.add(data, function(err, res) {
           if (cb) cb(err, res);

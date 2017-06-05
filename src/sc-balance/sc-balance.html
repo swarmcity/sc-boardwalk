@@ -246,8 +246,6 @@ This component shows the SWT-balance and the reference currency (when in sc-wall
         //debugger;
         this.priceusd = e.detail.response[0].price_usd;
         this.priceeur = e.detail.response[0].price_eur;
-        console.log('sc-balance -> 1 SWT is worth USD',this.priceusd);
-        console.log('sc-balance -> 1 SWT is worth EUR',this.priceeur);
         this.convertcurrency(this.swtbalance);
       },
 
@@ -280,15 +278,8 @@ This component shows the SWT-balance and the reference currency (when in sc-wall
       */
       convertcurrency: function(e) {
         if(this.priceusd && this.swtbalance) {
-         
-          //var x = e / this.priceusd;
-          //console.log(x);
           this.balanceref = this.swtbalance.times(this.priceusd).div(1e18);
           this.balanceref = this.balanceref.toFixed(2);
-          //this.eurref = this.balanceref * this.eurusd;
-          //this.eurref = this.eurref.toFixed(2);
-          
-          //debugger;
           return this.balanceref;
 
 
@@ -304,7 +295,6 @@ This component shows the SWT-balance and the reference currency (when in sc-wall
         if (b === undefined){
           b = true;
         }
-        //console.log(a ,'(',typeof a,') is',b,'(',typeof b,') they are equal for ==',a == b,', they are equal for ===',a === b);
         return a === b;
       },
 

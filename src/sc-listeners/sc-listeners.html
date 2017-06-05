@@ -502,7 +502,6 @@
       _starthastaglistener: function(hashtag) {
         
         if (sc_listeners_listening){
-          console.log('skipping init listeners. Already lsitening');
           return;
         }
 
@@ -513,8 +512,6 @@
         }
 
         if (this.filter) {
-          //console.log("sc-listeners: killing existing filter");
-          //this.filter.stopWatching();
           return;
         }
 
@@ -536,7 +533,6 @@
             "topics": mytopics,
           });
 
-          console.log("sc-listeners: channelswitch, start listening to", mytopics);
           this.filter.watch(this._processmessage.bind(this));
 
           sc_listeners_listening = true;
@@ -551,9 +547,7 @@
         var self = this;
         try {
           payload = JSON.parse(self.shhweb3.toAscii(result.payload));
-          console.log('incoming whisper message', payload);
         } catch (e) {
-          console.log(e);
         }
 
         switch(payload.type){
@@ -619,7 +613,6 @@
             if (mutation.providerfundingtx) {
               this.web3.waitTx(mutation.providerfundingtx, function(err, res) {
                 if (err){
-                  console.log('error in providerfundingtx');
                   return;
                 }
                 // TODO READ DEAL PARAMETERS NOW.
@@ -646,7 +639,6 @@
             if (mutation.providerfundingallowancetx) {
               this.web3.waitTx(mutation.providerfundingallowancetx, function(err, res) {
                 if (err){
-                  console.log('error in providerfundingallowancetx');
                   return;
                 }
                 self.dispatch('update_deal', {
@@ -670,7 +662,6 @@
             if (mutation.payouttx) {
               this.web3.waitTx(mutation.payouttx, function(err, res) {
                 if (err){
-                  console.log('error in payouttx');
                   return;
                 }
                 self.dispatch('update_deal', {
@@ -683,7 +674,6 @@
             }                 
             break;   
           default:
-            console.log('unknown message:',payload);
             break;
         }
       },

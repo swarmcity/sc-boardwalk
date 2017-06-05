@@ -685,8 +685,6 @@ This components is the representation of a request in the requests-list on sc-ha
       },
 
       _itemreply: function(){
-        //debugger;
-        console.log('itemreply changed...');
       },
 
       ready: function(){
@@ -724,8 +722,7 @@ This components is the representation of a request in the requests-list on sc-ha
       },
 
       toggleItem: function(){
-        //console.log('*toggleitem*',this.item);
-
+    
         var toggler = this.shadowRoot.getElementById('repliescollapser');
         if(this.iamprovider){
           this.fire('redirect', {
@@ -754,8 +751,7 @@ This components is the representation of a request in the requests-list on sc-ha
       },
 
       toLocaltime: function(target){
-        // console.log("HEY MISTER? got the tiiiimmmmmeeeeee",target);
-
+      
       },
 
 
@@ -811,7 +807,6 @@ This components is the representation of a request in the requests-list on sc-ha
 
 
       _log: function(target){
-          console.log("HAZ THIS in hashtagitem??!!!!",this.item.msg, target);
       },
 
 

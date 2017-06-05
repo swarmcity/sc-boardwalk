@@ -151,7 +151,6 @@ This is dealchat.
           "topics": mytopics,
         });
 
-        console.log("sc-listeners: channelswitch, start listening to", mytopics);
         this.filter.watch(this._processmessage.bind(this));
 
       },
@@ -162,11 +161,9 @@ This is dealchat.
         var self = this;
         try {
           payload = JSON.parse(self.shhweb3.toAscii(result.payload));
-          console.log('sc-dealchat -> incoming whisper message ', payload);
 
           //this.push('deals',payload);
         } catch (e) {
-          console.log(e);
         }
 
         switch (payload.type) {
@@ -239,7 +236,6 @@ This is dealchat.
         if (b === undefined){
           b = true;
         }
-        //console.log(a ,'(',typeof a,') is',b,'(',typeof b,') they are equal for ==',a == b,', they are equal for ===',a === b);
         return a === b;
       },
 
@@ -277,36 +273,16 @@ This is dealchat.
           "priority": 1000
         };
 
-        console.log('posting to topics', topics);
 
         self.shhweb3.shh.post(options, function(err, res) {
           if (!err) {
-            console.log('sc->dealfortwo_seeker -> Reply posted');
           } else {
-            console.log('sc-dealfortwo_seeker -> whisper error:', err);
           }
         });
 
         this.$.msginput.value = "";
         this.$.msginput.focused = true;
 
-        // console.log("** -- ",this.identity);
-        // var newballoon = {
-        //   chatteravatar: this.identity.avatarhash,
-        //   chattername: this.identity.username,
-        //   chatterpubkey: this.pubkey,
-        //   chatterrep: '0',
-        //   chatmsg: this.msg,
-        //   chattime: '21:05'
-        // };
-
-        // this.unshift('chatballoons',newballoon);
-        // this.msg = '';
-        // var self = this;
-        // setTimeout(function() {
-        //   var msginput = self.shadowRoot.getElementById('msginput');
-        //   msginput.focus();
-        // }, 5);
       },
 
 

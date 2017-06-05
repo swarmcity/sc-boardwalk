@@ -43,7 +43,6 @@
           acshh = new Web3(new Web3.providers.HttpProvider(this.host));
           acshh_identity = acshh.shh.newIdentity();
           //acshh.shh._filter = acshh.shh.filter;
-          console.log('sc-shh -> created Web3. Identity=',this.identity);
         }
         this.set('web3',acshh);
         this.set('web3.encodetopic',this.encodetopic.bind(this));
@@ -57,7 +56,6 @@
       },
 
       filter: function(){
-        //console.log('maak is een filter');
         var filter =  acshh.shh._filter(arguments);
         acshh_filters.push[filter];
         return filter;

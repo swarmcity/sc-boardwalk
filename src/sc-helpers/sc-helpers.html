@@ -64,7 +64,6 @@
         var self = this;
         Polymer.Base.importHref(fileurl, function(e) {
           var result = e.target.import.body.innerText;
-          console.log("getfile -> Loaded file",fileurl);
           if (asJSON) {
             try {
               result = JSON.parse(result);
@@ -96,29 +95,17 @@
       lazyload: function(elementid, filename, cb) {
         var self = this;
         var t0 = performance.now();
-        console.log('lazyload --> lazy loading ', elementid);
-        // if (Polymer.isInstance(this.$[elementid])) {
-        //   if (cb) {
-        //     cb(null,this.$[elementid]);
-        //     //} && this.$[elementid][method]) {
-        //     //this.$[elementid][method]();
-        //   }
-        //   return;
-        // }
         var url = this.resolveUrl(filename);
 
         Polymer.Base.importHref(
           url,
           function(e) {
-            console.log('lazyload --> ', url , 'loaded & added to DOM');
             if (cb && self.$) {
               cb(null,self.$[elementid]);
             }
             var t1 = performance.now();
-            console.log('lazyload --> lazyload',elementid,'took',(t1 - t0),'milliseconds.');
           }.bind(this),
           function() {
-            console.log('Something failed!');
           }, true
         );
       },      

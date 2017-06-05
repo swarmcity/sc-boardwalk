@@ -260,7 +260,6 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       ],
 
       _geohash: function(){
-        console.log('sc-newitem -> your geohash is',this.geohash);
         this.hasgeohash = true;
       },
 
@@ -332,7 +331,6 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
           var dealID = UUIDjs.create().toString();
           this.$.dealfortwo.makeDealForTwo(dealID, self.identity.pubkey, amount, function(err, txhash, extratx) {
             if (err) {
-              console.log('error happened...', err);
               // READY WITH NEWITEM... (failed)
               self.closeNewcollapser();
               self.offermsg = '';
@@ -375,9 +373,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
                   "ttl": 60 * 60 * 24,
                   "priority": 1000
                 };
-                console.log('posting to topics', topics);
                 self.shhweb3.shh.post(options, function(err, res) {
-                  console.log(err, res);
                   self.loading = false;
                   self.offermsg = '';
                   self.offeramount = '';
