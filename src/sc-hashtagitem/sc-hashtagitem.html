@@ -299,10 +299,8 @@ This components is the representation of a request in the requests-list on sc-ha
 
     </style>
 
-    <!-- <sc-dealstate deal="{{item}}" dealstate="{{dealstate}}"></sc-dealstate> -->
     <iron-media-query query="(min-width:0px) and (max-width: 540px)" query-matches="{{phoneview}}"></iron-media-query>
-
-
+<pre>{{jsondump(item)}}</pre>
       <!-- WHEN REPLY == NOT SELECTED YET -->
       <template is="dom-if" if="{{!item.selectedreply}}">
         <div class$="totalcontainer totalwidth vertic start centerjust {{ownerclass}}">
@@ -684,6 +682,13 @@ This components is the representation of a request in the requests-list on sc-ha
         yourreply: {
           type: String
         }
+      },
+
+      jsondump: function(a){
+        if (!a){
+          return 'undefined';
+        }
+        return JSON.stringify(a,null,1);
       },
 
       _itemreply: function(){

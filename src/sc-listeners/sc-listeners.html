@@ -392,22 +392,6 @@
               mutation.dealstate = targetstate;
             }
             var deal = deals[foundDeal];
-            var iamprovider = false;
-            // now check if the reply is ours.
-            //debugger;
-            if (deal.replies) {
-              // find the reply
-              var foundReply = deal.replies.find(function(item) {
-                return item.id === payload.replyid;
-              });
-              if (foundReply){
-                if (foundReply.provider && foundReply.provider.pubkey === this.identity.pubkey){
-                    iamprovider = true;
-                }
-              }
-            }           
-            mutation.iamprovider = iamprovider;
-
             Object.assign(deals[foundDeal],mutation);
 
             //deals[foundDeal] = Object.assign(getEmptyDeal(), deals[foundDeal], mutation);
@@ -613,11 +597,34 @@
               providerfundingallowancetx : payload.offerproviderfundingallowancetx,
               provideraccepted: true,
             };
+
+            // check if I am the provider of this deal
+            var foundDeal = this.deals.findIndex(function(item) {
+              return item.id === payload.id;
+            });
+            if (foundDeal > -1) {
+              //debugger;
+              var deal = this.deals[foundDeal];
+              var iamprovider = false;
+              if (deal.replies && deal.selectedreply) {
+                var selectedReply = deal.replies.find(function(item) {
+                  return item.id === deal.selectedreply;
+                });
+                if (selectedReply) {
+                  if (selectedReply.provider && selectedReply.provider.pubkey === this.identity.pubkey) {
+                    iamprovider = true;
+                  }
+                }
+              }
+              mutation.iamprovider = iamprovider;
+            }
+
             this.dispatch('update_deal', mutation);
 
             // watch for the TX to finish & update the state
             if (mutation.providerfundingtx) {
               this.web3.waitTx(mutation.providerfundingtx, function(err, res) {
+                //debugger;
                 if (err){
                   console.log('error in providerfundingtx');
                   return;
@@ -660,12 +667,13 @@
 
           case 'dealfortwo-approve':
          
-           var mutation = {
+            var mutation = {
               id: payload.requestid,
               payouttx: payload.transactionhash,
               targetdealstate: 'payout',
 
             };
+
             this.dispatch('update_deal', mutation);
             if (mutation.payouttx) {
               this.web3.waitTx(mutation.payouttx, function(err, res) {

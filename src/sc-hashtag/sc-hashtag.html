@@ -408,8 +408,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
 
           <div class="mydeals_repeater">
-            <template is="dom-if" if="{{hasmydeals(mydeals)}}">
-              <template is="dom-repeat" items="{{mydeals}}">
+         <!--    <p class="red">ALL DEALS</p>
+             <template is="dom-repeat" items="{{deals}}">
                 <sc-hashtagitem
                   item="[[item]]"
                   identity="[[identity]]"
@@ -417,12 +417,23 @@ This is the component showing all requests of a certain hashtag. It contains a r
                   class$="{{dealsopacity}}">
                 </sc-hashtagitem>
               </template>
+            <p class="red">/ALL DEALS</p> -->
+
+            <p class="red">My deals</p>
+            <!-- <template is="dom-if" if="{{hasmydeals(mydeals)}}"> -->
+            <template is="dom-repeat" items="{{deals}}" filter="isMyDeal" sort="sortOnTimestamp">
+              <sc-hashtagitem
+                item="[[item]]"
+                identity="[[identity]]"
+                on-to-detail="hashtag_to_detail"
+                class$="{{dealsopacity}}">
+              </sc-hashtagitem>
             </template>
+            <!-- </template> -->
 
             <div class="tester">
-              <p class="red">filter on iamprovider</p>
-              <template is="dom-repeat" items="{{otherdeals}}"
-                filter="claimedByme">
+             <p class="red">Deals claimed by me</p>
+              <template is="dom-repeat" items="{{deals}}" filter="isClaimedByMe" sort="sortOnTimestamp">
                 <sc-hashtagitem
                   item="[[item]]"
                   identity="[[identity]]"
@@ -434,9 +445,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
           </div>
 
           <div class="testerzzz">
-            <p class="red">filter on providerfundingtx == false or undefined</p>
-            <template is="dom-repeat" items="{{otherdeals}}"
-              filter="notClaimed">
+            <p class="red">Open deals of others - claimable by me</p>
+            <template is="dom-repeat" items="{{deals}}" filter="isClaimable" sort="sortOnTimestamp">
               <sc-hashtagitem
                 item="[[item]]"
                 identity="[[identity]]"
@@ -645,10 +655,10 @@ This is the component showing all requests of a certain hashtag. It contains a r
       },
 
       isNotMyDeal: function(item){
-        return (item.seeker.pubkey !== this.identity.pubkey);
+        return !this.isMyDeal(item); //(item.seeker.pubkey !== this.identity.pubkey);
       },
 
-      sortDeal: function(a,b){
+      sortOnTimestamp: function(a,b){
         return b.offertime - a.offertime;
       },
 
@@ -823,27 +833,30 @@ This is the component showing all requests of a certain hashtag. It contains a r
       toNotifs: function(){
         this.fire('to-notifications');
       },
-      // claimedByme: function(item) {
+      // isClaimedByMe: function(item) {
       //   if (this.isMyDeal(item)){
       //     return false;
       //   }
       //   return !item.providerfundingtx == false || !item.providerfundingtx == undefined;
       // },
 
-      // notClaimedByMe: function(item) {
+      // notisClaimedByMe: function(item) {
       //   if (this.isMyDeal(item)){
       //     return false;
       //   }
       //   return item.providerfundingtx == false || item.providerfundingtx == undefined;
       // },
 
-        claimedByme: function(item) {
+        isClaimedByMe: function(item) {
             return item.iamprovider == true;
         },
 
 
-        notClaimed: function(item) {
-            return item.providerfundingtx == false || item.providerfundingtx == undefined;
+        isClaimable: function(item) {
+          //debugger;
+          if (this.isMyDeal(item)) return false;
+          return (item.dealstate == 'created');
+//            return item.providerfundingtx == false || item.providerfundingtx == undefined;
         },
 
 
