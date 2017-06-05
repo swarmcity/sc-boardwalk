@@ -409,7 +409,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
           <div class="mydeals_repeater">
 
-            <!-- <p class="red">deals you responded to and were accepted as the provider</p> -->
             <template is="dom-repeat" items="{{deals}}" filter="filter1" sort="sortOnTimestamp">
               <sc-hashtagitem
                 item="[[item]]"
@@ -419,8 +418,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
               </sc-hashtagitem>
             </template>
 
-            <!-- <p class="red">My active deals ( = engaged with someone else )</p> -->
-            <!-- <template is="dom-if" if="{{hasmydeals(mydeals)}}"> -->
             <template is="dom-repeat" items="{{deals}}" filter="filter2" sort="sortOnTimestamp">
               <sc-hashtagitem
                 item="[[item]]"
@@ -429,10 +426,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
                 class$="{{dealsopacity}}">
               </sc-hashtagitem>
             </template>
-            <!-- </template> -->
-
-            <!-- <p class="red">Other's deals I am engaged in</p> -->
-            <!-- <template is="dom-if" if="{{hasmydeals(mydeals)}}"> -->
+          
             <template is="dom-repeat" items="{{deals}}" filter="filter3" sort="sortOnTimestamp">
               <sc-hashtagitem
                 item="[[item]]"
@@ -441,31 +435,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
                 class$="{{dealsopacity}}">
               </sc-hashtagitem>
             </template>
-
-            <!-- </template> -->
-            <!-- <p class="red">Last finished deals I engaged with ( mine or not mine ) </p> -->
-            <!-- <template is="dom-if" if="{{hasmydeals(mydeals)}}"> -->
-            <template is="dom-repeat" items="{{deals}}" filter="filter4" sort="sortOnTimestamp">
-              <sc-hashtagitem
-                item="[[item]]"
-                identity="[[identity]]"
-                on-to-detail="hashtag_to_detail"
-                class$="{{dealsopacity}}">
-              </sc-hashtagitem>
-            </template>
-          </div>
-
-          <!-- <div class="testerzzz"> -->
-            <!-- <p class="red">Open deals of others - respondable by me</p> -->
-            <template is="dom-repeat" items="{{deals}}" filter="filter5" sort="sortOnTimestamp">
-              <sc-hashtagitem
-                item="[[item]]"
-                identity="[[identity]]"
-                on-to-detail="hashtag_to_detail"
-                class$="{{dealsopacity}}">
-              </sc-hashtagitem>
-            </template>
-          <!-- </div> -->
 
         <div class="tenspace"></div>
         <div class="tenspace"></div>
@@ -639,18 +608,14 @@ This is the component showing all requests of a certain hashtag. It contains a r
       },
 
       _deals: function(){
-        console.log('DEALS IS VERANDERD JONGE',this.deals,Date.now());
         this.dealslist = [];
         for (var i=0;i<this.deals.length;i++){
           var d = this.deals[i];
           if (d.replies){
             d.replies = this.deals[i].replies.slice(0);
           }
-//          this.dealslist.push(this.deals[i]);
-//          this.dealslist
           this.push('dealslist',d);
         }
-        //this.dealslist = this.deals.slice(0);
       },
 
       _updatebalance: function(){
@@ -859,37 +824,45 @@ This is the component showing all requests of a certain hashtag. It contains a r
       // },
 
 
-      // deals you responded to and were accepted as the provider
+      // items I'm seeker of, whatever state their in - except payout state deals
       filter1: function(item){
-        return item.iamprovider == true;
-      },
-
-      // My active deals ( = engaged with someone else )
-      filter2: function(item){
-        //debugger;
-        //if (!this.isMyDeal(item)) return false;
-        if (item.dealstate == 'created' || item.dealstate == 'accepted' || item.dealstate == 'indeal') return true;
-         return false;
-      },
-
-      // Other's deals I am engaged in
-      filter3: function(item){
-        if (this.isMyDeal(item)) return false;
         if (item.dealstate == 'payout') return false;
-        if (item.iamprovider != true) return false;
-        return true;
+        return (this.isMyDeal(item));
       },
 
-      // Last finished deals I engaged with ( mine or not mine )
-      filter4: function(item){
-        if (item.dealstate != 'payout') return false;
-        if (this.isMyDeal(item)) return true;
-        if (!this.isMyDeal(item) && item.iamprovider == true) return true;
+      // the deals I accepted as provider - except payout state deals
+      filter2: function(item){
+      //return true;
+        if (item.dealstate == 'payout') return false;
+        // the seeker has chosen me , but I havent accepted this deal
+        if (item.ireplied==true && item.dealstate == 'accepted') return true;
+
+        // I have accepted the deal
+        if (item.iamprovider == true) return true;
+
         return false;
+        // if (item.ireplied==true && item.iamprovider==undefined && item.dealstate != 'accepted') return false;
+        // return (item.iamprovider == true);
       },
+
+      // // Other's deals I am engaged in
+      // filter3: function(item){
+      //   if (this.isMyDeal(item)) return false;
+      //   if (item.dealstate == 'payout') return false;
+      //   if (item.iamprovider != true) return false;
+      //   return true;
+      // },
+
+      // // Last finished deals I engaged with ( mine or not mine )
+      // filter4: function(item){
+      //   if (item.dealstate != 'payout') return false;
+      //   if (this.isMyDeal(item)) return true;
+      //   if (!this.isMyDeal(item) && item.iamprovider == true) return true;
+      //   return false;
+      // },
 
       // Open deals of others - respondable by me
-      filter5: function(item){
+      filter3: function(item){
         if (this.isMyDeal(item)) return false;
         return (item.dealstate == 'created');
       },

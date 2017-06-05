@@ -735,13 +735,15 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                   <h1 class=""><span class="bold">You're in deal</span> with <span class="light blue replyer_username">{{replydata.provider.username}}</span>.</h1>
                 </template>
 
-                <template is="dom-if" if="{{_is(requestdatadealstate,'payout')}}">
+             <!--    <template is="dom-if" if="{{_is(requestdatadealstate,'payout')}}">
                   <h1 class=""><span class="bold"></span>You started the payout of this deal (<sc-tokenbalanceformatter value="{{requestdata.amount}}"></sc-tokenbalanceformatter>).</h1>
-                </template>
+                </template> -->
 
-                <template is="dom-if" if="{{_is(requestdatadealstate,'payoutmined')}}">
+                <template is="dom-if" if="{{_is(requestdatadealstate,'payout')}}">
+               
                   <h1 class=""><span class="bold"><sc-tokenbalanceformatter value="{{requestdata.amount}}"></sc-tokenbalanceformatter></span> has been paid out to <span class="light blue replyer_username">{{replydata.provider.username}}</span>.</h1>
                 </template>
+
 
                 <div class="details_toggler" on-tap="showDetails">
                   <div class$="triangle {{collapsestate}}">
@@ -807,6 +809,13 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                           <div class="detail">
                             <p class="cat">Provider funding</p>
                             <a href="https://etherscan.io/tx/{{requestdata.providerfundingtx}}" target="_new"  class="reg blue">{{requestdata.providerfundingtx}}</a>
+                          </div>
+                        </template>
+
+                        <template is="dom-if" if="{{requestdata.payouttx}}">
+                          <div class="detail">
+                            <p class="cat">Payout</p>
+                            <a href="https://etherscan.io/tx/{{requestdata.payouttx}}" target="_new"  class="reg blue">{{requestdata.payouttx}}</a>
                           </div>
                         </template>
 
@@ -902,7 +911,11 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
             <div class="whitespace"></div>
               <div class="approver_confirmbtns">
                 <iron-icon icon="sc-icons:decline" class="decliner medium white" on-tap="backfromapproveDeal"></iron-icon>
+                <template is="dom-if" if="{{!payoutinitiated}}">
                 <paper-icon-button icon="sc-icons:v" noink class="confirmbtn green big white shadow" on-tap="approveDeal"></paper-icon-button>
+                </template>
+                <template is="dom-if" if="{{payoutinitiated}}">(...wait)
+                </template>
               </div>
             </div>
           </div>
@@ -1053,6 +1066,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
       _getdata: function(){
 
+        this.payoutinitiated = false;
+
         var self = this;
         if (!this.deals || !this.requestid || !this.replyid){
           return;
@@ -1060,7 +1075,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         var request = this.deals.find(function(item){
             return item.id === self.requestid;
         });
-        
+
         if (request){
           this.requestdata = request;
           this.requestdatadealstate = request.dealstate;
@@ -1231,6 +1246,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       approveDeal: function() {
 
         var self = this;
+        self.payoutinitiated = true;
 
         this.$.dealfortwo.payout(self.requestdata.id,self.identity.pubkey, function(err, payoutTx) {
 
@@ -1265,13 +1281,17 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
             } else {
               console.log('approveDeal -> whisper error:', err);
             }
+            // TODO : We assume that this does not error. 
+            // handle error here ( in UI )
+          
+            self.seekerpagesentry = 'slide-from-left-animation';
+            self.seekerpagesexit = 'slide-right-animation';
+            self.selecteddealpage = 'dodeal';
+
           });
         });
 
 
-        this.seekerpagesentry = 'slide-from-left-animation';
-        this.seekerpagesexit = 'slide-right-animation';
-        this.selecteddealpage = 'dodeal';
 
 
       },

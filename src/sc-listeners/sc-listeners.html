@@ -182,6 +182,21 @@
               delete mutation.targetdealstate;
             }
 
+            deals[foundDeal].ireplied = false;
+            if (deals[foundDeal].replies){
+              for (var i = 0; i < deals[foundDeal].replies.length; i++) {
+                if (deals[foundDeal].replies[i].provider.pubkey === this.identity.pubkey){
+                  deals[foundDeal].ireplied = true;
+                  if (deals[foundDeal].selectedreply == deals[foundDeal].replies[i].id){
+                    //debugger;
+                    deals[foundDeal].iamprovider = true;
+                  }
+                }
+              }
+            }
+
+
+
             if (deals[foundDeal].seeker.pubkey === this.identity.pubkey){
               mutation.ismydeal = true;
             }else{
@@ -249,7 +264,7 @@
           
           var deal;
           if (foundDeal > -1) {
-            deal = deals[foundDeal]; // Object.assign(getEmptyDeal(),deals[foundDeal]);
+            deal = Object.assign({},deals[foundDeal]); // Object.assign(getEmptyDeal(),deals[foundDeal]);
             if (deal.replies) {
               // search the reply
               var foundReply = deal.replies.findIndex(function(item) {
@@ -270,9 +285,14 @@
               for (var i = 0; i < deal.replies.length; i++) {
                 if (deal.replies[i].provider.pubkey === this.identity.pubkey){
                   deal.ireplied = true;
+                  // if (deal.selectedreply == deal.replies[i].id){
+                  //   //debugger;
+                  //   deal.iamprovider = true;
+                  // }
                 }
               }
             }
+
             // put deal back into array of deals
             deals[foundDeal] = deal; //Object.assign({},deal,{ireplied : ireplied});
 
@@ -287,20 +307,6 @@
             deals.push(deal);
             //console.error('no deal found for reply with ID=', replydata.id)
           }
-
-
-//           if (deal.ismydeal){
-//             //debugger;
-//             var n = {
-//               id : replydata.id + '-' + replydata.parentrequestid, //UUIDjs.create().toString(),
-//               msg: 'You received a new reply to your deal',
-//               //target: '/hashtag/' + deal.hashtag + '/list',
-// //              itemhashtag: deal.hashtag,
-// //              subjectusername: this.identity.username,
-//               timestamp: Date.now()
-//             }; 
-//             this.dispatch('update_notification', n);
-//           }
 
           return {
             type: 'DEALS',
@@ -597,27 +603,6 @@
               providerfundingallowancetx : payload.offerproviderfundingallowancetx,
               provideraccepted: true,
             };
-
-            // check if I am the provider of this deal
-            var foundDeal = this.deals.findIndex(function(item) {
-              return item.id === payload.id;
-            });
-            if (foundDeal > -1) {
-              //debugger;
-              var deal = this.deals[foundDeal];
-              var iamprovider = false;
-              if (deal.replies && deal.selectedreply) {
-                var selectedReply = deal.replies.find(function(item) {
-                  return item.id === deal.selectedreply;
-                });
-                if (selectedReply) {
-                  if (selectedReply.provider && selectedReply.provider.pubkey === this.identity.pubkey) {
-                    iamprovider = true;
-                  }
-                }
-              }
-              mutation.iamprovider = iamprovider;
-            }
 
             this.dispatch('update_deal', mutation);
 

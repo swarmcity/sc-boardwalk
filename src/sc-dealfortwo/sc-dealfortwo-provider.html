@@ -13,7 +13,7 @@
 <link rel="import" href="../sc-username/sc-username.html">
 <link rel="import" href="../sc-loader/sc-loader.html">
 <link rel="import" href="../sc-dealchat/sc-dealchat.html">
-<link rel="import" href="../sc-dealstate/sc-dealstate.html">
+<!-- <link rel="import" href="../sc-dealstate/sc-dealstate.html"> -->
 <link rel="import" href="../sc-redux/sc-redux.html">
 <link rel="import" href="../sc-shh/sc-shh.html">
 <link rel="import" href="../sc-config/sc-config.html">
@@ -645,10 +645,10 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
     <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
 
     <app-route route="{{route}}" pattern="/:hashtag/:requestid/:replyid" data="{{routedata}}"></app-route>
-
+<!-- 
     <sc-dealstate deal="{{requestdata}}" dealstate="{{dealstate}}"></sc-dealstate>
 
-
+ -->
     <neon-animated-pages id="providerpages" attr-for-selected="data-action" selected="{{selecteddealpage}}" entry-animation="{{providerpagesentry}}" exit-animation="{{providerpagesexit}}">
 
       <neon-animatable data-action="dodeal">
@@ -665,53 +665,22 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
             </div>
 
             <!-- Created. -->
-            <template is="dom-if" if="{{_is(dealstate,'created')}}">
+            <template is="dom-if" if="{{_is(requestdata.dealstate,'accepted')}}">
               <h1 class="">Do you accept a deal  with <span class="light blue replyer_username">{{requestdata.seeker.username}}</span> for <span class=""><sc-tokenbalanceformatter value="{{requestdata.amount}}"></sc-tokenbalanceformatter></span>?</h1>
             </template>
 
-            <!-- Provider accepted. -->
-            <template is="dom-if" if="{{_is(dealstate,'provideraccepted')}}">
-              <h1 class=""><span class="bold">You accepted!</span></h1>
-              <div class="whitespace"></div>
-              <sc-loader class="grey3" color="grey3" small on-tap="showSteps"><p class="light bottommarg">Processing deal</p></sc-loader>
-              <!--
-              <div class="dealcreate_steps">
-                <div class="horizont end startjust">
-                  <div class$="triangle {{collapsestate}}" on-tap="showSteps">
-                    <svg id="triangle_icon" x="0px" y="0px" viewBox="0 0 50 50" fill="#24B1FF">
-                    <polygon points="6.5,4.9 6.5,44.5 42,24.9 "/>
-                    </svg>
-                  </div>
-                  <p class="creatingadeal bold blue" on-tap="showSteps">Processing your deal</p>
-                  <sc-loader class="blue" color="blue" small on-tap="showSteps"></sc-loader>
-                </div>
-                <iron-collapse id="steps_collapser">
-                  <div class="allsteps">
-                    <div class$="step totalwidth horizont centercenter {{steponestate}}" on-tap="tempTapthree">
-                      <p class="flex">Assigning counterparty to deal</p>
-                      <iron-icon class="" icon="sc-icons:v"></iron-icon>
-                    </div>
-                    <div class$="step totalwidth horizont centercenter {{steptwostate}}" on-tap="tempTapfour">
-                      <p class="flex">Sending SWT of counterparty to deal</p>
-                      <iron-icon class="" icon="sc-icons:v"></iron-icon>
-                    </div>
-                  </div>
-                </iron-collapse>
-              </div> -->
-            </template>
-
             <!-- In deal. -->
-            <template is="dom-if" if="{{_is(dealstate,'indeal')}}">
+            <template is="dom-if" if="{{_is(requestdata.dealstate,'indeal')}}">
               <h1 class=""><span class="bold">You're in deal</span> with <span class="light blue replyer_username">{{requestdata.seeker.username}}</span>.</h1>
             </template>
 
             <!-- Payout. -->
-            <template is="dom-if" if="{{_is(dealstate,'payout')}}">
+<!--             <template is="dom-if" if="{{_is(dealstate,'payout')}}">
               <h1 class=""><span class="bold"></span><span class="light blue replyer_username">{{requestdata.seeker.username}}</span> started the payout of this deal (<sc-tokenbalanceformatter value="{{requestdata.amount}}"></sc-tokenbalanceformatter>).</h1>
-            </template>
+            </template> -->
 
             <!-- Paid out -->
-            <template is="dom-if" if="{{_is(dealstate,'payoutmined')}}">
+            <template is="dom-if" if="{{_is(requestdata.dealstate,'payout')}}">
               <h1 class=""><span class="bold"><sc-tokenbalanceformatter value="{{requestdata.amount}}"></sc-tokenbalanceformatter></span> has been paid out to you.</h1>
             </template>
 
@@ -766,10 +735,28 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                     </div>
                     <div class="whitespace"></div>
 
-                    <div class="detail">
-                      <p class="cat">Blockchain transactions</p>
-                      <p class="reg">[[requestdata.id]]</p>
-                    </div>
+                    <template is="dom-if" if="{{requestdata.creationtx}}">
+                      <div class="detail">
+                        <p class="cat">Deal creation</p>
+                        <a href="https://etherscan.io/tx/{{requestdata.creationtx}}" target="_new"  class="reg blue">{{requestdata.creationtx}}</a>
+                      </div>
+                    </template>
+
+                    <template is="dom-if" if="{{requestdata.providerfundingtx}}">
+                      <div class="detail">
+                        <p class="cat">Provider funding</p>
+                        <a href="https://etherscan.io/tx/{{requestdata.providerfundingtx}}" target="_new"  class="reg blue">{{requestdata.providerfundingtx}}</a>
+                      </div>
+                    </template>
+
+                    <template is="dom-if" if="{{requestdata.payouttx}}">
+                      <div class="detail">
+                        <p class="cat">Payout</p>
+                        <a href="https://etherscan.io/tx/{{requestdata.payouttx}}" target="_new"  class="reg blue">{{requestdata.payouttx}}</a>
+                      </div>
+                    </template>
+
+                    
                   </div>
                 </div>
             </iron-collapse>
@@ -793,7 +780,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                   on-tap="tempTapto"
                   ></sc-avatar>
               </div>
-              <template is="dom-if" if="{{_is(dealstate,'indeal')}}">
+              <template is="dom-if" if="{{_is(requestdata.dealstate,'indeal')}}">
                 <div class="chatbtn">
                   <paper-icon-button id="chatbutton" class="chatbtn_iconbtn shadow blue grey4" icon="sc-icons:babble" on-tap="toDealchat"></paper-icon-button>
                 </div>
@@ -820,7 +807,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
               </div>
             </template>
             <template is="dom-if" if="{{provideraccept}}">
-              <template is="dom-if" if="{{_is(dealstate,'indeal')}}">
+              <template is="dom-if" if="{{_is(requestdata.dealstate,'indeal')}}">
 
                 <div class="confirmbtns">
                   <p class="halfopacity white bold centertxt"><sc-tokenbalanceformatter value="{{requestdata.amount}}"></sc-tokenbalanceformatter> is locked on this deal until {{requestdata.seeker.username}} initiates payout.</p>
@@ -871,7 +858,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       '_checksize(phoneview)',
       '_provideraccept(provideraccept)',
       '_hashtag(routedata.hashtag)',
-      '_dealstate(dealstate)' ,
       '_resetme(routedata.requestid,routedata.replyid)'
       ],
 
@@ -1264,12 +1250,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         this.providerpagesexit = 'slide-right-animation';
         this.selecteddealpage = 'dodeal';
       },
-
-      _dealstate: function(){
-        console.log("dit is deellzz",this.dealstate);
-      },
-
-
 
 
     });
