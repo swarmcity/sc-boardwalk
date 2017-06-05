@@ -75,7 +75,7 @@ This is dealchat.
       </div>
       <div class="dealchat_container_inner vertic start startjust">
         <div class="msg_canvas totalwidth flex">
-          <template is="dom-repeat" items="{{chatballoons}}">
+          <template is="dom-repeat" items="{{chatballoons}}" sort="sortOnTimestamp">
             <sc-dealchatitem item="[[item]]" pubk="{{identity.pubkey}}" hashtag="[[hashtag]]" class="totalwidth"></sc-dealchatitem>
           </template>
         </div>
@@ -122,7 +122,7 @@ This is dealchat.
 
         topic: {
           type: String,
-          observer: '_startListener'
+          observer: '_newtopic'
         },
 
         hashtag: {
@@ -134,6 +134,18 @@ This is dealchat.
       observers: [
         '_startListener(shhweb3)'
       ],
+
+      sortOnTimestamp: function(a,b){
+        return b.chattime - a.chattime;
+      },
+
+      _newtopic: function(){
+        if (this.topic){
+          this.set('chatballoons',[]);
+          this._startListener();
+        }
+
+      },
 
       _startListener: function() {
 
@@ -181,34 +193,6 @@ This is dealchat.
         this.msg = '';  
         this.chatballoons = [];  
         this.topicPrefix = "2-";    
-        // this.chatballoons = [
-        //   {
-        //       chatteravatar: 'QmRzCWs6F4LiEC4umwLiMB5C6MAo1bKQa4frCC1iKvntme',
-        //       chattername: 'Frank David',
-        //       chatterpubkey: '2',
-        //       chatmsg: 'This is balloon 1!',
-        //       chattime: 'today at 16:33'              
-        //     },
-        //   {
-        //       chatteravatar: 'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
-        //       chattername: 'Hank Moovy',
-        //       chatterpubkey: '3',
-        //       chatmsg: 'This is balloon 2!',
-        //       chattime: 'today at 21:05'             
-        //     },
-        //   {
-        //       chatteravatar: 'QmVzX6YBGUnS9HbUU4Z2QyBnKppoZ2TvoT8P7SPie6Nzdv',
-        //       chattername: 'Hank Moovy',
-        //       chatterpubkey: '3',
-        //       chatmsg: 'This is balloon 2!',
-        //       chattime: 'today at 21:05'             
-        //     },
-
-        // ];
-
-
-
-        
       },
 
       /**
