@@ -176,6 +176,10 @@ This is the component showing all requests of a certain hashtag. It contains a r
         border: 1px solid red;
       }
 
+      .testerzzz {
+        border: 1px solid green;
+      }
+
       #currenttag {
 /*        background-color: red;*/
       }
@@ -363,7 +367,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
           <div id="balancebox" class="balance_box" on-tap="toWalletview">
             <sc-balance
-              id = "balancecomponent"
+              id="balance"
               refcur="EUR"
               swtbalance="[[swtbalance]]"
               ethbalance="{{ethbalance}}"
@@ -415,17 +419,22 @@ This is the component showing all requests of a certain hashtag. It contains a r
               </template>
             </template>
 
-            <template is="dom-repeat" items="{{otherdeals}}"
-              filter="claimedByme">
-              <sc-hashtagitem
-                item="[[item]]"
-                identity="[[identity]]"
-                on-to-detail="hashtag_to_detail"
-                class$="{{dealsopacity}}">
-              </sc-hashtagitem>
-            </template>
+            <div class="tester">
+              <p class="red">filter on iamprovider</p>
+              <template is="dom-repeat" items="{{otherdeals}}"
+                filter="claimedByme">
+                <sc-hashtagitem
+                  item="[[item]]"
+                  identity="[[identity]]"
+                  on-to-detail="hashtag_to_detail"
+                  class$="{{dealsopacity}}">
+                </sc-hashtagitem>
+              </template>
+            </div>
           </div>
 
+          <div class="testerzzz">
+            <p class="red">filter on providerfundingtx == false or undefined</p>
             <template is="dom-repeat" items="{{otherdeals}}"
               filter="notClaimed">
               <sc-hashtagitem
@@ -435,9 +444,10 @@ This is the component showing all requests of a certain hashtag. It contains a r
                 class$="{{dealsopacity}}">
               </sc-hashtagitem>
             </template>
+          </div>
 
-          <div class="tenspace"></div>
-          <div class="tenspace"></div>
+        <div class="tenspace"></div>
+        <div class="tenspace"></div>
 
 
       </div>
@@ -734,6 +744,67 @@ This is the component showing all requests of a certain hashtag. It contains a r
       },
 
       toWalletview: function(){
+
+
+        // this.sharedElements = {
+        //     'hero': this.$.balancebox,
+        //     };
+        //   this.animationConfig = {
+        //         'entry': [
+        //         // {
+        //         //   name: 'fade-in-animation',
+        //         //   node:this.$.homebalance,
+        //         //   toPage: this,
+        //         //   timing: {
+        //         //     duration: 200
+        //         //   }
+        //         // }, 
+        //         {
+        //           name: 'fade-in-animation',
+        //           node:this.$.homeusername,
+        //           toPage: this,
+        //           timing: {
+        //             duration: 200
+        //           }
+        //         },{
+        //           name: 'hero-animation',
+        //           id: 'hero',
+        //           toPage: this,
+        //           timing: {
+        //               duration: 600
+        //           }
+        //         }],
+
+        //         'exit': [
+        //         // {
+        //         //   name: 'fade-out-animation',
+        //         //   node:this.$.homebalance,
+        //         //   fromPage: this,
+        //         //   timing: {
+        //         //       duration: 200
+        //         //   }
+        //         // }, 
+        //         {
+        //         //   name: 'fade-out-animation',
+        //         //   node:this.$.homeusername,
+        //         //   fromPage: this,
+        //         //   timing: {
+        //         //       duration: 200
+        //         //   }
+        //         // },{
+        //           name: 'hero-animation',
+        //           id: 'hero',
+        //           fromPage: this,
+        //           timing: {
+        //               duration: 600
+        //           }
+        //         }]
+        //     };
+
+
+
+
+
          this.fire('redirect', {
           target: '/walletview'
         });
@@ -767,7 +838,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
       // },
 
         claimedByme: function(item) {
-            return !item.providerfundingtx == false || !item.providerfundingtx == undefined;
+            return item.iamprovider == true;
         },
 
 
