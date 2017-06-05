@@ -1,5 +1,4 @@
 <link rel="import" href="../../bower_components/polymer-redux/polymer-redux.html">
-<script src="../../node_modules/redux/dist/redux.min.js"></script>
 
 <script>
 
@@ -99,8 +98,11 @@
         }
     }
 
-    const store = Redux.createStore(reducer, /* preloadedState, */
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-    );
+    const store = Redux.createStore(reducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+/**
+* Redux behavior
+*
+* @polymerBehavior
+ */
     const ReduxBehaviour = PolymerRedux(store);
 </script>
