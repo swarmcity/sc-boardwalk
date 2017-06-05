@@ -4,7 +4,6 @@
   "fragments": [
     "src/bundle-terminal.html",
     "src/bundle-boardwalk.html",
-    "src/sc-makedeal/sc-makedeal.html",
     "src/sc-walletview/sc-walletview.html",
     "src/sc-swtconversion/sc-swtconversion.html",
     "src/sc-profile/sc-profile.html",
