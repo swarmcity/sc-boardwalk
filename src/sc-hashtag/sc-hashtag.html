@@ -45,7 +45,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 <!-- <link rel="import" href="../../bower_components/sc-style/sc-style.css" type="css"> -->
   <template>
    <sc-geohash geohash="{{geohash}}" locate-on-start></sc-geohash>
-   <sc-listeners id="listeners"></sc-listeners>
+   <sc-listeners id="listeners" on-updatebalance="_updatebalance"></sc-listeners>
     <style include="sc-styles">
       :host {
         display: block;
@@ -363,6 +363,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
           <div id="balancebox" class="balance_box" on-tap="toWalletview">
             <sc-balance
+              id = "balancecomponent"
               refcur="EUR"
               swtbalance="[[swtbalance]]"
               ethbalance="{{ethbalance}}"
@@ -621,6 +622,9 @@ This is the component showing all requests of a certain hashtag. It contains a r
         //this.dealslist = this.deals.slice(0);
       },
 
+      _updatebalance: function(){
+        this.fire('updatebalance');
+      },
 
       newitem_submitted: function(){
 
