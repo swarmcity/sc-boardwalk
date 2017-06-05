@@ -409,7 +409,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
           <div class="mydeals_repeater">
 
-            <p class="red">deals you responded to and were accepted as the provider</p>
+            <!-- <p class="red">deals you responded to and were accepted as the provider</p> -->
             <template is="dom-repeat" items="{{deals}}" filter="filter1" sort="sortOnTimestamp">
               <sc-hashtagitem
                 item="[[item]]"
@@ -419,7 +419,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
               </sc-hashtagitem>
             </template>
 
-            <p class="red">My active deals ( = engaged with someone else )</p>
+            <!-- <p class="red">My active deals ( = engaged with someone else )</p> -->
             <!-- <template is="dom-if" if="{{hasmydeals(mydeals)}}"> -->
             <template is="dom-repeat" items="{{deals}}" filter="filter2" sort="sortOnTimestamp">
               <sc-hashtagitem
@@ -431,7 +431,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
             </template>
             <!-- </template> -->
 
-            <p class="red">Other's deals I am engaged in</p>
+            <!-- <p class="red">Other's deals I am engaged in</p> -->
             <!-- <template is="dom-if" if="{{hasmydeals(mydeals)}}"> -->
             <template is="dom-repeat" items="{{deals}}" filter="filter3" sort="sortOnTimestamp">
               <sc-hashtagitem
@@ -443,7 +443,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
             </template>
 
             <!-- </template> -->
-            <p class="red">Last finished deals I engaged with ( mine or not mine ) </p>
+            <!-- <p class="red">Last finished deals I engaged with ( mine or not mine ) </p> -->
             <!-- <template is="dom-if" if="{{hasmydeals(mydeals)}}"> -->
             <template is="dom-repeat" items="{{deals}}" filter="filter4" sort="sortOnTimestamp">
               <sc-hashtagitem
@@ -455,8 +455,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
             </template>
           </div>
 
-          <div class="testerzzz">
-            <p class="red">Open deals of others - respondable by me</p>
+          <!-- <div class="testerzzz"> -->
+            <!-- <p class="red">Open deals of others - respondable by me</p> -->
             <template is="dom-repeat" items="{{deals}}" filter="filter5" sort="sortOnTimestamp">
               <sc-hashtagitem
                 item="[[item]]"
@@ -465,7 +465,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
                 class$="{{dealsopacity}}">
               </sc-hashtagitem>
             </template>
-          </div>
+          <!-- </div> -->
 
         <div class="tenspace"></div>
         <div class="tenspace"></div>
@@ -779,7 +779,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
         //         //   timing: {
         //         //     duration: 200
         //         //   }
-        //         // }, 
+        //         // },
         //         {
         //           name: 'fade-in-animation',
         //           node:this.$.homeusername,
@@ -804,7 +804,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
         //         //   timing: {
         //         //       duration: 200
         //         //   }
-        //         // }, 
+        //         // },
         //         {
         //         //   name: 'fade-out-animation',
         //         //   node:this.$.homeusername,
@@ -871,7 +871,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
         if (item.dealstate == 'created' ||item.dealstate == 'accepted' ||item.dealstate == 'indeal') return true;
          return false;
       },
-      
+
       // Other's deals I am engaged in
       filter3: function(item){
         if (this.isMyDeal(item)) return false;
@@ -879,8 +879,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
         if (item.iamprovider != true) return false;
         return true;
       },
-      
-      // Last finished deals I engaged with ( mine or not mine ) 
+
+      // Last finished deals I engaged with ( mine or not mine )
       filter4: function(item){
         if (item.dealstate != 'payout') return false;
         if (this.isMyDeal(item)) return true;
@@ -893,7 +893,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
         if (this.isMyDeal(item)) return false;
         return (item.dealstate == 'created');
       },
-      
+
       isMyDeal: function(item){
         return (item.seeker.pubkey === this.identity.pubkey);
       },
@@ -909,7 +909,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 //         return (item.dealstate == 'created');
 // //            return item.providerfundingtx == false || item.providerfundingtx == undefined;
 //       },
-        
+
         // this is a deal where I am the provider of
         // and that is in state accepted
         isAcceptedDeal: function(){
