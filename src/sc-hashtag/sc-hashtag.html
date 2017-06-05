@@ -867,8 +867,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
       // My active deals ( = engaged with someone else )
       filter2: function(item){
         //debugger;
-        if (!this.isMyDeal(item)) return false;
-        if (item.dealstate == 'created' ||item.dealstate == 'accepted' ||item.dealstate == 'indeal') return true;
+        //if (!this.isMyDeal(item)) return false;
+        if (item.dealstate == 'created' || item.dealstate == 'accepted' || item.dealstate == 'indeal') return true;
          return false;
       },
 

@@ -694,8 +694,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
 
     </style>
-    D={{requestdata.dealstate}}
-    D2={{requestdatadealstate}}
+    <!-- D={{requestdata.dealstate}}
+    D2={{requestdatadealstate}} -->
     <sc-shh web3="{{shhweb3}}"></sc-shh>
     <sc-listeners id="listeners"></sc-listeners>
     <sc-config config="{{config}}"></sc-config>
@@ -1050,7 +1050,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       },
 
       _getdata: function(){
-        
+
         var self = this;
         if (!this.deals || !this.requestid || !this.replyid){
           return;
@@ -1065,8 +1065,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         if (this.requestdatadealstate == 'indeal'){
           this.bottombg = 'greenback';
         }else{
-          this.bottombg = 'blueback'; 
-        }      
+          this.bottombg = 'blueback';
+        }
 
         if (request && request.replies){
           var reply = request.replies.find(function(item){
@@ -1321,9 +1321,9 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         // }
 
         if(this.requestdata.dealstate == 'indeal'){
-          this.$.chatbutton.enabled = true; 
+          this.$.chatbutton.enabled = true;
         }else{
-          this.$.chatbutton.enabled = false; 
+          this.$.chatbutton.enabled = false;
         }
 
         // if(this.requestdata.providerfundingtx_mined) {
