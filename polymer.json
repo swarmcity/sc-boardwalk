@@ -18,8 +18,10 @@
   "extraDependencies": [
     "manifest.json",
     "src/contracts/*",
+    "node_modules/redux/dist/redux.min.js",
     "bower_components/webcomponentsjs/webcomponents-lite.min.js",
     "bower_components/sc-style/sc-fonts/*",
-    "src/sc-enter/images/*"
+    "src/sc-enter/images/*",
+    "src/sc-ipfs/js-ipfs-api.js"
   ]
 }
