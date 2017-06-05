@@ -793,9 +793,11 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                   on-tap="tempTapto"
                   ></sc-avatar>
               </div>
-              <div class="chatbtn">
-                <paper-icon-button id="chatbutton" class="chatbtn_iconbtn shadow blue grey4" icon="sc-icons:babble" on-tap="toDealchat"></paper-icon-button>
-              </div>
+              <template is="dom-if" if="{{_is(dealstate,'indeal')}}">
+                <div class="chatbtn">
+                  <paper-icon-button id="chatbutton" class="chatbtn_iconbtn shadow blue grey4" icon="sc-icons:babble" on-tap="toDealchat"></paper-icon-button>
+                </div>
+              </template>
 
             </div>
 
@@ -1212,11 +1214,11 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           this.seekeraccept = true;
         }
 
-        if(this.requestdata.dealstate == 'indeal'){
-          this.$.chatbutton.enabled = true;
-        }else{
-          this.$.chatbutton.enabled = false;
-        }
+        // if(this.requestdata.dealstate == 'indeal'){
+        //   this.$.chatbutton.enabled = true;
+        // }else{
+        //   this.$.chatbutton.enabled = false;
+        // }
 
         // providerfundingtx check
         if(this.requestdata.providerfundingtx) {

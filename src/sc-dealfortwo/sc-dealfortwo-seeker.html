@@ -839,9 +839,11 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                       on-tap="tempTap"
                       ></sc-avatar>
                   </div>
-                  <div class="chatbtn">
-                    <paper-icon-button id="chatbutton" class="chatbtn_iconbtn shadow blue grey4" icon="sc-icons:babble" on-tap="toDealchat"></paper-icon-button>
-                  </div>
+                  <template is="dom-if" if="{{_is(requestdatadealstate,'indeal')}}">
+                    <div class="chatbtn">
+                      <paper-icon-button id="chatbutton" class="chatbtn_iconbtn shadow blue grey4" icon="sc-icons:babble" on-tap="toDealchat"></paper-icon-button>
+                    </div>
+                  </template>
                 </div>
 
 
@@ -1058,14 +1060,16 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         var request = this.deals.find(function(item){
             return item.id === self.requestid;
         });
+        
+        if (request){
+          this.requestdata = request;
+          this.requestdatadealstate = request.dealstate;
 
-        this.requestdata = request;
-        this.requestdatadealstate = request.dealstate;
-
-        if (this.requestdatadealstate == 'indeal'){
-          this.bottombg = 'greenback';
-        }else{
-          this.bottombg = 'blueback';
+          if (this.requestdatadealstate == 'indeal'){
+            this.bottombg = 'greenback';
+          }else{
+            this.bottombg = 'blueback';
+          }
         }
 
         if (request && request.replies){
@@ -1320,11 +1324,11 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         //   this.provideraccept = true;
         // }
 
-        if(this.requestdata.dealstate == 'indeal'){
-          this.$.chatbutton.enabled = true;
-        }else{
-          this.$.chatbutton.enabled = false;
-        }
+        // if(this.requestdata.dealstate == 'indeal'){
+        //   this.$.chatbutton.enabled = true;
+        // }else{
+        //   this.$.chatbutton.enabled = false;
+        // }
 
         // if(this.requestdata.providerfundingtx_mined) {
         //   debugger;
