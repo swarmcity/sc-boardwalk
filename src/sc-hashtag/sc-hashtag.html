@@ -407,7 +407,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
 
           <div class="mydeals_repeater">
-
             <template is="dom-repeat" items="{{deals}}" filter="filter1" sort="sortOnTimestamp">
               <sc-hashtagitem
                 item="[[item]]"
@@ -416,7 +415,9 @@ This is the component showing all requests of a certain hashtag. It contains a r
                 class$="{{dealsopacity}}">
               </sc-hashtagitem>
             </template>
+          </div>
 
+          <div class="mydeals_repeater">
             <template is="dom-repeat" items="{{deals}}" filter="filter2" sort="sortOnTimestamp">
               <sc-hashtagitem
                 item="[[item]]"
@@ -425,7 +426,9 @@ This is the component showing all requests of a certain hashtag. It contains a r
                 class$="{{dealsopacity}}">
               </sc-hashtagitem>
             </template>
+          </div>
 
+          <div class="mydeals_repeater">
             <template is="dom-repeat" items="{{deals}}" filter="filter3" sort="sortOnTimestamp">
               <sc-hashtagitem
                 item="[[item]]"
@@ -434,6 +437,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
                 class$="{{dealsopacity}}">
               </sc-hashtagitem>
             </template>
+          </div>
 
         <div class="tenspace"></div>
         <div class="tenspace"></div>
@@ -759,7 +763,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
       toNotifs: function(){
         this.fire('to-notifications');
       },
-     
+
       // items I'm seeker of, whatever state their in - except payout state deals
       filter1: function(item){
         if (item.dealstate == 'payout') return false;
@@ -767,7 +771,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
       },
 
       // deals where I was accepted as provider - except payout state deals
-      // also deals that are in-deal 
+      // also deals that are in-deal
       filter2: function(item){
 
         // deals that are done are not shown
