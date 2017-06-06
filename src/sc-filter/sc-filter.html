@@ -162,7 +162,7 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
           <div class="inner_sliderbox horizont centercenter">
             <div class="horizont centercenter flex">
               <iron-icon icon="sc-icons:location_edgeless" class="slidericon grey3"></iron-icon>
-              <paper-slider noink id="ratings" max="6" value="{{range}}"></paper-slider>
+              <paper-slider noink id="ratings" min="1" max="6" value="{{range}}" immediate-value="{{immediaterange}}"></paper-slider>
               <iron-icon icon="sc-icons:globe_edgeless" class="slidericon grey3"></iron-icon>
             </div>
             <paper-icon-button icon="sc-icons:v" on-tap="toggleSlider" class="grey3 leftmargers" noink></paper-icon-button>
@@ -209,7 +209,7 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
           <div class="inner_sliderbox horizont centercenter totalwidth darker">
             <div class="horizont centercenter flex">
               <iron-icon icon="sc-icons:location_edgeless" class="slidericon grey3"></iron-icon>
-              <paper-slider noink id="ratings" max="6" value="{{range}}" immediate-value="{{range}}"></paper-slider>
+              <paper-slider noink id="ratings" min="1" max="6" value="{{range}}" immediate-value="{{immediaterange}}"></paper-slider>
               <iron-icon icon="sc-icons:globe_edgeless" class="slidericon grey3"></iron-icon>
             </div>
             <paper-icon-button icon="sc-icons:v" on-tap="toggleSlider" class="grey3 leftmargers" noink></paper-icon-button>
@@ -284,7 +284,6 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
         range: {
           type: Number,
           value:2,
-          observer:'_rangetoDistance',
           notify: true
         },
 
@@ -292,16 +291,19 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
           type: String,
           observer:'_rangetoDistance'
         }
-
-
       },
+      observers: [
+        '_rangetoDistance(immediaterange)"'
+      ],
 
       ready: function(){
+        this.immediaterange = this.range;
         this.filteroptions = [
           'Option 1',
           'Option 2',
           'Option 3'
         ];
+        this._rangetoDistance();
 
         // this.distance = 40;
       },
@@ -365,7 +367,7 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
 
       _rangetoDistance: function(){
 
-        switch(this.range) {
+        switch(this.immediaterange) {
             case 0:
                 this.distance = "In your area"
                 this.distance_n = "(+/-125m)";

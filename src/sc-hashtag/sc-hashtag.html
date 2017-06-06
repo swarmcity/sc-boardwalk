@@ -5,17 +5,14 @@
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/neon-animation/neon-animation.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
-
 <link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
 <link rel="import" href="../../bower_components/sc-style/sc-style.html">
-
 <link rel="import" href="../sc-avatar/sc-avatar.html">
 <link rel="import" href="../sc-username/sc-username.html">
 <link rel="import" href="../sc-balance/sc-balance.html">
 <link rel="import" href="../sc-geohash/sc-geohash.html">
 <link rel="import" href="../sc-hashtagitem/sc-hashtagitem.html">
 <link rel="import" href="../sc-newitem/sc-newitem.html">
-<!-- <link rel="import" href="../sc-shh/sc-shh.html"> -->
 <link rel="import" href="../sc-itemdetail/sc-itemdetail.html">
 <link rel="import" href="../sc-itemreply/sc-itemreply.html">
 <link rel="import" href="../sc-redux/sc-redux.html">
@@ -25,7 +22,6 @@
 <link rel="import" href="../sc-helpers/sc-helpers.html">
 <link rel="import" href="../sc-dealitem/sc-dealitem.html">
 <link rel="import" href="../sc-listeners/sc-listeners.html">
-
 
 <script type="text/javascript" src="../../bower_components/uuid-js/lib/uuid.js"></script>
 
@@ -42,10 +38,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 -->
 
 <dom-module id="sc-hashtag">
-<!-- <link rel="import" href="../../bower_components/sc-style/sc-style.css" type="css"> -->
   <template>
-   <sc-geohash geohash="{{geohash}}" enabled="{{enabled}}"></sc-geohash>
-   <sc-listeners id="listeners" on-updatebalance="_updatebalance"></sc-listeners>
     <style include="sc-styles">
       :host {
         display: block;
@@ -101,11 +94,9 @@ This is the component showing all requests of a certain hashtag. It contains a r
         cursor: pointer;
       }
 
-
       sc-hashtagitem {
         width: 100%;
         max-width: 600px;
-/*        margin: 10px 0px;*/
         transition: all 0.25s linear;
         border-bottom: 1px solid rgba(0,0,0,0.05);
       }
@@ -121,7 +112,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
         max-width: 600px;
         margin: 0px;
       }
-
 
       paper-icon-button.addbtn {
         position: fixed;
@@ -139,8 +129,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
         box-sizing:border-box;
         color: var(--sc-blue);
       }
-
-
 
       .default {
         display: block;
@@ -192,7 +180,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
         opacity: 0.25;
 
       }
-
 
     @media all and (min-width: 0) and (max-width: 540px) {
 
@@ -251,8 +238,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
         width: 32px;
         height: 36px;
       }
-
-
 
       paper-icon-button.addbtn {
         position: fixed;
@@ -315,18 +300,21 @@ This is the component showing all requests of a certain hashtag. It contains a r
         width: 100%;
         margin: 20px 0px 30px 0px;
       }
-
     }
 
     </style>
     <sc-config config="{{config}}"></sc-config>
     <sc-helpers id="helpers"></sc-helpers>
-
+    <sc-geohash on-geohashchanged="_updatelistener" geohash="{{geohash}}" enabled="{{enabled}}"></sc-geohash>
+   <sc-listeners
+    id="listeners"
+    on-updatebalance="_updatebalance"
+    geohash="{{filter_geohash}}"
+    hashtag="{{filter_hashtag}}"
+    ></sc-listeners>
     <iron-media-query query="(min-width:0px) and (max-width: 540px)" query-matches="{{phoneview}}"></iron-media-query>
 
     <app-route route="{{route}}" pattern="/:hashtag/:action" data="{{data}}" tail="{{subroute}}"></app-route>
-    <!-- <app-route route="{{subroute}}" pattern="/:itemid" data="{{datasubroute}}"></app-route> -->
-
 
     <div class="avatar_username_balance_content totalwidth">
         <div class="avatar_username_balance">
@@ -347,21 +335,11 @@ This is the component showing all requests of a certain hashtag. It contains a r
             size="small"
             on-tap="toProfile"
             ></sc-username>
-<!--             <template is="dom-if" if="{{!lastbackup}}">
-              <div class="warningbackup blue vertic centercenter"><p class="bold blue">!</p></div>
-            </template> -->
+
             <template is="dom-if" if="{{!phoneview}}">
               <sc-notificationbadge on-to-notifications="toNotifs" class="notifbadge noSelect" notifnumber="{{notifnumber}}" dummynotifications="{{notifs}}"></sc-notificationbadge>
             </template>
           </div>
-<!--           <template is="dom-if" if="{{!phoneview}}">
-            <div class="pubk" on-tap="toProfile">
-              <p>{{pubkey}}</p>
-            </div>
-          </template>
- -->
-
-
 
           <div id="balancebox" class="balance_box" on-tap="toWalletview">
             <sc-balance
@@ -387,15 +365,16 @@ This is the component showing all requests of a certain hashtag. It contains a r
         </div>
 
         <!-- filterbox -->
-        <!-- <div class="filterbox">
+        <div class="filterbox">
           <sc-filter id="locationfilter" currentid="locationfilter" location range="{{range}}"></sc-filter>
-        </div> -->
+        </div>
 
+  <!--  enabled="{{_is(data.action,'list')}}" -->
         <sc-newitem
           data-action="newitem"
-          enabled="{{_is(data.action,'list')}}"
+          geohash="[[geohash]]"
           identity="[[identity]]"
-          hashtag="[[data.hashtag]]"
+          hashtagaddress="[[hashtagaddress]]"
           swtbalance="[[swtbalance]]"
           on-back="newitem_cancel"
           on-cancel=""
@@ -458,8 +437,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       observers: [
         '_routedata(data)',
-        '_log(range)',
-        '_geohash(geohash)'
+        '_updatelistener(data.hashtag,range,geohash)'
       ],
       properties: {
 
@@ -472,7 +450,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
           type: Boolean,
           value: false,
         },
-
         route: {
           type: Object,
           notify: true,
@@ -486,14 +463,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
           type: Array,
           statePath: 'deals',
           observer: '_deals'
-        },
-        mydeals: {
-          type: Array,
-          statePath: 'mydeals',
-        },
-        otherdeals: {
-          type: Array,
-          statePath: 'otherdeals',
         },
         /**
          * `phoneview` is a boolean to determine the viewport.
@@ -513,7 +482,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
               'hero': this.$.hashtagavatar,
               'balance': this.$.balancebox,
               'currenttag': this.$.currenttag
-
             }
           }
         },
@@ -526,17 +494,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
           value: function() {
             return {
               'entry': [{
-              //   name: 'slide-from-left-animation',
-              //   node: this.$.pagecontent,
-              //   toPage: this,
-              //   timing: {
-              //     duration: 700
-              //   }
-              // }, {
-
-
-
-
                 name: 'hero-animation',
                 id: 'currenttag',
                 toPage: this,
@@ -544,7 +501,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
                   duration: 600
                 }
               }, {
-
                 name: 'hero-animation',
                 id: 'hero',
                 toPage: this,
@@ -558,21 +514,9 @@ This is the component showing all requests of a certain hashtag. It contains a r
                 timing: {
                   duration: 600
                 }
-
-
               }],
 
               'exit': [{
-              //   name: 'slide-down-animation',
-              //   node: this.$.pagecontent,
-              //   fromPage: this,
-              //   timing: {
-              //     duration: 700
-              //   }
-              // }, {
-
-
-
                 name: 'hero-animation',
                 id: 'currenttag',
                 fromPage: this,
@@ -594,13 +538,11 @@ This is the component showing all requests of a certain hashtag. It contains a r
                 timing: {
                   duration: 600
                 }
-
-
-
               }]
             }
           },
         },
+
         /**
          * `requestsloaded` is a boolean to determine wether the whisper-msgs are received by this component.
          */
@@ -608,7 +550,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
           type: Boolean,
           value: false
         },
-
       },
 
       _is: function(a, b) {
@@ -616,6 +557,24 @@ This is the component showing all requests of a certain hashtag. It contains a r
           b = true;
         }
         return a === b;
+      },
+
+      _updatelistener: function(){
+
+        this.hashtagaddress = this.config.hashtagcontracts[this.data.hashtag];
+
+        if (!this.range || !this.geohash || !this.data || !this.data.hashtag){
+          return;
+        }
+
+        this.filter_geohash = this.geohash.substring(0,7 - this.range)
+        this.filter_hashtag = this.hashtagaddress;
+
+        console.log('geohash         =',this.geohash);
+        console.log('range           =',this.range);
+        console.log('geohash filtered=',this.filter_geohash);
+
+        //console.log('update listeners range=',this.range,' geohash=',this.geohash,' hashtag=',this.config.hashtagcontracts[this.data.hashtag])
       },
 
       _deals: function(){
@@ -653,33 +612,10 @@ This is the component showing all requests of a certain hashtag. It contains a r
         if (this.data && this.data.hashtag) {
           this.hashtag = this.data.hashtag;
           //debugger;
-          this.$.listeners._starthastaglistener(this.hashtag);
+          //this.$.listeners._starthastaglistener(this.hashtag);
+          //console.log()
         }
       },
-
-      hasdeals: function(deals){
-          // return false;
-        if (!deals || deals.length === 0){
-          // debugger;
-          return false
-        }else{
-          //debugger;
-          return true;
-        }
-      },
-
-      hasmydeals: function(mydeals){
-          // return false;
-        if (!mydeals || mydeals.length === 0){
-          // debugger;
-          return false
-        }else{
-          //debugger;
-          return true;
-        }
-      },
-
-
 
       ready: function() {
         this._checkSize();
@@ -687,7 +623,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
       },
 
       attached: function(){
-        this.hasgeohash = false;
+        //this.hasgeohash = false;
       },
 
       _web3: function() {
@@ -696,7 +632,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       _geohash: function() {
         console.log('sc-hashtag -> your geohash is', this.geohash);
-        this.hasgeohash = true;
+        //this.hasgeohash = true;
         //this._starthastaglistener();
       },
 
@@ -732,13 +668,13 @@ This is the component showing all requests of a certain hashtag. It contains a r
         this.fire('leave');
       },
 
-      // my deal -> to dealfortwo
-      hashtag_to_dealfortwo: function(e) {
-        //debugger;
-        this.fire('redirect', {
-          target: '/dealfortwoseeker/' + this.hashtag + '/' + e.detail.id + '/' + e.detail.selectedreply
-        });
-      },
+      // // my deal -> to dealfortwo
+      // hashtag_to_dealfortwo: function(e) {
+      //   //debugger;
+      //   this.fire('redirect', {
+      //     target: '/dealfortwoseeker/' + this.hashtag + '/' + e.detail.id + '/' + e.detail.selectedreply
+      //   });
+      // },
 
       toWalletview: function(){
          this.fire('redirect', {
