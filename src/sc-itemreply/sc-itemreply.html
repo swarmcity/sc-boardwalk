@@ -9,6 +9,8 @@
 <link rel="import" href="../sc-redux/sc-redux.html">
 <link rel="import" href="../sc-shh/sc-shh.html">
 <link rel="import" href="../sc-hashtagcontract/sc-hashtagrep.html">
+<link rel="import" href="../sc-tokenbalanceformatter/sc-tokenbalanceformatter.html">
+
 
 <!--
 `sc-itemreply`
@@ -309,7 +311,7 @@ This component shows a reply on a request.
             <p class="grey2b light small"><moment-js date="{{reply.replytime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
 
           </div>
-          <p class="msg totalwidth grey4"> {{reply.msg}}<!-- <span class="bold"> for {{item.amount}} SWT</span> --></p>
+          <p class="msg totalwidth grey4"> {{reply.msg}} <span class="bold"> for <sc-tokenbalanceformatter value="{{reply.replyamount}}"></sc-tokenbalanceformatter></span></p>
 
           <template is="dom-if" if="{{phoneview}}">
             <template is="dom-if" if="{{btnshow}}">

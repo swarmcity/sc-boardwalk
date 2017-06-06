@@ -177,35 +177,15 @@ This components allow a Swarm Citizen to reply on a request.
 
       <iron-collapse id="replyform" class="totalwidth">
           <div class="totalwidth vertic centercenter">
-
-
-<!--               <div class=" totalwidth horizont center startjust">
-                <p>Hank Moovy is offering 1 SWT.</p>
-                <a href="">Make a counteroffer</a>
-              </div> -->
-
-
-<!--               <div class="totalwidth horizont end startjust">
-                <paper-input label="What offer would you accept?" class="yourreplyamount swtamount grey2unfocus" value="{{replyamount}}">
-                <div suffix class="yellow bold swtwithoffer">SWT</div>
-                </paper-input>
-              </div> -->
-
-
-                <div class="horizont end startjust totalwidth">
-                  <paper-input id="amountinput" label="Your counteroffer" class="swtamount" value="{{replyamount}}" type="number">
-                  </paper-input>
-                  <p class="swtwithoffer bold">SWT</p>
-                </div>
-
-
-
-<!--             </div> -->
-
-            <div class="totalwidth confirmbtns">
-              <iron-icon icon="sc-icons:decline" class="grey3" on-tap="toggleForm">close collapse</iron-icon>
-              <paper-icon-button id="replybtn" icon="sc-icons:v" noink class="white medium blueback shadow confirmbtn" on-tap="submitReply"> Reply with offer</paper-icon-button>
-            </div>
+          <div class="horizont end startjust totalwidth">
+            <paper-input id="amountinput" label="Your counteroffer" class="swtamount" value="{{replyamount}}" type="number">
+            </paper-input>
+            <p class="swtwithoffer bold">SWT</p>
+          </div>
+          <div class="totalwidth confirmbtns">
+            <iron-icon icon="sc-icons:decline" class="grey3" on-tap="toggleForm">close collapse</iron-icon>
+            <paper-icon-button id="replybtn" icon="sc-icons:v" noink class="white medium blueback shadow confirmbtn" on-tap="submitReply"> Reply with offer</paper-icon-button>
+          </div>
       </div>
 
   </iron-collapse>
@@ -304,7 +284,7 @@ This components allow a Swarm Citizen to reply on a request.
 
         amount = amount * this.$.config.swtinputunit;
 
-        //debugger;
+        debugger;
 
         var message = {
           type: 'dealfortwo-request-reply',
@@ -317,7 +297,7 @@ This components allow a Swarm Citizen to reply on a request.
             pubkey: this.identity.pubkey
           },
           reply: this.replytext,
-          replyamount: this.replyamount,
+          replyamount: amount,
           replytime: Date.now()
         };
 
