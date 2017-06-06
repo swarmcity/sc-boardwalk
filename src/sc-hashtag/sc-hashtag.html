@@ -407,7 +407,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
 
           <div class="mydeals_repeater">
-
+1
             <template is="dom-repeat" items="{{deals}}" filter="filter1" sort="sortOnTimestamp">
               <sc-hashtagitem
                 item="[[item]]"
@@ -416,7 +416,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
                 class$="{{dealsopacity}}">
               </sc-hashtagitem>
             </template>
-
+<br>2<br>
             <template is="dom-repeat" items="{{deals}}" filter="filter2" sort="sortOnTimestamp">
               <sc-hashtagitem
                 item="[[item]]"
@@ -425,7 +425,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
                 class$="{{dealsopacity}}">
               </sc-hashtagitem>
             </template>
-          
+<br>3<br>
             <template is="dom-repeat" items="{{deals}}" filter="filter3" sort="sortOnTimestamp">
               <sc-hashtagitem
                 item="[[item]]"
@@ -766,7 +766,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
         return (this.isMyDeal(item));
       },
 
-      // the deals I accepted as provider - except payout state deals
+      // deals where I was accepted as provider - except payout state deals
+      // also deals that are in-deal 
       filter2: function(item){
 
         // deals that are done are not shown
@@ -775,7 +776,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
         // the seeker has chosen me , but I havent accepted this deal
         if (item.ireplied==true && item.dealstate == 'accepted') return true;
 
-        // I have accepted the deal
+        // I have accepted the deal ( so we're in deal )
         if (item.iamprovider == true) return true;
 
         return false;
