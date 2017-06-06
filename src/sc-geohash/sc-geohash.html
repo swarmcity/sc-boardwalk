@@ -17,23 +17,34 @@
         },
         locateOnStart: {
           type: Boolean,
+        },
+        enabled: {
+          type: Boolean,
+          observer: '_enabled'
+        }
+      },
+
+      _enabled: function(){
+        if (this.enabled){
+          console.log('sc-geohash -> is now enabled');
+          if ("geolocation" in navigator) {
+            /* geolocation is available */
+            this.geolocation = true;
+          } else {
+            /* geolocation IS NOT available */
+            console.log('sc-geohash -> geolocation is not available in this browser.');
+          }
+          if (this.geolocation){
+            this.getCurrentGeohash();
+          }          
         }
       },
 
       ready: function(){
-        if ("geolocation" in navigator) {
-          /* geolocation is available */
-          this.geolocation = true;
-        } else {
-          /* geolocation IS NOT available */
-          console.log('sc-geohash -> geolocation is not available in this browser.');
-        }
-        if (this.geolocation && this.locateOnStart){
-          this.getCurrentGeohash();
-        }
+        this.enabled = this.locateOnStart;
       },
 
-      // looks up your LAT/LNG from the 
+      // looks up your LAT/LNG from the geolocator & return  
       getCurrentGeohash: function(cb){
         var self=this;
         if (!this.geolocation){

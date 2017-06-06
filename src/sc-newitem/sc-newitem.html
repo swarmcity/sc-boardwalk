@@ -27,7 +27,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
 <dom-module id="sc-newitem">
   <template>
-    <sc-geohash geohash="{{geohash}}" locate-on-start></sc-geohash>
+    <sc-geohash geohash="{{geohash}}" enabled="{{enabled}}"></sc-geohash>
     <sc-dealfortwo id="dealfortwo"></sc-dealfortwo>
     <sc-web3 id="web3" web3="{{web3}}"></sc-web3>
     <sc-config config="{{config}}"></sc-config>
@@ -239,6 +239,11 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       ],
 
       properties: {
+
+        enabled: {
+          type: Boolean,
+        },
+
         identity: {
           type: Object,
           statePath: 'identity',

@@ -190,6 +190,7 @@
 
     <sc-hashtag
       data-page="hashtag"
+      enabled="{{_is(routedata.page,'hashtag')}}"
       id="hashtag"
       web3="[[web3]]"
       route="{{pageTail}}"
@@ -292,6 +293,13 @@
 
       ready: function(){
         //this.transitionto('/p1');
+      },
+
+      _is: function(a, b) {
+        if (b === undefined){
+          b = true;
+        }
+        return a === b;
       },
 
       attached: function(){

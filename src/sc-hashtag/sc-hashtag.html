@@ -44,7 +44,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 <dom-module id="sc-hashtag">
 <!-- <link rel="import" href="../../bower_components/sc-style/sc-style.css" type="css"> -->
   <template>
-   <!-- <sc-geohash geohash="{{geohash}}" locate-on-start></sc-geohash> -->
+   <sc-geohash geohash="{{geohash}}" enabled="{{enabled}}"></sc-geohash>
    <sc-listeners id="listeners" on-updatebalance="_updatebalance"></sc-listeners>
     <style include="sc-styles">
       :host {
@@ -319,15 +319,13 @@ This is the component showing all requests of a certain hashtag. It contains a r
     }
 
     </style>
-
-    <!-- <sc-shh web3="{{shhweb3}}"></sc-shh> -->
     <sc-config config="{{config}}"></sc-config>
     <sc-helpers id="helpers"></sc-helpers>
 
     <iron-media-query query="(min-width:0px) and (max-width: 540px)" query-matches="{{phoneview}}"></iron-media-query>
 
     <app-route route="{{route}}" pattern="/:hashtag/:action" data="{{data}}" tail="{{subroute}}"></app-route>
-    <app-route route="{{subroute}}" pattern="/:itemid" data="{{datasubroute}}"></app-route>
+    <!-- <app-route route="{{subroute}}" pattern="/:itemid" data="{{datasubroute}}"></app-route> -->
 
 
     <div class="avatar_username_balance_content totalwidth">
@@ -395,6 +393,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
         <sc-newitem
           data-action="newitem"
+          enabled="{{_is(data.action,'list')}}"
           identity="[[identity]]"
           hashtag="[[data.hashtag]]"
           swtbalance="[[swtbalance]]"
@@ -467,6 +466,11 @@ This is the component showing all requests of a certain hashtag. It contains a r
         web3: {
           type: Object,
           observer: '_web3'
+        },
+
+        enabled: {
+          type: Boolean,
+          value: false,
         },
 
         route: {
@@ -607,6 +611,13 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       },
 
+      _is: function(a, b) {
+        if (b === undefined){
+          b = true;
+        }
+        return a === b;
+      },
+
       _deals: function(){
         this.dealslist = [];
         for (var i=0;i<this.deals.length;i++){
@@ -730,67 +741,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
       },
 
       toWalletview: function(){
-
-
-        // this.sharedElements = {
-        //     'hero': this.$.balancebox,
-        //     };
-        //   this.animationConfig = {
-        //         'entry': [
-        //         // {
-        //         //   name: 'fade-in-animation',
-        //         //   node:this.$.homebalance,
-        //         //   toPage: this,
-        //         //   timing: {
-        //         //     duration: 200
-        //         //   }
-        //         // },
-        //         {
-        //           name: 'fade-in-animation',
-        //           node:this.$.homeusername,
-        //           toPage: this,
-        //           timing: {
-        //             duration: 200
-        //           }
-        //         },{
-        //           name: 'hero-animation',
-        //           id: 'hero',
-        //           toPage: this,
-        //           timing: {
-        //               duration: 600
-        //           }
-        //         }],
-
-        //         'exit': [
-        //         // {
-        //         //   name: 'fade-out-animation',
-        //         //   node:this.$.homebalance,
-        //         //   fromPage: this,
-        //         //   timing: {
-        //         //       duration: 200
-        //         //   }
-        //         // },
-        //         {
-        //         //   name: 'fade-out-animation',
-        //         //   node:this.$.homeusername,
-        //         //   fromPage: this,
-        //         //   timing: {
-        //         //       duration: 200
-        //         //   }
-        //         // },{
-        //           name: 'hero-animation',
-        //           id: 'hero',
-        //           fromPage: this,
-        //           timing: {
-        //               duration: 600
-        //           }
-        //         }]
-        //     };
-
-
-
-
-
          this.fire('redirect', {
           target: '/walletview'
         });
@@ -809,21 +759,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
       toNotifs: function(){
         this.fire('to-notifications');
       },
-      // isClaimedByMe: function(item) {
-      //   if (this.isMyDeal(item)){
-      //     return false;
-      //   }
-      //   return !item.providerfundingtx == false || !item.providerfundingtx == undefined;
-      // },
-
-      // notisClaimedByMe: function(item) {
-      //   if (this.isMyDeal(item)){
-      //     return false;
-      //   }
-      //   return item.providerfundingtx == false || item.providerfundingtx == undefined;
-      // },
-
-
+     
       // items I'm seeker of, whatever state their in - except payout state deals
       filter1: function(item){
         if (item.dealstate == 'payout') return false;
@@ -832,8 +768,10 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       // the deals I accepted as provider - except payout state deals
       filter2: function(item){
-      //return true;
+
+        // deals that are done are not shown
         if (item.dealstate == 'payout') return false;
+
         // the seeker has chosen me , but I havent accepted this deal
         if (item.ireplied==true && item.dealstate == 'accepted') return true;
 
@@ -845,22 +783,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
         // return (item.iamprovider == true);
       },
 
-      // // Other's deals I am engaged in
-      // filter3: function(item){
-      //   if (this.isMyDeal(item)) return false;
-      //   if (item.dealstate == 'payout') return false;
-      //   if (item.iamprovider != true) return false;
-      //   return true;
-      // },
-
-      // // Last finished deals I engaged with ( mine or not mine )
-      // filter4: function(item){
-      //   if (item.dealstate != 'payout') return false;
-      //   if (this.isMyDeal(item)) return true;
-      //   if (!this.isMyDeal(item) && item.iamprovider == true) return true;
-      //   return false;
-      // },
-
       // Open deals of others - respondable by me
       filter3: function(item){
         if (this.isMyDeal(item)) return false;
@@ -871,24 +793,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
         return (item.seeker.pubkey === this.identity.pubkey);
       },
 
-        // isClaimedByMe: function(item) {
-        //     return item.iamprovider == true;
-        // },
-
-
-//       isClaimable: function(item) {
-//         //debugger;
-//         if (this.isMyDeal(item)) return false;
-//         return (item.dealstate == 'created');
-// //            return item.providerfundingtx == false || item.providerfundingtx == undefined;
-//       },
-
-        // this is a deal where I am the provider of
-        // and that is in state accepted
-        isAcceptedDeal: function(){
-          if (this.isMyDeal(item)) return false;
-          return (item.dealstate == 'accepted');
-        },
 
       opacityHalf: function(){
         this.dealsopacity = "half";
