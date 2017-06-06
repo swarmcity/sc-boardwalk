@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/swarmcity/sc-boardwalk#readme",
   "dependencies": {
+    "polymer-cli": "^1.1.0",
     "redux": "^3.6.0"
   }
 }
