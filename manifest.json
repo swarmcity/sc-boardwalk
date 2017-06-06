@@ -1,6 +1,6 @@
 {
-  "name": "sc-boardwalk",
-  "short_name": "sc-boardwalk",
+  "name": "Swarm City",
+  "short_name": "Swarm City",
   "description": "swarm.city DAPP",
   "start_url": "/",
   "display": "standalone",
@@ -36,6 +36,6 @@
       "density": 4.0
     }],
   "background_color": "#FFF",
-  "theme_color": "#EFD96F",
+  "theme_color": "#FFF",
   "orientation": "landscape"
 }
