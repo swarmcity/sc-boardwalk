@@ -964,9 +964,9 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       },
 
       _hashtag: function(){
-        if (this.routedata.hashtag){
-          this.$.listeners._starthastaglistener(this.routedata.hashtag);
-        }
+        // if (this.routedata.hashtag){
+        //   this.$.listeners._starthastaglistener(this.routedata.hashtag);
+        // }
       },
 
       _getdata: function(){
@@ -1034,6 +1034,10 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
             self.shhweb3.encodetopic(payload.type),
             self.shhweb3.encodetopic(self.requestdata.hashtag),
             self.shhweb3.encodetopic(payload.id),
+            self.shhweb3.encodetopic('all'),
+            self.shhweb3.encodetopic('all'),
+            self.shhweb3.encodetopic('all'),
+            self.shhweb3.encodetopic('all'),                  
           ];
 
           if (self.shhweb3) {

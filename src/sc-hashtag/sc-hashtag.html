@@ -360,7 +360,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
             <div class="symbol">
               <p class="semibold">#</p>
             </div>
-            <p class="bold wordbreak">{{hashtag}}</p>
+            <p class="bold wordbreak">{{_getHashTagName(hashtag)}}</p>
           </div>
         </div>
 
@@ -369,7 +369,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
           <sc-filter id="locationfilter" currentid="locationfilter" location range="{{range}}"></sc-filter>
         </div>
 
-  <!--  enabled="{{_is(data.action,'list')}}" -->
         <sc-newitem
           data-action="newitem"
           geohash="[[geohash]]"
@@ -382,8 +381,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
           on-newitem-open="opacityHalf"
           on-newitem-close="opacityFull">
         </sc-newitem>
-
-
 
           <div class="mydeals_repeater">
             <template is="dom-repeat" items="{{deals}}" filter="filter1" sort="sortOnTimestamp">
@@ -563,9 +560,13 @@ This is the component showing all requests of a certain hashtag. It contains a r
         return a === b;
       },
 
+      _getHashTagName: function(hashtagaddress){
+        return this.config.hashtagcontractToName(hashtagaddress);
+      },
+
       _updatelistener: function(){
 
-        this.hashtagaddress = this.config.hashtagcontracts[this.data.hashtag];
+        this.hashtagaddress = this.data.hashtag;
 
         if (!this.range || !this.geohash || !this.data || !this.data.hashtag){
           return;
@@ -578,7 +579,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
         console.log('range           =',this.range);
         console.log('geohash filtered=',this.filter_geohash);
 
-        //console.log('update listeners range=',this.range,' geohash=',this.geohash,' hashtag=',this.config.hashtagcontracts[this.data.hashtag])
       },
 
       _deals: function(){
