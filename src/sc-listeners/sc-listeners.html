@@ -59,6 +59,14 @@
         //  id: <dealID>,
         //  <any_field>: <any_value>  
         // }
+
+        clear_deals: function(mutation){  
+          return {
+            type: 'DEALS',
+            deals: []
+          };
+        },  
+
         update_deal: function(mutation){
           
           let deals = this.deals.slice(0);
@@ -440,6 +448,9 @@
 
           console.log("sc-listeners: channelswitch, start listening to", mytopics);
           this.filter.watch(this._processmessage.bind(this));
+
+          // clear deals... pretty rough...(wss)
+          this.dispatch('clear_deals');
 
           //sc_listeners_listening = true;
 
