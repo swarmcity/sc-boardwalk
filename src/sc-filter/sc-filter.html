@@ -284,7 +284,8 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
         range: {
           type: Number,
           value:2,
-          notify: true
+          notify: true,
+          observer:'toggleSlider'
         },
 
         distance: {
@@ -353,7 +354,14 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
       },
 
       toggleSlider: function(){
+
+
         var sliderbox = this.shadowRoot.getElementById('sliderbox');
+
+        if (!sliderbox){
+          return;
+        }
+
         console.log(sliderbox);
         sliderbox.toggle();
 
