@@ -87,9 +87,9 @@
         if (!this.status && this.arcbalance != undefined && this.swtbalance != undefined && this.ethbalance != undefined){
           console.log('vals:',this.swtbalance,this.ethbalance,this.arcbalance);
           this.dispatch('update_wallet', {
-            swtbalance: this.swtbalance,
-            ethbalance: this.ethbalance,
-            arcbalance: this.arcbalance,
+            swtbalance: this.swtbalance.toNumber(10),
+            ethbalance: this.ethbalance.toNumber(10),
+            arcbalance: this.arcbalance.toNumber(10),
           });
           this.status = 'ready';
           this.fire('ready');
