@@ -320,14 +320,20 @@ This components allow a Swarm Citizen to reply on a request.
           replyamount: this.replyamount,
           replytime: Date.now()
         };
-
+debugger;
 
         var topics = [
           this.shhweb3.encodetopic('swarmcity-v1'),
           this.shhweb3.encodetopic('dealfortwo-request-reply'),
           this.shhweb3.encodetopic(message.hashtag),
-          this.shhweb3.encodetopic(message.dealid),
+          this.shhweb3.encodetopic(message.id),
+          this.shhweb3.encodetopic('all'),
+          this.shhweb3.encodetopic('all'),
+          this.shhweb3.encodetopic('all'),
+          this.shhweb3.encodetopic('all'),
         ];
+        
+        this.shhweb3.dumptopics(topics);
 
         var options = {
           "from": this.shhweb3.identity,

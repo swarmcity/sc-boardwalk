@@ -430,17 +430,17 @@
             null,
             self.shhweb3.encodetopic(this.hashtag),
             null, // ID
-            this.geohash.length > 1 ? self.shhweb3.encodetopic(this.geohash.slice(0, 1)) : null,
-            this.geohash.length > 2 ? self.shhweb3.encodetopic(this.geohash.slice(0, 2)) : null,
-            this.geohash.length > 3 ? self.shhweb3.encodetopic(this.geohash.slice(0, 3)) : null,
-            this.geohash.length > 4 ? self.shhweb3.encodetopic(this.geohash.slice(0, 4)) : null,
+            [self.shhweb3.encodetopic('all'),this.geohash.length > 1 ? self.shhweb3.encodetopic(this.geohash.slice(0, 1)) : null],
+            [self.shhweb3.encodetopic('all'),this.geohash.length > 2 ? self.shhweb3.encodetopic(this.geohash.slice(0, 2)) : null],
+            [self.shhweb3.encodetopic('all'),this.geohash.length > 3 ? self.shhweb3.encodetopic(this.geohash.slice(0, 3)) : null],
+            [self.shhweb3.encodetopic('all'),this.geohash.length > 4 ? self.shhweb3.encodetopic(this.geohash.slice(0, 4)) : null],
             // this.geohash.length > 1 ? self.shhweb3.encodetopic(this.geohash.slice(0, 1)) : null,
             // self.shhweb3.encodetopic(this.geohash.slice(0, 2)),
             // self.shhweb3.encodetopic(this.geohash.slice(0, 3)),
             // self.shhweb3.encodetopic(this.geohash.slice(0, 4)),
           ];
 
-          self.shhweb3.dumptopics(mytopics);
+          //self.shhweb3.dumptopics(mytopics);
 
           this.filter = self.shhweb3.shh.filter({
             "topics": mytopics,
