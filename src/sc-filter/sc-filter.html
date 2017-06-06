@@ -13,7 +13,7 @@
 <!--
 `sc-filter`
 
-This component shows a filter-component in Swarm City Style. It's a dropdown-menu which passes the right value to the parent-component. 
+This component shows a filter-component in Swarm City Style. It's a dropdown-menu which passes the right value to the parent-component.
 
 -->
 
@@ -36,7 +36,7 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
 
       .filter_selection p {
         font-size: 12px;
-        line-height: 16px;   
+        line-height: 16px;
       }
 
       .triangle {
@@ -60,24 +60,24 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
       .filter_options {
         box-sizing:border-box;
         padding: 0px;
-        border-top: 2px solid rgba(0,0,0,0.25);           
-        border-bottom: 2px solid rgba(0,0,0,0.25);           
+        border-top: 2px solid rgba(0,0,0,0.25);
+        border-bottom: 2px solid rgba(0,0,0,0.25);
 
       }
 
       .filter_option {
-        border-bottom: 2px solid rgba(0,0,0,0.05);           
+        border-bottom: 2px solid rgba(0,0,0,0.05);
       }
 
       .filter_option:hover {
-        cursor: pointer;           
+        cursor: pointer;
       }
 
       .filter_option p {
         box-sizing:border-box;
         padding: 14px 18px 14px 18px;
         font-size: 14px;
-        line-height: 15px;      
+        line-height: 15px;
       }
 
       #currentid {
@@ -176,13 +176,13 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
       </div>
 
 
-<!-- 
+<!--
       <div class="locationtotal totalwidth horizont center startjust">
         <div class$="triangle {{collapsestate}}">
           <svg id="triangle_icon" x="0px" y="0px" viewBox="0 0 50 50" fill="#666666">
           <polygon points="6.5,4.9 6.5,44.5 42,24.9 "/>
           </svg>
-        </div> 
+        </div>
           <div class="horizont centercenter location">
             <iron-icon icon="sc-icons:location_edgeless" class="slidericon grey3"></iron-icon>
             <paper-slider noink id="ratings" max="6" value="{{range}}"></paper-slider>
@@ -190,7 +190,7 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
           </div>
         <p class="light grey2 divider">|</p>
         <p class="bold grey3">{{distance}}</p>
-       
+
       </div> -->
     </template>
 
@@ -294,7 +294,7 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
         }
       },
       observers: [
-        '_rangetoDistance(immediaterange)"'
+        '_rangetoDistance(immediaterange)'
       ],
 
       ready: function(){
@@ -310,14 +310,14 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
       },
 
       /**
-      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
+      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage
       * use this to initialize any variables to start the component
       */
       onEnter: function(){
       },
 
       /**
-      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage 
+      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage
       * use this to reset any variables when leaving this component while it remains loaded.
       */
       onExit: function(){
