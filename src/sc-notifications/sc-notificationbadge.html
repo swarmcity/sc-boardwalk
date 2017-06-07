@@ -15,7 +15,7 @@
 
 This components simple shows the number of in-app notifications in a badge-icon.
 
-@demo src/sc-notificationbadge/demo/index.html 
+@demo src/sc-notificationbadge/demo/index.html
 -->
 
 <dom-module id="sc-notificationbadge">
@@ -41,12 +41,12 @@ This components simple shows the number of in-app notifications in a badge-icon.
 
 
       .havepaddings {
-        padding: 0px 5px 0px 5px; 
+        padding: 0px 5px 0px 5px;
         margin-left: 4px;
       }
 
       .nopaddings {
-        padding: 0px; 
+        padding: 0px;
       }
 
       .newclass {
@@ -73,7 +73,7 @@ This components simple shows the number of in-app notifications in a badge-icon.
 
 
 
-    @media all and (min-width: 0) and (max-width: 420px) { 
+    @media all and (min-width: 0) and (max-width: 420px) {
 
     }
 
@@ -85,10 +85,10 @@ This components simple shows the number of in-app notifications in a badge-icon.
             <p class="white bold">{{notificationscounter}}</p>
           </template>
           <template is="dom-if" if="{{_is(notificationscounter,0)}}">
-              <iron-icon icon="sc-icons:babble" class="grey3 babbleicon">reply-icon</iron-icon>
+              <!-- <iron-icon icon="sc-icons:babble" class="grey3 babbleicon">reply-icon</iron-icon> -->
           </template>
         </div>
-  
+
 
   </template>
 
@@ -105,7 +105,7 @@ This components simple shows the number of in-app notifications in a badge-icon.
 
       observers: [
         '_watch(notificationscounter)',
-        '_starthastaglistener(shhweb3,identity)',        
+        '_starthastaglistener(shhweb3,identity)',
       ],
 
       properties: {
@@ -126,13 +126,13 @@ This components simple shows the number of in-app notifications in a badge-icon.
         identity: {
           type: Object,
           statePath: 'identity',
-        },  
+        },
 
         // mydeals: {
         //   type: Array,
         //   statePath: 'mydeals',
         //   observer: '_mydeals'
-        // },   
+        // },
 
       },
 
@@ -211,14 +211,14 @@ This components simple shows the number of in-app notifications in a badge-icon.
 
 
       /**
-      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
+      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage
       * use this to initialize any variables to start the component
       */
       onEnter: function(){
       },
 
       /**
-      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage 
+      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage
       * use this to reset any variables when leaving this component while it remains loaded.
       */
       onExit: function(){
