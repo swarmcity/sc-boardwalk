@@ -52,6 +52,7 @@
         }
         navigator.geolocation.getCurrentPosition(function(position) {
           self.geohash = Geohash.encode(position.coords.latitude, position.coords.longitude);
+          self.fire('geohashchanged',self.geohash);
           if (cb) cb(null,self.geohash);
         });
       }

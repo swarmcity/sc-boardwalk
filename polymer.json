@@ -9,7 +9,7 @@
     "src/sc-profile/sc-profile.html",
     "src/sc-hashtag/sc-hashtag.html",
     "src/sc-geohash/sc-geohash.html",
-    "src/sc-hashtaglist/sc-hashtaglist.html",  
+    "src/sc-hashtaglist/sc-hashtaglist.html",
     "src/sc-boardwalk-app/sc-boardwalk-app.html"
   ],
   "sources": [
@@ -18,6 +18,7 @@
   "extraDependencies": [
     "manifest.json",
     "src/contracts/*",
+    "images/*",
     "node_modules/redux/dist/redux.min.js",
     "bower_components/webcomponentsjs/webcomponents-lite.min.js",
     "bower_components/sc-style/sc-fonts/*",

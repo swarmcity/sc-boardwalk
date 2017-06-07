@@ -15,7 +15,7 @@
   </template>
   <script>
 
-  var sc_listeners_listening = false;
+//  var sc_listeners_listening = false;
 
     Polymer({
       is: 'sc-listeners',
@@ -29,61 +29,18 @@
           type: Array,
           statePath: 'notifications',
         },
-        mydeals: {
-          type: Array,
-          statePath: 'mydeals',
-        },
-        otherdeals: {
-          type: Array,
-          statePath: 'otherdeals',
-        },
         identity: {
           type: Object,
           statePath: 'identity'
-        },        
-        // emptyDeal: {
-        //   type: Object,
-        //   value: {
-        //       //creationtx_mined: false,
-        //       //dealaddress: null,
-        //       //seekerfundingtx: false,
-        //       //seekerfundingtx_mined: false,
-        //       //assigntx: false,
-        //       //assigntx_mined: false,
-        //       //providerfundingtx: false,
-        //       //providerfundingtx_mined: false,
-        //       //payouttx: false,
-        //       //payouttx_mined: false,
-        //       replies: [],
-        //       seeker: {
-        //         pubkey: '0x0'
-        //       }
-        //     }
-        // },
-
-        // emptyNotification: {
-        //   type: Object,
-        //   value: {
-        //     read: false,
-        //     itemhashtag: '',
-        //     subjectusername: '',
-        //     msg: '',
-        //     timestamp: null
-        //       //creationtx_mined: false,
-        //       //dealaddress: null,
-        //       //seekerfundingtx: false,
-        //       //seekerfundingtx_mined: false,
-        //       //assigntx: false,
-        //       //assigntx_mined: false,
-        //       // providerfundingtx: false,
-        //       // providerfundingtx_mined: false,
-        //       // payouttx: false,
-        //       // payouttx_mined: false,
-        //       // seeker: {
-        //       //   pubkey: '0x0'
-        //       // }
-        //     }
-        // }      
+        },
+        geohash: {
+          type: String,
+          observer: '_changefilter'
+        },
+        hashtag: {
+          type: String,
+          observer: '_changefilter'          
+        }
       },
 
       behaviors: [
@@ -102,6 +59,14 @@
         //  id: <dealID>,
         //  <any_field>: <any_value>  
         // }
+
+        clear_deals: function(mutation){  
+          return {
+            type: 'DEALS',
+            deals: []
+          };
+        },  
+
         update_deal: function(mutation){
           
           let deals = this.deals.slice(0);
@@ -218,20 +183,15 @@
         },
 
         update_notification: function(mutation){
-
           let notifications = this.notifications.slice(0);
           var indexFound = notifications.findIndex(function(item) {
             return item.id === mutation.id;
           });
           if (indexFound > -1) {
-            // notifications[indexFound] = Object.assign(getEmptyDeal(), notifications[indexFound], mutation);
             Object.assign(notifications[indexFound], mutation);
           }else{
             notifications.push(Object.assign(this.getEmptyNotification(),mutation));
-          }
-          // notifications.sort(function(a, b) {
-          //   return b.offertime - a.offertime;
-          // });          
+          }        
           return {
             type: 'NOTIFICATIONS',
             notifications: notifications
@@ -253,7 +213,8 @@
             msg: replydata.reply,
             provider: replydata.replyer,
             replytime: replydata.replytime,
-            parentrequestid: replydata.parentrequestid
+            parentrequestid: replydata.parentrequestid,
+            replyamount: replydata.replyamount
           };
 
           // make a copy of deals - apply changes and return
@@ -410,60 +371,6 @@
             deals: deals
           };
         },
-
-        // request_approve: function(payload){
-        //   var self=this;
-        //   var mutation = {
-        //     id : payload.requestid,
-        //     payouttx: payload.transactionhash,
-        //   };
-        //   let deals = this.deals.slice(0);
-        //   var foundDeal = deals.findIndex(function(item) {
-        //     return item.id === payload.requestid;
-        //   });
-        //   if (foundDeal > -1) {
-        //     Object.assign(deals[foundDeal],mutation);
-        //     //deals[foundDeal] = Object.assign(getEmptyDeal(), deals[foundDeal], mutation);
-        //   }else{
-        //     deals.push(Object.assign(this.getEmptyDeal(),mutation));
-        //   }
-
-        //   this.web3.waitTx(payload.transactionhash, function(err, res) {
-        //   //this.readcontractaftertx(payload.requestid,payload.transactionhash,function(err,res){
-        //     self.dispatch('request_approve_mined', {
-        //       requestid: payload.requestid
-        //     });
-        //   });
-        //   return {
-        //     type: 'DEALS',
-        //     deals: deals
-        //   };
-        // },
-
-        // request_approve_mined: function(params) {
-        //   //debugger;
-        //   var mutation = {
-        //     id: params.requestid,
-        //     payouttx_mined: true
-        //   };
-
-        //   let deals = this.deals.slice(0);
-        //   var foundDeal = deals.findIndex(function(item) {
-        //     return item.id === params.requestid;
-        //   });
-        //   if (foundDeal > -1) {
-        //     Object.assign(deals[foundDeal],mutation);
-        //     //deals[foundDeal] = Object.assign(getEmptyDeal(), deals[foundDeal], mutation);
-        //   }else{
-        //     deals.push(Object.assign(this.getEmptyDeal(),mutation));
-        //   }
-
-        //   return {
-        //     type: 'DEALS',
-        //     deals: deals
-        //   };
-
-        // },
       },
 
       getEmptyDeal: function() {
@@ -485,16 +392,26 @@
         });
       },
 
-      stopFiltering: function(options,cb){
-        this.options
+
+      _changefilter: function(){
+
+        if (!this.hashtag || !this.geohash){
+          return false;
+        }
+
+        console.log('sc-filter -> Change filter',this.hashtag ,this.geohash);
+
+        this.__starthastaglistener();
+
       },
 
-      _starthastaglistener: function(hashtag) {
+
+      __starthastaglistener: function() {
         
-        if (sc_listeners_listening){
-          console.log('skipping init listeners. Already lsitening');
-          return;
-        }
+        // if (sc_listeners_listening){
+        //   console.log('skipping init listeners. Already lsitening');
+        //   return;
+        // }
 
         var self = this;
         
@@ -503,24 +420,31 @@
         }
 
         if (this.filter) {
-          //console.log("sc-listeners: killing existing filter");
-          //this.filter.stopWatching();
-          return;
+          console.log("sc-listeners: killing existing filter");
+          this.filter.stopWatching();
+          delete this.filter;
         }
 
-       
-        if (this.shhweb3 && hashtag) {
-
+        if (this.shhweb3 && this.hashtag) {
           var mytopics = [
             self.shhweb3.encodetopic("swarmcity-v1"),
             null,
-            self.shhweb3.encodetopic(hashtag),
+            self.shhweb3.encodetopic(this.hashtag),
             null, // ID
-            //[null,self.shhweb3.encodetopic(this.geohash.slice(0, 1))],
-           // [null,self.shhweb3.encodetopic(this.geohash.slice(0, 2))],
-           // null,
-           // null
+            // [self.shhweb3.encodetopic('all'),this.geohash.length > 1 ? self.shhweb3.encodetopic(this.geohash.slice(0, 1)) : null],
+            // [self.shhweb3.encodetopic('all'),this.geohash.length > 2 ? self.shhweb3.encodetopic(this.geohash.slice(0, 2)) : null],
+            // [self.shhweb3.encodetopic('all'),this.geohash.length > 3 ? self.shhweb3.encodetopic(this.geohash.slice(0, 3)) : null],
+            // [self.shhweb3.encodetopic('all'),this.geohash.length > 4 ? self.shhweb3.encodetopic(this.geohash.slice(0, 4)) : null],
+            self.geohash.length > 1 ? self.shhweb3.encodetopic(self.geohash.slice(0, 1)) : null,
+            self.geohash.length > 2 ? self.shhweb3.encodetopic(self.geohash.slice(0, 2)) : null,
+            self.geohash.length > 3 ? self.shhweb3.encodetopic(self.geohash.slice(0, 3)) : null,
+            self.geohash.length > 4 ? self.shhweb3.encodetopic(self.geohash.slice(0, 4)) : null,            
+            // self.shhweb3.encodetopic(this.geohash.slice(0, 2)),
+            // self.shhweb3.encodetopic(this.geohash.slice(0, 3)),
+            // self.shhweb3.encodetopic(this.geohash.slice(0, 4)),
           ];
+
+          //self.shhweb3.dumptopics(mytopics);
 
           this.filter = self.shhweb3.shh.filter({
             "topics": mytopics,
@@ -529,7 +453,10 @@
           console.log("sc-listeners: channelswitch, start listening to", mytopics);
           this.filter.watch(this._processmessage.bind(this));
 
-          sc_listeners_listening = true;
+          // clear deals... pretty rough...(wss)
+          this.dispatch('clear_deals');
+
+          //sc_listeners_listening = true;
 
         }
       },

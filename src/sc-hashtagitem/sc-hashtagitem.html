@@ -322,10 +322,10 @@ This components is the representation of a request in the requests-list on sc-ha
               <template is="dom-if" if="{{phoneview}}">
                 <div class="totalwidth horizont center startjust">
                 <p class="grey2b light small"><moment-js date="{{item.offertime}}" format="HH:mm"></moment-js></p>
-                <template is="dom-if" if="{{itemreplies}}">
+                <template is="dom-if" if="{{item.replies}}">
                   <div class="replies horizont centercenter">
                     <p class="divider small grey2b light">|</p>
-                    <small class="small grey2b light">{{itemreplies.length}}</small>
+                    <small class="small grey2b light">{{item.replies.length}}</small>
                     <iron-icon icon="sc-icons:babble" class="grey2b verysmall">replies</iron-icon>
                   </div>
                 </template>
@@ -333,10 +333,10 @@ This components is the representation of a request in the requests-list on sc-ha
               </template>
               <template is="dom-if" if="{{!phoneview}}">
                 <p class="grey2b light small"><moment-js date="{{item.offertime}}" format="HH:mm"></moment-js></p>
-                <template is="dom-if" if="{{itemreplies}}">
+                <template is="dom-if" if="{{item.replies}}">
                   <div class="replies horizont centercenter">
                     <p class="divider small grey2b light">|</p>
-                    <small class="small grey2b light">{{itemreplies.length}}</small>
+                    <small class="small grey2b light">{{item.replies.length}}</small>
                     <iron-icon icon="sc-icons:babble" class="grey2b verysmall">replies</iron-icon>
                   </div>
                 </template>
@@ -382,7 +382,7 @@ This components is the representation of a request in the requests-list on sc-ha
                   </sc-itemreplier>
               </template>
             </template>
-            <template is="dom-repeat" as="currentreply" items="{{itemreplies}}">
+            <template is="dom-repeat" as="currentreply" items="{{item.replies}}">
               <sc-itemreply
               item="{{item}}"
               btnshow="{{youareowner(item.seeker.pubkey)}}"
@@ -418,10 +418,10 @@ This components is the representation of a request in the requests-list on sc-ha
                       <template is="dom-if" if="{{phoneview}}">
                         <div class="totalwidth horizont center startjust">
                         <p class="grey2b light small"><moment-js date="{{item.offertime}}" format="HH:mm"></moment-js></p>
-                        <template is="dom-if" if="{{itemreplies}}">
+                        <template is="dom-if" if="{{item.replies}}">
                           <div class="replies horizont centercenter">
                             <p class="divider small grey2b light">|</p>
-                            <small class="small grey2b light">{{itemreplies.length}}</small>
+                            <small class="small grey2b light">{{item.replies.length}}</small>
                             <iron-icon icon="sc-icons:babble" class="grey2b verysmall">replies</iron-icon>
                           </div>
                         </template>
@@ -429,10 +429,10 @@ This components is the representation of a request in the requests-list on sc-ha
                       </template>
                       <template is="dom-if" if="{{!phoneview}}">
                         <p class="grey2b light small"><moment-js date="{{item.offertime}}" format="HH:mm"></moment-js></p>
-                        <template is="dom-if" if="{{itemreplies}}">
+                        <template is="dom-if" if="{{item.replies}}">
                           <div class="replies horizont centercenter">
                             <p class="divider small grey2b light">|</p>
-                            <small class="small grey2b light">{{itemreplies.length}}</small>
+                            <small class="small grey2b light">{{item.replies.length}}</small>
                             <iron-icon icon="sc-icons:babble" class="grey2b verysmall">replies</iron-icon>
                           </div>
                         </template>
@@ -462,10 +462,10 @@ This components is the representation of a request in the requests-list on sc-ha
                       <template is="dom-if" if="{{phoneview}}">
                         <div class="totalwidth horizont center startjust">
                         <p class="grey2b light small"><moment-js date="{{item.offertime}}" format="HH:mm"></moment-js></p>
-                        <template is="dom-if" if="{{itemreplies}}">
+                        <template is="dom-if" if="{{item.replies}}">
                           <div class="replies horizont centercenter">
                             <p class="divider small grey2b light">|</p>
-                            <small class="small grey2b light">{{itemreplies.length}}</small>
+                            <small class="small grey2b light">{{item.replies.length}}</small>
                             <iron-icon icon="sc-icons:babble" class="grey2b verysmall">replies</iron-icon>
                           </div>
                         </template>
@@ -473,10 +473,10 @@ This components is the representation of a request in the requests-list on sc-ha
                       </template>
                       <template is="dom-if" if="{{!phoneview}}">
                         <p class="grey2b light small"><moment-js date="{{item.offertime}}" format="HH:mm"></moment-js></p>
-                        <template is="dom-if" if="{{itemreplies}}">
+                        <template is="dom-if" if="{{item.replies}}">
                           <div class="replies horizont centercenter">
                             <p class="divider small grey2b light">|</p>
-                            <small class="small grey2b light">{{itemreplies.length}}</small>
+                            <small class="small grey2b light">{{item.replies.length}}</small>
                             <iron-icon icon="sc-icons:babble" class="grey2b verysmall">replies</iron-icon>
                           </div>
                         </template>
@@ -524,10 +524,10 @@ This components is the representation of a request in the requests-list on sc-ha
                       <template is="dom-if" if="{{phoneview}}">
                         <div class="totalwidth horizont center startjust">
                         <p class="grey2b light small"><moment-js date="{{item.offertime}}" format="HH:mm"></moment-js></p>
-                        <template is="dom-if" if="{{itemreplies}}">
+                        <template is="dom-if" if="{{item.replies}}">
                           <div class="replies horizont centercenter">
                             <p class="divider small grey2b light">|</p>
-                            <small class="small grey2b light">{{itemreplies.length}}</small>
+                            <small class="small grey2b light">{{item.replies.length}}</small>
                             <iron-icon icon="sc-icons:babble" class="grey2b verysmall">replies</iron-icon>
                           </div>
                         </template>
@@ -535,10 +535,10 @@ This components is the representation of a request in the requests-list on sc-ha
                       </template>
                       <template is="dom-if" if="{{!phoneview}}">
                         <p class="grey2b light small"><moment-js date="{{item.offertime}}" format="HH:mm"></moment-js></p>
-                        <template is="dom-if" if="{{itemreplies}}">
+                        <template is="dom-if" if="{{item.replies}}">
                           <div class="replies horizont centercenter">
                             <p class="divider small grey2b light">|</p>
-                            <small class="small grey2b light">{{itemreplies.length}}</small>
+                            <small class="small grey2b light">{{item.replies.length}}</small>
                             <iron-icon icon="sc-icons:babble" class="grey2b verysmall">replies</iron-icon>
                           </div>
                         </template>
@@ -671,10 +671,10 @@ This components is the representation of a request in the requests-list on sc-ha
         item: {
           type: Object
         },
-        itemreplies: {
-          type: Object,
-          observer: '_itemreply'
-        },
+        // item.replies: {
+        //   type: Object,
+        //   observer: '_itemreply'
+        // },
         identity: {
           type: Object,
           statePath: 'identity',
@@ -691,10 +691,10 @@ This components is the representation of a request in the requests-list on sc-ha
         return JSON.stringify(a,null,1);
       },
 
-      _itemreply: function(){
-        //debugger;
-        console.log('itemreply changed...');
-      },
+      // _itemreply: function(){
+      //   //debugger;
+      //   console.log('itemreply changed...');
+      // },
 
       ready: function(){
       },
@@ -789,7 +789,7 @@ This components is the representation of a request in the requests-list on sc-ha
           // this slice is neccesary to prevent a polymer databinding flaw..
 
           if (deal.replies){
-            this.itemreplies = deal.replies.slice(0);
+            this.item.replies = deal.replies.slice(0);
           }
 
           if(deal.selectedreply) {

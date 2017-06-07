@@ -1,6 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../sc-helpers/sc-helpers.html">
 <link rel="import" href="../sc-config/sc-config.html">
+<link rel="import" href="../sc-redux/sc-redux.html">
 
 <dom-module id="sc-wallet">
 
@@ -53,9 +54,29 @@
           type: Boolean,
           notify: true
         },
+        wallet: {
+          type: Object,
+          statePath: 'wallet'
+        },
+      },
+
+      behaviors: [
+        ReduxBehavior
+      ],
+
+      actions: {
+        update_wallet: function(mutation) {
+          var w = Object.assign({},this.wallet);
+          Object.assign(w,mutation);
+          return {
+            type: 'WALLET',
+            wallet: w
+          };
+        }
       },
 
       _arc: function(){
+
       },
 
       attached: function() {
@@ -65,6 +86,11 @@
       checkreadystate: function(){
         if (!this.status && this.arcbalance != undefined && this.swtbalance != undefined && this.ethbalance != undefined){
           console.log('vals:',this.swtbalance,this.ethbalance,this.arcbalance);
+          this.dispatch('update_wallet', {
+            swtbalance: this.swtbalance.toNumber(10),
+            ethbalance: this.ethbalance.toNumber(10),
+            arcbalance: this.arcbalance.toNumber(10),
+          });
           this.status = 'ready';
           this.fire('ready');
         }
@@ -72,7 +98,6 @@
 
       _web3: function(){
          this.setup();
-
       },
 
       _pubkey: function(){

@@ -266,14 +266,6 @@
 
         this.hashtaglist = Object.keys(this.config.hashtagcontracts);
 
-        // 'ridesharing',
-        // 'dev-ops',
-        // 'testingSC',
-        // 'dogwalking',
-        // 'food-delivery',
-        // 'it-hive'
-
-
       },
 
 
@@ -327,7 +319,7 @@
       */
       toHashtag: function(e) {
         // if (this.phoneview) {
-        var selectedhasht = e.detail.sourceEvent.target.parentElement.id;
+        var selectedhasht = this.config.hashtagcontracts[e.detail.sourceEvent.target.parentElement.id];
         var selhash = this.shadowRoot.getElementById(selectedhasht);
 
 

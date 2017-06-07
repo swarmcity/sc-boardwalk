@@ -1051,9 +1051,9 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
       _hashtag: function(){
 //          debugger;
-        if (this.data.hashtag){
-          this.$.listeners._starthastaglistener(this.data.hashtag);
-        }
+        // if (this.data.hashtag){
+        //   this.$.listeners._starthastaglistener(this.data.hashtag);
+        // }
       },
 
       _data: function(){
@@ -1257,12 +1257,15 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
             timestamp: Date.now(),
           };
 
-
           var topics = [
             self.shhweb3.encodetopic('swarmcity-v1'),
             self.shhweb3.encodetopic(message.type),
             self.shhweb3.encodetopic(self.requestdata.hashtag),
             self.shhweb3.encodetopic(self.requestdata.id),
+            self.shhweb3.encodetopic('all'),
+            self.shhweb3.encodetopic('all'),
+            self.shhweb3.encodetopic('all'),
+            self.shhweb3.encodetopic('all'),            
           ];
 
           var options = {

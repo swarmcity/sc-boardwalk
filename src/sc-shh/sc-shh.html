@@ -47,6 +47,7 @@
         }
         this.set('web3',acshh);
         this.set('web3.encodetopic',this.encodetopic.bind(this));
+        this.set('web3.dumptopics',this.dumptopics.bind(this));
         this.set('web3.identity',acshh_identity);
         //this.set('web3.shh.filter',this.filter.bind(this));
         this.fire('web3-ready');
@@ -54,6 +55,14 @@
 
       encodetopic: function(topic){
         return this.web3.fromAscii(this.shhprefix + topic);
+      },
+
+      dumptopics: function(topics){
+        console.log('~~~topics~~~');
+        for (var i=0;i<topics.length;i++){
+          console.log(i,topics[i] ? this.web3.toAscii(topics[i]) : 'null');
+        }
+        console.log('~~/topics~~~');
       },
 
       filter: function(){

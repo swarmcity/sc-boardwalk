@@ -80,10 +80,13 @@
                 // break;
 
             case 'IDENTITY':
-//                let identity = state.identity;
-//                identity  = action.identity;
                 return Object.assign({}, state, {identity: action.identity});
                 break;
+                
+            case 'WALLET':
+                return Object.assign({}, state, {wallet: action.wallet});
+                break;
+
         }
     }
 

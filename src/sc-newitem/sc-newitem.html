@@ -9,7 +9,7 @@
 
 <link rel="import" href="../../bower_components/sc-style/sc-style.html">
 <link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
-<link rel="import" href="../sc-geohash/sc-geohash.html">
+<!-- <link rel="import" href="../sc-geohash/sc-geohash.html"> -->
 <link rel="import" href="../sc-dealfortwo/sc-dealfortwo.html">
 <link rel="import" href="../sc-redux/sc-redux.html">
 <link rel="import" href="../sc-web3/sc-web3.html">
@@ -27,7 +27,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
 <dom-module id="sc-newitem">
   <template>
-    <sc-geohash geohash="{{geohash}}" enabled="{{enabled}}"></sc-geohash>
+    <!-- <sc-geohash geohash="{{geohash}}" enabled="{{enabled}}"></sc-geohash> -->
     <sc-dealfortwo id="dealfortwo"></sc-dealfortwo>
     <sc-web3 id="web3" web3="{{web3}}"></sc-web3>
     <sc-config config="{{config}}"></sc-config>
@@ -201,7 +201,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
                 <iron-icon icon="sc-icons:plus" class="blue medium"></iron-icon>
               </div>
             </template>
-            <paper-textarea id="offerinput" label="What are you looking for? {{selectedhashtag}}" class="totalwidth offermsg grey2unfocus"  on-focused-changed="checkFocus" value="{{offermsg}}">
+            <paper-textarea id="offerinput" label="What are you looking for?" class="totalwidth offermsg grey2unfocus"  on-focused-changed="checkFocus" value="{{offermsg}}">
             </paper-textarea>
           </div>
       <iron-collapse id="offerinputform" class="totalwidth">
@@ -240,19 +240,27 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
       properties: {
 
-        enabled: {
-          type: Boolean,
-        },
+        // enabled: {
+        //   type: Boolean,
+        // },
 
         identity: {
           type: Object,
           statePath: 'identity',
         },
 
-        hashtag: {
+        wallet: {
+          type: Object,
+          statePath: 'wallet',
+        },
+
+        hashtagaddress: {
           type: String
         },
 
+        geohash: {
+          type: String
+        },
 
         overspending: {
           type: Boolean,
@@ -276,18 +284,11 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         this.loading = false;
       },
 
-      attached: function(){
-      },
-
       /**
       * 'onEnter' are the behaviors that occur when the router tells this component enters the stage
       * use this to initialize any variables to start the component
       */
       onEnter: function(){
-        // This is DUMMY!!!
-        this.selectedhashtag = "";
-
-        // These are for REALS
         this.btnable = false;
         this.totalstate = "totalclosed";
         this.showavatar = false;
@@ -300,7 +301,6 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       onExit: function(){
       },
 
-
       back: function(){
         this.fire('back');
       },
@@ -309,16 +309,40 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       },
 
       _btnable: function(){
-        if (!this.offermsg || !this.offeramount || !this.geohash) {
+        var inputvalidated = true;
+        
+        if (!this.offermsg || !this.offeramount || !this.geohash || !this.wallet || !this.wallet.swtbalance) {
           this.btnable = false;
           return;
         }
 
-        if (this.offermsg && this.offeramount) {
-          this.btnable = true;
-        } else {
+        var amount = parseFloat(this.offeramount);
+
+        if (amount === NaN){
+          console.log('this is NOT a number');
           this.btnable = false;
+          return;
         }
+
+        if (amount < 0){
+          console.log('this is a negative number');
+          this.btnable = false;
+          return;
+        }
+
+        if (this.wallet.swtbalance < amount * this.config.swtinputunit){
+          console.log('your balance is too low...');
+          this.btnable = false;
+          return;
+
+        }
+
+        if (!this.offermsg){
+          this.btnable = false;
+          return;
+        }
+
+        this.btnable = true;
       },
 
       confirmRequest: function() {
@@ -354,7 +378,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
                   avatarhash: self.identity.avatarhash,
                 },
                 offer: self.offermsg,
-                offerhashtag: self.hashtag,
+                offerhashtag: self.hashtagaddress,
                 offertime: Date.now(),
                 offeramount: amount,
                 offercreationtx: txhash,
@@ -372,7 +396,9 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
                 self.shhweb3.encodetopic(self.geohash.slice(0, 4)),
               ];
 
-              if (self.shhweb3 && self.hashtag) {
+              self.shhweb3.dumptopics(topics);
+
+              if (self.shhweb3 && self.hashtagaddress) {
 
                 var options = {
                   "from": self.shhweb3.identity,
