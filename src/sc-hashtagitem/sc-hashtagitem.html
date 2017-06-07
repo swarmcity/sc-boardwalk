@@ -313,10 +313,10 @@ This components is the representation of a request in the requests-list on sc-ha
             <div class="flex vertic start startjust">
               <div class="request_info">
               <template is="dom-if" if="{{youareowner(item.seeker.pubkey)}}">
-                <p class="you small bold grey4">you • <span class="bold"><sc-hashtagrep pubkey="{{item.seeker.pubkey}}" hashtagname="{{item.hashtag}}"></sc-hashtagrep></span></p>
+                <p class="you small bold grey4">you • <span class="bold"><sc-hashtagrep pubkey="{{item.seeker.pubkey}}" hashtagcontractaddress="{{item.hashtag}}"></sc-hashtagrep></span></p>
               </template>
               <template is="dom-if" if="{{!youareowner(item.seeker.pubkey)}}">
-                <p class="seeker small reg blue">{{item.seeker.username}} • <span class="bold"><sc-hashtagrep pubkey="{{item.seeker.pubkey}}" hashtagname="{{item.hashtag}}"></sc-hashtagrep></span></p>
+                <p class="seeker small reg blue">{{item.seeker.username}} • <span class="bold"><sc-hashtagrep pubkey="{{item.seeker.pubkey}}" hashtagcontractaddress="{{item.hashtag}}"></sc-hashtagrep></span></p>
               </template>
 
               <template is="dom-if" if="{{phoneview}}">
@@ -414,7 +414,7 @@ This components is the representation of a request in the requests-list on sc-ha
                 <template is="dom-if" if="{{_is(item.dealstate,'accepted')}}">
                   <div class="flex vertic start startjust">
                     <div class="request_info">
-                      <p class="seeker small reg blue">{{item.seeker.username}} • <span class="bold"><sc-hashtagrep pubkey="{{item.seeker.pubkey}}" hashtagname="{{item.hashtag}}"></sc-hashtagrep></span></p>
+                      <p class="seeker small reg blue">{{item.seeker.username}} • <span class="bold"><sc-hashtagrep pubkey="{{item.seeker.pubkey}}" hashtagcontractaddress="{{item.hashtag}}"></sc-hashtagrep></span></p>
                       <template is="dom-if" if="{{phoneview}}">
                         <div class="totalwidth horizont center startjust">
                         <p class="grey2b light small"><moment-js date="{{item.offertime}}" format="HH:mm"></moment-js></p>
@@ -458,7 +458,7 @@ This components is the representation of a request in the requests-list on sc-ha
 
                   <div class="flex vertic start startjust">
                     <div class="request_info">
-                      <p class="seeker small reg blue">{{item.seeker.username}} • <span class="bold"><sc-hashtagrep pubkey="{{item.seeker.pubkey}}" hashtagname="{{item.hashtag}}"></sc-hashtagrep></span></p>
+                      <p class="seeker small reg blue">{{item.seeker.username}} • <span class="bold"><sc-hashtagrep pubkey="{{item.seeker.pubkey}}" hashtagcontractaddress="{{item.hashtag}}"></sc-hashtagrep></span></p>
                       <template is="dom-if" if="{{phoneview}}">
                         <div class="totalwidth horizont center startjust">
                         <p class="grey2b light small"><moment-js date="{{item.offertime}}" format="HH:mm"></moment-js></p>
@@ -518,7 +518,7 @@ This components is the representation of a request in the requests-list on sc-ha
                 <template is="dom-if" if="{{_is(item.dealstate,'payout')}}">
                   <div class="flex vertic start startjust">
                     <div class="request_info">
-                      <p class="seeker small reg blue">{{item.seeker.username}} • <span class="bold"><sc-hashtagrep pubkey="{{item.seeker.pubkey}}" hashtagname="{{item.hashtag}}"></sc-hashtagrep></span></p>
+                      <p class="seeker small reg blue">{{item.seeker.username}} • <span class="bold"><sc-hashtagrep pubkey="{{item.seeker.pubkey}}" hashtagcontractaddress="{{item.hashtag}}"></sc-hashtagrep></span></p>
 
 
                       <template is="dom-if" if="{{phoneview}}">

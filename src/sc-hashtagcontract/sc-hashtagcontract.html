@@ -11,8 +11,10 @@
   </template>
   <script>
     var schashtagrep_contract;
+    var schashtagrep_loading;
     var schashtagrep_ready;
     var schashtagrep_HashtagRepInstance;
+    var schashtagrep_cache = {};
     var hashtagcontract = {"abi":[{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"validFactories","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[],"name":"getTokenAddress","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_factoryAddress","type":"address"}],"name":"addFactory","outputs":[],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_newCommission","type":"uint256"}],"name":"setCommission","outputs":[],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_factoryAddress","type":"address"}],"name":"removeFactory","outputs":[],"payable":false,"type":"function"},{"constant":false,"inputs":[],"name":"getConflictResolver","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_metadataHash","type":"string"}],"name":"setMetadataHash","outputs":[],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_receiver","type":"address"},{"name":"_amount","type":"uint256"}],"name":"mintRep","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_dealContract","type":"address"},{"name":"_dealOwner","type":"address"}],"name":"registerDeal","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"registeredDeals","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"metadataHash","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"successfulDeals","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"commission","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"type":"function"},{"constant":false,"inputs":[],"name":"getRepTokenAddress","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"inputs":[{"name":"_token","type":"address"},{"name":"_tokenfactory","type":"address"},{"name":"_name","type":"string"},{"name":"_commission","type":"uint256"},{"name":"_metadataHash","type":"string"}],"payable":false,"type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"name":"dealContract","type":"address"}],"name":"DealRegistered","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"to","type":"address"},{"indexed":false,"name":"amount","type":"uint256"}],"name":"RepAdded","type":"event"}]};
     var minimicontract = {
   "abi": [{
@@ -415,79 +417,66 @@
           type: Object,
           observer: '_init'
         },
-        hashtagname: {
-          type: String,
-          observer: '_init'
-        },
         hashtagcontract: {
           type: String,
           observer: '_init'          
+        },
+        loaded: {
+          type: Boolean,
+          notify: true
         }
       },
 
-      ready: function(){
-        console.log('sc-hashtagcontract -> ready');
-      
-
-      },
-
-     
       _init: function(){
         var self = this;
-
-
-        if (!this.hashtagname || !this.config || !this.web3 || schashtagrep_ready){
+        if (schashtagrep_ready){
+          self.fire('ready');
+          self.loaded = true;
+        }
+        if (!this.hashtagcontract || !this.config || !this.web3 || schashtagrep_loading){
           return;
         }
-        
-        schashtagrep_ready = new Promise(function(resolve, reject) {
-          self.schashtagrep_ready_resolve = resolve;
-        });
-
-       
-          this.hashtagcontract = this.config.hashtagcontracts[this.hashtagname];
-          if (!this.hashtagcontract){
-            console.log('sc-hashtagcontract -> ERROR hashtag \''+this.hashtagname+'\' not found');
-            return;
-          }
-       
-        self.HashtagInstance = self.web3.eth.contract(hashtagcontract.abi).at(self.config.hashtagcontracts[self.hashtagname]);
-
+        // the 'schashtagrep_HashtagRepInstance' is a singleton
+        // so make sure we only load it once
+        schashtagrep_loading = true;
+        self.HashtagInstance = self.web3.eth.contract(hashtagcontract.abi).at(self.hashtagcontract);
         self.HashtagInstance.getRepTokenAddress.call(function(err, address) {
           schashtagrep_HashtagRepInstance = self.web3.eth.contract(minimicontract.abi).at(address);
-          self.schashtagrep_ready_resolve();
+          schashtagrep_ready = true;
+          self.loaded = true;
         });
 
  
 
       },
 
-      getRep: function(pubkey){
-
+      getRep: function(pubkey,cb){
         var self = this;
-               
         var address;
         try{
           address = self.web3.toHex(pubkey);
         }catch(e){
-          return new Promise(function(resolve, reject) {
-            reject(e);
-          });
+          cb(e);
+        }
+        if (!schashtagrep_HashtagRepInstance){
+          cb('no rep contract yet');
         }
 
-        return new Promise(function(resolve, reject) {
-          schashtagrep_ready.then(function(){
-            if (!schashtagrep_HashtagRepInstance){
-              debugger;
-            }
+        // check cache ?
+        if (schashtagrep_cache[address]){
+          if (schashtagrep_cache[address].created < Date.now() - 3*1000){
+            //debugger;
+            return cb(null,schashtagrep_cache[address].rep);
+          }
+        }
 
-            schashtagrep_HashtagRepInstance.balanceOf(address,function(err,res){
-              if (err){
-                reject();
-              }
-              resolve(res);
-            });
-          });
+
+        schashtagrep_HashtagRepInstance.balanceOf(address, function(err, res) {
+          schashtagrep_cache[address] = {
+            rep: res,
+            created: Date.now()
+          };
+          cb(err,res);
         });
       },
 
