@@ -53,20 +53,21 @@
 
       actions: {
 
-        // update deal providing a mutation 
-        // mutation looks like this :
-        // mutation = {
-        //  id: <dealID>,
-        //  <any_field>: <any_value>  
-        // }
-
+        // clear the deal array ( for example when reloading list
+        // after change in range filter )
         clear_deals: function(mutation){  
           return {
             type: 'DEALS',
             deals: []
           };
-        },  
+        }, 
 
+        // update deal providing a mutation 
+        // mutation looks like this :
+        // mutation = {
+        //  id: <dealID>,
+        //  <any_field>: <any_value>  
+        // } 
         update_deal: function(mutation){
           
           let deals = this.deals.slice(0);

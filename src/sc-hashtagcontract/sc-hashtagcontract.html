@@ -439,8 +439,8 @@
         // the 'schashtagrep_HashtagRepInstance' is a singleton
         // so make sure we only load it once
         schashtagrep_loading = true;
-        self.HashtagInstance = self.web3.eth.contract(hashtagcontract.abi).at(self.hashtagcontract);
-        self.HashtagInstance.getRepTokenAddress.call(function(err, address) {
+        schashtagrep_HashtagContract = self.web3.eth.contract(hashtagcontract.abi).at(self.hashtagcontract);
+        schashtagrep_HashtagContract.getRepTokenAddress.call(function(err, address) {
           schashtagrep_HashtagRepInstance = self.web3.eth.contract(minimicontract.abi).at(address);
           schashtagrep_ready = true;
           self.loaded = true;
@@ -462,14 +462,13 @@
           cb('no rep contract yet');
         }
 
-        // check cache ?
+        // put the answers in a short-lived cache
+        // to prevent the contract to be hammered.
         if (schashtagrep_cache[address]){
           if (schashtagrep_cache[address].created < Date.now() - 3*1000){
-            //debugger;
             return cb(null,schashtagrep_cache[address].rep);
           }
         }
-
 
         schashtagrep_HashtagRepInstance.balanceOf(address, function(err, res) {
           schashtagrep_cache[address] = {
@@ -479,7 +478,25 @@
           cb(err,res);
         });
       },
-
+      
+      getCommission: function(cb){
+        var self = this;
+        if (!schashtagrep_HashtagContract){
+          cb('no rep contract yet');
+        }
+        if (schashtagrep_cache[self.hashtagcontract]){
+          if (schashtagrep_cache[self.hashtagcontract].created < Date.now() - 60*1000){
+            return cb(null,schashtagrep_cache[self.hashtagcontract].commission);
+          }
+        }
+        schashtagrep_HashtagContract.commission.call(function(err, res) {
+          schashtagrep_cache[self.hashtagcontract] = {
+            commission: res,
+            created: Date.now()
+          };
+          cb(err,res);
+        });        
+      }
 
     });
   </script>

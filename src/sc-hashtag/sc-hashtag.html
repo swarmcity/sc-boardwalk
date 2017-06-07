@@ -22,6 +22,7 @@
 <link rel="import" href="../sc-helpers/sc-helpers.html">
 <link rel="import" href="../sc-dealitem/sc-dealitem.html">
 <link rel="import" href="../sc-listeners/sc-listeners.html">
+<link rel="import" href="../sc-hashtagcontract/sc-hashtagcontract.html">
 
 <script type="text/javascript" src="../../bower_components/uuid-js/lib/uuid.js"></script>
 
@@ -306,12 +307,12 @@ This is the component showing all requests of a certain hashtag. It contains a r
     <sc-config config="{{config}}"></sc-config>
     <sc-helpers id="helpers"></sc-helpers>
     <sc-geohash on-geohashchanged="_updatelistener" geohash="{{geohash}}" enabled="{{enabled}}"></sc-geohash>
-<!--     <sc-hashtagcontract id="hashtagcontract" hashtagcontract="{{data.hashtag}}"></sc-hashtagcontract>   -->  
-   <sc-listeners
-    id="listeners"
-    on-updatebalance="_updatebalance"
-    geohash="{{filter_geohash}}"
-    hashtag="{{filter_hashtag}}"
+    <sc-hashtagcontract id="hashtagcontract" hashtagcontract="{{data.hashtag}}" loaded="{{hcready}}"></sc-hashtagcontract>
+    <sc-listeners
+      id="listeners"
+      on-updatebalance="_updatebalance"
+      geohash="{{filter_geohash}}"
+      hashtag="{{filter_hashtag}}"
     ></sc-listeners>
     <iron-media-query query="(min-width:0px) and (max-width: 540px)" query-matches="{{phoneview}}"></iron-media-query>
 
@@ -362,6 +363,17 @@ This is the component showing all requests of a certain hashtag. It contains a r
               <p class="semibold">#</p>
             </div>
             <p class="bold wordbreak">{{_getHashTagName(hashtag)}}</p>
+
+            <!-- 
+
+            Here we should have some hashtag info collapser or something
+            The user needs to know the commission that applies to this
+            hastag. Bevause his offer needs to be > commission...
+            The code for displying the hashtag commission is this :
+            
+            <p><sc-tokenbalanceformatter value="{{hashtagcommission}}"></sc-tokenbalanceformatter></p>
+
+             -->
           </div>
         </div>
 
@@ -437,7 +449,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       observers: [
         '_routedata(data)',
-        '_updatelistener(data.hashtag,range,geohash)'
+        '_updatelistener(data.hashtag,range,geohash)',
+        '_hashtagcontractloaded(hcready)'
       ],
       properties: {
 
@@ -445,7 +458,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
           type: Object,
           observer: '_web3'
         },
-
         enabled: {
           type: Boolean,
           value: false,
@@ -458,6 +470,10 @@ This is the component showing all requests of a certain hashtag. It contains a r
         identity: {
           type: Object,
           statePath: 'identity',
+        },
+        hashtaginfo: {
+          type: Object,
+          statePath: 'hashtaginfo',
         },
         deals: {
           type: Array,
@@ -551,6 +567,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
           },
         },
 
+
         /**
          * `requestsloaded` is a boolean to determine wether the whisper-msgs are received by this component.
          */
@@ -558,6 +575,18 @@ This is the component showing all requests of a certain hashtag. It contains a r
           type: Boolean,
           value: false
         },
+      },
+
+      // redux actions - see sc-redux.html for state handling of this data
+      actions: {
+        update_hashtaginfo: function(mutation){  
+          var hashtaginfo = Object.assign({},this.hashtaginfo);
+          hashtaginfo[mutation.hashtagaddress] = mutation.hashtaginfo;
+          return {
+            type: 'HASHTAGINFO',
+            hashtaginfo: hashtaginfo
+          };
+        }, 
       },
 
       _is: function(a, b) {
@@ -569,6 +598,24 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       _getHashTagName: function(hashtagaddress){
         return this.config.hashtagcontractToName(hashtagaddress);
+      },
+
+      _hashtagcontractloaded: function(){
+        //debugger;
+        var self = this;
+        this.$.hashtagcontract.getCommission(function(err,res){
+          self.commission = res;
+          // we update this in the app state too ( should be done better
+          // cause now state only updates when you're in this screen ... )
+          self.dispatch('update_hashtaginfo',{
+            hashtagaddress: self.data.hashtag,
+            hashtaginfo: {
+              commission: res
+            }
+          });
+          // this is to display this in this component
+          self.hashtagcommission = res;
+        });
       },
 
       _updatelistener: function(){

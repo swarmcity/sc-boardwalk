@@ -26,67 +26,55 @@
 
     let initialState = {
         deals: initialdeals,
-        mydeals: initialmydeals,
-        otherdeals: initialotherdeals,
+        //mydeals: initialmydeals,
+        //otherdeals: initialotherdeals,
         notifications: [],
-        mydeals: [],
-        otherdeals: [],
+        //mydeals: [],
+        //otherdeals: [],
         identity: {
             username: 'username',
             avatarhash: 'Qme5k7WUAoo5JwySiYGfhm4umvhUCTqVKPw2yfP7jhiqPT'
-        }
+        },
+        wallet: {},
+        hashtaginfo: {}
     };
 
     let reducer = function(state, action){
         if(!state){ 
             return initialState
         };
-        switch(action.type){
+        switch (action.type) {
             case 'NOTIFICATIONS':
-                //let notifications = state.notifications;
-                //notifications  = action.notifications;
-                return Object.assign({}, state, { notifications: action.notifications });
+                return Object.assign({}, state, {
+                    notifications: action.notifications
+                });
                 break;
-
+            case 'HASHTAGINFO':
+                return Object.assign({}, state, {
+                    hashtaginfo: action.hashtaginfo
+                });
+                break;
             case 'DEALS':
-
-//                console.log('redux_deals',action);
-                //let deals = state.deals;
-                //var deals  = action.deals;
-               
-                //debugger;
-                // NOTE: if you do deals = action.deals.slice(0)
-                // then the updates are not propagated to the template
-
                 var deals = [];
                 for (var i = 0; i < action.deals.length; i++) {
                     deals.push(Object.assign({}, action.deals[i]));
                 }
-            
-                setLS('sc-deals',deals);
-     
-                var newstate = Object.assign({}, state, {
+                // save this in localstorage
+                setLS('sc-deals', deals);
+                return Object.assign({}, state, {
                     deals: deals,
                 });
-
-                return newstate;
-
-                break;            
-                //let deals = state.deals;
-
-                // var newstate = Object.assign({}, state, { deals: action.deals });
-                // setLS('sc-deals',newstate.deals);
-                // return newstate;
-                // break;
-
+                break;
             case 'IDENTITY':
-                return Object.assign({}, state, {identity: action.identity});
+                return Object.assign({}, state, {
+                    identity: action.identity
+                });
                 break;
-                
             case 'WALLET':
-                return Object.assign({}, state, {wallet: action.wallet});
+                return Object.assign({}, state, {
+                    wallet: action.wallet
+                });
                 break;
-
         }
     }
 

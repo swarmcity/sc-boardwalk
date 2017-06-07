@@ -152,45 +152,30 @@ This components allow a Swarm Citizen to reply on a request.
 
 
     </style>
-
-      <div class$="{{focusclass}} yourrespond totalwidth vertic centercenter">
-
-          <!-- <paper-button noink class="darker totalwidth blue shadow respondbtn big" on-tap="toggleForm">Reply</paper-button> -->
-          <div class="totalwidth horizont start startjust">
-            <sc-avatar
-              class="replyeravatar"
-              ipfshash="[[identity.avatarhash]]"
-              size="small">
-            </sc-avatar>
-            <paper-input id="replyinput" label="Your reply" class="flex grey2unfocus replyinput" value="{{replytext}}"  on-focused-changed="checkFocus"></paper-input>
-
-<!--             <paper-button on-tap="toggleForm" noink class="addreplybtn grey4 shadow darker">
-            <sc-avatar
-              class="replyeravatar"
-              ipfshash="[[identity.avatarhash]]"
-              size="verysmall">
-            </sc-avatar>
-            Reply to this request<iron-icon icon="sc-icons:babble" class="small blue">reply-icon</iron-icon></paper-button> -->
-          </div>
-
-        <!-- <template is="dom-if" if="{{_is(replystate,'replying')}}"> -->
-
-      <iron-collapse id="replyform" class="totalwidth">
-          <div class="totalwidth vertic centercenter">
-          <div class="horizont end startjust totalwidth">
-            <paper-input id="amountinput" label="Your counteroffer" class="swtamount" value="{{replyamount}}" type="number">
-            </paper-input>
-            <p class="swtwithoffer bold">SWT</p>
-          </div>
-          <div class="totalwidth confirmbtns">
-            <iron-icon icon="sc-icons:decline" class="grey3" on-tap="toggleForm">close collapse</iron-icon>
-            <paper-icon-button id="replybtn" icon="sc-icons:v" noink class="white medium blueback shadow confirmbtn" on-tap="submitReply"> Reply with offer</paper-icon-button>
-          </div>
+    <div class$="{{focusclass}} yourrespond totalwidth vertic centercenter">
+      <div class="totalwidth horizont start startjust">
+        <sc-avatar
+          class="replyeravatar"
+          ipfshash="[[identity.avatarhash]]"
+          size="small">
+        </sc-avatar>
+        <paper-input id="replyinput" label="Your reply" class="flex grey2unfocus replyinput" value="{{replytext}}"  on-focused-changed="checkFocus"></paper-input>
       </div>
-
-  </iron-collapse>
-</div>
-  </template>
+    <iron-collapse id="replyform" class="totalwidth">
+      <div class="totalwidth vertic centercenter">
+        <div class="horizont end startjust totalwidth">
+          <paper-input id="amountinput" label="Your counteroffer" class="swtamount" value="{{replyamount}}" type="number">
+          </paper-input>
+          <p class="swtwithoffer bold">SWT</p>
+        </div>
+        <div class="totalwidth confirmbtns">
+          <iron-icon icon="sc-icons:decline" class="grey3" on-tap="toggleForm">close collapse</iron-icon>
+          <paper-icon-button id="replybtn" icon="sc-icons:v" noink class="white medium blueback shadow confirmbtn" on-tap="submitReply"> Reply with offer</paper-icon-button>
+        </div>
+      </div>
+    </iron-collapse>
+  </div>
+</template>
 
   <script>
     Polymer({
@@ -198,7 +183,6 @@ This components allow a Swarm Citizen to reply on a request.
       is: 'sc-itemreplier',
 
       observers: [
-        '_log(focusclass)',
         '_itemdata(itemdata)'
       ],
 
@@ -221,6 +205,11 @@ This components allow a Swarm Citizen to reply on a request.
           type: Boolean,
           value:true
         },
+
+        wallet: {
+          type: Object,
+          statePath: 'wallet',
+        },        
 
       },
 
@@ -276,15 +265,26 @@ This components allow a Swarm Citizen to reply on a request.
         this.$.replybtn.disabled = true;
 
         var amount = parseFloat(this.replyamount);
+
         if (amount === NaN ){
           this.erroramount = 'Please enter an amount';
-          // TODO : report to user that his input in invalid.
           return;
         }
 
-        amount = amount * this.$.config.swtinputunit;
+        if (amount < 0){
+          console.log('this is a negative number');
+          return;
+        }
 
-        //debugger;
+        if (this.wallet.swtbalance < amount * this.config.swtinputunit){
+          console.log('your balance is too low...');
+          return;
+        }
+
+        if (this.itemdata.amount < amount * this.config.swtinputunit){
+          console.log('you cant bid more than the deal amount...');
+          return;
+        }
 
         var message = {
           type: 'dealfortwo-request-reply',
@@ -336,10 +336,6 @@ This components allow a Swarm Citizen to reply on a request.
           self.$.replybtn.disabled = false;
           self.toggleForm();
         });
-      },
-
-      _log: function(target) {
-        console.log("*************************** in itemreplierzzzz", target);
       },
 
       checkFocus: function(){

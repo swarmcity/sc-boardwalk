@@ -253,7 +253,12 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
           type: Object,
           statePath: 'wallet',
         },
-
+        
+        hashtaginfo: {
+          type: Object,
+          statePath: 'hashtaginfo',
+        },
+        
         hashtagaddress: {
           type: String
         },
@@ -311,7 +316,9 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       _btnable: function(){
         var inputvalidated = true;
         
-        if (!this.offermsg || !this.offeramount || !this.geohash || !this.wallet || !this.wallet.swtbalance) {
+        if (!this.offermsg || !this.offeramount || !this.geohash || 
+          !this.wallet || !this.wallet.swtbalance || !this.hashtagaddress || 
+          this.hashtaginfo || !this.hashtaginfo[this.hashtagaddress]) {
           this.btnable = false;
           return;
         }
@@ -332,6 +339,12 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
         if (this.wallet.swtbalance < amount * this.config.swtinputunit){
           console.log('your balance is too low...');
+          this.btnable = false;
+          return;
+        }
+
+        if (this.hashtaginfo[this.hashtagaddress] && this.hashtaginfo[this.hashtagaddress].commission > amount * this.config.swtinputunit){
+          console.log('you must offer more than the commission');
           this.btnable = false;
           return;
         }
