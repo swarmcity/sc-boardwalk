@@ -160,7 +160,7 @@
               <div class="symbol">
                 <p class="semibold grey4">#</p>
               </div>
-              <p on-tap="toHashtag" class="grey4 bold">
+              <p class="grey4 bold">
                {{item}}
               </p>
           </div>
@@ -320,8 +320,9 @@
       toHashtag: function(e) {
         // if (this.phoneview) {
         var selectedhasht = this.config.hashtagcontracts[e.detail.sourceEvent.target.parentElement.id];
-        var selhash = this.shadowRoot.getElementById(selectedhasht);
 
+        var hashtoanimate = e.detail.sourceEvent.target.parentElement.id;
+        var selhash = this.shadowRoot.getElementById(hashtoanimate);
 
           this.sharedElements = {
               'hero': this.$.homeavatar,

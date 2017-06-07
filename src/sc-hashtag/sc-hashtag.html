@@ -696,166 +696,166 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
 
 
-       if (this.phoneview) {
-          this.sharedElements = {
-              'hero': this.$.hashtagavatar,
-            };
+       // // if (this.phoneview) {
+       //    this.sharedElements = {
+       //        'hero': this.$.hashtagavatar,
+       //      };
 
-          this.animationConfig = {
-                'entry': [{
-                //   name: 'fade-in-animation',
-                //   node:this.$.homebalance,
-                //   toPage: this,
-                //   timing: {
-                //     delay: 200,
-                //     duration: 125
-                //   },
+       //    this.animationConfig = {
+       //          'entry': [{
+       //          //   name: 'fade-in-animation',
+       //          //   node:this.$.homebalance,
+       //          //   toPage: this,
+       //          //   timing: {
+       //          //     delay: 200,
+       //          //     duration: 125
+       //          //   },
 
-                // // }, {
-                // //   name: 'slide-from-bottom-animation',
-                // //   node:this.$.bottomhalf,
-                // //   toPage: this,
-                // //   timing: {
-                // //     duration: 700
-                // //   }
-                // },{
-                  name: 'hero-animation',
-                  id: 'hero',
-                  toPage: this,
-                  timing: {
-                      duration: 600
-                    }
-                }],
+       //          // // }, {
+       //          // //   name: 'slide-from-bottom-animation',
+       //          // //   node:this.$.bottomhalf,
+       //          // //   toPage: this,
+       //          // //   timing: {
+       //          // //     duration: 700
+       //          // //   }
+       //          // },{
+       //            name: 'hero-animation',
+       //            id: 'hero',
+       //            toPage: this,
+       //            timing: {
+       //                duration: 600
+       //              }
+       //          }],
 
-                'exit': [{
+       //          'exit': [{
 
-                  name: 'fade-out-animation',
-                  node: this.$.pagecontent,
-                  fromPage: this,
-                  timing: {
-                    duration: 125
-                  }
-                }, {
-                  name: 'fade-out-animation',
-                  node:this.$.hashtagusername,
-                  fromPage: this,
-                  timing: {
-                      duration: 125
-                  }
-                },{
-                  name: 'fade-out-animation',
-                  node:this.$.hashtagbalancebox,
-                  fromPage: this,
-                  timing: {
-                      duration: 125
-                  }
-                },{
-                  name: 'fade-out-animation',
-                  node:this.$.notifsmobile,
-                  fromPage: this,
-                  timing: {
-                      duration: 125
-                  }
-                }, {
-                // //   name: 'slide-down-animation',
-                // //   node:this.$.bottomhalf,
-                // //   fromPage: this,
-                // //   timing: {
-                // //       duration: 700
-                // //   }
-                // },{
-                  name: 'hero-animation',
-                  id: 'hero',
-                  fromPage: this,
-                  timing: {
-                      duration: 600
-                    }
-                }]
-            };
+       //            name: 'fade-out-animation',
+       //            node: this.$.pagecontent,
+       //            fromPage: this,
+       //            timing: {
+       //              duration: 125
+       //            }
+       //          }, {
+       //            name: 'fade-out-animation',
+       //            node:this.$.hashtagusername,
+       //            fromPage: this,
+       //            timing: {
+       //                duration: 125
+       //            }
+       //          },{
+       //            name: 'fade-out-animation',
+       //            node:this.$.hashtagbalancebox,
+       //            fromPage: this,
+       //            timing: {
+       //                duration: 125
+       //            }
+       //          },{
+       //            name: 'fade-out-animation',
+       //            node:this.$.notifsmobile,
+       //            fromPage: this,
+       //            timing: {
+       //                duration: 125
+       //            }
+       //          }, {
+       //          // //   name: 'slide-down-animation',
+       //          // //   node:this.$.bottomhalf,
+       //          // //   fromPage: this,
+       //          // //   timing: {
+       //          // //       duration: 700
+       //          // //   }
+       //          // },{
+       //            name: 'hero-animation',
+       //            id: 'hero',
+       //            fromPage: this,
+       //            timing: {
+       //                duration: 600
+       //              }
+       //          }]
+       //      };
 
-          } else {
+       // //    } else {
 
-       this.sharedElements = {
-              'hero': this.$.hashtagavatar,
-            };
+       // // this.sharedElements = {
+       // //        'hero': this.$.hashtagavatar,
+       // //      };
 
-          this.animationConfig = {
-                'entry': [{
-                //   name: 'fade-in-animation',
-                //   node:this.$.homebalance,
-                //   toPage: this,
-                //   timing: {
-                //     delay: 200,
-                //     duration: 125
-                //   },
+       // //    this.animationConfig = {
+       // //          'entry': [{
+       // //          //   name: 'fade-in-animation',
+       // //          //   node:this.$.homebalance,
+       // //          //   toPage: this,
+       // //          //   timing: {
+       // //          //     delay: 200,
+       // //          //     duration: 125
+       // //          //   },
 
-                // // }, {
-                // //   name: 'slide-from-bottom-animation',
-                // //   node:this.$.bottomhalf,
-                // //   toPage: this,
-                // //   timing: {
-                // //     duration: 700
-                // //   }
-                // },{
-                  name: 'hero-animation',
-                  id: 'hero',
-                  toPage: this,
-                  timing: {
-                      duration: 600
-                    }
-                }],
+       // //          // // }, {
+       // //          // //   name: 'slide-from-bottom-animation',
+       // //          // //   node:this.$.bottomhalf,
+       // //          // //   toPage: this,
+       // //          // //   timing: {
+       // //          // //     duration: 700
+       // //          // //   }
+       // //          // },{
+       // //            name: 'hero-animation',
+       // //            id: 'hero',
+       // //            toPage: this,
+       // //            timing: {
+       // //                duration: 600
+       // //              }
+       // //          }],
 
-                'exit': [{
+       // //          'exit': [{
 
-                  name: 'fade-out-animation',
-                  node: this.$.pagecontent,
-                  fromPage: this,
-                  timing: {
-                    duration: 125
-                  }
-                }, {
-                  name: 'fade-out-animation',
-                  node:this.$.hashtagusername,
-                  fromPage: this,
-                  timing: {
-                      duration: 125
-                  }
-                },{
-                  name: 'fade-out-animation',
-                  node:this.$.hashtagbalancebox,
-                  fromPage: this,
-                  timing: {
-                      duration: 125
-                  }
-                },{
-                  name: 'fade-out-animation',
-                  node:this.$.notifsdesktop,
-                  fromPage: this,
-                  timing: {
-                      duration: 125
-                  }
-                }, {
-                // //   name: 'slide-down-animation',
-                // //   node:this.$.bottomhalf,
-                // //   fromPage: this,
-                // //   timing: {
-                // //       duration: 700
-                // //   }
-                // },{
-                  name: 'hero-animation',
-                  id: 'hero',
-                  fromPage: this,
-                  timing: {
-                      duration: 600
-                    }
-                }]
-            };
-
-
+       // //            name: 'fade-out-animation',
+       // //            node: this.$.pagecontent,
+       // //            fromPage: this,
+       // //            timing: {
+       // //              duration: 125
+       // //            }
+       // //          }, {
+       // //            name: 'fade-out-animation',
+       // //            node:this.$.hashtagusername,
+       // //            fromPage: this,
+       // //            timing: {
+       // //                duration: 125
+       // //            }
+       // //          },{
+       // //            name: 'fade-out-animation',
+       // //            node:this.$.hashtagbalancebox,
+       // //            fromPage: this,
+       // //            timing: {
+       // //                duration: 125
+       // //            }
+       // //          },{
+       // //            name: 'fade-out-animation',
+       // //            node:this.$.notifsdesktop,
+       // //            fromPage: this,
+       // //            timing: {
+       // //                duration: 125
+       // //            }
+       // //          }, {
+       // //          // //   name: 'slide-down-animation',
+       // //          // //   node:this.$.bottomhalf,
+       // //          // //   fromPage: this,
+       // //          // //   timing: {
+       // //          // //       duration: 700
+       // //          // //   }
+       // //          // },{
+       // //            name: 'hero-animation',
+       // //            id: 'hero',
+       // //            fromPage: this,
+       // //            timing: {
+       // //                duration: 600
+       // //              }
+       // //          }]
+       // //      };
 
 
 
-          }
+
+
+       // //    }
 
 
 
