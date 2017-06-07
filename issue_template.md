@@ -1,8 +1,11 @@
-Actual behavior:
+## Enviroment
+OS, Browser, Version
+
+## Actual behavior:
 
 
-Expected behavior:
+## Expected behavior:
 
 
-Steps to reproduce the problem:
+## Steps to reproduce the problem:
 
