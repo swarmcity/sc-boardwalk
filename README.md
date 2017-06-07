@@ -22,7 +22,8 @@ https://trello.com/b/jlViH0QQ/boardwalk-release
 First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polymer-cli) installed. Then run `polymer serve` to serve your application locally.
 
 ## Viewing the Application
-
 ```
 $ polymer serve
 ```
+## Dev setup
+`npm install`, `bower install` and `polymer serve`
