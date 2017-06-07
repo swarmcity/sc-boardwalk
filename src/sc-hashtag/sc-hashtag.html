@@ -725,6 +725,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
       // Open deals of others - respondable by me
       filter3: function(item){
         if (this.isMyDeal(item)) return false;
+        if (item.selectedreply) return false;
         return (item.dealstate == 'created');
       },
 
