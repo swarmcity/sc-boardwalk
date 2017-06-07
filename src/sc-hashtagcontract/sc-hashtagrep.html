@@ -3,12 +3,11 @@
 
 <dom-module id="sc-hashtagrep">
   <template>
-    <sc-hashtagcontract id="hashtagcontract" pubkey="{{pubkey}}" hashtagname="{{hashtagname}}"></sc-hashtagcontract>
+    <sc-hashtagcontract id="hashtagcontract" pubkey="{{pubkey}}" hashtagcontract="{{hashtagcontractaddress}}" loaded="{{hcready}}"></sc-hashtagcontract>
     <span>{{rep}}</span>
   </template>
   <script>
     var schashtagrep_contract;
-//    var acweb3_customproviderset = false;
 
     Polymer({
       is: 'sc-hashtagrep',
@@ -16,19 +15,27 @@
         pubkey: {
           type: String,
         },
-        hashtagname: {
+        hashtagcontractaddress: {
           type: String,
         }
       },
       observers: [
+        '_readRep(hcready,pubkey)'
       ],
 
       ready: function(){
-        console.log('sc-hashtagrep -> ready');
-        var self=this;
-        this.$.hashtagcontract.getRep(this.pubkey).then(function(rep){
-          self.rep = rep;
-        });
+        //debugger;
+      },
+
+      _readRep: function(){
+        //debugger;
+        if (this.hcready && this.pubkey){
+          console.log('sc-hashtagrep -> ready');
+          var self=this;
+          this.$.hashtagcontract.getRep(this.pubkey,function(err,rep){
+            self.rep = rep;
+          });          
+        }
       },
      
     });
