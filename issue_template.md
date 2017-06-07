@@ -9,3 +9,9 @@ OS, Browser, Version
 
 ## Steps to reproduce the problem:
 
+## Console Output (if possible):
+Go to developer tools, and select Console copy the Output below 
+
+```
+Output
+```
