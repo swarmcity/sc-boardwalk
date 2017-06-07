@@ -370,7 +370,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
             The user needs to know the commission that applies to this
             hastag. Bevause his offer needs to be > commission...
             The code for displying the hashtag commission is this :
-            
+
             <p><sc-tokenbalanceformatter value="{{hashtagcommission}}"></sc-tokenbalanceformatter></p>
 
              -->
@@ -386,7 +386,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
           data-action="newitem"
           geohash="[[geohash]]"
           identity="[[identity]]"
-          hashtagaddress="[[hashtagaddress]]"
+          hashtagaddress="[[data.hashtag]]"
           swtbalance="[[swtbalance]]"
           on-back="newitem_cancel"
           on-cancel=""
@@ -669,9 +669,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
       _routedata: function() {
         if (this.data && this.data.hashtag) {
           this.hashtag = this.data.hashtag;
-          //debugger;
-          //this.$.listeners._starthastaglistener(this.hashtag);
-          //console.log()
         }
       },
 
@@ -726,14 +723,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
         this.fire('leave');
       },
 
-      // // my deal -> to dealfortwo
-      // hashtag_to_dealfortwo: function(e) {
-      //   //debugger;
-      //   this.fire('redirect', {
-      //     target: '/dealfortwoseeker/' + this.hashtag + '/' + e.detail.id + '/' + e.detail.selectedreply
-      //   });
-      // },
-
       toWalletview: function(){
          this.fire('redirect', {
           target: '/walletview'
@@ -741,173 +730,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
       },
 
       toProfile: function(){
-
-
-
-       // // if (this.phoneview) {
-       //    this.sharedElements = {
-       //        'hero': this.$.hashtagavatar,
-       //      };
-
-       //    this.animationConfig = {
-       //          'entry': [{
-       //          //   name: 'fade-in-animation',
-       //          //   node:this.$.homebalance,
-       //          //   toPage: this,
-       //          //   timing: {
-       //          //     delay: 200,
-       //          //     duration: 125
-       //          //   },
-
-       //          // // }, {
-       //          // //   name: 'slide-from-bottom-animation',
-       //          // //   node:this.$.bottomhalf,
-       //          // //   toPage: this,
-       //          // //   timing: {
-       //          // //     duration: 700
-       //          // //   }
-       //          // },{
-       //            name: 'hero-animation',
-       //            id: 'hero',
-       //            toPage: this,
-       //            timing: {
-       //                duration: 600
-       //              }
-       //          }],
-
-       //          'exit': [{
-
-       //            name: 'fade-out-animation',
-       //            node: this.$.pagecontent,
-       //            fromPage: this,
-       //            timing: {
-       //              duration: 125
-       //            }
-       //          }, {
-       //            name: 'fade-out-animation',
-       //            node:this.$.hashtagusername,
-       //            fromPage: this,
-       //            timing: {
-       //                duration: 125
-       //            }
-       //          },{
-       //            name: 'fade-out-animation',
-       //            node:this.$.hashtagbalancebox,
-       //            fromPage: this,
-       //            timing: {
-       //                duration: 125
-       //            }
-       //          },{
-       //            name: 'fade-out-animation',
-       //            node:this.$.notifsmobile,
-       //            fromPage: this,
-       //            timing: {
-       //                duration: 125
-       //            }
-       //          }, {
-       //          // //   name: 'slide-down-animation',
-       //          // //   node:this.$.bottomhalf,
-       //          // //   fromPage: this,
-       //          // //   timing: {
-       //          // //       duration: 700
-       //          // //   }
-       //          // },{
-       //            name: 'hero-animation',
-       //            id: 'hero',
-       //            fromPage: this,
-       //            timing: {
-       //                duration: 600
-       //              }
-       //          }]
-       //      };
-
-       // //    } else {
-
-       // // this.sharedElements = {
-       // //        'hero': this.$.hashtagavatar,
-       // //      };
-
-       // //    this.animationConfig = {
-       // //          'entry': [{
-       // //          //   name: 'fade-in-animation',
-       // //          //   node:this.$.homebalance,
-       // //          //   toPage: this,
-       // //          //   timing: {
-       // //          //     delay: 200,
-       // //          //     duration: 125
-       // //          //   },
-
-       // //          // // }, {
-       // //          // //   name: 'slide-from-bottom-animation',
-       // //          // //   node:this.$.bottomhalf,
-       // //          // //   toPage: this,
-       // //          // //   timing: {
-       // //          // //     duration: 700
-       // //          // //   }
-       // //          // },{
-       // //            name: 'hero-animation',
-       // //            id: 'hero',
-       // //            toPage: this,
-       // //            timing: {
-       // //                duration: 600
-       // //              }
-       // //          }],
-
-       // //          'exit': [{
-
-       // //            name: 'fade-out-animation',
-       // //            node: this.$.pagecontent,
-       // //            fromPage: this,
-       // //            timing: {
-       // //              duration: 125
-       // //            }
-       // //          }, {
-       // //            name: 'fade-out-animation',
-       // //            node:this.$.hashtagusername,
-       // //            fromPage: this,
-       // //            timing: {
-       // //                duration: 125
-       // //            }
-       // //          },{
-       // //            name: 'fade-out-animation',
-       // //            node:this.$.hashtagbalancebox,
-       // //            fromPage: this,
-       // //            timing: {
-       // //                duration: 125
-       // //            }
-       // //          },{
-       // //            name: 'fade-out-animation',
-       // //            node:this.$.notifsdesktop,
-       // //            fromPage: this,
-       // //            timing: {
-       // //                duration: 125
-       // //            }
-       // //          }, {
-       // //          // //   name: 'slide-down-animation',
-       // //          // //   node:this.$.bottomhalf,
-       // //          // //   fromPage: this,
-       // //          // //   timing: {
-       // //          // //       duration: 700
-       // //          // //   }
-       // //          // },{
-       // //            name: 'hero-animation',
-       // //            id: 'hero',
-       // //            fromPage: this,
-       // //            timing: {
-       // //                duration: 600
-       // //              }
-       // //          }]
-       // //      };
-
-
-
-
-
-       // //    }
-
-
-
-
         this.fire('to-profile');
       },
 
@@ -941,8 +763,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
         if (item.iamprovider == true) return true;
 
         return false;
-        // if (item.ireplied==true && item.iamprovider==undefined && item.dealstate != 'accepted') return false;
-        // return (item.iamprovider == true);
       },
 
       // Open deals of others - respondable by me
@@ -955,7 +775,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
       isMyDeal: function(item){
         return (item.seeker.pubkey === this.identity.pubkey);
       },
-
 
       opacityHalf: function(){
         this.dealsopacity = "half";

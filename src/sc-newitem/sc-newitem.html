@@ -240,10 +240,6 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
       properties: {
 
-        // enabled: {
-        //   type: Boolean,
-        // },
-
         identity: {
           type: Object,
           statePath: 'identity',
@@ -315,10 +311,11 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
       _btnable: function(){
         var inputvalidated = true;
-        
+        debugger;
         if (!this.offermsg || !this.offeramount || !this.geohash || 
           !this.wallet || !this.wallet.swtbalance || !this.hashtagaddress || 
-          this.hashtaginfo || !this.hashtaginfo[this.hashtagaddress]) {
+          !this.hashtaginfo || !this.hashtaginfo[this.hashtagaddress])
+        {
           this.btnable = false;
           return;
         }
