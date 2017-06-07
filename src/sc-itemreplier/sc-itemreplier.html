@@ -297,7 +297,7 @@ This components allow a Swarm Citizen to reply on a request.
             pubkey: this.identity.pubkey
           },
           reply: this.replytext,
-          replyamount: amount,
+          replyamount: amount * this.config.swtinputunit,
           replytime: Date.now()
         };
 

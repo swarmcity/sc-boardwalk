@@ -432,20 +432,11 @@
             null,
             self.shhweb3.encodetopic(this.hashtag),
             null, // ID
-            // [self.shhweb3.encodetopic('all'),this.geohash.length > 1 ? self.shhweb3.encodetopic(this.geohash.slice(0, 1)) : null],
-            // [self.shhweb3.encodetopic('all'),this.geohash.length > 2 ? self.shhweb3.encodetopic(this.geohash.slice(0, 2)) : null],
-            // [self.shhweb3.encodetopic('all'),this.geohash.length > 3 ? self.shhweb3.encodetopic(this.geohash.slice(0, 3)) : null],
-            // [self.shhweb3.encodetopic('all'),this.geohash.length > 4 ? self.shhweb3.encodetopic(this.geohash.slice(0, 4)) : null],
             self.geohash.length > 1 ? [self.shhweb3.encodetopic('all'),self.shhweb3.encodetopic(self.geohash.slice(0, 1))] : null,
             self.geohash.length > 2 ? [self.shhweb3.encodetopic('all'),self.shhweb3.encodetopic(self.geohash.slice(0, 2))] : null,
             self.geohash.length > 3 ? [self.shhweb3.encodetopic('all'),self.shhweb3.encodetopic(self.geohash.slice(0, 3))] : null,
-            self.geohash.length > 4 ? [self.shhweb3.encodetopic('all'),self.shhweb3.encodetopic(self.geohash.slice(0, 4))] : null,            
-            // self.shhweb3.encodetopic(this.geohash.slice(0, 2)),
-            // self.shhweb3.encodetopic(this.geohash.slice(0, 3)),
-            // self.shhweb3.encodetopic(this.geohash.slice(0, 4)),
+            self.geohash.length > 4 ? [self.shhweb3.encodetopic('all'),self.shhweb3.encodetopic(self.geohash.slice(0, 4))] : null,
           ];
-
-          //self.shhweb3.dumptopics(mytopics);
 
           this.filter = self.shhweb3.shh.filter({
             "topics": mytopics,
@@ -474,6 +465,79 @@
           console.log(e);
         }
 
+        if (!this.messagequeue){
+          this.messagequeue = {};
+        }
+
+        // re-order and buffer items by gate
+        // gate 1 : create request
+        // gate 2 : reply to a request
+        // gate 3 : selection of provider
+        // gate 4 : funding of deal by provider
+        // gate 5 : approval of deal 
+        switch (payload.type){
+          case 'dealfortwo-request-create':
+            var dealid = payload.id;
+            if(!this.messagequeue[dealid]){ this.messagequeue[dealid] = this.payloadStructure(); }
+            this.messagequeue[dealid].gatequeue[0].push(payload);            
+            break;
+          case 'dealfortwo-request-reply':
+            var dealid = payload.parentrequestid;
+            if(!this.messagequeue[dealid]){ this.messagequeue[dealid] = this.payloadStructure(); }
+            this.messagequeue[dealid].gatequeue[1].push(payload);            
+            break;
+          case 'dealfortwo-select-provider':
+            var dealid = payload.requestid;
+            if(!this.messagequeue[dealid]){ this.messagequeue[dealid] = this.payloadStructure(); }
+            this.messagequeue[dealid].gatequeue[2].push(payload);            
+            break;
+          case 'dealfortwo-provider-funding':
+            var dealid = payload.id;
+            if(!this.messagequeue[dealid]){ this.messagequeue[dealid] = this.payloadStructure(); }
+            this.messagequeue[dealid].gatequeue[3].push(payload);
+            break;
+          case 'dealfortwo-approve':
+            var dealid = payload.requestid;
+            if(!this.messagequeue[dealid]){ this.messagequeue[dealid] = this.payloadStructure(); }
+            this.messagequeue[dealid].gatequeue[4].push(payload);
+            break;
+          default:
+            console.log('unknown gate for message',payload);
+            break;
+        }
+
+        //console.log('MQ',JSON.stringify(this.messagequeue,null,1));
+
+        // purge the queue
+        for (var key in this.messagequeue) {
+          if (this.messagequeue.hasOwnProperty(key)) {
+            var currentgate = this.messagequeue[key].currentgate;
+            // empty all gates up to the current gate
+            for (gates = 0 ; gates <= currentgate; gates++){
+              // increase the gate number if this one contains items.
+              if(this.messagequeue[key].gatequeue[gates].length > 0){
+                this.messagequeue[key].currentgate++;
+              }
+              if (this.messagequeue[key].gatequeue[currentgate]){              
+                while (this.messagequeue[key].gatequeue[currentgate].length > 0){
+                  msg = this.messagequeue[key].gatequeue[currentgate].pop();
+                  this.parsemessage(msg);
+                }
+              }
+            }            
+          }
+        }
+
+      },
+
+      payloadStructure: function(){
+        return {
+          currentgate: 0,
+          gatequeue: [[],[],[],[],[]]
+        }
+      },
+
+      parsemessage : function(payload){
         switch(payload.type){
           case 'dealfortwo-request-create':
             var self = this;
@@ -518,6 +582,17 @@
 
           case 'dealfortwo-request-reply':
             this.dispatch('request_reply', payload);
+
+            // var deal = this.getDeal(payload.parentrequestid);
+            // var reply = this.getReply(payload.parentrequestid,payload.id);
+
+            // if (deal.ismydeal){
+            //   this.dispatch('update_notification',{
+            //     id: payload.parentrequestid + '_' + payload.offertime,
+
+            //   })
+            // }
+
             break;
 
           case 'dealfortwo-select-provider':
@@ -608,6 +683,21 @@
             break;
         }
       },
+
+      getDeal: function(dealid){
+        return this.deals.find(function(item){
+              return item.id === dealid;
+        });
+      },
+
+      getReply: function(dealid,replyid){
+        return this.getDeal(dealid).replies.find(function(item){
+              return item.id === replyid;
+        });
+      },
+
+
+
     });
   </script>
 </dom-module>
