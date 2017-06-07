@@ -89,7 +89,7 @@ This is dealchatitem.
           <div class="balloon totalwidth">
             <div class="horizont center startjust wrap">
 <!--               <p class="small reg grey4">{{item.chattername}}</span></p> -->
-              <p class="grey2b light small leftm"><moment-js date="{{item.offertime}}" format="HH:mm"></moment-js></p>
+              <p class="grey2b light small leftm"><moment-js date="[[item.chattime]]" format="HH:mm"></moment-js></p>
             </div>
             <p>{{item.chatmsg}}</p>
 
@@ -101,8 +101,7 @@ This is dealchatitem.
         <div class="item_total">
             <div class="balloon totalwidth rightalign">
               <div class="horizont center endjust wrap">
-<!--                 <p class="small reg grey4">{{item.chattername}}</span></p> -->
-                <p class="grey2b light small leftm"><moment-js date="{{item.offertime}}" format="HH:mm"></moment-js></p>
+                <p class="grey2b light small leftm">{{item.chattime}}<moment-js date="[[item.chattime]]" format="HH:mm"></moment-js></p>
               </div>
               <p>{{item.chatmsg}}</p>
 
@@ -129,6 +128,10 @@ This is dealchatitem.
       ],
 
       properties: {
+
+        item: {
+          type: Object
+        },
 
         animationConfig: {
           value: function() {
@@ -189,6 +192,7 @@ This is dealchatitem.
 
 
       _log: function(target){
+        //debugger;
         console.log("***** log in chatitem ==",target);
       },
 
