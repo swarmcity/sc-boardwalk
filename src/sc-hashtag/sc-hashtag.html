@@ -331,7 +331,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
     <div class="avatar_username_balance_content totalwidth">
         <div class="avatar_username_balance">
           <template is="dom-if" if="{{phoneview}}">
-            <sc-notificationbadge on-tap="toNotifs" class="notifbadge noSelect" notifnumber="{{notifnumber}}" dummynotifications="{{notifs}}"></sc-notificationbadge>
+            <sc-notificationbadge on-tap="toNotifs" class="notifbadge noSelect" notifnumber="{{notifnumber}}" dummynotifications="{{notifs}}" id="notifsmobile"></sc-notificationbadge>
           </template>
           <sc-avatar
           ipfshash="[[identity.avatarhash]]"
@@ -351,7 +351,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
               <div class="warningbackup blue vertic centercenter"><p class="bold blue">!</p></div>
             </template> -->
             <template is="dom-if" if="{{!phoneview}}">
-              <sc-notificationbadge on-to-notifications="toNotifs" class="notifbadge noSelect" notifnumber="{{notifnumber}}" dummynotifications="{{notifs}}"></sc-notificationbadge>
+              <sc-notificationbadge on-to-notifications="toNotifs" class="notifbadge noSelect" notifnumber="{{notifnumber}}" dummynotifications="{{notifs}}" id="notifsdesktop"></sc-notificationbadge>
             </template>
           </div>
 <!--           <template is="dom-if" if="{{!phoneview}}">
@@ -363,7 +363,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
 
 
-          <div id="balancebox" class="balance_box" on-tap="toWalletview">
+          <div id="hashtagbalancebox" class="balance_box" on-tap="toWalletview">
             <sc-balance
               id="balance"
               refcur="EUR"
@@ -511,7 +511,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
           value: function() {
             return {
               'hero': this.$.hashtagavatar,
-              'balance': this.$.balancebox,
+              'balance': this.$.hashtagbalancebox,
               'currenttag': this.$.currenttag
 
             }
@@ -563,13 +563,13 @@ This is the component showing all requests of a certain hashtag. It contains a r
               }],
 
               'exit': [{
-              //   name: 'slide-down-animation',
-              //   node: this.$.pagecontent,
-              //   fromPage: this,
-              //   timing: {
-              //     duration: 700
-              //   }
-              // }, {
+                name: 'fade-out-animation',
+                node: this.$.pagecontent,
+                fromPage: this,
+                timing: {
+                  duration: 1000
+                }
+              }, {
 
 
 
@@ -747,6 +747,173 @@ This is the component showing all requests of a certain hashtag. It contains a r
       },
 
       toProfile: function(){
+
+
+
+       if (this.phoneview) {
+          this.sharedElements = {
+              'hero': this.$.hashtagavatar,
+            };
+
+          this.animationConfig = {
+                'entry': [{
+                //   name: 'fade-in-animation',
+                //   node:this.$.homebalance,
+                //   toPage: this,
+                //   timing: {
+                //     delay: 200,
+                //     duration: 125
+                //   },
+
+                // // }, {
+                // //   name: 'slide-from-bottom-animation',
+                // //   node:this.$.bottomhalf,
+                // //   toPage: this,
+                // //   timing: {
+                // //     duration: 700
+                // //   }
+                // },{
+                  name: 'hero-animation',
+                  id: 'hero',
+                  toPage: this,
+                  timing: {
+                      duration: 600
+                    }
+                }],
+
+                'exit': [{
+
+                  name: 'fade-out-animation',
+                  node: this.$.pagecontent,
+                  fromPage: this,
+                  timing: {
+                    duration: 125
+                  }
+                }, {
+                  name: 'fade-out-animation',
+                  node:this.$.hashtagusername,
+                  fromPage: this,
+                  timing: {
+                      duration: 125
+                  }
+                },{
+                  name: 'fade-out-animation',
+                  node:this.$.hashtagbalancebox,
+                  fromPage: this,
+                  timing: {
+                      duration: 125
+                  }
+                },{
+                  name: 'fade-out-animation',
+                  node:this.$.notifsmobile,
+                  fromPage: this,
+                  timing: {
+                      duration: 125
+                  }
+                }, {
+                // //   name: 'slide-down-animation',
+                // //   node:this.$.bottomhalf,
+                // //   fromPage: this,
+                // //   timing: {
+                // //       duration: 700
+                // //   }
+                // },{
+                  name: 'hero-animation',
+                  id: 'hero',
+                  fromPage: this,
+                  timing: {
+                      duration: 600
+                    }
+                }]
+            };
+
+          } else {
+
+       this.sharedElements = {
+              'hero': this.$.hashtagavatar,
+            };
+
+          this.animationConfig = {
+                'entry': [{
+                //   name: 'fade-in-animation',
+                //   node:this.$.homebalance,
+                //   toPage: this,
+                //   timing: {
+                //     delay: 200,
+                //     duration: 125
+                //   },
+
+                // // }, {
+                // //   name: 'slide-from-bottom-animation',
+                // //   node:this.$.bottomhalf,
+                // //   toPage: this,
+                // //   timing: {
+                // //     duration: 700
+                // //   }
+                // },{
+                  name: 'hero-animation',
+                  id: 'hero',
+                  toPage: this,
+                  timing: {
+                      duration: 600
+                    }
+                }],
+
+                'exit': [{
+
+                  name: 'fade-out-animation',
+                  node: this.$.pagecontent,
+                  fromPage: this,
+                  timing: {
+                    duration: 125
+                  }
+                }, {
+                  name: 'fade-out-animation',
+                  node:this.$.hashtagusername,
+                  fromPage: this,
+                  timing: {
+                      duration: 125
+                  }
+                },{
+                  name: 'fade-out-animation',
+                  node:this.$.hashtagbalancebox,
+                  fromPage: this,
+                  timing: {
+                      duration: 125
+                  }
+                },{
+                  name: 'fade-out-animation',
+                  node:this.$.notifsdesktop,
+                  fromPage: this,
+                  timing: {
+                      duration: 125
+                  }
+                }, {
+                // //   name: 'slide-down-animation',
+                // //   node:this.$.bottomhalf,
+                // //   fromPage: this,
+                // //   timing: {
+                // //       duration: 700
+                // //   }
+                // },{
+                  name: 'hero-animation',
+                  id: 'hero',
+                  fromPage: this,
+                  timing: {
+                      duration: 600
+                    }
+                }]
+            };
+
+
+
+
+
+          }
+
+
+
+
         this.fire('to-profile');
       },
 

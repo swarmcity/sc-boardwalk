@@ -229,6 +229,7 @@
        */
         sharedElements: {
           type: Object,
+          observer: '_whatwhat',
           value: function() {
             return {
               'hero': '',
@@ -240,6 +241,7 @@
        * `animationConfig` is used to configure animations.
        */
         animationConfig: {
+          observer: '_whatwhat'
         },
 
 
@@ -386,20 +388,23 @@
 
                 'exit': [
                   {
-                    name: 'fade-out-animation',
-                    node:this.$.homeusername,
-                    fromPage: this,
-                    timing: {
-                        duration: 200
-                    }
-                  }, {
-                    name: 'fade-out-animation',
-                    node:this.$.bottomhalf,
-                    fromPage: this,
-                    timing: {
-                        duration: 200
-                    }
-                  },{
+                  //   name: 'fade-out-animation',
+                  //   node:this.$.homeusername,
+                  //   fromPage: this,
+                  //   timing: {
+                  //       duration: 200
+                  //   }
+                  // }, {
+                  //   name: 'fade-out-animation',
+                  //   node:this.$.bottomhalf,
+                  //   fromPage: this,
+                  //   timing: {
+                  //       duration: 200
+                  //   }
+                  // },{
+
+
+
                     name: 'hero-animation',
                     id: 'currenttag',
                     fromPage: this,
@@ -571,6 +576,11 @@
       toNotifs: function(){
           this.fire('to-notifications');
       },
+
+      _whatwhat: function(){
+        console.log('***** ***** this.animationConfig',this.animationConfig);
+        console.log('***** ***** this.sharedElements',this.sharedElements);
+      }
 
 
 
