@@ -318,113 +318,76 @@
       * 'toHashtag' makes the app go to a new view/route (in this case sc-hashtag). The function sets the animationConfig and sharedElements, then fires 'to-hashtag' to the parent-element to change the route.
       */
       toHashtag: function(e) {
-        // if (this.phoneview) {
+
+        var selhash = e.detail.sourceEvent.target.parentElement;
+
+        this.sharedElements = {
+          'hero': this.$.homeavatar,
+          'balance': this.$.homebalance,
+          'currenttag': selhash
+        };
+
+        this.animationConfig = {
+          'entry': [{
+            name: 'fade-in-animation',
+            node: this.$.homeusername,
+            toPage: this,
+            timing: {
+              delay: 475,
+              duration: 125
+            }
+          }, {
+            name: 'hero-animation',
+            id: 'currenttag',
+            toPage: this,
+            timing: {
+              duration: 500
+            }
+          }, {
+            name: 'hero-animation',
+            id: 'hero',
+            toPage: this,
+            timing: {
+              duration: 500
+            }
+          }, {
+            name: 'hero-animation',
+            id: 'balance',
+            toPage: this,
+            timing: {
+              duration: 500
+            }
+          }],
+
+          'exit': [{
+
+
+            name: 'hero-animation',
+            id: 'currenttag',
+            fromPage: this,
+            timing: {
+              duration: 500
+            }
+          }, {
+            name: 'hero-animation',
+            id: 'hero',
+            fromPage: this,
+            timing: {
+              duration: 500
+            }
+          }, {
+            name: 'hero-animation',
+            id: 'balance',
+            fromPage: this,
+            timing: {
+              duration: 500
+            }
+          }]
+        };
+        
         var selectedhasht = this.config.hashtagcontracts[e.detail.sourceEvent.target.parentElement.id];
+        this.fire('to-hashtag', selectedhasht);
 
-        var hashtoanimate = e.detail.sourceEvent.target.parentElement.id;
-        var selhash = this.shadowRoot.getElementById(hashtoanimate);
-
-          this.sharedElements = {
-              'hero': this.$.homeavatar,
-              'balance': this.$.homebalance,
-              'currenttag': selhash
-            };
-
-          this.animationConfig = {
-              'entry': [
-              // {
-              //     name: 'fade-in-animation',
-              //     node:this.$.homebalance,
-              //     toPage: this,
-              //     timing: {
-              //       delay: 200,
-              //       duration: 125
-              //     }
-              //   },
-                {
-                  name: 'fade-in-animation',
-                  node:this.$.homeusername,
-                  toPage: this,
-                  timing: {
-                    delay: 475,
-                    duration: 125
-                  }
-                // }, {
-                //   name: 'slide-from-bottom-animation',
-                //   node:this.$.bottomhalf,
-                //   toPage: this,
-                //   timing: {
-                //     duration: 700
-                //   }
-                },{
-                  name: 'hero-animation',
-                  id: 'currenttag',
-                  toPage: this,
-                  timing: {
-                      duration: 500
-                  }
-                },{
-                  name: 'hero-animation',
-                  id: 'hero',
-                  toPage: this,
-                  timing: {
-                      duration: 500
-                  }
-                },{
-                  name: 'hero-animation',
-                  id: 'balance',
-                  toPage: this,
-                  timing: {
-                      duration: 500
-                  }
-                }],
-
-                'exit': [
-                  {
-                  //   name: 'fade-out-animation',
-                  //   node:this.$.homeusername,
-                  //   fromPage: this,
-                  //   timing: {
-                  //       duration: 200
-                  //   }
-                  // }, {
-                  //   name: 'fade-out-animation',
-                  //   node:this.$.bottomhalf,
-                  //   fromPage: this,
-                  //   timing: {
-                  //       duration: 200
-                  //   }
-                  // },{
-
-
-
-                    name: 'hero-animation',
-                    id: 'currenttag',
-                    fromPage: this,
-                    timing: {
-                        duration: 500
-                    }
-                  },{
-                    name: 'hero-animation',
-                    id: 'hero',
-                    fromPage: this,
-                    timing: {
-                        duration: 500
-                    }
-                  },{
-                    name: 'hero-animation',
-                    id: 'balance',
-                    fromPage: this,
-                    timing: {
-                        duration: 500
-                    }
-                }]
-              };
-              // debugger;
-            this.fire('to-hashtag',selectedhasht);
-          // } else {
-          //   this.fire('to-hashtag',e.detail);
-          // }
       },
 
       /**
