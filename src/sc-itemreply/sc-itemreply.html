@@ -15,9 +15,9 @@
 <!--
 `sc-itemreply`
 
-This component shows a reply on a request. 
+This component shows a reply on a request.
 
-@demo src/sc-itemreply/demo/index.html 
+@demo src/sc-itemreply/demo/index.html
 -->
 
 <dom-module id="sc-itemreply">
@@ -45,7 +45,7 @@ This component shows a reply on a request.
 
       .replyamount {
       }
-      
+
       .replyer {
         font-size: 11px;
         line-height: 14px;
@@ -70,9 +70,9 @@ This component shows a reply on a request.
         width: 100%;
         @apply(--layout-vertical);
         @apply(--layout-start);
-        @apply(--layout-start-justified); 
+        @apply(--layout-start-justified);
         box-sizing:border-box;
-        padding-top: 18vh;    
+        padding-top: 18vh;
       }
 
       .paddingsides {
@@ -84,8 +84,8 @@ This component shows a reply on a request.
         width: 100%;
         max-width: 700px;
         box-sizing:border-box;
-        padding-top: 6vh; 
-        padding-bottom: 6vh; 
+        padding-top: 6vh;
+        padding-bottom: 6vh;
       }
 
       .username {
@@ -97,12 +97,12 @@ This component shows a reply on a request.
         width: 80%;
         font-size: 22px;
         line-height: 24px;
-        margin-top: 10px;        
-        margin-bottom: 10px;        
+        margin-top: 10px;
+        margin-bottom: 10px;
       }
 
       .replyeravatar_detail {
-        margin-right: 12px;        
+        margin-right: 12px;
       }
 
       .requestself {
@@ -145,7 +145,7 @@ This component shows a reply on a request.
         border-bottom: 2px solid var(--sc-blue);
         @apply(--layout-horizontal);
         @apply(--layout-start);
-        @apply(--layout-end-justified); 
+        @apply(--layout-end-justified);
         margin: 0px 0px 0px 0px;
       }
 
@@ -163,7 +163,7 @@ This component shows a reply on a request.
         border-bottom: 2px solid var(--sc-grey3);
         @apply(--layout-horizontal);
         @apply(--layout-start);
-        @apply(--layout-end-justified); 
+        @apply(--layout-end-justified);
         margin: 0px 0px 0px 0px;
       }
 
@@ -204,7 +204,7 @@ This component shows a reply on a request.
         margin-right: 10px;
         margin-left: 2px;
       }
-      
+
       .msg {
 /*        margin-top: 2px;*/
         font-size: 14px;
@@ -224,15 +224,15 @@ This component shows a reply on a request.
 
 
 
-      @media all and (min-width: 0) and (max-width: 420px) { 
+      @media all and (min-width: 0) and (max-width: 420px) {
 
 
         .totalcontainer {
           width: 100%;
           @apply(--layout-vertical);
-          @apply(--layout-center-center);        
+          @apply(--layout-center-center);
           box-sizing:border-box;
-          padding-top: 4vh; 
+          padding-top: 4vh;
         }
 
 
@@ -258,7 +258,7 @@ This component shows a reply on a request.
         border-bottom: 1px solid var(--sc-blue);
         @apply(--layout-horizontal);
         @apply(--layout-start);
-        @apply(--layout-start-justified); 
+        @apply(--layout-start-justified);
         margin: 0px 0px 0px 0px;
       }
 
@@ -269,7 +269,7 @@ This component shows a reply on a request.
         border-bottom: 1px solid var(--sc-grey3);
         @apply(--layout-horizontal);
         @apply(--layout-start);
-        @apply(--layout-start-justified); 
+        @apply(--layout-start-justified);
         margin: 0px 0px 0px 0px;
       }
 
@@ -311,7 +311,7 @@ This component shows a reply on a request.
             <p class="grey2b light small"><moment-js date="{{reply.replytime}}" format="HH:mm:ss.SSS" from-now></moment-js></p>
 
           </div>
-          <p class="msg totalwidth grey4"> {{reply.msg}} <span class="bold"> for <sc-tokenbalanceformatter value="{{reply.replyamount}}"></sc-tokenbalanceformatter></span></p>
+          <p class="msg totalwidth grey4"> {{reply.msg}} <span class="bold"> for <sc-tokenbalanceformatter value="{{reply.replyamount}}"  decimals=3  denomination="SWT"></sc-tokenbalanceformatter></span></p>
 
           <template is="dom-if" if="{{phoneview}}">
             <template is="dom-if" if="{{btnshow}}">
@@ -335,7 +335,7 @@ This component shows a reply on a request.
                 </div>
               </template>
             </template>
-          </template>        
+          </template>
       </div>
         </div>
       </div>
@@ -365,7 +365,7 @@ This component shows a reply on a request.
         identity: {
           type: Object,
           statePath: 'identity',
-        },  
+        },
 
         /**
        * `btnshow` determines wether or not to show the btn to start a deal. sc-itemdetail determines if this is true or false and passes it to this component.
@@ -419,14 +419,14 @@ This component shows a reply on a request.
       },
 
       /**
-      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
+      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage
       * use this to initialize any variables to start the component
       */
       onEnter: function(){
       },
 
       /**
-      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage 
+      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage
       * use this to reset any variables when leaving this component while it remains loaded.
       */
       onExit: function(){
@@ -458,10 +458,10 @@ This component shows a reply on a request.
         if (this.item.selectedreply) {
           if(this.item.selectedreply == this.reply.id){
             //this.yourethechoosenone = true;
-            this.displaythis = "full";       
+            this.displaythis = "full";
           } else {
             //this.yourethechoosenone = false;
-            this.displaythis = "notfull";       
+            this.displaythis = "notfull";
           }
 
           var foundReply = this.item.replies.find(function(item){
@@ -511,7 +511,7 @@ This component shows a reply on a request.
           self.shhweb3.encodetopic('all'),
           self.shhweb3.encodetopic('all'),
           self.shhweb3.encodetopic('all'),
-          self.shhweb3.encodetopic('all'),          
+          self.shhweb3.encodetopic('all'),
         ];
 
         var options = {
@@ -539,7 +539,7 @@ This component shows a reply on a request.
 
       youareowner: function(pubkey){
         return (this.identity.pubkey == pubkey);
-      },  
+      },
 
     });
   </script>
