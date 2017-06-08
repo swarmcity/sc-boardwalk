@@ -726,8 +726,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                <template is="dom-if" if="{{_is(requestdatadealstate,'accepted')}}">
                   <h1 class="">You selected <span class="light blue replyer_username">{{replydata.provider.username}}</span> to make a deal for <span class=""><sc-tokenbalanceformatter value="{{deducthalfcommission(requestdata.amount)}}" rounding="false" decimals=3></sc-tokenbalanceformatter></span>.</h1>
                 
-                <p class="grey2b reg">The hashtagfee of #{{hashtagcontractToName(requestdata.hashtag)}} is
-                <sc-tokenbalanceformatter value="{{hashtagcommission_div2}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></p>
+                <!-- <p class="grey2b reg">The hashtagfee of #{{hashtagcontractToName(requestdata.hashtag)}} is
+                <sc-tokenbalanceformatter value="{{hashtagcommission_div2}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></p> -->
 
                </template>
 

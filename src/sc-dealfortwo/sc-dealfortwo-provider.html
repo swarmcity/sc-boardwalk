@@ -660,8 +660,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
             <template is="dom-if" if="{{_is(requestdata.dealstate,'accepted')}}">
               <h1 class="">Do you accept a deal  with <span class="light blue replyer_username">{{requestdata.seeker.username}}</span> for <span class=""><sc-tokenbalanceformatter value="{{deducthalfcommission(requestdata.amount,hashtagcommission_div2)}}" rounding="false" decimals=3></sc-tokenbalanceformatter></span>?</h1>
 
-            <p class="grey2b reg">The hashtagfee of #{{hashtagcontractToName(requestdata.hashtag)}} is
-                <sc-tokenbalanceformatter value="{{hashtagcommission_div2}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></p>
+<!--             <p class="grey2b reg">The hashtagfee of #{{hashtagcontractToName(requestdata.hashtag)}} is
+                <sc-tokenbalanceformatter value="{{hashtagcommission_div2}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></p> -->
 
             </template>
 
@@ -798,8 +798,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 <!-- Here we also need to add the hashtagcommission / 2 -->
           <div class$="bottomhalf {{bottombg}} totalwidth">
             <template is="dom-if" if="{{!provideraccept}}">
-              <p class="white light centertxt">By accepting, <sc-tokenbalanceformatter value="{{addhalfcommission(requestdata.amount)}}" decimals=3></sc-tokenbalanceformatter> will be locked on this deal until payout.</p>
-              <p class="white light centertxt">from that amount <sc-tokenbalanceformatter value="{{hashtagcommission_div2}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter> will be sent to the hashtag maintainer upon payout.</p>
+              <p class="white light centertxt">By accepting, <sc-tokenbalanceformatter value="{{addhalfcommission(requestdata.amount)}}" decimals=3></sc-tokenbalanceformatter> will be locked on this deal. At payout, the hashtagmaintainer will receive the hashtagfee (<sc-tokenbalanceformatter value="{{hashtagcommission_div2}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter>). You will receive the remaining funds.</p>
+              <!-- <p class="white light centertxt">from that amount <sc-tokenbalanceformatter value="{{hashtagcommission_div2}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter> will be sent to the hashtag maintainer upon payout.</p> -->
               <div class="confirmbtns">
                 <template is="dom-if" if="{{btntapped}}">
                   <sc-loader small color="white"></sc-loader>
