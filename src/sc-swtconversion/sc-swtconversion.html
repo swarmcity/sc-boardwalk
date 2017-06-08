@@ -520,15 +520,15 @@ Polymer({
   },
 
   checkarc: function(err, ARCbalance) {
-    if (this.arcbalance && this.arcbalance > 0) {
+    if (this.arcbalance !== undefined && this.arcbalance > 0) {
       this.needstoconvert = true;
+      this.startconvert();
     } else {
       this.needstoconvert = false;
     }
   },
 
   checkgas: function(err, ETHbalance) {
-
     var ethrequired = this.gasPrice * 200000;
 
     if (this.ETHbalance !== undefined && this.ETHbalance > ethrequired) {
@@ -551,8 +551,8 @@ Polymer({
     this.ethcheckstate = 'doing'
 
     this.web3.eth.getGasPrice(function(err, result) {
-      this.gasPrice = result.toNumber(10) * 1.105;
-
+      this.gasPrice = result.toNumber(10);
+      console.log("gasPrice: " , this.gasPrice);
       this.getETHBalance(function() {
 
         if (this.checkgas()) {
@@ -646,12 +646,11 @@ Polymer({
 
       var requiredallowance = self.arcbalance;
 
-      self.gasforapprove = self.ARCTokenInstance.approve.estimateGas(self.config.swtconversioncontractaddress, requiredallowance.toNumber(10), {
+      self.gasforapprove = self.ARCTokenInstance.approve.estimateGas(self.config.swtconversioncontractaddress, requiredallowance, {
         from: self.$.helpers.fixaddress(self.account),
       });
       console.log('gas needed for approval=',self.gasforapprove);
-
-      self.ARCTokenInstance.approve.sendTransaction(self.config.swtconversioncontractaddress, requiredallowance.toNumber(10), {
+      self.ARCTokenInstance.approve.sendTransaction(self.config.swtconversioncontractaddress, requiredallowance, {
         from: self.$.helpers.fixaddress(self.account),
         gasPrice: self.gasPrice,
         gas: self.gasforapprove
