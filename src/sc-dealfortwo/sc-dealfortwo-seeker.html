@@ -724,7 +724,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
               </div>
 
                <template is="dom-if" if="{{_is(requestdatadealstate,'accepted')}}">
-                  <h1 class="">You selected <span class="light blue replyer_username">{{replydata.provider.username}}</span> to make a deal for <span class=""><sc-tokenbalanceformatter value="{{deducthalfcommission(requestdata.amount)}}" rounding="false" decimals=3></sc-tokenbalanceformatter></span>.</h1>
+                  <h1 class="">You selected <span class="light blue replyer_username">{{replydata.provider.username}}</span> to make a deal for <span class=""><sc-tokenbalanceformatter value="{{deducthalfcommission(requestdata.amount,hashtagcommission_div2)}}" rounding="false" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></span>.</h1>
                 
                 <p class="grey2b reg">The hashtagfee of #{{hashtagcontractToName(requestdata.hashtag)}} is
                 <sc-tokenbalanceformatter value="{{hashtagcommission_div2}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></p>
@@ -765,9 +765,16 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
                         <div class="detail">
                           <p class="cat">Offer</p>
-                          <p class="reg bold"><sc-tokenbalanceformatter value="{{deducthalfcommission(requestdata.amount)}}" decimals=3></sc-tokenbalanceformatter></p>
+                          <p class="reg bold"><sc-tokenbalanceformatter value="{{deducthalfcommission(requestdata.amount,hashtagcommission_div2)}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></p>
                         </div>
 
+                        <template is="dom-if" if="{{hashtagcommission_div2}}">
+                          <div class="detail">
+                            <p class="cat">Fee</p>
+                            <p class="reg"><sc-tokenbalanceformatter value="{{hashtagcommission_div2}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></p></p>
+                          </div>
+                        </template>
+                        
                         <div class="detail">
                           <p class="cat">Hashtag</p>
                           <p class="reg bold">#{{hashtagcontractToName(requestdata.hashtag)}}</p>
@@ -820,13 +827,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                           <div class="detail">
                             <p class="cat">Payout</p>
                             <a href="https://etherscan.io/tx/{{requestdata.payouttx}}" target="_new"  class="reg blue">{{requestdata.payouttx}}</a>
-                          </div>
-                        </template>
-
-                        <template is="dom-if" if="{{requestdata.dealdata}}">
-                          <div class="detail">
-                            <p class="cat">Fee</p>
-                            <p class="reg"><sc-tokenbalanceformatter value="{{requestdata.dealdata.commissionValue}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></p>
                           </div>
                         </template>
 

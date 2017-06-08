@@ -531,9 +531,9 @@
             break;
         }
 
-        console.log('MQ before',JSON.stringify(this.messagequeue,null,1));
+        //console.log('MQ before',JSON.stringify(this.messagequeue,null,1));
         this.purgeQueue();
-        console.log('MQ after',JSON.stringify(this.messagequeue,null,1));
+        //console.log('MQ after',JSON.stringify(this.messagequeue,null,1));
 
       },
 
@@ -673,8 +673,21 @@
                   providerfundingallowancetx_mined: true
                 });
               });
-            }            
-            //this.dispatch('request_provider_funding', payload);
+            } 
+ 
+            // send a notification ?
+            var deal = this.getDeal(mutation.id);
+            if (deal.ismydeal) {
+              var reply = this.getReply(mutation.id, deal.selectedreply);
+              this.dispatch('update_notification', {
+                id: deal.id + '_' + payload.time,
+                senderidentity: reply.provider,
+                timestamp: payload.timestamp,
+                msg: 'You\'re now in a deal with ' + reply.provider.username,
+                hashtag: deal.hashtag
+              })
+            }
+
             break;
 
           case 'dealfortwo-approve':
@@ -700,7 +713,23 @@
                 });
                 self.fire('updatebalance');
               });
-            }                 
+            }
+
+            // send a notification ?
+            var deal = this.getDeal(mutation.id);
+            if (!deal.ismydeal && deal.iamprovider) {
+              debugger;
+              var reply = this.getReply(mutation.id, deal.selectedreply);
+              this.dispatch('update_notification', {
+                id: deal.id + '_' + payload.time,
+                senderidentity: reply.provider,
+                timestamp: payload.timestamp,
+                msg: reply.provider.username + ' paid out your deal. ',
+                hashtag: deal.hashtag
+              })
+            }
+
+
             break;   
           default:
             console.log('unknown message:',payload);
