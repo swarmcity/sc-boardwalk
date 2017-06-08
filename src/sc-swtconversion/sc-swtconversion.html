@@ -646,12 +646,12 @@ Polymer({
 
       var requiredallowance = self.arcbalance;
 
-      self.gasforapprove = self.ARCTokenInstance.approve.estimateGas(self.config.swtconversioncontractaddress, requiredallowance, {
+      self.gasforapprove = self.ARCTokenInstance.approve.estimateGas(self.config.swtconversioncontractaddress, requiredallowance.toNumber(10), {
         from: self.$.helpers.fixaddress(self.account),
       });
       console.log('gas needed for approval=',self.gasforapprove);
 
-      self.ARCTokenInstance.approve.sendTransaction(self.config.swtconversioncontractaddress, requiredallowance, {
+      self.ARCTokenInstance.approve.sendTransaction(self.config.swtconversioncontractaddress, requiredallowance.toNumber(10), {
         from: self.$.helpers.fixaddress(self.account),
         gasPrice: self.gasPrice,
         gas: self.gasforapprove
