@@ -111,15 +111,35 @@ This component shows the SWT-balance and the reference currency (when in sc-wall
         </template>
         <template is="dom-if" if="{{_is( viewmode, 'small')}}">
           <h1 class="yellow bold"><sc-tokenbalanceformatter value="{{swtbalance}}" onlybalance></sc-tokenbalanceformatter></h1>
+          <h3 class="yellow bold"><sc-tokenbalanceformatter value="{{ethbalance}}" onlybalance></sc-tokenbalanceformatter></h1>
         </template>
         <template is="dom-if" if="{{_is( viewmode, 'normal')}}">
           <h1 class="yellow bold"><sc-tokenbalanceformatter value="{{swtbalance}}" onlybalance></sc-tokenbalanceformatter></h1>
           <h1 class="yellow bold"><span class="SWTletters"> <sc-tokenbalanceformatter value="{{swtbalance}}" onlydenomination></sc-tokenbalanceformatter></span></h1>
+
+          <h3 class="yellow bold"><sc-tokenbalanceformatter value="{{ethbalance}}" onlybalance></sc-tokenbalanceformatter></h1>
+
+
         </template>
         <template is="dom-if" if="{{_is( viewmode, 'big')}}">
           <h1 class="yellow bold big"><sc-tokenbalanceformatter value="{{swtbalance}}" onlybalance></sc-tokenbalanceformatter></h1>
           <h1 class="yellow bold"><span class="SWTletters"> <sc-tokenbalanceformatter value="{{swtbalance}}" onlydenomination></sc-tokenbalanceformatter></span></h1>
+          <h2 class="yellow bold big"><sc-tokenbalanceformatter value="{{ethbalance}}" onlybalance></sc-tokenbalanceformatter></h1>
+          <h2 class="yellow bold"><span class="SWTletters"> <sc-tokenbalanceformatter value="{{ethbalance}}" onlydenomination></sc-tokenbalanceformatter></span></h1>
+ 
         </template>
+
+
+
+        <template is="dom-if" if="{{_is( viewmode, 'small')}}">
+
+        </template>
+        <template is="dom-if" if="{{_is( viewmode, 'normal')}}">
+
+        </template>
+        <template is="dom-if" if="{{_is( viewmode, 'big')}}">
+       </template>
+
       </div>
 
       <template is="dom-if" if="{{_is(phoneview)}}">
@@ -152,6 +172,14 @@ This component shows the SWT-balance and the reference currency (when in sc-wall
           type: Object,
           observer: '_swtbalance'
         },
+        /**
+       * `ethbalance` is the eth balance.
+       */
+        ethbalance: {
+          type: Object,
+          observer: '_ethbalance'
+        },
+
         /**
        * `balanceref` is the balance of the reference currency.
        */        
@@ -245,6 +273,22 @@ This component shows the SWT-balance and the reference currency (when in sc-wall
         //this.balanceref = '0,00';
 
       },
+
+      _ethbalance: function() {
+        var charcount = this.ethbalance.toString().length;
+        this.balancesize = charcount * this.basesize;
+        this.balanceref = this.convertcurrency(this.ethbalance);
+
+        if (!this.balanceloaded) {
+          this.balanceloaded = true;
+        }
+
+        // THIS IS DUMMY, PLEASE REMOVE WHEN THE FUNCTION WORKS
+        //this.balanceref = '0,00';
+
+      },
+
+
 
       /**
       * 'convertcurrency' takes the data from the ajaxcalls and links them to one another to show the actual the SWT-balance in the actual reference curreny (standard USD).
