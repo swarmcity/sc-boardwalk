@@ -292,7 +292,7 @@
 
         // seeker says : I just selected this reply as my provider
         select_provider: function(payload){
-          debugger;
+          //debugger;
           var mutation = {
             id : payload.requestid,
             lastupdate : Date.now(),
@@ -366,7 +366,7 @@
                   break;
                 default:
                   targetstate = 'init';
-                  debugger;
+                  //debugger;
                   break;
               }
               mutation.dealstate = targetstate;
@@ -379,18 +379,18 @@
             mutation.dealstate = 'accepted';
             deals.push(Object.assign(this.getEmptyDeal(),mutation));
           }
-          debugger;
-          if (!deal.ismydeal && deal.ireplied){
-            debugger;
-            // create a notification
-            this.dispatch('update_notification',{
-              id: replyMutation.parentrequestid + '_' + replyMutation.replytime,
-              senderidentity : replyMutation.provider,
-              timestamp: replyMutation.replytime,
-              msg: replyMutation.provider.username + ' responded to your request.',
-              hashtag: deal.hashtag
-            })
-          }
+          // //debugger;
+          // if (!deal.ismydeal && deal.ireplied){
+          //   //debugger;
+          //   // create a notification
+          //   this.dispatch('update_notification',{
+          //     id: replyMutation.parentrequestid + '_' + replyMutation.replytime,
+          //     senderidentity : replyMutation.provider,
+          //     timestamp: replyMutation.replytime,
+          //     msg: replyMutation.provider.username + ' responded to your request.',
+          //     hashtag: deal.hashtag
+          //   })
+          // }
 
 
           return {
