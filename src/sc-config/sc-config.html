@@ -45,7 +45,7 @@
 
         switch (environment){
   
-          case 'livenet':
+            case 'livenet':
 
             this.set('ipfs', {
               host: 'ipfsapi.swarm.city',
@@ -67,6 +67,10 @@
 //              pioneer: "0x5c21b622ac0a51d5b02060d2c483b26252939eee"
 //              BoardwalkTesting: "0x5c21b622ac0a51d5b02060d2c483b26252939eee"
               BoardwalkTesting: "0xAB2b656cea9D351243A1742e5805Cfb9385feB24"
+            };
+            this.contractranges = {
+              default: 2,
+              BoardwalkTesting: 6
             };
 
             this.swtunits = {
@@ -94,9 +98,11 @@
               dealfortwofactory: this.dealfortwofactory,
               shhprefix: this.shhprefix,
               hashtagcontracts : this.hashtagcontracts,
+              contractranges: this.contractranges,
               swtunits: this.swtunits,
               swtinputunit: this.swtinputunit,
               hashtagcontractToName: this.hashtagcontractToName,
+              contractnameToRange: this.contractnameToRange,
             });
 
             break;
@@ -114,6 +120,18 @@
             //              console.log(key + " -> " + p[key]);
           }
         }
+      },
+
+      contractnameToRange: function(name) {
+          for (var key in this.contractranges) {
+              if (this.contractranges.hasOwnProperty(key)) {
+                  if (key == name) {
+                      return this.contractranges[key];
+                  }
+              }
+          }
+
+          return this.contractranges["default"]
       }
     });
   </script>

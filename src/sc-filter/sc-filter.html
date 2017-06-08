@@ -244,6 +244,10 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
             is: 'sc-filter',
 
             properties: {
+                defaultrange : {
+                    type: Number
+                }
+                ,
                 /**
                  * Show the selected item and passes it to parent-element
                  *
@@ -297,6 +301,7 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
                     this.mobile_classes = '';
                 }
             },
+
 
             ready: function () {
                 this.immediaterange = this.range;
@@ -379,7 +384,7 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
                 switch (this.immediaterange) {
                     case 0:
                         this.distance = "In your area"
-                        this.distance_n = "(+/-125m)";
+                        this.distance_n = "(+/-125m)"
                         break;
                     case 1:
                         this.distance = "In your area"
