@@ -105,6 +105,7 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
       }
 
       #sliderbox {
+        max-width: 600px;
         width: 100%;
         margin-top: 10px;
       }
@@ -161,7 +162,7 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
         </div>
         <iron-collapse opened="false" id="sliderbox" class="">
           <div class$="inner_sliderbox horizont centercenter {{mobile_classes}}">
-            <div class="horizont centercenter flex">
+            <div class="horizont centercenter flex ">
               <iron-icon icon="sc-icons:location_edgeless" class="slidericon grey3"></iron-icon>
               <paper-slider noink id="ratings" min="1" max="6" value="{{range}}" immediate-value="{{immediaterange}}"></paper-slider>
               <iron-icon icon="sc-icons:globe_edgeless" class="slidericon grey3"></iron-icon>
