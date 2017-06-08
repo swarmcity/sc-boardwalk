@@ -44,7 +44,7 @@
         var environment = 'livenet';
 
         switch (environment){
-
+  
           case 'livenet':
 
             this.set('ipfs', {
@@ -57,7 +57,7 @@
 
             this.web3host = 'https://ethpool.swarm.city/';
             this.shhhost = 'https://eth.swarm.city/';
-            this.shhprefix = 'w63-';
+            this.shhprefix = 'w70-';
             this.etherscanroot = 'https://etherscan.io/';
             this.tokencontractaddress = '0xAc709FcB44a43c35F0DA4e3163b117A17F3770f5';
             this.swtconversioncontractaddress = '0x69e5da6904f73dfa845648e1991ad1dcc780f874';
@@ -66,7 +66,7 @@
             this.hashtagcontracts = {
 //              pioneer: "0x5c21b622ac0a51d5b02060d2c483b26252939eee"
 //              BoardwalkTesting: "0x5c21b622ac0a51d5b02060d2c483b26252939eee"
-              BoardwalkTesting: "0xAB2b656cea9D351243A1742e5805Cfb9385feB24"
+              BoardwalkTesting: "0xAB2b656cea9D351243A1742e5805Cfb9385feB24",
             };
 
             this.swtunits = {
@@ -78,8 +78,11 @@
               'Pado': 1e15,
               'SWT': 1e18,
             },
+            
             // the default unit of any input textbox
-            // needs to be multiplied with to obtain the unit of measure
+            // needs to be multiplied with to obtain the unit of token to be sent to 
+            // a smart contract if you're talking about tokens units.
+            // so that next to the textbox you can say 'xxx SWT'
             this.swtinputunit = this.swtunits['SWT'];
 
             this.set('config', {
@@ -108,9 +111,9 @@
       hashtagcontractToName: function(address) {
         for (var key in this.hashtagcontracts) {
           if (this.hashtagcontracts.hasOwnProperty(key)) {
-            if (this.hashtagcontracts[key] == address);
-            return key;
-            //              console.log(key + " -> " + p[key]);
+            if (this.hashtagcontracts[key] == address){
+              return key;
+            }
           }
         }
       }

@@ -16,6 +16,7 @@
 <link rel="import" href="../sc-config/sc-config.html">
 <link rel="import" href="../sc-shh/sc-shh.html">
 <link rel="import" href="../sc-avatar/sc-avatar.html">
+<link rel="import" href="../sc-tokenbalanceformatter/sc-tokenbalanceformatter.html">
 
 <!--
 `sc-newitem`
@@ -30,7 +31,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
     <!-- <sc-geohash geohash="{{geohash}}" enabled="{{enabled}}"></sc-geohash> -->
     <sc-dealfortwo id="dealfortwo"></sc-dealfortwo>
     <sc-web3 id="web3" web3="{{web3}}"></sc-web3>
-    <sc-config config="{{config}}"></sc-config>
+    <sc-config  id="config"  config="{{config}}"></sc-config>
     <sc-shh web3="{{shhweb3}}"></sc-shh>
     <style include="sc-styles">
       :host {
@@ -92,7 +93,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       }
 
       .confirmbtn {
-        margin-left: 20px; 
+        margin-left: 20px;
 /*        background-color: var(--sc-white);
         @apply(--layout-horizontal);
         @apply(--layout-center-center);
@@ -239,9 +240,12 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         <template is="dom-if" if="{{!loading}}">
           <div class="confirmbtns totalwidth">
             <div class="hashtagfeemsg flex">
-              <p class="grey2b reg">The hashtagfee of #Boardwalk is {{hashtagfee}} SWT.</p>
+              <p class="grey2b reg">The hashtagfee of #{{hashtagcontractToName(hashtagaddress)}} is
+                <sc-tokenbalanceformatter value="{{d2}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></p>
               <template is="dom-if" if="{{showtotal}}">
-                <p class="grey3 reg"><span class="bold">Total:</span> {{offeramount}} SWT</p>
+                <p class="grey3 reg"><span class="bold">Total:</span>
+                  <sc-tokenbalanceformatter value="{{offeramount}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter>
+                </p>
               </template>
             </div>
             <div class="confirmbtn">
@@ -274,12 +278,12 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
           type: Object,
           statePath: 'wallet',
         },
-        
+
         hashtaginfo: {
           type: Object,
           statePath: 'hashtaginfo',
         },
-        
+
         hashtagaddress: {
           type: String
         },
@@ -303,10 +307,14 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
           type: Number
         },
 
-        hashtagfee: {
+        hashtagcommission: {
           type: Number,
-          value: 0.005
+          observer: '_d2'
         },
+
+        d2: {
+          type: Number
+        }
 
       },
 
@@ -314,6 +322,14 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         '_btnable(offermsg,offeramount,geohash)',
         '_geohash(geohash)'
       ],
+
+      hashtagcontractToName: function(a){
+        return this.$.config.hashtagcontractToName(a);
+      },
+
+      _d2: function(){
+        this.d2 = parseFloat(this.hashtagcommission)/2;
+      },
 
       _geohash: function(){
         console.log('sc-newitem -> your geohash is',this.geohash);
@@ -354,8 +370,8 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       _btnable: function(){
         var inputvalidated = true;
         //debugger;
-        if (!this.offermsg || !this.offeramount || !this.geohash || 
-          !this.wallet || !this.wallet.swtbalance || !this.hashtagaddress || 
+        if (!this.offermsg || !this.offeramount || !this.geohash ||
+          !this.wallet || !this.wallet.swtbalance || !this.hashtagaddress ||
           !this.hashtaginfo || !this.hashtaginfo[this.hashtagaddress])
         {
           this.btnable = false;
@@ -376,13 +392,13 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
           return;
         }
 
-        if (this.wallet.swtbalance < amount * this.config.swtinputunit){
+        if (this.wallet.swtbalance < amount){
           console.log('your balance is too low...');
           this.btnable = false;
           return;
         }
 
-        if (this.hashtaginfo[this.hashtagaddress] && this.hashtaginfo[this.hashtagaddress].commission > amount * this.config.swtinputunit){
+        if (this.hashtaginfo[this.hashtagaddress] && this.hashtaginfo[this.hashtagaddress].commission > amount){
           console.log('you must offer more than the commission');
           this.btnable = false;
           return;
@@ -410,8 +426,6 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
           // TODO : report to user that hsi input in invalid.
           return;
         }
-
-          amount = amount * this.config.swtinputunit;
         //debugger;
         if (this.swtbalance.toNumber(10) >= amount) {
           var self = this;
@@ -515,7 +529,10 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       _amountsum: function(){
         if (this.firstofferamount){
           this.showtotal = true;
-          this.offeramount = this.firstofferamount + this.hashtagfee;
+          var first = parseFloat(this.firstofferamount)*this.config.swtinputunit;
+          var tax = this.d2;
+          this.offeramount = first + tax;
+          //this.offeramount = this.firstofferamount + this.hashtagfee;
         } else {
           this.showtotal = false;
         }

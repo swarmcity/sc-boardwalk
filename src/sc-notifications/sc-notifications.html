@@ -9,8 +9,7 @@
 <link rel="import" href="../sc-balance/sc-balance.html">
 <link rel="import" href="../sc-redux/sc-redux.html">
 <link rel="import" href="../sc-notifications/sc-notificationbadge.html">
-
-<!--<link rel="import" href="../sc-balance/sc-balance.html"> -->
+<link rel="import" href="../sc-config/sc-config.html">
 
 
 <!--
@@ -152,6 +151,8 @@ This components shows the in-app notifications in Swarm City.
 
     </style>
     <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
+    <sc-config id="config" config="{{config}}"></sc-config>
+
 
     <div class="avatar_username_balance_hashtagcontent totalwidth">
         <div class="avatar_username_balance" on-tap="toProfile">
@@ -173,16 +174,12 @@ This components shows the in-app notifications in Swarm City.
             class$="{{visibleclass}}"
             id="hashtagusername"
             identity="[[identity]]"
-            pubkey="[[pubkey]]"
+            pubkey="[[identity.pubkey]]"
             size="small"
             ></sc-username>
             <sc-notificationbadge on-tap="tonotifications" class="notifbadge noSelect" notifnumber="{{notifnumber}}" dummynotifications="{{notifications}}"></sc-notificationbadge>
           </div>
 
-<!--           <div class="pubk" on-tap="toProfile">
-            <p>{{pubkey}}</p>
-          </div>
- -->
           <div id="balancebox" class="notifbalance_box" on-tap="toWalletview">
             <sc-balance
               refcur="EUR"
@@ -199,18 +196,17 @@ This components shows the in-app notifications in Swarm City.
             <iron-icon on-tap="leave" icon="sc-icons:decline" class="small backhash grey4">back</iron-icon>
             </div>
           </template>
-            <template is="dom-repeat" items="{{notifications}}">
+            <template is="dom-repeat" items="{{notifications}}" sort="sortOnTimestamp">
             <div on-tap="notificationTapHandler" class="notif_item horizont start startjust">
               <sc-avatar
               class="subjectavatar"
-              ipfshash="[[item.subjectavatar]]"
+              ipfshash="[[item.senderidentity.avatarhash]]"
               size="verysmall"
               ></sc-avatar>
               <div class="flex vertic start startjust">
-READ={{item.read}}
-                <p class="timestamp grey3"><moment-js date="{{item.timestamp}}" format="HH:mm:ss.SSS" from-now></moment-js> | #{{item.dealhashtag}}</p>
+                <p class="timestamp grey3"><moment-js date="{{item.timestamp}}" format="HH:mm:ss.SSS" from-now></moment-js> | #{{hashtagcontractToName(item.hashtag)}}</p>
                 <div class="totalwidth horizont start startjust">
-                <p class="msg grey4 flex"><span class="reg" on-tap="gotoUserprofile">{{item.subjectusername}} </span>{{item.msg}}</p>
+                <p class="msg grey4 flex">{{item.msg}}</p>
                 <iron-icon icon="sc-icons:arrowright" class="blue"></iron-icon>
                 </div>
               </div>
@@ -235,41 +231,32 @@ READ={{item.read}}
       ],
 
       observers: [
-      '_web3(web3)'
-
       ],
 
       actions: {
-        update: function(notification) {
+        notifications_mark_all_read: function() {
+          //debugger;
+          var notifications = this.notifications.slice(0);
+
+          for (var i=0 ; i< notifications.length ; i++){
+            notifications[i].read = true;
+          }
+
           return {
             type: 'NOTIFICATIONS',
-            identity: identitydata
+            notifications: notifications
           };
         },
       },
 
       properties: {
-
-        pubkey: {
-          type: Object,
-          statePath: 'pubkey',
-          observer: '_pubkey'
-        },
-
         identity: {
           type: Object,
           statePath: 'identity'
         },
-
-        // notifications: {
-        //   type: Object,
-        //   observer: '_notifications'
-        // },
-
         notifications: {
           type: Array,
           statePath: 'notifications',
-          //observer: 'countnotifications'
         },
         /**
        * `phoneview` is a boolean to determine the viewport.
@@ -280,12 +267,17 @@ READ={{item.read}}
         },
       },
 
+      hashtagcontractToName: function(a){
+        return this.$.config.hashtagcontractToName(a);
+      },
 
       ready: function() {
           this._checkSize();
       },
 
-
+      sortOnTimestamp: function(a,b){
+        return b.timestamp - a.timestamp;
+      },
 
       /**
       * 'onEnter' are the behaviors that occur when the router tells this component enters the stage
@@ -305,7 +297,9 @@ READ={{item.read}}
       * 'leave' fires the 'leave' to the parent-element. (This also contains animation-config for going back to sc-home.)
       */
       leave: function(){
+        this.dispatch('notifications_mark_all_read');
         window.history.go(-1);
+
         //this.fire('leave');
       },
 
@@ -317,7 +311,6 @@ READ={{item.read}}
         if (b === undefined){
           b = true;
         }
-        //console.log(a ,'(',typeof a,') is',b,'(',typeof b,') they are equal for ==',a == b,', they are equal for ===',a === b);
         return a === b;
       },
 
@@ -334,45 +327,14 @@ READ={{item.read}}
         }
       },
 
-
-      gotoUserprofile: function(e){
-        // console.log("yep ----------------",e);
-      },
-
-
-
-
-     _web3: function() {
-
-        if (!this.web3){
-          throw new Error('web3 not set while requesting whisper listener');
-        }
-
-       console.log("yep ----------------",this.web3);
-      },
-
-
-      _pubkey: function(){
-        console.log("THIS IS pubkeeeeyy. IN notificationsSS:", this.pubkey);
-      },
-
       notificationTapHandler: function(e) {
-        //debugger;
-        switch (e.model.item.type) {
-          case 'reply-to-deal':
-            this.fire('jump-to', {
-              target: '/hashtag/' + e.model.item.dealhashtag + '/detail/' + e.model.item.dealid
-            });
-            break;
-          case 'engage-in-deal':
-            this.fire('jump-to', {
-              target: '/simpledealprovider/' + e.model.item.dealhashtag + '/' + e.model.item.dealid + '/' + e.model.item.replyid
-            });
-            break;
 
-          default:
-            console.log('unknown notification-type to handle', e.model.item);
-            break;
+        this.dispatch('notifications_mark_all_read');
+
+        if (e.model.item.target){
+             this.fire('redirect', {
+          target: e.model.item.target
+          });
         }
       },
 

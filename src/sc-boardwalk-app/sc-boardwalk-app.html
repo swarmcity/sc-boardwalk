@@ -198,7 +198,7 @@
       pubkey="[[account]]"
       swtbalance="[[swtbalance]]"
       on-leave="hashtag_tohome"
-      on-redirect="hashtag_redirect"
+      on-redirect="redirectTo"
       on-to-notifications="hashtag_tonotifications"
       on-to-profile="hashtag_toProfile"
       on-updatebalance="refreshwallet"
@@ -214,7 +214,7 @@
       route="{{pageTail2}}"
       id="dealfortwoseeker"
       web3="[[web3]]"
-      on-redirect="hashtag_redirect"
+      on-redirect="redirectTo"
     >
     </sc-dealfortwo-seeker>
 
@@ -224,7 +224,7 @@
       route="{{pageTail3}}"
       id="dealfortwoprovider"
       web3="[[web3]]"
-      on-redirect="hashtag_redirect"
+      on-redirect="redirectTo"
      >
     </sc-dealfortwo-provider>
     
@@ -239,7 +239,8 @@
       pubkey="[[account]]"
       swtbalance="[[swtbalance]]"
       on-leave="notifications_tohome"
-      on-jump-to="notifications_jumpto"
+      on-redirect="redirectTo"
+
       >
     </sc-notifications>
 
@@ -531,7 +532,7 @@
         // console.log("Ik heb zeeeeeeee !!!!!!!", this.notifs);
       },
 
-      hashtag_redirect: function(e){
+      redirectTo: function(e){
         //debugger;
         this.transitionto(e.detail.target);
       },
