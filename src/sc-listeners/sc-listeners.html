@@ -468,13 +468,14 @@
             "topics": mytopics,
           });
 
-          console.log("sc-listeners: channelswitch, start listening to", mytopics);
-          this.filter.watch(this._processmessage.bind(this));
-
           // clear deals... pretty rough...(wss)
           this.dispatch('clear_deals');
 
-          //sc_listeners_listening = true;
+          // and clear the local cache
+          this.messagequeue = {}
+
+          console.log("sc-listeners: channelswitch, start listening to", mytopics);
+          this.filter.watch(this._processmessage.bind(this));
 
         }
       },
@@ -532,8 +533,13 @@
             break;
         }
 
-        console.log('MQ',JSON.stringify(this.messagequeue,null,1));
+        console.log('MQ before',JSON.stringify(this.messagequeue,null,1));
+        this.purgeQueue();
+        console.log('MQ after',JSON.stringify(this.messagequeue,null,1));
 
+      },
+
+      purgeQueue:function(){
         // purge the queue
         for (var key in this.messagequeue) {
           if (this.messagequeue.hasOwnProperty(key)) {
@@ -541,20 +547,22 @@
             var currentgate = this.messagequeue[key].currentgate;
             // empty all gates up to the current gate
             for (gates = 0 ; gates <= currentgate; gates++){
-              // increase the gate number if this one contains items.
-              if(this.messagequeue[key].gatequeue[gates].length > 0){
-                this.messagequeue[key].currentgate++;
-              }
+              var opennextgate = false;
               if (this.messagequeue[key].gatequeue[currentgate]){              
                 while (this.messagequeue[key].gatequeue[currentgate].length > 0){
+                  opennextgate = true;
                   msg = this.messagequeue[key].gatequeue[currentgate].pop();
                   this.parsemessage(msg);
                 }
               }
+              // increase the gate number if this one contains items.
+              if(opennextgate){
+                this.messagequeue[key].currentgate++;
+                this.purgeQueue();
+              }              
             }            
           }
         }
-
       },
 
       payloadStructure: function(){
