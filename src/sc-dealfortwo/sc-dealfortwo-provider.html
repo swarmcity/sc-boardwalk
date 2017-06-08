@@ -637,7 +637,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
     <sc-config id="config" config="{{config}}"></sc-config>
     <sc-listeners id="listeners"></sc-listeners>
     <sc-dealfortwo id="dealfortwo"></sc-dealfortwo>
-    <sc-hashtagcontract id="hashtagcontract" hashtagcontract="{{requestdata.hashtag}}"  loaded="{{hcready}}"></sc-hashtagcontract>
+    <sc-hashtagcontract id="hashtagcontract" hashtagcontract="{{routedata.hashtag}}"  loaded="{{hcready}}"></sc-hashtagcontract>
     <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
 
     <app-route route="{{route}}" pattern="/:hashtag/:requestid/:replyid" data="{{routedata}}"></app-route>
