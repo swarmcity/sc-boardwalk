@@ -906,7 +906,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
               <paper-icon-button on-tap="backfromapproveDeal" icon="sc-icons:decline" noink class="white">back</paper-icon-button>
             </div>
             <div class="approver_inner">
-              <h1 class="light white centertxt">Do you want to payout <span class="bold"><sc-tokenbalanceformatter value="{{requestdata.amount}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter></span> to <span class="bold">{{replydata.provider.username}}</span>?</h1>
+              <h1 class="light white centertxt">Do you want to payout <span class="bold"><sc-tokenbalanceformatter value="{{deducthalfcommission(requestdata.amount,hashtagcommission_div2)}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter></span> to <span class="bold">{{replydata.provider.username}}</span>?</h1>
             <div class="fivespace"></div>
             <div class="whitespace"></div>
               <div class="approver_confirmbtns">
