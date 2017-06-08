@@ -68,92 +68,92 @@
         //  id: <dealID>,
         //  <any_field>: <any_value>  
         // } 
-        update_deal: function(mutation){
-          
+        update_deal: function(mutation) {
+
           let deals = this.deals.slice(0);
-          mutation.lastupdate = Date.now();          
+          mutation.lastupdate = Date.now();
           var foundDeal = deals.findIndex(function(item) {
             return item.id === mutation.id;
           });
 
           if (foundDeal > -1) {
-            if (mutation.targetdealstate){
+            if (mutation.targetdealstate) {
               var targetstate;
 
-          switch ((deals[foundDeal].dealstate || 'init') + '_' + mutation.targetdealstate) {
+              switch ((deals[foundDeal].dealstate || 'init') + '_' + mutation.targetdealstate) {
 
-            case 'init_created':
-            case 'init_accepted':
-            case 'init_indeal':
-            case 'init_payout':
-              targetstate = mutation.targetdealstate;
-              break;
-            case 'created_created':
-              targetstate = 'created';
-              break;              
-            case 'created_accepted':
-              targetstate = 'accepted';
-              break;
-            case 'created_indeal':
-              targetstate = 'indeal';
-              break;
-            case 'created_payout':
-              targetstate = 'payout';
-              break;
-            case 'accepted_accepted':
-              targetstate = 'accepted';
-              break;
-            case 'accepted_created':
-              targetstate = 'accepted';
-              break;
-            case 'accepted_indeal':
-              targetstate = 'indeal';
-              break;
-            case 'accepted_payout':
-              targetstate = 'payout';
-              break;
-            case 'indeal_indeal':
-              targetstate = 'indeal';
-              break;
-            case 'indeal_created':
-              targetstate = 'indeal';
-              break;
-            case 'indeal_accepted':
-              targetstate = 'indeal';
-              break;
-            case 'indeal_payout':
-              targetstate = 'payout';
-              break;
-            case 'payout_created':
-              targetstate = 'payout';
-              break;
-            case 'payout_indeal':
-              targetstate = 'payout';
-              break;
-            case 'payout_accepted':
-              targetstate = 'payout';
-              break;
-            case 'payout_payout':
-              targetstate = 'payout';
-              break;
-            default:
-              targetstate = 'init';
-              debugger;
-              break;
-          }
+                case 'init_created':
+                case 'init_accepted':
+                case 'init_indeal':
+                case 'init_payout':
+                  targetstate = mutation.targetdealstate;
+                  break;
+                case 'created_created':
+                  targetstate = 'created';
+                  break;
+                case 'created_accepted':
+                  targetstate = 'accepted';
+                  break;
+                case 'created_indeal':
+                  targetstate = 'indeal';
+                  break;
+                case 'created_payout':
+                  targetstate = 'payout';
+                  break;
+                case 'accepted_accepted':
+                  targetstate = 'accepted';
+                  break;
+                case 'accepted_created':
+                  targetstate = 'accepted';
+                  break;
+                case 'accepted_indeal':
+                  targetstate = 'indeal';
+                  break;
+                case 'accepted_payout':
+                  targetstate = 'payout';
+                  break;
+                case 'indeal_indeal':
+                  targetstate = 'indeal';
+                  break;
+                case 'indeal_created':
+                  targetstate = 'indeal';
+                  break;
+                case 'indeal_accepted':
+                  targetstate = 'indeal';
+                  break;
+                case 'indeal_payout':
+                  targetstate = 'payout';
+                  break;
+                case 'payout_created':
+                  targetstate = 'payout';
+                  break;
+                case 'payout_indeal':
+                  targetstate = 'payout';
+                  break;
+                case 'payout_accepted':
+                  targetstate = 'payout';
+                  break;
+                case 'payout_payout':
+                  targetstate = 'payout';
+                  break;
+                default:
+                  targetstate = 'init';
+                  debugger;
+                  break;
+              }
 
-          mutation.dealstate = targetstate;
+              mutation.dealstate = targetstate;
 
-//              mutation.dealstate = this.gettargetdealstate(deals[foundDeal].dealstate,mutation.targetdealstate);
+              //              mutation.dealstate = this.gettargetdealstate(deals[foundDeal].dealstate,mutation.targetdealstate);
               delete mutation.targetdealstate;
             }
 
             deals[foundDeal].ireplied = false;
-            if (deals[foundDeal].replies){
+            if (deals[foundDeal].replies) {
               for (var i = 0; i < deals[foundDeal].replies.length; i++) {
-                if (deals[foundDeal].replies[i].provider.pubkey === this.identity.pubkey){
+                if (deals[foundDeal].replies[i].provider.pubkey === this.identity.pubkey) {
                   deals[foundDeal].ireplied = true;
-                  if (deals[foundDeal].selectedreply == deals[foundDeal].replies[i].id){
+                  if (deals[foundDeal].selectedreply == deals[foundDeal].replies[i].id) {
                     //debugger;
                     deals[foundDeal].iamprovider = true;
                   }
@@ -161,21 +161,24 @@
               }
             }
 
-
-
-            if (deals[foundDeal].seeker.pubkey === this.identity.pubkey){
+            if (deals[foundDeal].seeker.pubkey === this.identity.pubkey) {
               mutation.ismydeal = true;
-            }else{
+            } else {
               mutation.ismydeal = false;
             }
             Object.assign(deals[foundDeal], mutation);
-          }else{
+          } else {
             // this is a new deal
-            if (mutation.targetdealstate){
+            if (mutation.targetdealstate) {
               mutation.dealstate = mutation.targetdealstate;
               delete mutation.targetdealstate;
             }
-            deals.push(Object.assign(this.getEmptyDeal(),mutation));
+            if (mutation.seeker.pubkey === this.identity.pubkey) {
+              mutation.ismydeal = true;
+            } else {
+              mutation.ismydeal = false;
+            }            
+            deals.push(Object.assign(this.getEmptyDeal(), mutation));
           }
           return {
             type: 'DEALS',
@@ -267,7 +270,17 @@
             };
             deal = Object.assign(this.getEmptyDeal(),newDeal);
             deals.push(deal);
-            //console.error('no deal found for reply with ID=', replydata.id)
+          }
+
+          if (deal.ismydeal){
+            // create a notification
+            this.dispatch('update_notification',{
+              id: replyMutation.parentrequestid + '_' + replyMutation.replytime,
+              senderidentity : replyMutation.provider,
+              timestamp: replyMutation.replytime,
+              msg: replyMutation.provider.username + ' responded to your request.',
+              hashtag: deal.hashtag
+            });
           }
 
           return {
@@ -279,7 +292,7 @@
 
         // seeker says : I just selected this reply as my provider
         select_provider: function(payload){
-          
+          debugger;
           var mutation = {
             id : payload.requestid,
             lastupdate : Date.now(),
@@ -356,7 +369,6 @@
                   debugger;
                   break;
               }
-
               mutation.dealstate = targetstate;
             }
             var deal = deals[foundDeal];
@@ -367,6 +379,20 @@
             mutation.dealstate = 'accepted';
             deals.push(Object.assign(this.getEmptyDeal(),mutation));
           }
+          debugger;
+          if (!deal.ismydeal && deal.ireplied){
+            debugger;
+            // create a notification
+            this.dispatch('update_notification',{
+              id: replyMutation.parentrequestid + '_' + replyMutation.replytime,
+              senderidentity : replyMutation.provider,
+              timestamp: replyMutation.replytime,
+              msg: replyMutation.provider.username + ' responded to your request.',
+              hashtag: deal.hashtag
+            })
+          }
+
+
           return {
             type: 'DEALS',
             deals: deals
@@ -432,32 +458,24 @@
             null,
             self.shhweb3.encodetopic(this.hashtag),
             null, // ID
-            // [self.shhweb3.encodetopic('all'),this.geohash.length > 1 ? self.shhweb3.encodetopic(this.geohash.slice(0, 1)) : null],
-            // [self.shhweb3.encodetopic('all'),this.geohash.length > 2 ? self.shhweb3.encodetopic(this.geohash.slice(0, 2)) : null],
-            // [self.shhweb3.encodetopic('all'),this.geohash.length > 3 ? self.shhweb3.encodetopic(this.geohash.slice(0, 3)) : null],
-            // [self.shhweb3.encodetopic('all'),this.geohash.length > 4 ? self.shhweb3.encodetopic(this.geohash.slice(0, 4)) : null],
             self.geohash.length > 1 ? [self.shhweb3.encodetopic('all'),self.shhweb3.encodetopic(self.geohash.slice(0, 1))] : null,
             self.geohash.length > 2 ? [self.shhweb3.encodetopic('all'),self.shhweb3.encodetopic(self.geohash.slice(0, 2))] : null,
             self.geohash.length > 3 ? [self.shhweb3.encodetopic('all'),self.shhweb3.encodetopic(self.geohash.slice(0, 3))] : null,
-            self.geohash.length > 4 ? [self.shhweb3.encodetopic('all'),self.shhweb3.encodetopic(self.geohash.slice(0, 4))] : null,            
-            // self.shhweb3.encodetopic(this.geohash.slice(0, 2)),
-            // self.shhweb3.encodetopic(this.geohash.slice(0, 3)),
-            // self.shhweb3.encodetopic(this.geohash.slice(0, 4)),
+            self.geohash.length > 4 ? [self.shhweb3.encodetopic('all'),self.shhweb3.encodetopic(self.geohash.slice(0, 4))] : null,
           ];
-
-          //self.shhweb3.dumptopics(mytopics);
 
           this.filter = self.shhweb3.shh.filter({
             "topics": mytopics,
           });
 
-          console.log("sc-listeners: channelswitch, start listening to", mytopics);
-          this.filter.watch(this._processmessage.bind(this));
-
           // clear deals... pretty rough...(wss)
           this.dispatch('clear_deals');
 
-          //sc_listeners_listening = true;
+          // and clear the local cache
+          this.messagequeue = {}
+
+          console.log("sc-listeners: channelswitch, start listening to", mytopics);
+          this.filter.watch(this._processmessage.bind(this));
 
         }
       },
@@ -474,6 +492,87 @@
           console.log(e);
         }
 
+        if (!this.messagequeue){
+          this.messagequeue = {};
+        }
+
+        // re-order and buffer items by gate
+        // gate 1 : create request
+        // gate 2 : reply to a request
+        // gate 3 : selection of provider
+        // gate 4 : funding of deal by provider
+        // gate 5 : approval of deal 
+        switch (payload.type){
+          case 'dealfortwo-request-create':
+            var dealid = payload.id;
+            if(!this.messagequeue[dealid]){ this.messagequeue[dealid] = this.payloadStructure(); }
+            this.messagequeue[dealid].gatequeue[0].push(payload);            
+            break;
+          case 'dealfortwo-request-reply':
+            var dealid = payload.parentrequestid;
+            if(!this.messagequeue[dealid]){ this.messagequeue[dealid] = this.payloadStructure(); }
+            this.messagequeue[dealid].gatequeue[1].push(payload);            
+            break;
+          case 'dealfortwo-select-provider':
+            var dealid = payload.requestid;
+            if(!this.messagequeue[dealid]){ this.messagequeue[dealid] = this.payloadStructure(); }
+            this.messagequeue[dealid].gatequeue[2].push(payload);            
+            break;
+          case 'dealfortwo-provider-funding':
+            var dealid = payload.id;
+            if(!this.messagequeue[dealid]){ this.messagequeue[dealid] = this.payloadStructure(); }
+            this.messagequeue[dealid].gatequeue[3].push(payload);
+            break;
+          case 'dealfortwo-approve':
+            var dealid = payload.requestid;
+            if(!this.messagequeue[dealid]){ this.messagequeue[dealid] = this.payloadStructure(); }
+            this.messagequeue[dealid].gatequeue[4].push(payload);
+            break;
+          default:
+            console.log('unknown gate for message',payload);
+            break;
+        }
+
+        console.log('MQ before',JSON.stringify(this.messagequeue,null,1));
+        this.purgeQueue();
+        console.log('MQ after',JSON.stringify(this.messagequeue,null,1));
+
+      },
+
+      purgeQueue:function(){
+        // purge the queue
+        for (var key in this.messagequeue) {
+          if (this.messagequeue.hasOwnProperty(key)) {
+            //if (key =='b4e85acb-bfe9-4cae-a444-86c1e4496e4c') debugger;
+            var currentgate = this.messagequeue[key].currentgate;
+            // empty all gates up to the current gate
+            for (gates = 0 ; gates <= currentgate; gates++){
+              var opennextgate = false;
+              if (this.messagequeue[key].gatequeue[currentgate]){              
+                while (this.messagequeue[key].gatequeue[currentgate].length > 0){
+                  opennextgate = true;
+                  msg = this.messagequeue[key].gatequeue[currentgate].pop();
+                  this.parsemessage(msg);
+                }
+              }
+              // increase the gate number if this one contains items.
+              if(opennextgate){
+                this.messagequeue[key].currentgate++;
+                this.purgeQueue();
+              }              
+            }            
+          }
+        }
+      },
+
+      payloadStructure: function(){
+        return {
+          currentgate: 0,
+          gatequeue: [[],[],[],[],[]]
+        }
+      },
+
+      parsemessage : function(payload){
         switch(payload.type){
           case 'dealfortwo-request-create':
             var self = this;
@@ -584,11 +683,11 @@
               id: payload.requestid,
               payouttx: payload.transactionhash,
               targetdealstate: 'payout',
-
             };
 
             this.dispatch('update_deal', mutation);
             if (mutation.payouttx) {
+              var self=this;
               this.web3.waitTx(mutation.payouttx, function(err, res) {
                 if (err){
                   console.log('error in payouttx');
@@ -608,6 +707,21 @@
             break;
         }
       },
+
+      getDeal: function(dealid){
+        return this.deals.find(function(item){
+              return item.id === dealid;
+        });
+      },
+
+      getReply: function(dealid,replyid){
+        return this.getDeal(dealid).replies.find(function(item){
+              return item.id === replyid;
+        });
+      },
+
+
+
     });
   </script>
 </dom-module>

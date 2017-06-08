@@ -12,6 +12,8 @@
 <link rel="import" href="../sc-avatar/sc-avatar.html">
 <link rel="import" href="../sc-redux/sc-redux.html">
 
+<!-- <link rel="import" href="sc-hashtagactivity.html"> -->
+
 
 <link rel="stylesheet" href="../../bower_components/Croppie/croppie.css" />
 <script src="../../bower_components/Croppie/croppie.js"></script>
@@ -19,7 +21,7 @@
 <!--
 `sc-profile` is profile-view where a Swarm Citizen can do his profile-things. Here the user has the possibility of changing his avatar/username, he can view his complete pubkey, or creating a backup of his profile via IPFS. The user can also logout here, or delete his complete user-data from the device.
 
-@demo src/sc-profile/demo/index.html 
+@demo src/sc-profile/demo/index.html
 -->
 
 <dom-module id="sc-profile">
@@ -31,7 +33,7 @@
         display: block;
         width: 100%;
         height: 100%;
-        @apply(--base-structure);     
+        @apply(--base-structure);
       }
 
       .fullheight {
@@ -94,7 +96,7 @@
       .croppiecontrols {
         z-index: 12;
         margin: -70px 0px 20px 0px;
-        box-sizing:border-box;    
+        box-sizing:border-box;
         padding-left: 10px;
       }
 
@@ -163,7 +165,7 @@
         line-height: 15px;
         @apply(--montserrat-reg);
         text-align: left;
-      } 
+      }
 
       .pubhidden {
         width: 60px;
@@ -181,7 +183,7 @@
       }
 
       .pubshown iron-icon {
-        margin: 0px 0px 0px 5px; 
+        margin: 0px 0px 0px 5px;
       }
 
       .pubshown p {
@@ -191,7 +193,7 @@
       .pk {
         width: 100%;
         box-sizing:border-box;
-        padding: 0px; 
+        padding: 0px;
         @apply(--layout-horizontal);
         @apply(--layout-center);
         @apply(--layout-start-justified);
@@ -277,7 +279,14 @@
         margin-bottom: 5vh;
       }
 
-        
+
+
+      .hashtagactivities {
+        box-sizing:border-box;
+        padding: 2vh 10vw 2vh 10vw;
+      }
+
+
       @media all and (min-width: 0) and (max-width: 420px) {
 
         .toppart {
@@ -293,8 +302,8 @@
           @apply(--layout-center-center);
           -ms-flex: none;
           -webkit-flex: none;
-          flex: none; 
-          min-width: 270px;       
+          flex: none;
+          min-width: 270px;
         }
 
         .warning {
@@ -312,7 +321,7 @@
           @apply(--layout-vertical);
           @apply(--layout-center-center);
           box-sizing:border-box;
-          padding: 0px 15vw 0px 15vw;        
+          padding: 0px 15vw 0px 15vw;
         }
 
         .vaultdeleter {
@@ -347,11 +356,11 @@
         }
 
         .pubshown iron-icon {
-          margin: 5px 0px 0px 0px; 
+          margin: 5px 0px 0px 0px;
         }
         .pubkey p {
           text-align: center;
-        } 
+        }
 
         .pk {
           width: 100%;
@@ -363,6 +372,12 @@
 
         .pk p {
           word-break: break-all;
+        }
+
+
+        .hashtagactivities {
+          box-sizing:border-box;
+          padding: 5vh 15vw 5vh 15vw;
         }
 
       }
@@ -495,12 +510,46 @@
 
           </div>
 
-
-      <div class="fivespace"></div>
+<!--           <div>
+            <template is="dom-repeat" items="{{deals}}">
+              <p>{{item.msg}}</p>
+            </template>
+          </div> -->
+      <template is="dom-if" if="{{phoneview}}">
+        <div class="fivespace"></div>
+      </template>
       <div class="dottedline"></div>
-      <div class="fivespace"></div>
 
+      <div class="hashtagactivities totalwidth vertic start startjust">
+        <template is="dom-repeat" items="{{testarray}}">
+          <sc-hashtagactivity hashtag="[[item]]"></sc-hashtagactivity>
+        </template>
+
+<!--         <div class="hashtagactivity totalwidth horizont start startjust">
+          <p class="bold">#BoardwalkTesting • <span class="bold">1</span></p>
+          <p class="blue small">Show completed deals</p>
+        </div>
+        <div class="hashtagactivity totalwidth horizont start startjust">
+          <p class="bold">#Needaride • <span class="bold">3</span></p>
+          <p class="blue small">Show completed deals</p>
+        </div> -->
+      </div>
+
+<!--       <div class="dottedline"></div>
+
+      <div class="hashtagactivities totalwidth vertic start startjust">
+        <p class="bold">#Needaride</p>
+        <p class="grey3">You completed 1 deal in #Needaride.</p>
+      </div>
+ -->
+
+
+          <div class="dottedline"></div>
+          <template is="dom-if" if="{{phoneview}}">
+            <div class="fivespace"></div>
+          </template>
           <div class="profilecontent totalwidth" id="profilecontent">
+
             <paper-button class="whiteback bold downbtn shadow" on-tap="backupvault" noink>Create backup</paper-button>
             <template is="dom-if" if="{{itemshow}}">
               <paper-button class="whiteback bold downbtn shadow" on-tap="collapseMe" id="deletemyvault" noink>Delete this user</paper-button>
@@ -565,7 +614,7 @@
                 <paper-icon-button icon="sc-icons:v" class="blue whiteback shadow big" on-tap="setprofileavatar"></paper-icon-button>
               </div>
           </div>
-        </div> 
+        </div>
 
 
       </neon-animatable>
@@ -581,10 +630,6 @@
 
       is: 'sc-profile',
 
-      // behaviors: [
-      //   ReduxBehavior
-      // ],
-
       actions: {
         update: function(identitydata) {
           return {
@@ -595,6 +640,12 @@
       },
 
       properties: {
+
+        deals: {
+          type: Array,
+          statePath: 'deals',
+          // observer: '_deals'
+        },
 
         /**
        * `identity` is received from parent-element, as an object containing an IPFS-hash, which is img-source.
@@ -674,7 +725,7 @@
               'hero': this.$.profileavatar
             }
           }
-        },  
+        },
 
         /**
        * `animationConfig` is used to configure animations.
@@ -748,10 +799,14 @@
 
       ready: function(){
         this.onEnter();
+        this.testarray = [
+          'BoardwalkTesting',
+          'NeedaRide'
+        ]
       },
 
       /**
-      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
+      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage
       * use this to initialize any variables to start the component
       */
       onEnter: function(){
@@ -765,7 +820,7 @@
       },
 
       /**
-      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage 
+      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage
       * use this to reset any variables when leaving this component while it remains loaded.
       */
       onExit: function(){
@@ -880,7 +935,7 @@
       },
 
       /**
-      * 'setprofileavatar' is activated when the user confirms the picture cropped by the Croppie-component. It then is saved to IPFS and set as the new avatar. 
+      * 'setprofileavatar' is activated when the user confirms the picture cropped by the Croppie-component. It then is saved to IPFS and set as the new avatar.
       */
       setprofileavatar: function() {
         this.avatarloading = true;
@@ -912,7 +967,7 @@
               self.datachanged = true;
 
 //               this.dispatch('update',{
-              
+
 //                 username: self.username,
 //                 avatarhash: self.avatarhash
 //               });
@@ -930,7 +985,7 @@
       },
 
       /**
-      * 'logout' fires 'logout' to parent-element. 
+      * 'logout' fires 'logout' to parent-element.
       */
       logout: function() {
         this.fire('logout');
@@ -938,7 +993,7 @@
 
 
       /**
-      * 'uploadfile' masks the click on the inputfield: when clicked on avatar, the upload is active. 
+      * 'uploadfile' masks the click on the inputfield: when clicked on avatar, the upload is active.
       */
       uploadfile: function() {
         this.$.avatarupload.click();
@@ -946,7 +1001,7 @@
 
 
       /**
-      * 'avatarChange' reloads to show the new avatar when it's changed by a new upload. 
+      * 'avatarChange' reloads to show the new avatar when it's changed by a new upload.
       */
       avatarChange: function(e) {
         var input = e.target;
@@ -960,7 +1015,7 @@
       },
 
       /**
-      * 'collapseMe' opens the collapse-menu of deleting the user, after tapping btn 'Delete this user'. 
+      * 'collapseMe' opens the collapse-menu of deleting the user, after tapping btn 'Delete this user'.
       */
       collapseMe: function(e)  {
         var item = e.target.parentNode.id;
@@ -985,7 +1040,7 @@
 
 
       /**
-      * 'confirm' closes the collapse-menu in which the buttons are to change username, and saves the new username. 
+      * 'confirm' closes the collapse-menu in which the buttons are to change username, and saves the new username.
       */
       confirm: function() {
         this.dispatch('update', {
@@ -1006,7 +1061,7 @@
       },
 
       /**
-      * 'close' closes the collapse-menu in which the buttons are to change username, without saving it (so it cancels this action). 
+      * 'close' closes the collapse-menu in which the buttons are to change username, without saving it (so it cancels this action).
       */
       close: function() {
         this.$.usernameinput.value = this.username;
@@ -1016,7 +1071,7 @@
 
 
       /**
-      * 'closeMe' closes the collapse-menu of deleting the user. 
+      * 'closeMe' closes the collapse-menu of deleting the user.
       */
       closeMe: function()  {
         var collapsdis = this.$['deletemyvaultcollapser'];
@@ -1027,7 +1082,7 @@
 
 
       /**
-      * 'togglePub' toggles between the different css-classes (.pubhidden/.pubshown)  of pubkey. 
+      * 'togglePub' toggles between the different css-classes (.pubhidden/.pubshown)  of pubkey.
       */
       togglePub: function()  {
         if (this.pubwhat == "pubhidden"){
@@ -1053,7 +1108,7 @@
 
 
       /**
-      * 'backupvault' fires 'backup' to parent-element. 
+      * 'backupvault' fires 'backup' to parent-element.
       */
       backupvault: function(){
         this.fire('backup');

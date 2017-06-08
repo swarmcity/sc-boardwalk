@@ -18,7 +18,7 @@
 
 This components shows the in-app notifications in Swarm City.
 
-@demo src/sc-notifications/demo/index.html 
+@demo src/sc-notifications/demo/index.html
 -->
 
 <dom-module id="sc-notifications">
@@ -34,9 +34,9 @@ This components shows the in-app notifications in Swarm City.
       .avatar_username_balance_hashtagcontent {
         @apply(--layout-horizontal);
         @apply(--layout-start);
-        @apply(--layout-start-justified); 
+        @apply(--layout-start-justified);
         box-sizing:border-box;
-        padding: 0px 14vw 0px 14vw;   
+        padding: 0px 14vw 0px 14vw;
         height: 100%;
       }
 
@@ -105,13 +105,13 @@ This components shows the in-app notifications in Swarm City.
 
 
 
-    @media all and (min-width: 0) and (max-width: 420px) { 
+    @media all and (min-width: 0) and (max-width: 420px) {
 
       .avatar_username_balance_hashtagcontent {
         @apply(--layout-vertical);
         @apply(--layout-center-center);
         box-sizing:border-box;
-        padding: 0px;            
+        padding: 0px;
       }
 
       .avatar_username_balance {
@@ -165,7 +165,7 @@ This components shows the in-app notifications in Swarm City.
           id="notifavatar"
           size="{{currentviewmode}}"
           ></sc-avatar>
-          
+
 
 
           <div class="horizont centercenter noSelect">
@@ -254,12 +254,12 @@ READ={{item.read}}
           type: Object,
           statePath: 'pubkey',
           observer: '_pubkey'
-        },  
+        },
 
         identity: {
           type: Object,
           statePath: 'identity'
-        },  
+        },
 
         // notifications: {
         //   type: Object,
@@ -273,7 +273,7 @@ READ={{item.read}}
         },
         /**
        * `phoneview` is a boolean to determine the viewport.
-       */ 
+       */
         phoneview: {
           type: Boolean,
           observer: '_checkSize'
@@ -288,14 +288,14 @@ READ={{item.read}}
 
 
       /**
-      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
+      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage
       * use this to initialize any variables to start the component
       */
       onEnter: function(){
       },
 
       /**
-      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage 
+      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage
       * use this to reset any variables when leaving this component while it remains loaded.
       */
       onExit: function(){
@@ -305,8 +305,8 @@ READ={{item.read}}
       * 'leave' fires the 'leave' to the parent-element. (This also contains animation-config for going back to sc-home.)
       */
       leave: function(){
-       
-        this.fire('leave');
+        window.history.go(-1);
+        //this.fire('leave');
       },
 
 
@@ -323,7 +323,7 @@ READ={{item.read}}
 
       /**
       * '_checkSize' responds to the iron-media-query and sets some variables according to the result.
-      */      
+      */
       _checkSize: function() {
         if (this.phoneview) {
         this.visibleclass = 'mobile';
@@ -343,7 +343,7 @@ READ={{item.read}}
 
 
      _web3: function() {
-        
+
         if (!this.web3){
           throw new Error('web3 not set while requesting whisper listener');
         }
