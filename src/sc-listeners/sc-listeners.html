@@ -635,6 +635,7 @@
 
             // watch for the TX to finish & update the state
             if (mutation.providerfundingtx) {
+              var self = this;
               this.web3.waitTx(mutation.providerfundingtx, function(err, res) {
                 //debugger;
                 if (err){
@@ -663,6 +664,7 @@
             }
             // watch the TX to finish & update the state
             if (mutation.providerfundingallowancetx) {
+              var self = this;
               this.web3.waitTx(mutation.providerfundingallowancetx, function(err, res) {
                 if (err){
                   console.log('error in providerfundingallowancetx');

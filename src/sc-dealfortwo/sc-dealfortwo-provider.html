@@ -17,7 +17,7 @@
 <link rel="import" href="../sc-shh/sc-shh.html">
 <link rel="import" href="../sc-config/sc-config.html">
 <link rel="import" href="../sc-helpers/sc-helpers.html">
-<!-- <link rel="import" href="../sc-hashtagcontract/sc-hashtagcontract.html"> -->
+<link rel="import" href="../sc-hashtagcontract/sc-hashtagcontract.html">
 <link rel="import" href="../sc-dealfortwo/sc-dealfortwo.html">
 <link rel="import" href="../sc-listeners/sc-listeners.html">
 <link rel="import" href="../sc-tokenbalanceformatter/sc-tokenbalanceformatter.html">
@@ -633,26 +633,19 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
 
     </style>
-    <!-- D={{requestdata.dealstate}}
-    D2={{requestdatadealstate}} -->
     <sc-shh web3="{{shhweb3}}"></sc-shh>
-    <sc-config config="{{config}}"></sc-config>
+    <sc-config id="config" config="{{config}}"></sc-config>
     <sc-listeners id="listeners"></sc-listeners>
     <sc-dealfortwo id="dealfortwo"></sc-dealfortwo>
-    <!--<sc-helpers id="helpers"></sc-helpers>
-    <sc-hashtagcontract id="hashtagcontract" hashtagname="{{data.hashtag}}"></sc-hashtagcontract>   -->
+    <sc-hashtagcontract id="hashtagcontract" hashtagcontract="{{requestdata.hashtag}}"  loaded="{{hcready}}"></sc-hashtagcontract>    
     <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
 
     <app-route route="{{route}}" pattern="/:hashtag/:requestid/:replyid" data="{{routedata}}"></app-route>
-<!--
-    <sc-dealstate deal="{{requestdata}}" dealstate="{{dealstate}}"></sc-dealstate>
-
- -->
     <neon-animated-pages id="providerpages" attr-for-selected="data-action" selected="{{selecteddealpage}}" entry-animation="{{providerpagesentry}}" exit-animation="{{providerpagesexit}}">
 
       <neon-animatable data-action="dodeal">
 
-        <div class="topbar" on-tap="dumpdeal">
+        <div class="topbar">
           <span class="flex"></span>
             <paper-icon-button on-tap="leave" icon="sc-icons:decline" noink>back</paper-icon-button>
         </div>
@@ -665,7 +658,11 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
             <!-- Created. -->
             <template is="dom-if" if="{{_is(requestdata.dealstate,'accepted')}}">
-              <h1 class="">Do you accept a deal  with <span class="light blue replyer_username">{{requestdata.seeker.username}}</span> for <span class=""><sc-tokenbalanceformatter value="{{requestdata.amount}}" norounding decimals=3></sc-tokenbalanceformatter></span>?</h1>
+              <h1 class="">Do you accept a deal  with <span class="light blue replyer_username">{{requestdata.seeker.username}}</span> for <span class=""><sc-tokenbalanceformatter value="{{deducthalfcommission(requestdata.amount,hashtagcommission_div2)}}" rounding="false" decimals=3></sc-tokenbalanceformatter></span>?</h1>
+
+            <p class="grey2b reg">The hashtagfee of #{{hashtagcontractToName(requestdata.hashtag)}} is
+                <sc-tokenbalanceformatter value="{{hashtagcommission_div2}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></p>
+
             </template>
 
             <!-- In deal. -->
@@ -702,18 +699,18 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
                     <div class="detail">
                       <p class="cat">Hashtag</p>
-                      <p class="reg bold">#[[requestdata.hashtag]]</p>
+                      <p class="reg bold">#{{hashtagcontractToName(requestdata.hashtag)}}</p>
                     </div>
 
 
                     <div class="detail">
                       <p class="cat">Requester</p>
-                      <a href="" class="reg blue">[[requestdata.seeker.username]]<span>( [[requestdata.seeker.pubkey]] )</span></a>
+                      <a href="" class="reg blue">[[requestdata.seeker.username]]</a>
                     </div>
 
                     <div class="detail">
                       <p class="cat">Provider</p>
-                      <a href="" class="reg blue">[[replydata.provider.username]]<span>( [[replydata.provide.pubkey]] )</span></a>
+                      <a href="" class="reg blue">[[replydata.provider.username]]</a>
                     </div>
 
 
@@ -752,6 +749,13 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                       <div class="detail">
                         <p class="cat">Payout</p>
                         <a href="https://etherscan.io/tx/{{requestdata.payouttx}}" target="_new"  class="reg blue">{{requestdata.payouttx}}</a>
+                      </div>
+                    </template>
+                    
+                    <template is="dom-if" if="{{requestdata.dealdata}}">
+                      <div class="detail">
+                        <p class="cat">Fee</p>
+                        <p class="reg"><sc-tokenbalanceformatter value="{{requestdata.dealdata.commissionValue}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></p>
                       </div>
                     </template>
 
@@ -794,7 +798,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 <!-- Here we also need to add the hashtagcommission / 2 -->
           <div class$="bottomhalf {{bottombg}} totalwidth">
             <template is="dom-if" if="{{!provideraccept}}">
-              <p class="white light centertxt">By accepting, <sc-tokenbalanceformatter value="{{requestdata.amount}}"></sc-tokenbalanceformatter> will be locked on this deal until payout.</p>
+              <p class="white light centertxt">By accepting, <sc-tokenbalanceformatter value="{{addhalfcommission(requestdata.amount)}}" decimals=3></sc-tokenbalanceformatter> will be locked on this deal until payout.</p>
+              <p class="white light centertxt">from that amount <sc-tokenbalanceformatter value="{{hashtagcommission_div2}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter> will be sent to the hashtag maintainer upon payout.</p>
               <div class="confirmbtns">
                 <template is="dom-if" if="{{btntapped}}">
                   <sc-loader small color="white"></sc-loader>
@@ -837,11 +842,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       </neon-animatable>
 
     </neon-animated-pages>
-
-
-
   </template>
-
   <script>
 
     Polymer({
@@ -857,14 +858,11 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       '_checksize(phoneview)',
       '_provideraccept(provideraccept)',
       '_hashtag(routedata.hashtag)',
-      '_resetme(routedata.requestid,routedata.replyid)'
+      '_resetme(routedata.requestid,routedata.replyid)',
+      '_hashtagcontractloaded(hcready)',
       ],
 
-
       properties: {
-        /**
-       * `prop1` this is the first property and what it does is described right here.
-       */
         identity: {
           type: Object,
           statePath: 'identity',
@@ -878,65 +876,62 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           statePath: 'deals',
           observer: '_getdata'
         },
-
-       seekeraccept: {
+        seekeraccept: {
           type: Boolean,
           value: false
         },
-
         provideraccept: {
           type: Boolean,
           value: false
         },
-
         currentdealstatus: {
           type: String,
           value: 'init'
         },
-
         bottombg: {
           type: String,
           value: 'blueback'
         },
-
         indeal: {
           type: Boolean,
           value: false
         },
-
-        // assignmined: {
-        //   type: Boolean,
-        //   value: false,
-        //   observer: '_whatismined'
-        // },
-
-        // providerfundingmined: {
-        //   type: Boolean,
-        //   value: false  ,
-        //   observer: '_whatismined'
-        // },
-
         steponestate: {
           type: String,
           value: 'stepinit'
         },
-
         steptwostate: {
           type: String,
           value: 'stepinit'
         },
       },
 
-      dumpdeal: function(){
-        console.log('----------------------------------------');
-        console.log(this.requestdata);
-        console.log('----------------------------------------');
+      deducthalfcommission: function(v){
+        return v-this.hashtagcommission_div2;
+      },
+
+      addhalfcommission: function(v){
+        return v+this.hashtagcommission_div2;
+      },
+
+      hashtagcontractToName: function(a){
+        return this.$.config.hashtagcontractToName(a);
+      },
+
+      _hashtagcontractloaded: function(){
+        var self = this;
+        this.$.hashtagcontract.getCommission(function(err,res){
+          self.hashtagcommission = res;
+          self.hashtagcommission_div2 = self.hashtagcommission / 2;
+        });
       },
 
       ready: function(){
         this.selecteddealpage = 'dodeal';
         this.dealdetailsmsg = "Show details";
         this.btntapped = false;
+        this.hashtagcommission = 0;
+        this.hashtagcommission_div2 = 0;
       },
 
       _resetme: function(){
