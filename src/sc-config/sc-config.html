@@ -66,7 +66,7 @@
             this.hashtagcontracts = {
 //              pioneer: "0x5c21b622ac0a51d5b02060d2c483b26252939eee"
 //              BoardwalkTesting: "0x5c21b622ac0a51d5b02060d2c483b26252939eee"
-              BoardwalkTesting: "0xAB2b656cea9D351243A1742e5805Cfb9385feB24"
+              BoardwalkTesting: "0xAB2b656cea9D351243A1742e5805Cfb9385feB24",
             };
 
             this.swtunits = {
@@ -80,7 +80,9 @@
             },
             
             // the default unit of any input textbox
-            // needs to be multiplied with to obtain the unit of measure
+            // needs to be multiplied with to obtain the unit of token to be sent to 
+            // a smart contract if you're talking about tokens units.
+            // so that next to the textbox you can say 'xxx SWT'
             this.swtinputunit = this.swtunits['SWT'];
 
             this.set('config', {
@@ -109,9 +111,9 @@
       hashtagcontractToName: function(address) {
         for (var key in this.hashtagcontracts) {
           if (this.hashtagcontracts.hasOwnProperty(key)) {
-            if (this.hashtagcontracts[key] == address);
-            return key;
-            //              console.log(key + " -> " + p[key]);
+            if (this.hashtagcontracts[key] == address){
+              return key;
+            }
           }
         }
       }

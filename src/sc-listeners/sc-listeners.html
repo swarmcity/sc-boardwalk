@@ -374,23 +374,21 @@
             var deal = deals[foundDeal];
             Object.assign(deals[foundDeal],mutation);
 
-            //deals[foundDeal] = Object.assign(getEmptyDeal(), deals[foundDeal], mutation);
           }else{
             mutation.dealstate = 'accepted';
             deals.push(Object.assign(this.getEmptyDeal(),mutation));
           }
-          // //debugger;
-          // if (!deal.ismydeal && deal.ireplied){
-          //   //debugger;
-          //   // create a notification
-          //   this.dispatch('update_notification',{
-          //     id: replyMutation.parentrequestid + '_' + replyMutation.replytime,
-          //     senderidentity : replyMutation.provider,
-          //     timestamp: replyMutation.replytime,
-          //     msg: replyMutation.provider.username + ' responded to your request.',
-          //     hashtag: deal.hashtag
-          //   })
-          // }
+          //debugger;
+          if (!deal.ismydeal && deal.ireplied){
+            // create a notification
+            this.dispatch('update_notification',{
+              id: deal.id + '_' + payload.timestamp,
+              senderidentity : deal.seeker,
+              timestamp: payload.timestamp,
+              msg: deal.seeker.username + ' selected you as a provider.',
+              hashtag: deal.hashtag
+            })
+          }
 
 
           return {
