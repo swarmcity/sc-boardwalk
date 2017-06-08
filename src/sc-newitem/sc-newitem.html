@@ -241,10 +241,10 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
           <div class="confirmbtns totalwidth">
             <div class="hashtagfeemsg flex">
               <p class="grey2b reg">The hashtagfee of #Boardwalk is
-                <sc-tokenbalanceformatter value="{{d2}}"></sc-tokenbalanceformatter></p>
+                <sc-tokenbalanceformatter value="{{d2}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></p>
               <template is="dom-if" if="{{showtotal}}">
                 <p class="grey3 reg"><span class="bold">Total:</span>
-                  <sc-tokenbalanceformatter value="{{offeramount}}"></sc-tokenbalanceformatter>
+                  <sc-tokenbalanceformatter value="{{offeramount}}" decimals=3></sc-tokenbalanceformatter>
                 </p>
               </template>
             </div>
@@ -389,13 +389,13 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
           return;
         }
 
-        if (this.wallet.swtbalance < amount * this.config.swtinputunit){
+        if (this.wallet.swtbalance < amount){
           console.log('your balance is too low...');
           this.btnable = false;
           return;
         }
 
-        if (this.hashtaginfo[this.hashtagaddress] && this.hashtaginfo[this.hashtagaddress].commission > amount * this.config.swtinputunit){
+        if (this.hashtaginfo[this.hashtagaddress] && this.hashtaginfo[this.hashtagaddress].commission > amount){
           console.log('you must offer more than the commission');
           this.btnable = false;
           return;
@@ -423,8 +423,6 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
           // TODO : report to user that hsi input in invalid.
           return;
         }
-
-          amount = amount * this.config.swtinputunit;
         //debugger;
         if (this.swtbalance.toNumber(10) >= amount) {
           var self = this;
