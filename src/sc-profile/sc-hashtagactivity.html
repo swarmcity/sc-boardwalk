@@ -27,6 +27,9 @@
 
 
       .hashtagactivity {
+        @apply(--layout-vertical);
+        @apply(--layout-start);
+        @apply(--layout-start-justified);
         margin-bottom: 2vh;
       }
 
@@ -66,13 +69,23 @@
       }
 
 
+      @media all and (min-width: 0) and (max-width: 540px) { 
+
+        .hashtagactivity {
+          @apply(--layout-vertical);
+          @apply(--layout-start);
+          @apply(--layout-start-justified);
+          margin-bottom: 2vh;
+        }
+
+      }
 
 
 
     </style>
     <iron-media-query query="(min-width:0px) and (max-width: 540px)" query-matches="{{phoneview}}"></iron-media-query>
 
-        <div class="hashtagactivity totalwidth vertic start startjust">
+        <div class="hashtagactivity totalwidth">
           <p class="bold">#{{hashtag}} • <span class="bold">1</span></p>
 
             <div id="" class="completeddeals_toggler" on-tap="showDetails">

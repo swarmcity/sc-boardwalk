@@ -45,8 +45,12 @@
         };
         switch (action.type) {
             case 'NOTIFICATIONS':
+                var notifications = [];
+                for (var i = 0; i < action.notifications.length; i++) {
+                    notifications.push(Object.assign({}, action.notifications[i]));
+                }
                 return Object.assign({}, state, {
-                    notifications: action.notifications
+                    notifications: notifications
                 });
                 break;
             case 'HASHTAGINFO':
