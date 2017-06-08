@@ -3,7 +3,7 @@
 <link rel="import" href="../../bower_components/moment-js/moment-js.html">
 <link rel="import" href="../../bower_components/sc-style/sc-style.html">
 <link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
-
+<link rel="import" href="../sc-config/sc-config.html">
 <link rel="import" href="../sc-avatar/sc-avatar.html">
 <link rel="import" href="../sc-username/sc-username.html">
 <link rel="import" href="../sc-balance/sc-balance.html">
@@ -152,7 +152,7 @@ This components shows the in-app notifications in Swarm City.
 
     </style>
     <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
-
+    <sc-config config="{{config}}"></sc-config>
     <div class="avatar_username_balance_hashtagcontent totalwidth">
         <div class="avatar_username_balance" on-tap="toProfile">
 
@@ -203,14 +203,13 @@ This components shows the in-app notifications in Swarm City.
             <div on-tap="notificationTapHandler" class="notif_item horizont start startjust">
               <sc-avatar
               class="subjectavatar"
-              ipfshash="[[item.subjectavatar]]"
+              ipfshash="[[item.senderidentity.avatarhash]]"
               size="verysmall"
               ></sc-avatar>
               <div class="flex vertic start startjust">
-READ={{item.read}}
-                <p class="timestamp grey3"><moment-js date="{{item.timestamp}}" format="HH:mm:ss.SSS" from-now></moment-js> | #{{item.dealhashtag}}</p>
+                <p class="timestamp grey3"><moment-js date="{{item.timestamp}}" format="HH:mm"></moment-js> | #{{_getHashTagName(item.hashtag)}}</p>
                 <div class="totalwidth horizont start startjust">
-                <p class="msg grey4 flex"><span class="reg" on-tap="gotoUserprofile">{{item.subjectusername}} </span>{{item.msg}}</p>
+                <p class="msg grey4 flex"><span class="reg" on-tap="gotoUserprofile"></span>{{item.msg}}</p>
                 <iron-icon icon="sc-icons:arrowright" class="blue"></iron-icon>
                 </div>
               </div>
@@ -305,8 +304,9 @@ READ={{item.read}}
       * 'leave' fires the 'leave' to the parent-element. (This also contains animation-config for going back to sc-home.)
       */
       leave: function(){
-       
-        this.fire('leave');
+        debugger;
+        window.history.back(-1);
+        //this.fire('leave');
       },
 
 
@@ -375,6 +375,10 @@ READ={{item.read}}
             break;
         }
       },
+
+      _getHashTagName: function(hashtagaddress){
+        return this.config.hashtagcontractToName(hashtagaddress);
+      },      
 
     });
   </script>
