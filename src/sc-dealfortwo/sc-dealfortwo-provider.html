@@ -644,7 +644,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
     <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
 
     <app-route route="{{route}}" pattern="/:hashtag/:requestid/:replyid" data="{{routedata}}"></app-route>
-<!-- 
+<!--
     <sc-dealstate deal="{{requestdata}}" dealstate="{{dealstate}}"></sc-dealstate>
 
  -->
@@ -755,7 +755,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                       </div>
                     </template>
 
-                    
+
                   </div>
                 </div>
             </iron-collapse>
@@ -791,7 +791,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
 
           </div>
-
+<!-- Here we also need to add the hashtagcommission / 2 -->
           <div class$="bottomhalf {{bottombg}} totalwidth">
             <template is="dom-if" if="{{!provideraccept}}">
               <p class="white light centertxt">By accepting, <sc-tokenbalanceformatter value="{{requestdata.amount}}"></sc-tokenbalanceformatter> will be locked on this deal until payout.</p>
@@ -1033,7 +1033,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
             self.shhweb3.encodetopic('all'),
             self.shhweb3.encodetopic('all'),
             self.shhweb3.encodetopic('all'),
-            self.shhweb3.encodetopic('all'),                  
+            self.shhweb3.encodetopic('all'),
           ];
 
           if (self.shhweb3) {
