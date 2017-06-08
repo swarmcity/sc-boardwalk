@@ -3,7 +3,7 @@
 <link rel="import" href="../../bower_components/moment-js/moment-js.html">
 <link rel="import" href="../../bower_components/sc-style/sc-style.html">
 <link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
-<link rel="import" href="../sc-config/sc-config.html">
+
 <link rel="import" href="../sc-avatar/sc-avatar.html">
 <link rel="import" href="../sc-username/sc-username.html">
 <link rel="import" href="../sc-balance/sc-balance.html">
@@ -18,7 +18,7 @@
 
 This components shows the in-app notifications in Swarm City.
 
-@demo src/sc-notifications/demo/index.html 
+@demo src/sc-notifications/demo/index.html
 -->
 
 <dom-module id="sc-notifications">
@@ -34,9 +34,9 @@ This components shows the in-app notifications in Swarm City.
       .avatar_username_balance_hashtagcontent {
         @apply(--layout-horizontal);
         @apply(--layout-start);
-        @apply(--layout-start-justified); 
+        @apply(--layout-start-justified);
         box-sizing:border-box;
-        padding: 0px 14vw 0px 14vw;   
+        padding: 0px 14vw 0px 14vw;
         height: 100%;
       }
 
@@ -105,13 +105,13 @@ This components shows the in-app notifications in Swarm City.
 
 
 
-    @media all and (min-width: 0) and (max-width: 420px) { 
+    @media all and (min-width: 0) and (max-width: 420px) {
 
       .avatar_username_balance_hashtagcontent {
         @apply(--layout-vertical);
         @apply(--layout-center-center);
         box-sizing:border-box;
-        padding: 0px;            
+        padding: 0px;
       }
 
       .avatar_username_balance {
@@ -152,7 +152,7 @@ This components shows the in-app notifications in Swarm City.
 
     </style>
     <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
-    <sc-config config="{{config}}"></sc-config>
+
     <div class="avatar_username_balance_hashtagcontent totalwidth">
         <div class="avatar_username_balance" on-tap="toProfile">
 
@@ -165,7 +165,7 @@ This components shows the in-app notifications in Swarm City.
           id="notifavatar"
           size="{{currentviewmode}}"
           ></sc-avatar>
-          
+
 
 
           <div class="horizont centercenter noSelect">
@@ -203,13 +203,14 @@ This components shows the in-app notifications in Swarm City.
             <div on-tap="notificationTapHandler" class="notif_item horizont start startjust">
               <sc-avatar
               class="subjectavatar"
-              ipfshash="[[item.senderidentity.avatarhash]]"
+              ipfshash="[[item.subjectavatar]]"
               size="verysmall"
               ></sc-avatar>
               <div class="flex vertic start startjust">
-                <p class="timestamp grey3"><moment-js date="{{item.timestamp}}" format="HH:mm"></moment-js> | #{{_getHashTagName(item.hashtag)}}</p>
+READ={{item.read}}
+                <p class="timestamp grey3"><moment-js date="{{item.timestamp}}" format="HH:mm:ss.SSS" from-now></moment-js> | #{{item.dealhashtag}}</p>
                 <div class="totalwidth horizont start startjust">
-                <p class="msg grey4 flex"><span class="reg" on-tap="gotoUserprofile"></span>{{item.msg}}</p>
+                <p class="msg grey4 flex"><span class="reg" on-tap="gotoUserprofile">{{item.subjectusername}} </span>{{item.msg}}</p>
                 <iron-icon icon="sc-icons:arrowright" class="blue"></iron-icon>
                 </div>
               </div>
@@ -253,12 +254,12 @@ This components shows the in-app notifications in Swarm City.
           type: Object,
           statePath: 'pubkey',
           observer: '_pubkey'
-        },  
+        },
 
         identity: {
           type: Object,
           statePath: 'identity'
-        },  
+        },
 
         // notifications: {
         //   type: Object,
@@ -272,7 +273,7 @@ This components shows the in-app notifications in Swarm City.
         },
         /**
        * `phoneview` is a boolean to determine the viewport.
-       */ 
+       */
         phoneview: {
           type: Boolean,
           observer: '_checkSize'
@@ -287,14 +288,14 @@ This components shows the in-app notifications in Swarm City.
 
 
       /**
-      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
+      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage
       * use this to initialize any variables to start the component
       */
       onEnter: function(){
       },
 
       /**
-      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage 
+      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage
       * use this to reset any variables when leaving this component while it remains loaded.
       */
       onExit: function(){
@@ -304,8 +305,7 @@ This components shows the in-app notifications in Swarm City.
       * 'leave' fires the 'leave' to the parent-element. (This also contains animation-config for going back to sc-home.)
       */
       leave: function(){
-        debugger;
-        window.history.back(-1);
+        window.history.go(-1);
         //this.fire('leave');
       },
 
@@ -323,7 +323,7 @@ This components shows the in-app notifications in Swarm City.
 
       /**
       * '_checkSize' responds to the iron-media-query and sets some variables according to the result.
-      */      
+      */
       _checkSize: function() {
         if (this.phoneview) {
         this.visibleclass = 'mobile';
@@ -343,7 +343,7 @@ This components shows the in-app notifications in Swarm City.
 
 
      _web3: function() {
-        
+
         if (!this.web3){
           throw new Error('web3 not set while requesting whisper listener');
         }
@@ -375,10 +375,6 @@ This components shows the in-app notifications in Swarm City.
             break;
         }
       },
-
-      _getHashTagName: function(hashtagaddress){
-        return this.config.hashtagcontractToName(hashtagaddress);
-      },      
 
     });
   </script>
