@@ -18,389 +18,398 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
 -->
 
 <dom-module id="sc-filter">
-  <template>
-    <style include="sc-styles">
-      :host {
-        display: inline-block;
-        width: 100%;
-        margin: 5px 5px 5px 0px;
-        --paper-slider-knob-color: var(--sc-yellow);
-        --paper-slider-active-color: var(--sc-yellow);
-      }
+    <template>
+        <style include="sc-styles">
+            :host {
+                display: inline-block;
+                width: 100%;
+                margin: 5px 5px 5px 0px;
+                --paper-slider-knob-color: var(--sc-yellow);
+                --paper-slider-active-color: var(--sc-yellow);
+            }
 
-      .filter_selection {
-        box-sizing:border-box;
-        padding: 5px 8px 5px 8px;
-        border-radius: 2px;
-      }
+            .filter_selection {
+                box-sizing: border-box;
+                padding: 5px 8px 5px 8px;
+                border-radius: 2px;
+            }
 
-      .filter_selection p {
-        font-size: 12px;
-        line-height: 16px;
-      }
+            .filter_selection p {
+                font-size: 12px;
+                line-height: 16px;
+            }
 
-      .triangle {
-        width: 8px;
-        transition: all 0.075s linear;
-        margin-right: 4px;
-        margin-left: 10px;
+            .triangle {
+                width: 8px;
+                transition: all 0.075s linear;
+                margin-right: 4px;
+                margin-left: 10px;
 
-        opacity: 0.75;
-      }
+                opacity: 0.75;
+            }
 
-      .triangle svg {
-        width: 100%;
-      }
+            .triangle svg {
+                width: 100%;
+            }
 
-      .opened {
-        transform: rotate(90deg);
-        opacity: 1;
-      }
+            .triangle svg:hover {
+                cursor: pointer;
+            }
 
-      .filter_options {
-        box-sizing:border-box;
-        padding: 0px;
-        border-top: 2px solid rgba(0,0,0,0.25);
-        border-bottom: 2px solid rgba(0,0,0,0.25);
+            .opened {
+                transform: rotate(90deg);
+                opacity: 1;
+            }
 
-      }
+            .filter_options {
+                box-sizing: border-box;
+                padding: 0px;
+                border-top: 2px solid rgba(0, 0, 0, 0.25);
+                border-bottom: 2px solid rgba(0, 0, 0, 0.25);
 
-      .filter_option {
-        border-bottom: 2px solid rgba(0,0,0,0.05);
-      }
+            }
 
-      .filter_option:hover {
-        cursor: pointer;
-      }
+            .filter_option {
+                border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+            }
 
-      .filter_option p {
-        box-sizing:border-box;
-        padding: 14px 18px 14px 18px;
-        font-size: 14px;
-        line-height: 15px;
-      }
+            .filter_option:hover {
+                cursor: pointer;
+            }
 
-      #currentid {
-        position: absolute;
-        background-color: white;
-        z-index: 9;
-      }
+            .filter_option p {
+                box-sizing: border-box;
+                padding: 14px 18px 14px 18px;
+                font-size: 14px;
+                line-height: 15px;
+            }
 
+            #currentid {
+                position: absolute;
+                background-color: white;
+                z-index: 9;
+            }
 
+            .slidericon {
+                width: 18px;
+                height: 18px;
+            }
 
+            paper-slider {
+                width: 100%;
+            }
 
+            .locationtotal p {
+                font-size: 11px;
+                line-height: 13px;
+            }
 
-      .slidericon {
-        width: 18px;
-        height: 18px;
-      }
+            #sliderbox {
+                width: 100%;
+                margin-top: 10px;
+            }
 
-      paper-slider {
-        width: 100%;
-      }
+            #ratings:hover {
+                cursor: pointer;
+            }
 
-      .locationtotal p {
-        font-size: 11px;
-        line-height: 13px;
-      }
+            .inner_sliderbox {
+                width: 100%;
+                box-sizing: border-box;
+                padding: 6px 12px 6px 12px;
+            }
 
-      #sliderbox {
-        width: 100%;
-        margin-top: 10px;
-      }
+            .location {
+                width: 50%;
+                max-width: 220px;
+            }
 
-      .inner_sliderbox {
-        width: 100%;
-        box-sizing:border-box;
-        padding: 6px 12px 6px 12px;
-      }
+            .divider {
+                margin: 0px 13px 0px 13px;
+            }
 
+            .distance {
+                border-bottom: 1px dotted #bfbfbf;
+            }
 
-      .location {
-        width: 50%;
-        max-width: 220px;
-      }
+            .distance:hover {
+                cursor: pointer;
+            }
 
-      .divider {
-        margin: 0px 13px 0px 13px;
-      }
+            @media all and (max-width: 500px) {
+                /*      .locationtotal {
+                        width: 100%;
+                        @apply(--layout-vertical);
+                        @apply(--layout-start);
+                        @apply(--layout-start-justified);
 
-      .distance {
-        border-bottom: 1px dotted #bfbfbf;
-      }
+                      }*/
+                /*        paper-slider {
+                          width: 150px;
+                        }*/
+                .leftmargers {
+                    margin-left: 14px;
+                }
+            }
 
+        </style>
 
-      @media all and (max-width: 500px) {
-/*      .locationtotal {
-        width: 100%;
-        @apply(--layout-vertical);
-        @apply(--layout-start);
-        @apply(--layout-start-justified);
+        <iron-media-query query="(min-width:0px) and (max-width: 540px)"
+                          query-matches="{{phoneview}}"></iron-media-query>
 
-      }*/
-/*        paper-slider {
-          width: 150px;
-        }*/
+        <!-- <template is="dom-if" if="{{location}}"> -->
 
-        .leftmargers {
-          margin-left: 14px;
-        }
-      }
-
-    </style>
-
-    <iron-media-query query="(min-width:0px) and (max-width: 540px)" query-matches="{{phoneview}}"></iron-media-query>
-
-  <!-- <template is="dom-if" if="{{location}}"> -->
-
-    <!-- <template is="dom-if" if="{{!phoneview}}"> -->
-      <div class="locationtotal totalwidth vertical center startjust">
-        <div class="horizont center startjust">
-          <div class$="triangle {{collapsestate}}">
-            <svg id="triangle_icon" x="0px" y="0px" viewBox="0 0 50 50" fill="#666666">
-            <polygon points="6.5,4.9 6.5,44.5 42,24.9 "/>
-            </svg>
-          </div>
-          <p class="distance grey3" on-tap="toggleSlider">{{distance}}</p>
-        </div>
-        <iron-collapse opened="false" id="sliderbox" class="">
-          <div class$="inner_sliderbox horizont centercenter {{mobile_classes}}">
-            <div class="horizont centercenter flex">
-              <iron-icon icon="sc-icons:location_edgeless" class="slidericon grey3"></iron-icon>
-              <paper-slider noink id="ratings" min="1" max="6" value="{{range}}" immediate-value="{{immediaterange}}"></paper-slider>
-              <iron-icon icon="sc-icons:globe_edgeless" class="slidericon grey3"></iron-icon>
+        <!-- <template is="dom-if" if="{{!phoneview}}"> -->
+        <div class="locationtotal totalwidth vertical center startjust">
+            <div class="horizont center startjust">
+                <div class$="triangle {{collapsestate}}">
+                    <svg id="triangle_icon" x="0px" y="0px" viewBox="0 0 50 50" fill="#666666" onmouseover=""
+                         style="cursor: pointer;">
+                        <polygon points="6.5,4.9 6.5,44.5 42,24.9 "/>
+                    </svg>
+                </div>
+                <p class="distance grey3" on-tap="toggleSlider">{{distance}}</p>
             </div>
-            <paper-icon-button icon="sc-icons:v" on-tap="toggleSlider" class="grey3 leftmargers" noink></paper-icon-button>
-            <p class="bold grey3">{{distance_n}}</p>
-          </div>
-        </iron-collapse>
-      </div>
-    <!-- </template> -->
-
-<!-- 
-    <template is="dom-if" if="{{phoneview}}">
-      <div class="locationtotal totalwidth vertic start startjust">
-        <div class="horizont center startjust">
-          <div class$="triangle {{collapsestate}}">
-            <svg id="triangle_icon" x="0px" y="0px" viewBox="0 0 50 50" fill="#666666">
-            <polygon points="6.5,4.9 6.5,44.5 42,24.9 "/>
-            </svg>
-          </div>
-          <p class="bold grey3" on-tap="toggleSlider">{{distance}}</p>
+            <iron-collapse opened="false" id="sliderbox" class="">
+                <div class$="inner_sliderbox horizont centercenter {{mobile_classes}}">
+                    <div class="horizont centercenter flex ">
+                        <iron-icon icon="sc-icons:location_edgeless" class="slidericon grey3"></iron-icon>
+                        <paper-slider noink id="ratings" min="1" max="6" value="{{range}}"
+                                      immediate-value="{{immediaterange}}"></paper-slider>
+                        <iron-icon icon="sc-icons:globe_edgeless" class="slidericon grey3"></iron-icon>
+                    </div>
+                    <paper-icon-button icon="sc-icons:v" on-tap="toggleSlider" class="grey3 leftmargers"
+                                       noink></paper-icon-button>
+                    <p class="bold grey3">{{distance_n}}</p>
+                </div>
+            </iron-collapse>
         </div>
-        <iron-collapse id="sliderbox" class="">
-          <div class="inner_sliderbox horizont centercenter totalwidth darker">
-            <div class="horizont centercenter flex">
-              <iron-icon icon="sc-icons:location_edgeless" class="slidericon grey3"></iron-icon>
-              <paper-slider noink id="ratings" min="1" max="6" value="{{range}}" immediate-value="{{immediaterange}}"></paper-slider>
-              <iron-icon icon="sc-icons:globe_edgeless" class="slidericon grey3"></iron-icon>
+        <!-- </template> -->
+
+        <!--
+            <template is="dom-if" if="{{phoneview}}">
+              <div class="locationtotal totalwidth vertic start startjust">
+                <div class="horizont center startjust">
+                  <div class$="triangle {{collapsestate}}">
+                    <svg id="triangle_icon" x="0px" y="0px" viewBox="0 0 50 50" fill="#666666">
+                    <polygon points="6.5,4.9 6.5,44.5 42,24.9 "/>
+                    </svg>
+                  </div>
+                  <p class="bold grey3" on-tap="toggleSlider">{{distance}}</p>
+                </div>
+                <iron-collapse id="sliderbox" class="">
+                  <div class="inner_sliderbox horizont centercenter totalwidth darker">
+                    <div class="horizont centercenter flex">
+                      <iron-icon icon="sc-icons:location_edgeless" class="slidericon grey3"></iron-icon>
+                      <paper-slider noink id="ratings" min="1" max="6" value="{{range}}" immediate-value="{{immediaterange}}"></paper-slider>
+                      <iron-icon icon="sc-icons:globe_edgeless" class="slidericon grey3"></iron-icon>
+                    </div>
+                    <paper-icon-button icon="sc-icons:v" on-tap="toggleSlider" class="grey3 leftmargers" noink></paper-icon-button>
+                <p class="bold grey3">{{distance_n}}</p>
+                  </div>
+                </iron-collapse>
+              </div>
+            </template> -->
+        <!-- </template> -->
+        <!--
+          <template is="dom-if" if="{{!location}}">
+            <div class="vertic start startjust">
+              <div class="filter_selection horizont center startjust darkerer" on-tap="toggleCollapse">
+
+                <div class$="triangle {{collapsestate}}">
+                  <svg id="triangle_icon" x="0px" y="0px" viewBox="0 0 50 50" fill="#666666">
+                  <polygon points="6.5,4.9 6.5,44.5 42,24.9 "/>
+                  </svg>
+                </div>
+                <p class="reg grey3">{{selecteditem}}</p>
+              </div>
+              <iron-collapse id="currentid">
+                <div class="filter_options shadow">
+                  <template is="dom-repeat" items="{{filteroptions}}">
+                    <div class="filter_option" id="{{item}}" on-tap="select">
+                      <p content="{{item}}" class$="reg grey3 {{thisone}}">{{item}}</p>
+                    </div>
+                  </template>
+                </div>
+              </iron-collapse>
             </div>
-            <paper-icon-button icon="sc-icons:v" on-tap="toggleSlider" class="grey3 leftmargers" noink></paper-icon-button>
-        <p class="bold grey3">{{distance_n}}</p>
-          </div>
-        </iron-collapse>
-      </div>
-    </template> -->
-  <!-- </template> -->
-<!-- 
-  <template is="dom-if" if="{{!location}}">
-    <div class="vertic start startjust">
-      <div class="filter_selection horizont center startjust darkerer" on-tap="toggleCollapse">
-
-        <div class$="triangle {{collapsestate}}">
-          <svg id="triangle_icon" x="0px" y="0px" viewBox="0 0 50 50" fill="#666666">
-          <polygon points="6.5,4.9 6.5,44.5 42,24.9 "/>
-          </svg>
-        </div>
-        <p class="reg grey3">{{selecteditem}}</p>
-      </div>
-      <iron-collapse id="currentid">
-        <div class="filter_options shadow">
-          <template is="dom-repeat" items="{{filteroptions}}">
-            <div class="filter_option" id="{{item}}" on-tap="select">
-              <p content="{{item}}" class$="reg grey3 {{thisone}}">{{item}}</p>
-            </div>
-          </template>
-        </div>
-      </iron-collapse>
-    </div>
-  </template> -->
+          </template> -->
 
 
-  </template>
+    </template>
 
-  <script>
-    Polymer({
+    <script>
+        Polymer({
 
-      is: 'sc-filter',
+            is: 'sc-filter',
 
-      properties: {
-        /**
-        * Show the selected item and passes it to parent-element
-        *
-        * @type {String}
-        */
-        selecteditem: {
-          type: String,
-          notify: true
-        },
-        /**
-        * Is the array of options received from parent-element
-        *
-        * @type {Array}
-        */
-        filteroptions: {
-          type: Array,
-          observer: '_filteroptions'
-        },
+            properties: {
+                /**
+                 * Show the selected item and passes it to parent-element
+                 *
+                 * @type {String}
+                 */
+                selecteditem: {
+                    type: String,
+                    notify: true
+                },
+                /**
+                 * Is the array of options received from parent-element
+                 *
+                 * @type {Array}
+                 */
+                filteroptions: {
+                    type: Array,
+                    observer: '_filteroptions'
+                },
 
-        /**
-        * Determines the visual form of the element. If location=true, show the location-filter (slider).
-        *
-        * @type {Boolean}
-        */
-        location: {
-          type: Boolean,
-          value: false
-        },
+                /**
+                 * Determines the visual form of the element. If location=true, show the location-filter (slider).
+                 *
+                 * @type {Boolean}
+                 */
+                location: {
+                    type: Boolean,
+                    value: false
+                },
 
-        range: {
-          type: Number,
-          value:2,
-          notify: true,
-          observer:'toggleSlider'
-        },
+                range: {
+                    type: Number,
+                    value: 2,
+                    notify: true,
+                    observer: 'toggleSlider'
+                },
 
-        distance: {
-          type: String,
-          observer:'_rangetoDistance'
-        }
-      },
-      observers: [
-        '_rangetoDistance(immediaterange)',
-        '_phoneview(phoneview)'
-      ],
+                distance: {
+                    type: String,
+                    observer: '_rangetoDistance'
+                }
+            },
+            observers: [
+                '_rangetoDistance(immediaterange)',
+                '_phoneview(phoneview)'
+            ],
 
-      _phoneview: function(){
-        if (this.phoneview){
-          this.mobile_classes = "totalwidth darker";
-        }else{
-          this.mobile_classes = '';
-        }
-      },
+            _phoneview: function () {
+                if (this.phoneview) {
+                    this.mobile_classes = "totalwidth darker";
+                } else {
+                    this.mobile_classes = '';
+                }
+            },
 
-      ready: function(){
-        this.immediaterange = this.range;
-        this.filteroptions = [
-          'Option 1',
-          'Option 2',
-          'Option 3'
-        ];
-        this._rangetoDistance();
+            ready: function () {
+                this.immediaterange = this.range;
+                this.filteroptions = [
+                    'Option 1',
+                    'Option 2',
+                    'Option 3'
+                ];
+                this._rangetoDistance();
 
-        // this.distance = 40;
-      },
+                // this.distance = 40;
+            },
 
-      /**
-      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage
-      * use this to initialize any variables to start the component
-      */
-      onEnter: function(){
-      },
+            /**
+             * 'onEnter' are the behaviors that occur when the router tells this component enters the stage
+             * use this to initialize any variables to start the component
+             */
+            onEnter: function () {
+            },
 
-      /**
-      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage
-      * use this to reset any variables when leaving this component while it remains loaded.
-      */
-      onExit: function(){
-      },
-
-
-      /**
-      * '_is', a function to bind a template to a certain value of a variable.
-      */
-      _is: function(a, b) {
-        if (b === undefined){
-          b = true;
-        }
-        //console.log(a ,'(',typeof a,') is',b,'(',typeof b,') they are equal for ==',a == b,', they are equal for ===',a === b);
-        return a === b;
-      },
-
-      // select: function(e){
-      //   this.selecteditem = e.target.content;
-      //   this.toggleCollapse();
-      // },
-
-      _filteroptions: function(){
-        this.selecteditem = this.filteroptions[0];
-      },
-
-      // toggleCollapse: function(){
-      //   this.$.currentid.toggle();
-      //   if (this.$.currentid.opened){
-      //     this.collapsestate = 'opened';
-      //   } else {
-      //     this.collapsestate = '';
-      //   }
-      // },
-
-      toggleSlider: function(){
+            /**
+             * 'onExit' are the behaviors that occur when the router tells this component to leave the stage
+             * use this to reset any variables when leaving this component while it remains loaded.
+             */
+            onExit: function () {
+            },
 
 
-        // var sliderbox = this.shadowRoot.getElementById('sliderbox');
+            /**
+             * '_is', a function to bind a template to a certain value of a variable.
+             */
+            _is: function (a, b) {
+                if (b === undefined) {
+                    b = true;
+                }
+                //console.log(a ,'(',typeof a,') is',b,'(',typeof b,') they are equal for ==',a == b,', they are equal for ===',a === b);
+                return a === b;
+            },
 
-        // if (!sliderbox){
-        //   return;
-        // }
+            // select: function(e){
+            //   this.selecteditem = e.target.content;
+            //   this.toggleCollapse();
+            // },
+
+            _filteroptions: function () {
+                this.selecteditem = this.filteroptions[0];
+            },
+
+            // toggleCollapse: function(){
+            //   this.$.currentid.toggle();
+            //   if (this.$.currentid.opened){
+            //     this.collapsestate = 'opened';
+            //   } else {
+            //     this.collapsestate = '';
+            //   }
+            // },
+
+            toggleSlider: function () {
+
+
+                // var sliderbox = this.shadowRoot.getElementById('sliderbox');
+
+                // if (!sliderbox){
+                //   return;
+                // }
 
 //        console.log(sliderbox);
-        this.$.sliderbox.toggle();
+                this.$.sliderbox.toggle();
 
-        if (this.$.sliderbox.opened){
-          this.collapsestate = 'opened';
-        } else {
-          this.collapsestate = '';
-        }
+                if (this.$.sliderbox.opened) {
+                    this.collapsestate = 'opened';
+                } else {
+                    this.collapsestate = '';
+                }
 
-      },
+            },
 
-      _rangetoDistance: function(){
+            _rangetoDistance: function () {
 
-        switch(this.immediaterange) {
-            case 0:
-                this.distance = "In your area"
-                this.distance_n = "(+/-125m)";
-                break;
-            case 1:
-                this.distance = "In your area"
-                this.distance_n = "(+/-5km)";
-                break;
-            case 2:
-                this.distance = "In your area"
-                this.distance_n = "(+/-40km)";
-                break;
-            case 3:
-                this.distance = "In your area"
-                this.distance_n = "(+/-150km)";
-                break;
-            case 4:
-                this.distance = "In your area"
-                this.distance_n = "(+/-150km)";
-                break;
-            case 5:
-                this.distance = "In your area"
-                this.distance_n = "(+/-5000km)";
-                break;
-            case 6:
-                this.distance = "Worldwide"
-                this.distance_n = "Worldwide";
-                break;
-        }
+                switch (this.immediaterange) {
+                    case 0:
+                        this.distance = "In your area"
+                        this.distance_n = "(+/-125m)";
+                        break;
+                    case 1:
+                        this.distance = "In your area"
+                        this.distance_n = "(+/-5km)";
+                        break;
+                    case 2:
+                        this.distance = "In your area"
+                        this.distance_n = "(+/-40km)";
+                        break;
+                    case 3:
+                        this.distance = "In your area"
+                        this.distance_n = "(+/-150km)";
+                        break;
+                    case 4:
+                        this.distance = "In your area"
+                        this.distance_n = "(+/-150km)";
+                        break;
+                    case 5:
+                        this.distance = "In your area"
+                        this.distance_n = "(+/-5000km)";
+                        break;
+                    case 6:
+                        this.distance = "Worldwide"
+                        this.distance_n = "Worldwide";
+                        break;
+                }
 
-      }
+            }
 
 
-    });
-  </script>
+        });
+    </script>
 </dom-module>
