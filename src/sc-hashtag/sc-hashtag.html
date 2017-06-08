@@ -373,7 +373,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
             </div>
             <p class="bold wordbreak">{{_getHashTagName(hashtag)}}</p>
 
-            <!-- 
+            <!--
 
             Here we should have some hashtag info collapser or something
             The user needs to know the commission that applies to this
@@ -393,6 +393,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
           geohash="[[geohash]]"
           identity="[[identity]]"
           hashtagaddress="[[data.hashtag]]"
+          hashtagcommission="[[hashtagcommission]]"
           swtbalance="[[swtbalance]]"
           on-back="newitem_cancel"
           on-cancel=""
@@ -588,14 +589,14 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       // redux actions - see sc-redux.html for state handling of this data
       actions: {
-        update_hashtaginfo: function(mutation){  
+        update_hashtaginfo: function(mutation){
           var hashtaginfo = Object.assign({},this.hashtaginfo);
           hashtaginfo[mutation.hashtagaddress] = mutation.hashtaginfo;
           return {
             type: 'HASHTAGINFO',
             hashtaginfo: hashtaginfo
           };
-        }, 
+        },
       },
 
       _is: function(a, b) {
