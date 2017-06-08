@@ -11,6 +11,7 @@
 <link rel="import" href="../sc-hashtagcontract/sc-hashtagrep.html">
 <link rel="import" href="../sc-redux/sc-redux.html">
 <link rel="import" href="../sc-dealstate/sc-dealstate.html">
+<link rel="import" href="../sc-tokenbalanceformatter/sc-tokenbalanceformatter.html">
 
 
 <!--
@@ -148,7 +149,9 @@ This components is the representation of a request in the requests-list on sc-ha
                 </div>
               </template>
 
-              <p class$="myoffer bold yellow {{amountopacity}}">{{item.amount}} SWT</p>
+              <p class$="myoffer bold yellow {{amountopacity}}">
+<sc-tokenbalanceformatter value="{{item.amount}}" rounding="false" decimals=3 denomination="SWT"></sc-tokenbalanceformatter>
+              </p>
               <div class="replycount_box horizont center endjust">
                 <p class="bold">{{replycount}}</p>
                 <iron-icon icon="sc-icons:babble" class="small replyicon">replies</iron-icon>
