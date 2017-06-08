@@ -678,11 +678,12 @@
             // send a notification ?
             var deal = this.getDeal(mutation.id);
             if (deal.ismydeal) {
+              //debugger;
               var reply = this.getReply(mutation.id, deal.selectedreply);
               this.dispatch('update_notification', {
                 id: deal.id + '_' + payload.time,
                 senderidentity: reply.provider,
-                timestamp: payload.timestamp,
+                timestamp: payload.time,
                 msg: 'You\'re now in a deal with ' + reply.provider.username,
                 hashtag: deal.hashtag
               })
@@ -718,10 +719,9 @@
             // send a notification ?
             var deal = this.getDeal(mutation.id);
             if (!deal.ismydeal && deal.iamprovider) {
-              var reply = this.getReply(mutation.id, deal.selectedreply);
               this.dispatch('update_notification', {
                 id: deal.id + '_' + payload.timestamp,
-                senderidentity: reply.provider,
+                senderidentity: deal.seeker,
                 timestamp: payload.timestamp,
                 msg: deal.seeker.username + ' paid out your deal. ',
                 hashtag: deal.hashtag
