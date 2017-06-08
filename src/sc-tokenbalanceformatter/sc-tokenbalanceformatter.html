@@ -31,6 +31,10 @@
         },
         denomination:{
           type: String
+        },
+        rounding: {
+          type: Boolean,
+          value: true
         }
       },
 
@@ -45,7 +49,9 @@
             if ((this.denomination === key) || (this.value / unit) >= (1/(10*this.decimals))){
               this.formattedvalue = (this.value / unit).toFixed(this.decimals);
               // remove any trailing zeroes
-              this.formattedvalue = parseFloat(this.formattedvalue).toString();
+              if (this.rounding){
+                this.formattedvalue = parseFloat(this.formattedvalue).toString();
+              }
               // if (this.formattedvalue.endsWith('00')){
               //   this.formattedvalue = this.formattedvalue.substring(0,this.formattedvalue.length-decimals-1);
               // }

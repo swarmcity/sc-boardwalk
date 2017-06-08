@@ -31,7 +31,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
     <!-- <sc-geohash geohash="{{geohash}}" enabled="{{enabled}}"></sc-geohash> -->
     <sc-dealfortwo id="dealfortwo"></sc-dealfortwo>
     <sc-web3 id="web3" web3="{{web3}}"></sc-web3>
-    <sc-config config="{{config}}"></sc-config>
+    <sc-config  id="config"  config="{{config}}"></sc-config>
     <sc-shh web3="{{shhweb3}}"></sc-shh>
     <style include="sc-styles">
       :host {
@@ -240,7 +240,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         <template is="dom-if" if="{{!loading}}">
           <div class="confirmbtns totalwidth">
             <div class="hashtagfeemsg flex">
-              <p class="grey2b reg">The hashtagfee of #Boardwalk is
+              <p class="grey2b reg">The hashtagfee of #{{hashtagcontractToName(hashtagaddress)}} is
                 <sc-tokenbalanceformatter value="{{d2}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></p>
               <template is="dom-if" if="{{showtotal}}">
                 <p class="grey3 reg"><span class="bold">Total:</span>
@@ -323,6 +323,9 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         '_geohash(geohash)'
       ],
 
+      hashtagcontractToName: function(a){
+        return this.$.config.hashtagcontractToName(a);
+      },
 
       _d2: function(){
         this.d2 = parseFloat(this.hashtagcommission)/2;

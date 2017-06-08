@@ -698,9 +698,9 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
     D2={{requestdatadealstate}} -->
     <sc-shh web3="{{shhweb3}}"></sc-shh>
     <sc-listeners id="listeners"></sc-listeners>
-    <sc-config config="{{config}}"></sc-config>
+    <sc-config id="config" config="{{config}}"></sc-config>
     <sc-helpers id="helpers"></sc-helpers>
-<!--     <sc-hashtagcontract id="hashtagcontract" hashtagcontract="{{data.hashtag}}"></sc-hashtagcontract> -->
+    <sc-hashtagcontract id="hashtagcontract" hashtagcontract="{{data.hashtag}}"  loaded="{{hcready}}"></sc-hashtagcontract>
     <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
     <!-- <sc-dealstate deal="{{requestdata}}" dealstate="{{dealstate}}"></sc-dealstate> -->
 
@@ -724,7 +724,11 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
               </div>
 
                <template is="dom-if" if="{{_is(requestdatadealstate,'accepted')}}">
-                  <h1 class="">You selected <span class="light blue replyer_username">{{replydata.provider.username}}</span> to make a deal for <span class=""><sc-tokenbalanceformatter value="{{requestdata.amount}}"></sc-tokenbalanceformatter></span>.</h1>
+                  <h1 class="">You selected <span class="light blue replyer_username">{{replydata.provider.username}}</span> to make a deal for <span class=""><sc-tokenbalanceformatter value="{{deducthalfcommission(requestdata.amount)}}" rounding="false" decimals=3></sc-tokenbalanceformatter></span>.</h1>
+                
+                <p class="grey2b reg">The hashtagfee of #{{hashtagcontractToName(requestdata.hashtag)}} is
+                <sc-tokenbalanceformatter value="{{hashtagcommission_div2}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></p>
+
                </template>
 
                <template is="dom-if" if="{{_is(requestdatadealstate,'provideraccepted')}}">
@@ -761,12 +765,12 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
                         <div class="detail">
                           <p class="cat">Offer</p>
-                          <p class="reg bold"><sc-tokenbalanceformatter value="{{requestdata.amount}}"></sc-tokenbalanceformatter></p>
+                          <p class="reg bold"><sc-tokenbalanceformatter value="{{deducthalfcommission(requestdata.amount)}}" decimals=3></sc-tokenbalanceformatter></p>
                         </div>
 
                         <div class="detail">
                           <p class="cat">Hashtag</p>
-                          <p class="reg bold">#[[requestdata.hashtag]]</p>
+                          <p class="reg bold">#{{hashtagcontractToName(requestdata.hashtag)}}</p>
                         </div>
 
 
@@ -822,7 +826,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                         <template is="dom-if" if="{{requestdata.dealdata}}">
                           <div class="detail">
                             <p class="cat">Fee</p>
-                            <p class="reg"><sc-tokenbalanceformatter value="{{requestdata.dealdata.commissionValue}}"></sc-tokenbalanceformatter></p>
+                            <p class="reg"><sc-tokenbalanceformatter value="{{requestdata.dealdata.commissionValue}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></p>
                           </div>
                         </template>
 
@@ -920,13 +924,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
             </div>
           </div>
           </neon-animatable>
-
         </neon-animated-pages>
-
-
-
-    <!-- <app-route route="{{route}}" pattern="/:requestid/:replyid" data="{{data}}" tail="{{subroute}}"></app-route>  -->
-
   </template>
 
   <script>
@@ -945,127 +943,75 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         '_shhweb3(shhweb3)',
         '_checksize(phoneview)',
         '_hashtag(data.hashtag)',
-        // '_connectionline(myamount_state,otheramount_state)',
         '_data(data)',
         '_log(replydata)',
-        //'_provideraccepted(provideraccept)',
-        //'_dealstate(dealstate)'
-        // '_requestdata(requestdata)'
-        // '_provideraccept(provideraccept)'
+        '_hashtagcontractloaded(hcready)',
       ],
 
 
       properties: {
-        /**
-       * `prop1` this is the first property and what it does is described right here.
-       */
         identity: {
           type: Object,
           statePath: 'identity',
         },
-
         web3: {
           type: Object,
           observer: '_web3'
         },
-
         route: {
           type: Object,
           observer: '_route'
         },
-
-        // hashtagname: {
-        //   type: String,
-        //   observer: '_hashtagname'
-        // },
-
-        // seekeraccept: {
-        //   type: Boolean,
-        //   value: false
-        // },
-
-        // provideraccept: {
-        //   type: Boolean,
-        //   value: false
-        // },
-
         deals: {
           type: Array,
           statePath: 'deals',
           observer: '_getdata'
         },
-
-        // currentdealstatus: {
-        //   type: String,
-        //   value: 'init'
-        // },
-
         bottombg: {
           type: String,
           value: 'blueback'
         },
+      },
 
-        // indeal: {
-        //   type: Boolean,
-        //   value: false
-        // },
+      deducthalfcommission: function(v){
+        return v-this.hashtagcommission_div2;
+      },
 
-        // assignmined: {
-        //   type: Boolean,
-        //   value: false,
-        //   observer: '_whatismined'
-        // },
-
-        // providerfundingmined: {
-        //   type: Boolean,
-        //   value: false  ,
-        //   observer: '_whatismined'
-        // },
-
-        // steponestate: {
-        //   type: String,
-        //   value: 'stepinit'
-        // },
-
-        // steptwostate: {
-        //   type: String,
-        //   value: 'stepinit'
-        // },
-
-        // steptwostate: {
-        //   type: String,
-        //   value: 'stepinit'
-        // },
-
+      hashtagcontractToName: function(a){
+        return this.$.config.hashtagcontractToName(a);
       },
 
       ready: function(){
         this.selecteddealpage = 'dodeal';
         this.dealdetailsmsg = "Show details";
+        this.hashtagcommission = 0;
+        this.hashtagcommission_div2 = 0;
+      },
+
+
+      _hashtagcontractloaded: function(){
+        var self = this;
+        this.$.hashtagcontract.getCommission(function(err,res){
+          self.hashtagcommission = res;
+          self.hashtagcommission_div2 = self.hashtagcommission / 2;
+        });
       },
 
       _route: function(){
-        //debugger;
         this._hashtag();
       },
 
       _hashtag: function(){
-//          debugger;
-        // if (this.data.hashtag){
-        //   this.$.listeners._starthastaglistener(this.data.hashtag);
-        // }
       },
 
       _data: function(){
         this.requestid = this.data.requestid;
         this.replyid = this.data.replyid;
-        //this._starthastaglistener();
         this._getdata();
         console.log("joooo uit deal42seeker", this.data);
       },
 
       _getdata: function(){
-
         this.payoutinitiated = false;
 
         var self = this;
@@ -1092,17 +1038,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
             return item.id === self.replyid;
           });
           this.replydata = reply;
-
-          console.log('request:',this.requestdata);
-          //this._requestdata(this.requestdata);
-
-        }else{
-          //debugger;
-          console.error('what now.. ?');
         }
-
-
-
       },
 
       /**
