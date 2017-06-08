@@ -80,18 +80,19 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
       .confirmbtns {
         z-index: 2;
-        margin-top: -30px;
+        margin-top: 10px;
 /*        width: 100%;
         max-width: 600px;*/
         @apply(--layout-self-end);
 
         @apply(--layout-horizontal);
-        @apply(--layout-start);
-        @apply(--layout-end-justified);
+        @apply(--layout-center);
+        @apply(--layout-start-justified);
         box-sizing:border-box;
       }
 
       .confirmbtn {
+        margin-left: 20px; 
 /*        background-color: var(--sc-white);
         @apply(--layout-horizontal);
         @apply(--layout-center-center);
@@ -123,6 +124,23 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         min-height: 40px;
         margin: 0px 16px 4px 0px;
       }
+
+
+      .hashtagfeemsg {
+        @apply(--layout-self-start);
+        margin: 20px 0px;
+      }
+
+
+      .hashtagfeemsg p {
+        font-size: 12px;
+        line-height: 16px;
+      }
+
+            .grey2b {
+        color: #999999;
+      }
+
 
 
 /*        .dottedbottom {
@@ -174,14 +192,14 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
       .confirmbtns {
         z-index: 2;
-        margin-top: 0px;
+        margin-top: 20px;
 /*        width: 100%;
         max-width: 600px;*/
         @apply(--layout-self-end);
 
         @apply(--layout-horizontal);
-        @apply(--layout-start);
-        @apply(--layout-end-justified);
+        @apply(--layout-center);
+        @apply(--layout-start-justified);
         box-sizing:border-box;
       }
       }
@@ -207,10 +225,11 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       <iron-collapse id="offerinputform" class="totalwidth">
         <div class="incollapser totalwidth vertic centercenter">
           <div class="horizont end startjust totalwidth">
-            <paper-input on-focused-changed="checkFocus" id="offerinputamount" label="What do you offer?" class="swtamount" value="{{offeramount}}" type="number">
+            <paper-input on-focused-changed="checkFocus" id="offerinputamount" label="What do you offer?" class="swtamount" value="{{firstofferamount}}" type="number">
             </paper-input>
             <p class="swtwithoffer bold">SWT</p>
           </div>
+
         <template is="dom-if" if="{{loading}}">
           <div class="whitespace"></div>
           <div class="totalwidth newitempadding">
@@ -218,7 +237,13 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
           </div>
         </template>
         <template is="dom-if" if="{{!loading}}">
-          <div class="confirmbtns">
+          <div class="confirmbtns totalwidth">
+            <div class="hashtagfeemsg flex">
+              <p class="grey2b reg">The hashtagfee of #Boardwalk is {{hashtagfee}} SWT.</p>
+              <template is="dom-if" if="{{showtotal}}">
+                <p class="grey3 reg"><span class="bold">Total:</span> {{offeramount}} SWT</p>
+              </template>
+            </div>
             <div class="confirmbtn">
               <paper-icon-button icon="sc-icons:v" class="medium blueback white" on-tap="confirmRequest" noink disabled="{{!btnable}}">show</paper-icon-button>
             </div>
@@ -266,7 +291,23 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         overspending: {
           type: Boolean,
           value: false
-        }
+        },
+
+        firstofferamount: {
+          type: Number,
+          observer: '_amountsum'
+        },
+
+
+        offeramount: {
+          type: Number
+        },
+
+        hashtagfee: {
+          type: Number,
+          value: 0.005
+        },
+
       },
 
       observers: [
@@ -283,6 +324,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         this.onEnter();
         this.hasgeohash = false;
         this.loading = false;
+        this.showtotal = false;
       },
 
       /**
@@ -468,7 +510,17 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         this.showavatar = false;
         this.totalstate = "totalclosed";
         this.fire('newitem-close');
-      }
+      },
+
+      _amountsum: function(){
+        if (this.firstofferamount){
+          this.showtotal = true;
+          this.offeramount = this.firstofferamount + this.hashtagfee;
+        } else {
+          this.showtotal = false;
+        }
+      },
+
     });
   </script>
 </dom-module>
