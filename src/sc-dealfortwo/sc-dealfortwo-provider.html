@@ -677,7 +677,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
             <!-- Paid out -->
             <template is="dom-if" if="{{_is(requestdata.dealstate,'payout')}}">
-              <h1 class=""><span class="bold"><sc-tokenbalanceformatter value="{{requestdata.amount}}"></sc-tokenbalanceformatter></span> has been paid out to you.</h1>
+              <h1 class=""><span class="bold"><sc-tokenbalanceformatter value="{{requestdata.amount}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></span> has been paid out to you.</h1>
             </template>
 
             <div class="details_toggler" on-tap="showDetails">
