@@ -1,0 +1,164 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
+
+<!-- <link rel="import" href="../../bower_components/polymer-redux/polymer-redux.html"> -->
+
+<link rel="import" href="../../bower_components/sc-style/sc-style.html">
+<link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
+
+<link rel="import" href="../sc-redux/sc-redux.html">
+
+
+<!--
+`sc-hashtagactivity` is profile-view where a Swarm Citizen can do his profile-things. Here the user has the possibility of changing his avatar/username, he can view his complete pubkey, or creating a backup of his profile via IPFS. The user can also logout here, or delete his complete user-data from the device.
+
+@demo src/sc-hashtagactivity/demo/index.html 
+-->
+
+<dom-module id="sc-hashtagactivity">
+<link rel="import" href="../../bower_components/Croppie/croppie.css" type="css">
+
+  <template>
+    <style include="sc-styles">
+      :host {
+        display: block;
+        width: 100%;  
+      }
+
+
+      .hashtagactivity {
+        margin-bottom: 2vh;
+      }
+
+      .triangle {
+        width: 12px;
+        transition: all 0.075s linear;
+        margin-right: 10px;
+        margin-left: 2px;
+        opacity: 1;
+      }
+
+      .triangle svg {
+        width: 100%;
+      }
+
+      .opened {
+        transform: rotate(90deg);
+        opacity: 0.75;
+      }
+
+      .completeddeals_toggler {
+        padding: 0px;
+        margin: 0px 0px 0px 0px;
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        @apply(--layout-start-justified);
+      }
+
+      .completeddeals_toggler p {
+        font-size: 14px;
+        line-height: 20px;
+        border-bottom: 1px dotted #bfbfbf;
+      }
+
+      .completeddeals_toggler:hover {
+        cursor: pointer;
+      }
+
+
+
+
+
+    </style>
+    <iron-media-query query="(min-width:0px) and (max-width: 540px)" query-matches="{{phoneview}}"></iron-media-query>
+
+        <div class="hashtagactivity totalwidth vertic start startjust">
+          <p class="bold">#{{hashtag}} • <span class="bold">1</span></p>
+
+            <div id="" class="completeddeals_toggler" on-tap="showDetails">
+              <div class$="triangle {{collapsestate}}">
+                <svg id="triangle_icon" x="0px" y="0px" viewBox="0 0 50 50" fill="#B3B3B3">
+                <polygon points="6.5,4.9 6.5,44.5 42,24.9 "/>
+                </svg>
+              </div>
+              <p class="grey3">Show completed deals</p>
+            </div>
+
+            <iron-collapse id="completeddeals_collapser">
+            <p>Joooo</p>
+            </iron-collapse>
+        </div>
+
+
+  </template>
+  <script>
+    Polymer({
+
+      is: 'sc-hashtagactivity',
+
+
+      properties: {
+
+        /**
+       * `identity` is received from parent-element, as an object containing an IPFS-hash, which is img-source.
+       */
+        identity: {
+          type: String,
+          observer: '_identity',
+          statePath: 'identity'
+          //notify: true
+        },
+
+      },
+
+      behaviors: [
+        Polymer.NeonSharedElementAnimatableBehavior,
+        ReduxBehavior
+      ],
+
+      ready: function(){
+        this.onEnter();
+      },
+
+      /**
+      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
+      * use this to initialize any variables to start the component
+      */
+      onEnter: function(){
+      },
+
+      /**
+      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage 
+      * use this to reset any variables when leaving this component while it remains loaded.
+      */
+      onExit: function(){
+      },
+
+
+      /**
+      * '_is', a function to bind a template to a certain value of a variable.
+      */
+      _is: function(a, b) {
+        if (b === undefined){
+          b = true;
+        }
+        return a === b;
+      },
+
+
+      showDetails: function(){
+        var completeddeals = this.shadowRoot.getElementById('completeddeals_collapser');
+        completeddeals.toggle();
+        if (completeddeals.opened){
+          this.collapsestate = 'opened';
+        } else {
+          this.collapsestate = '';
+        }
+      },
+
+
+
+
+    });
+  </script>
+</dom-module>

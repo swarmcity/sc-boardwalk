@@ -125,6 +125,10 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
         margin: 0px 13px 0px 13px;
       }
 
+      .distance {
+        border-bottom: 1px dotted #bfbfbf;
+      }
+
 
       @media all and (max-width: 500px) {
 /*      .locationtotal {
@@ -157,7 +161,7 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
             <polygon points="6.5,4.9 6.5,44.5 42,24.9 "/>
             </svg>
           </div>
-          <p class="bold grey3" on-tap="toggleSlider">{{distance}}</p>
+          <p class="distance grey3" on-tap="toggleSlider">{{distance}}</p>
         </div>
         <iron-collapse opened="false" id="sliderbox" class="">
           <div class$="inner_sliderbox horizont centercenter {{mobile_classes}}">

@@ -12,6 +12,8 @@
 <link rel="import" href="../sc-avatar/sc-avatar.html">
 <link rel="import" href="../sc-redux/sc-redux.html">
 
+<link rel="import" href="sc-hashtagactivity.html">
+
 
 <link rel="stylesheet" href="../../bower_components/Croppie/croppie.css" />
 <script src="../../bower_components/Croppie/croppie.js"></script>
@@ -277,6 +279,13 @@
         margin-bottom: 5vh;
       }
 
+
+
+      .hashtagactivities {
+        box-sizing:border-box;
+        padding: 2vh 10vw 2vh 10vw;
+      }
+
         
       @media all and (min-width: 0) and (max-width: 420px) {
 
@@ -363,6 +372,12 @@
 
         .pk p {
           word-break: break-all;
+        }
+
+
+        .hashtagactivities {
+          box-sizing:border-box;
+          padding: 5vh 15vw 5vh 15vw;
         }
 
       }
@@ -495,12 +510,46 @@
 
           </div>
 
-
-      <div class="fivespace"></div>
+<!--           <div>
+            <template is="dom-repeat" items="{{deals}}">
+              <p>{{item.msg}}</p>
+            </template>
+          </div> -->
+      <template is="dom-if" if="{{phoneview}}">
+        <div class="fivespace"></div>
+      </template>
       <div class="dottedline"></div>
-      <div class="fivespace"></div>
 
+      <div class="hashtagactivities totalwidth vertic start startjust">
+        <template is="dom-repeat" items="{{testarray}}">
+          <sc-hashtagactivity hashtag="[[item]]"></sc-hashtagactivity>
+        </template>
+
+<!--         <div class="hashtagactivity totalwidth horizont start startjust">
+          <p class="bold">#BoardwalkTesting • <span class="bold">1</span></p>
+          <p class="blue small">Show completed deals</p>
+        </div>
+        <div class="hashtagactivity totalwidth horizont start startjust">
+          <p class="bold">#Needaride • <span class="bold">3</span></p>
+          <p class="blue small">Show completed deals</p>
+        </div> -->
+      </div>
+
+<!--       <div class="dottedline"></div>
+
+      <div class="hashtagactivities totalwidth vertic start startjust">
+        <p class="bold">#Needaride</p>
+        <p class="grey3">You completed 1 deal in #Needaride.</p>
+      </div>
+ -->
+
+  
+          <div class="dottedline"></div>
+          <template is="dom-if" if="{{phoneview}}">
+            <div class="fivespace"></div>
+          </template>
           <div class="profilecontent totalwidth" id="profilecontent">
+
             <paper-button class="whiteback bold downbtn shadow" on-tap="backupvault" noink>Create backup</paper-button>
             <template is="dom-if" if="{{itemshow}}">
               <paper-button class="whiteback bold downbtn shadow" on-tap="collapseMe" id="deletemyvault" noink>Delete this user</paper-button>
@@ -581,10 +630,6 @@
 
       is: 'sc-profile',
 
-      // behaviors: [
-      //   ReduxBehavior
-      // ],
-
       actions: {
         update: function(identitydata) {
           return {
@@ -595,6 +640,12 @@
       },
 
       properties: {
+
+        deals: {
+          type: Array,
+          statePath: 'deals',
+          // observer: '_deals'
+        },
 
         /**
        * `identity` is received from parent-element, as an object containing an IPFS-hash, which is img-source.
@@ -748,6 +799,10 @@
 
       ready: function(){
         this.onEnter();
+        this.testarray = [
+          'BoardwalkTesting',
+          'NeedaRide'
+        ]
       },
 
       /**
