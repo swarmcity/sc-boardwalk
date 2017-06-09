@@ -278,7 +278,6 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
 
                 range: {
                     type: Number,
-                    value: 2,
                     notify: true,
                     observer: 'toggleSlider'
                 },
@@ -300,6 +299,7 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
                     this.mobile_classes = '';
                 }
             },
+
 
             ready: function () {
                 this.immediaterange = this.range;
