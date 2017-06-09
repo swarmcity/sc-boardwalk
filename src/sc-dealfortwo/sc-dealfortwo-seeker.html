@@ -742,7 +742,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
                 <template is="dom-if" if="{{_is(requestdatadealstate,'payout')}}">
 
-                  <h1 class=""><span class="bold"><sc-tokenbalanceformatter value="{{requestdata.amount}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter></span> has been paid out to <span class="light blue replyer_username">{{replydata.provider.username}}</span>.</h1>
+                  <h1 class=""><span class="bold"><sc-tokenbalanceformatter value="{{deducthalfcommission(requestdata.amount,hashtagcommission)}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter></span> has been paid out to <span class="light blue replyer_username">{{replydata.provider.username}}</span>.</h1>
                 </template>
 
 
@@ -768,7 +768,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                         <template is="dom-if" if="{{hashtagcommission}}">
                           <div class="detail">
                             <p class="cat">Fee</p>
-                            <p class="reg"><sc-tokenbalanceformatter value="{{hashtagcommission}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></p></p>
+                            <p class="reg"><sc-tokenbalanceformatter value="{{halfof(hashtagcommission)}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></p></p>
                           </div>
                         </template>
                         
@@ -989,6 +989,10 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         }        
       },
 
+
+      halfof: function(val){
+        return val/2;
+      },
 
       deducthalfcommission: function(v,w){
         return v-w/2;
