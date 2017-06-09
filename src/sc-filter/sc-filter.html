@@ -156,14 +156,14 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
         <iron-media-query query="(min-width:0px) and (max-width: 540px)"
                           query-matches="{{phoneview}}"></iron-media-query>
 
-        <iron-localstorage 
+        <iron-localstorage
           name="sc-filter-value"
           value="{{range}}">
-        </iron-localstorage>  
+        </iron-localstorage>
         <!-- <template is="dom-if" if="{{location}}"> -->
 
         <!-- <template is="dom-if" if="{{!phoneview}}"> -->
-        <div class="locationtotal totalwidth vertical center startjust">
+        <div class="locationtotal totalwidth vertical center startjust" on-tap="toggleSlider">
             <div class="horizont center startjust">
                 <div class$="triangle {{collapsestate}}">
                     <svg id="triangle_icon" x="0px" y="0px" viewBox="0 0 50 50" fill="#666666" onmouseover=""
@@ -171,7 +171,7 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
                         <polygon points="6.5,4.9 6.5,44.5 42,24.9 "/>
                     </svg>
                 </div>
-                <p class="distance grey3" on-tap="toggleSlider">{{distance}}</p>
+                <p class="distance grey3">{{distance}}</p>
             </div>
             <iron-collapse opened="false" id="sliderbox" class="">
                 <div class$="inner_sliderbox horizont centercenter {{mobile_classes}}">
