@@ -40,6 +40,12 @@
         hashtag: {
           type: String,
           observer: '_changefilter'          
+        },
+        // even with all data present you can disable the filter using this switch
+        enabled: {
+          type: Boolean,
+          value: true,
+          observer: '_changefilter'
         }
       },
 
@@ -390,7 +396,6 @@
             })
           }
 
-
           return {
             type: 'DEALS',
             deals: deals
@@ -420,18 +425,19 @@
 
       _changefilter: function(){
 
-        if (!this.hashtag || !this.geohash){
-          return false;
+        if (!this.hashtag || !this.geohash || this.enabled != true){
+          this._stophastaglistener();
+          return;
         }
 
-        console.log('sc-filter -> Change filter',this.hashtag ,this.geohash);
+        console.log('sc-filter -> Install new filter on',this.hashtag ,this.geohash);
 
-        this.__starthastaglistener();
+        this._starthastaglistener();
 
       },
 
 
-      __starthastaglistener: function() {
+      _starthastaglistener: function() {
         
         // if (sc_listeners_listening){
         //   console.log('skipping init listeners. Already lsitening');
@@ -444,11 +450,7 @@
           return;
         }
 
-        if (this.filter) {
-          console.log("sc-listeners: killing existing filter");
-          this.filter.stopWatching();
-          delete this.filter;
-        }
+        this._stophastaglistener();
 
         if (this.shhweb3 && this.hashtag) {
           var mytopics = [
@@ -475,6 +477,14 @@
           console.log("sc-listeners: channelswitch, start listening to", mytopics);
           this.filter.watch(this._processmessage.bind(this));
 
+        }
+      },
+
+      _stophastaglistener: function(){
+        if (this.filter) {
+          console.log("sc-listeners: killing existing filter");
+          this.filter.stopWatching();
+          delete this.filter;
         }
       },
 
