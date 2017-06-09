@@ -680,13 +680,17 @@
             if (deal.ismydeal) {
               //debugger;
               var reply = this.getReply(mutation.id, deal.selectedreply);
-              this.dispatch('update_notification', {
-                id: deal.id + '_' + payload.time,
-                senderidentity: reply.provider,
-                timestamp: payload.time,
-                msg: 'You\'re now in a deal with ' + reply.provider.username,
-                hashtag: deal.hashtag
-              })
+              if (reply){
+                this.dispatch('update_notification', {
+                  id: deal.id + '_' + payload.time,
+                  senderidentity: reply.provider,
+                  timestamp: payload.time,
+                  msg: 'You\'re now in a deal with ' + reply.provider.username,
+                  hashtag: deal.hashtag
+                });                
+              }else{
+                console.log('INCONSITENCY : reply not found');
+              }
             }
 
             break;
