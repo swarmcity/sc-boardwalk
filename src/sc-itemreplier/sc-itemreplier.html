@@ -16,6 +16,7 @@
 <link rel="import" href="../sc-config/sc-config.html">
 
 <script type="text/javascript" src="../../bower_components/uuid-js/lib/uuid.js"></script>
+<link rel="import" href="../sc-tokenbalanceformatter/sc-tokenbalanceformatter.html">
 
 <!--
 `sc-itemreplier`
@@ -164,9 +165,10 @@ This components allow a Swarm Citizen to reply on a request.
     <iron-collapse id="replyform" class="totalwidth">
       <div class="totalwidth vertic centercenter">
         <div class="horizont end startjust totalwidth">
-          <paper-input disabled id="amountinput" label="Your counteroffer" class="swtamount" value="{{replyamount}}" type="number">
+<!--           <paper-input disabled id="amountinput" label="Your counteroffer" class="swtamount" value="{{replyamount}}" type="number">
           </paper-input>
-          <p class="swtwithoffer bold">SWT</p>
+          <p class="swtwithoffer bold">SWT</p> -->
+          <p class="swtwithoffer bold"><sc-tokenbalanceformatter value="{{deducthalfof(itemdata.amount,itemdata.dealdata.commissionValue)}}" rounding="false" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></p>          
         </div>
         <div class="totalwidth confirmbtns">
           <iron-icon icon="sc-icons:decline" class="grey3" on-tap="toggleForm">close collapse</iron-icon>
@@ -217,6 +219,12 @@ This components allow a Swarm Citizen to reply on a request.
         ReduxBehavior
       ],
 
+      // please someone - refactor this functions into the sc-helper TY.
+      deducthalfof: function(v,w){
+        return v-(w/2);
+      },
+
+
       ready: function(){
         this.onEnter();
       },
@@ -251,7 +259,8 @@ This components allow a Swarm Citizen to reply on a request.
       },
 
       _itemdata: function(target){
-        this.replyamount = target.amount / this.$.config.swtinputunit;
+        //debugger;
+        this.replyamount = target.amount; // / this.$.config.swtinputunit;
       },
 
       toggleForm: function(){
@@ -276,12 +285,12 @@ This components allow a Swarm Citizen to reply on a request.
           return;
         }
 
-        if (this.wallet.swtbalance < amount * this.config.swtinputunit){
+        if (this.wallet.swtbalance < amount){
           console.log('your balance is too low...');
           return;
         }
 
-        if (this.itemdata.amount < amount * this.config.swtinputunit){
+        if (this.itemdata.amount < amount){
           console.log('you cant bid more than the deal amount...');
           return;
         }
@@ -297,7 +306,7 @@ This components allow a Swarm Citizen to reply on a request.
             pubkey: this.identity.pubkey
           },
           reply: this.replytext,
-          replyamount: amount * this.config.swtinputunit,
+          replyamount: amount,
           replytime: Date.now()
         };
 
