@@ -218,7 +218,7 @@ This components shows the in-app notifications in Swarm City.
             <iron-icon on-tap="leave" icon="sc-icons:decline" class="backhash grey4">back</iron-icon>
             </div>
           </template>
-          <template is="dom-if" if="{{showdefaultmsg}}">
+          <template is="dom-if" if="{{hasnotifications(notifications)}}">
             <div class="nomsg">
               <p class="grey2 light">You have no messages.</p>
             </div>
@@ -259,7 +259,7 @@ This components shows the in-app notifications in Swarm City.
       ],
 
       observers: [
-      '_notifications(notifications)'
+      // '_notifications(notifications)'
       ],
 
       actions: {
@@ -294,6 +294,10 @@ This components shows the in-app notifications in Swarm City.
           type: Boolean,
           observer: '_checkSize'
         },
+      },
+
+      hasnotifications:function(notifications){
+        return (!this.notifications || this.notifications.length === 0);
       },
 
       hashtagcontractToName: function(a){
@@ -369,13 +373,13 @@ This components shows the in-app notifications in Swarm City.
         }
       },
 
-      _notifications: function(){
-        if(this.notifications.length<=0){
-          this.showdefaultmsg = true;
-        } else {
-          this.showdefaultmsg = false;
-        }
-      }
+      // _notifications: function(){
+      //   if(this.notifications.length<=0){
+      //     this.showdefaultmsg = true;
+      //   } else {
+      //     this.showdefaultmsg = false;
+      //   }
+      // }
 
     });
   </script>
