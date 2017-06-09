@@ -168,7 +168,7 @@ This components allow a Swarm Citizen to reply on a request.
 <!--           <paper-input disabled id="amountinput" label="Your counteroffer" class="swtamount" value="{{replyamount}}" type="number">
           </paper-input>
           <p class="swtwithoffer bold">SWT</p> -->
-          <p class="swtwithoffer reg">- for <sc-tokenbalanceformatter value="{{deducthalfof(itemdata.amount,itemdata.dealdata.commissionValue)}}" rounding="false" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></p>          
+          <p class="swtwithoffer reg">for <sc-tokenbalanceformatter value="{{deducthalfof(itemdata.amount,itemdata.dealdata.commissionValue)}}" rounding="false" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></p>          
         </div>
         <div class="totalwidth confirmbtns">
           <iron-icon icon="sc-icons:decline" class="grey3" on-tap="toggleForm">close collapse</iron-icon>
@@ -185,7 +185,9 @@ This components allow a Swarm Citizen to reply on a request.
       is: 'sc-itemreplier',
 
       observers: [
-        '_itemdata(itemdata)'
+        '_itemdata(itemdata)',
+        '_hashtaginfo(itemdata,hashtaginfo)'
+
       ],
 
       properties: {
@@ -203,6 +205,11 @@ This components allow a Swarm Citizen to reply on a request.
           statePath: 'identity',
         },
 
+        hashtaginfo: {
+          type: Object,
+          statePath: 'hashtaginfo',
+        },        
+
         btnvisible: {
           type: Boolean,
           value:true
@@ -218,6 +225,19 @@ This components allow a Swarm Citizen to reply on a request.
       behaviors: [
         ReduxBehavior
       ],
+
+
+      _hashtaginfo: function(){
+        // fetch this deal's commission
+        if (this.itemdata.dealdata && this.itemdata.dealdata.commissionValue){
+          this.hashtagcommission = this.itemdata.dealdata.commissionValue;
+          return;
+        }
+        // fallback to hashtag commission
+        if (this.itemdata && this.itemdata.hashtag && this.hashtaginfo){
+          this.hashtagcommission = this.hashtaginfo[this.itemdata.hashtag].commission;
+        }        
+      },
 
       // please someone - refactor this functions into the sc-helper TY.
       deducthalfof: function(v,w){
