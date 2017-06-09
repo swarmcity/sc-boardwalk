@@ -695,11 +695,16 @@ This components is the representation of a request in the requests-list on sc-ha
       },
 
       _hashtaginfo: function(){
+        // fetch this deal's commission
+        if (this.item.dealdata && this.item.dealdata.commissionValue){
+          this.hashtagcommission = this.item.dealdata.commissionValue;
+          return;
+        }
+        // fallback to hashtag commission
         if (this.item && this.item.hashtag && this.hashtaginfo){
           this.hashtagcommission = this.hashtaginfo[this.item.hashtag].commission;
-        }
+        }        
       },
-
 
       deducthalfcommission: function(v,c){
         var r = v-c/2;
