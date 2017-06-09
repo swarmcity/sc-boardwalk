@@ -373,6 +373,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
             </div>
             <p class="bold wordbreak">{{_getHashTagName(hashtag)}}</p>
 
+
             <!--
 
             Here we should have some hashtag info collapser or something
@@ -423,7 +424,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
         </div>
         <!-- filterbox -->
         <div class="filterbox">
-          <sc-filter id="locationfilter" currentid="locationfilter" defaultrange="{{_getHashTagRange(hashtag)}}" location range="{{range}}"></sc-filter>
+          <sc-filter id="locationfilter" currentid="locationfilter" range$="{{_getHashTagRange(hashtag)}}" location range="{{range}}"></sc-filter>
         </div>
 
         <div class="deals_repeater">

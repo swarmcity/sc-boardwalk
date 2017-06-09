@@ -156,10 +156,10 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
         <iron-media-query query="(min-width:0px) and (max-width: 540px)"
                           query-matches="{{phoneview}}"></iron-media-query>
 
-        <iron-localstorage 
+        <iron-localstorage
           name="sc-filter-value"
           value="{{range}}">
-        </iron-localstorage>  
+        </iron-localstorage>
         <!-- <template is="dom-if" if="{{location}}"> -->
 
         <!-- <template is="dom-if" if="{{!phoneview}}"> -->
@@ -247,10 +247,6 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
             is: 'sc-filter',
 
             properties: {
-                defaultrange : {
-                    type: Number
-                }
-                ,
                 /**
                  * Show the selected item and passes it to parent-element
                  *
@@ -282,7 +278,6 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
 
                 range: {
                     type: Number,
-                    value: 2,
                     notify: true,
                     observer: 'toggleSlider'
                 },
