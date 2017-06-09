@@ -298,7 +298,6 @@ This components is the representation of a request in the requests-list on sc-ha
       }
 
     </style>
-
     <iron-media-query query="(min-width:0px) and (max-width: 540px)" query-matches="{{phoneview}}"></iron-media-query>
 <!-- <pre>{{jsondump(item)}}</pre> -->
       <!-- WHEN REPLY == NOT SELECTED YET -->
@@ -357,7 +356,7 @@ This components is the representation of a request in the requests-list on sc-ha
 
             <div class="amountstuff vertic end endjust">
               <small class="bold yellow">for</small>
-              <p class="bold yellow"><sc-tokenbalanceformatter value="{{item.amount}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter></p>
+              <p class="bold yellow"><sc-tokenbalanceformatter value="{{deducthalfcommission(item.amount,item.dealdata.commissionValue)}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter></p>
             </div>
 
 
@@ -378,7 +377,9 @@ This components is the representation of a request in the requests-list on sc-ha
             </template>
             <template is="dom-if" if="{{!youareowner(item.seeker.pubkey)}}">
               <template is="dom-if" if="{{!item.ireplied}}">
-                  <sc-itemreplier itemdata="{{item}}">
+                  <sc-itemreplier
+                    itemdata="{{item}}"
+                  >
                   </sc-itemreplier>
               </template>
             </template>
@@ -387,6 +388,7 @@ This components is the representation of a request in the requests-list on sc-ha
               item="{{item}}"
               btnshow="{{youareowner(item.seeker.pubkey)}}"
               reply="{{currentreply}}"
+              commission="{{item.dealdata.commissionValue}}"
              >
               </sc-itemreply>
             </template>
@@ -442,7 +444,7 @@ This components is the representation of a request in the requests-list on sc-ha
                   </div>
                   <div class="amountstuff vertic end endjust">
                     <small class="bold yellow">for</small>
-                    <p class="bold yellow"><sc-tokenbalanceformatter value="{{item.amount}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter></p>
+                    <p class="bold yellow"><sc-tokenbalanceformatter value="{{deducthalfcommission(item.amount,item.dealdata.commissionValue)}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter></p>
                   </div>
                 </template>
 
@@ -509,7 +511,7 @@ This components is the representation of a request in the requests-list on sc-ha
 
                   <div class="amountstuff vertic end endjust">
                     <small class="bold green">for</small>
-                    <p class="bold green"><sc-tokenbalanceformatter value="{{item.amount}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter></p>
+                    <p class="bold green"><sc-tokenbalanceformatter value="{{deducthalfcommission(item.amount,item.dealdata.commissionValue)}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter></p>
                   </div>
 
                 </template>
@@ -548,7 +550,7 @@ This components is the representation of a request in the requests-list on sc-ha
                   </div>
                   <div class="amountstuff vertic end endjust">
                     <small class="bold yellow">for</small>
-                    <p class="bold yellow"><sc-tokenbalanceformatter value="{{item.amount}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter></p>
+                    <p class="bold yellow"><sc-tokenbalanceformatter value="{{deducthalfcommission(item.amount,item.dealdata.commissionValue)}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter></p>
                   </div>
 
                 </template>
@@ -605,7 +607,7 @@ This components is the representation of a request in the requests-list on sc-ha
                     </div>
                     <div class="amountstuff vertic end endjust">
                       <small class="bold blue">for</small>
-                      <p class="bold blue"><sc-tokenbalanceformatter value="{{item.amount}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter></p>
+                      <p class="bold blue"><sc-tokenbalanceformatter value="{{deducthalfcommission(item.amount,item.dealdata.commissionValue)}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter></p>
                     </div>
                   </template>
 
@@ -616,7 +618,7 @@ This components is the representation of a request in the requests-list on sc-ha
                     </div>
                     <div class="amountstuff vertic end endjust">
                       <small class="bold green">for</small>
-                      <p class="bold green"><sc-tokenbalanceformatter value="{{item.amount}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter></p>
+                      <p class="bold green"><sc-tokenbalanceformatter value="{{deducthalfcommission(item.amount,item.dealdata.commissionValue)}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter></p>
                     </div>
                   </template>
 
@@ -633,7 +635,7 @@ This components is the representation of a request in the requests-list on sc-ha
                     </div>
                     <div class="amountstuff vertic end endjust">
                       <small class="bold green">for</small>
-                      <p class="bold green"><sc-tokenbalanceformatter value="{{item.amount}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter></p>
+                      <p class="bold green"><sc-tokenbalanceformatter value="{{deducthalfcommission(item.amount,item.dealdata.commissionValue)}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter></p>
                     </div>
                   </template>
 
@@ -661,7 +663,7 @@ This components is the representation of a request in the requests-list on sc-ha
 
       observers: [
         '_log(dealstate)',
-        '_item(item,item.replies,identity)'
+        '_item(item,item.dealdata,identity)',
       ],
 
       properties: {
@@ -669,19 +671,24 @@ This components is the representation of a request in the requests-list on sc-ha
        * `` .
        */
         item: {
-          type: Object
+          type: Object,
         },
-        // item.replies: {
-        //   type: Object,
-        //   observer: '_itemreply'
-        // },
         identity: {
           type: Object,
           statePath: 'identity',
         },
         yourreply: {
           type: String
+        },
+
+        hashtagcommission: {
+          type: Number
         }
+      },
+
+      deducthalfcommission: function(v,c){
+        var r = v-c/2;
+        return r;
       },
 
       jsondump: function(a){
@@ -770,6 +777,9 @@ This components is the representation of a request in the requests-list on sc-ha
 
       youareowner: function(pubkey){
         //debugger;
+        if (!this.identity){
+          return false;
+        }
         return (this.identity.pubkey == pubkey);
       },
 
