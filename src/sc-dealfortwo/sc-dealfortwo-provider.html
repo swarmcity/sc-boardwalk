@@ -658,10 +658,10 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
             <!-- Created. -->
             <template is="dom-if" if="{{_is(requestdata.dealstate,'accepted')}}">
-              <h1 class="">Do you accept a deal  with <span class="light blue replyer_username">{{requestdata.seeker.username}}</span> for <span class=""><sc-tokenbalanceformatter value="{{deducthalfcommission(requestdata.amount,hashtagcommission_div2)}}" rounding="false" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></span>?</h1>
+              <h1 class="">Do you accept a deal  with <span class="light blue replyer_username">{{requestdata.seeker.username}}</span> for <span class=""><sc-tokenbalanceformatter value="{{deducthalfcommission(requestdata.amount,requestdata.dealdata.commissionValue)}}" rounding="false" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></span>?</h1>
 
 <!--             <p class="grey2b reg">The hashtagfee of #{{hashtagcontractToName(requestdata.hashtag)}} is
-                <sc-tokenbalanceformatter value="{{hashtagcommission_div2}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></p> -->
+                <sc-tokenbalanceformatter value="{{requestdata.dealdata.commissionValue}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></p> -->
 
             </template>
 
@@ -677,7 +677,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
             <!-- Paid out -->
             <template is="dom-if" if="{{_is(requestdata.dealstate,'payout')}}">
-              <h1 class=""><span class="bold"><sc-tokenbalanceformatter value="{{requestdata.amount}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></span> has been paid out to you.</h1>
+              <h1 class=""><span class="bold"><sc-tokenbalanceformatter value="{{deducthalfcommission(requestdata.amount,requestdata.dealdata.commissionValue)}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></span> has been paid out to you.</h1>
             </template>
 
             <div class="details_toggler" on-tap="showDetails">
@@ -694,7 +694,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
                     <div class="detail">
                       <p class="cat">Offer</p>
-                      <p class="reg bold"><sc-tokenbalanceformatter value="{{deducthalfcommission(requestdata.amount,hashtagcommission_div2)}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></p>
+                      <p class="reg bold"><sc-tokenbalanceformatter value="{{deducthalfcommission(requestdata.amount,requestdata.dealdata.commissionValue)}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></p>
                     </div>
 
                     <template is="dom-if" if="{{requestdata.dealdata.commissionValue}}">
@@ -799,8 +799,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           <div class$="bottomhalf {{bottombg}} totalwidth">
             <template is="dom-if" if="{{!provideraccept}}">
 
-              <p class="white light centertxt">By accepting, <sc-tokenbalanceformatter value="{{addhalfcommission(requestdata.amount)}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter> will be locked on this deal until payout.</p>
-              <p class="white light centertxt">from that amount <sc-tokenbalanceformatter value="{{hashtagcommission_div2}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter> will be sent to the hashtag maintainer upon payout.</p>
+              <p class="white light centertxt">By accepting, <sc-tokenbalanceformatter value="{{requestdata.amount}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter> will be locked on this deal until payout.</p>
+              <p class="white light centertxt">from that amount <sc-tokenbalanceformatter value="{{halfof(requestdata.dealdata.commissionValue)}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter> will be sent to the hashtag maintainer upon payout.</p>
 
               <div class="confirmbtns">
                 <template is="dom-if" if="{{btntapped}}">
@@ -908,12 +908,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         },
       },
 
-      deducthalfcommission: function(v){
-        return v-this.hashtagcommission_div2;
-      },
-
-      addhalfcommission: function(v){
-        return v+this.hashtagcommission_div2;
+      deducthalfcommission: function(v,c){
+        return v-c/2;
       },
 
       halfof: function(val){
@@ -924,20 +920,18 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         return this.$.config.hashtagcontractToName(a);
       },
 
-      _hashtagcontractloaded: function(){
-        var self = this;
-        this.$.hashtagcontract.getCommission(function(err,res){
-          self.hashtagcommission = res;
-          self.hashtagcommission_div2 = self.hashtagcommission / 2;
-        });
-      },
+      // _hashtagcontractloaded: function(){
+      //   var self = this;
+      //   this.$.hashtagcontract.getCommission(function(err,res){
+      //     self.hashtagcommission = res;
+      //     self.requestdata.dealdata.commissionValue = self.hashtagcommission / 2;
+      //   });
+      // },
 
       ready: function(){
         this.selecteddealpage = 'dodeal';
         this.dealdetailsmsg = "Show details";
         this.btntapped = false;
-        this.hashtagcommission = 0;
-        this.hashtagcommission_div2 = 0;
       },
 
       _resetme: function(){

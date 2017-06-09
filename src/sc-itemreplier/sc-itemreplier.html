@@ -226,7 +226,7 @@ This components allow a Swarm Citizen to reply on a request.
 
 
       ready: function(){
-        this.onEnter();
+        this.clearForm();
       },
 
       /**
@@ -234,7 +234,12 @@ This components allow a Swarm Citizen to reply on a request.
       * use this to initialize any variables to start the component
       */
       onEnter: function(){
+        this.clearForm();
+      },
+
+      clearForm: function(){
         this.replystate = 'init';
+        this.$.replyinput.value = '';
         this.submittingreply = false;
         this.bgcolor = "whiteback";
         this.borderz = "lightgreytopborder";
@@ -245,7 +250,6 @@ This components allow a Swarm Citizen to reply on a request.
       * use this to reset any variables when leaving this component while it remains loaded.
       */
       onExit: function(){
-        this.backtoInit();
       },
 
       /**
@@ -340,6 +344,9 @@ This components allow a Swarm Citizen to reply on a request.
           } else {
             console.log('sc-itemreplier -> whisper error:', err);
           }
+
+          self.clearForm();
+
           self.bgcolor = "whiteback";
           self.borderz = "lightgreytopborder";
           self.$.replybtn.disabled = false;
