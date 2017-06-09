@@ -165,7 +165,7 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
         <!-- <template is="dom-if" if="{{!phoneview}}"> -->
         <div class="locationtotal totalwidth vertical center startjust" on-tap="toggleSlider">
             <div class="horizont center startjust">
-                <div class$="triangle {{collapsestate}}" on-tap="toggleSlider">
+                <div class$="triangle {{collapsestate}}">
                     <svg id="triangle_icon" x="0px" y="0px" viewBox="0 0 50 50" fill="#666666" onmouseover=""
                          style="cursor: pointer;">
                         <polygon points="6.5,4.9 6.5,44.5 42,24.9 "/>
@@ -173,7 +173,7 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
                 </div>
                 <p class="distance grey3" >{{distance}}</p>
             </div>
-            <iron-collapse id="sliderbox" class="">
+            <iron-collapse opened="false" id="sliderbox" class="">
                 <div class$="inner_sliderbox horizont centercenter {{mobile_classes}}">
                     <div class="horizont centercenter flex ">
                         <iron-icon icon="sc-icons:location_edgeless" class="slidericon grey3"></iron-icon>
