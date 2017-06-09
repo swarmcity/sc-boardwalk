@@ -670,7 +670,7 @@ This components is the representation of a request in the requests-list on sc-ha
       observers: [
         '_log(dealstate)',
         '_item(item,item.dealdata,identity)',
-        '_hashtaginfo(item,hashtaginfo)'
+        '_hashtaginfo(item,item.dealdata,item.hashtag,hashtaginfo)'
       ],
 
       properties: {
@@ -804,55 +804,48 @@ This components is the representation of a request in the requests-list on sc-ha
         return (this.identity.pubkey == pubkey);
       },
 
-
-      _item: function(){
+      _item: function() {
 
         var self = this;
         var deal = this.item;
-          if(deal.ireplied) {
-            self.showdealmsg = true;
-            self.dealmessage = "You replied to this.";
-            self.dealmessageclass = "grey4";
-          } else {
-            self.showdealmsg = false;
-          }
+        if (deal.ireplied) {
+          self.showdealmsg = true;
+          self.dealmessage = "You replied to this.";
+          self.dealmessageclass = "grey4";
+        } else {
+          self.showdealmsg = false;
+        }
 
-          // this slice is neccesary to prevent a polymer databinding flaw..
+        // this slice is neccesary to prevent a polymer databinding flaw..
+        if (deal.replies) {
+          this.item.replies = deal.replies.slice(0);
+        }
 
-          if (deal.replies){
-            this.item.replies = deal.replies.slice(0);
-          }
+        if (deal.selectedreply) {
 
-          if(deal.selectedreply) {
+          var foundReply = deal.replies.find(function(item) {
+            return item.id === deal.selectedreply;
+          });
 
-            var foundReply = deal.replies.find(function(item){
-              return item.id === deal.selectedreply;
-            });
-
-            if (foundReply){
-              self.currentprovider = foundReply.provider;
-                if(self.currentprovider.pubkey === self.identity.pubkey) {
-                  self.dealmessage = deal.seeker.username+" chose you for this request!";
-                  self.dealmessagechosen = "";
-                  self.dealmessageclass = "blue";
-                  self.iamprovider = true;
-                  self.showdealmsg = false;
-                  //debugger;
-                } else {
-                self.dealmessage = "";
-                self.dealmessagechosen = deal.seeker.username+" chose "+self.currentprovider.username+" for this request.";
-              }
+          if (foundReply) {
+            self.currentprovider = foundReply.provider;
+            if (self.currentprovider.pubkey === self.identity.pubkey) {
+              self.dealmessage = deal.seeker.username + " chose you for this request!";
+              self.dealmessagechosen = "";
+              self.dealmessageclass = "blue";
+              self.iamprovider = true;
+              self.showdealmsg = false;
+            } else {
+              self.dealmessage = "";
+              self.dealmessagechosen = deal.seeker.username + " chose " + self.currentprovider.username + " for this request.";
             }
           }
-
+        }
       },
-
 
       _log: function(target){
           console.log("HAZ THIS in hashtagitem??!!!!",this.item.msg, target);
       },
-
-
 
       /**
       * '_is', a function to bind a template to a certain value of a variable.
