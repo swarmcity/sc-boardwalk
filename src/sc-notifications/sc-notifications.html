@@ -102,6 +102,16 @@ This components shows the in-app notifications in Swarm City.
           margin-top: 4px;
       }
 
+      .nomsg {
+        width: 100%;
+        height: 100%;
+        @apply(--layout-vertical);
+        @apply(--layout-start);
+        @apply(--layout-start-justified);
+        box-sizing:border-box;
+        padding: 0px;       
+      }
+
 
 
     @media all and (min-width: 0) and (max-width: 420px) {
@@ -137,13 +147,25 @@ This components shows the in-app notifications in Swarm City.
 
       #notifcontent {
         box-sizing:border-box;
-        padding-top: 0px;
+        padding: 10px 40px;
         width: 100%;
 
       }
+
+
       .notif_item {
         box-sizing:border-box;
         padding: 15px 10px 15px 10px;
+      }
+
+
+      .nomsg {
+        width: 100%;
+        height: 100%;
+        @apply(--layout-vertical);
+        @apply(--layout-center-center);
+        box-sizing:border-box;
+        padding: 0px;       
       }
 
     }
@@ -193,9 +215,15 @@ This components shows the in-app notifications in Swarm City.
         <div id="notifcontent">
           <template is="dom-if" if="{{!phoneview}}">
             <div class="totalwidth horizont endjust center">
-            <iron-icon on-tap="leave" icon="sc-icons:decline" class="small backhash grey4">back</iron-icon>
+            <iron-icon on-tap="leave" icon="sc-icons:decline" class="backhash grey4">back</iron-icon>
             </div>
           </template>
+          <template is="dom-if" if="{{showdefaultmsg}}">
+            <div class="nomsg">
+              <p class="grey2 light">You have no messages.</p>
+            </div>
+          </template>
+
             <template is="dom-repeat" items="{{notifications}}" sort="sortOnTimestamp">
             <div on-tap="notificationTapHandler" class="notif_item horizont start startjust">
               <sc-avatar
@@ -231,6 +259,7 @@ This components shows the in-app notifications in Swarm City.
       ],
 
       observers: [
+      '_notifications(notifications)'
       ],
 
       actions: {
@@ -273,6 +302,8 @@ This components shows the in-app notifications in Swarm City.
 
       ready: function() {
           this._checkSize();
+          this.showdefaultmsg = true;
+
       },
 
       sortOnTimestamp: function(a,b){
@@ -337,6 +368,14 @@ This components shows the in-app notifications in Swarm City.
           });
         }
       },
+
+      _notifications: function(){
+        if(this.notifications.length<=0){
+          this.showdefaultmsg = true;
+        } else {
+          this.showdefaultmsg = false;
+        }
+      }
 
     });
   </script>

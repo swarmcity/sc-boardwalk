@@ -166,6 +166,13 @@
     margin: 4px;
   }
 
+.avatar_username_box {
+  width: 100%;
+  height: 100%;
+  box-sizing:border-box;
+  padding-top: 15vh;
+}
+
 
     </style>
 
@@ -596,7 +603,7 @@
         </div>
         <template is="dom-if" if="{{!tappedunlockbtn}}">
         <div class="pascanvasunderexit vertic centercenter paddingsides">
-        <div class="avatar_username_box vertic centercenter noSelect">
+        <div class="avatar_username_box vertic center startjust noSelect">
           <sc-avatar
           ipfshash="[[currentidentity.avatarhash]]"
           id="homeavatar"
@@ -611,6 +618,7 @@
             on-tap="toProfile"
             ></sc-username>
           </div>
+          <div class="whitespace"></div>
         <template is="dom-if" if="{{loadingpassw}}">
           <sc-loader color="blue" small>Unlocking</sc-loader>
           <div class="whitespace"></div>
