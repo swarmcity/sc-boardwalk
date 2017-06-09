@@ -92,7 +92,7 @@ This components allow a Swarm Citizen to reply on a request.
         color: var(--sc-grey4);
         font-size: 12px;
         line-height: 12px;
-        margin:0px 0px 6px 12px;
+        margin:0px 0px 5px 50px;
       }
 
 
@@ -123,7 +123,7 @@ This components allow a Swarm Citizen to reply on a request.
         @apply(--layout-horizontal);
         @apply(--layout-center);
         @apply(--layout-end-justified);
-        margin-top: -30px;
+        /*margin-top: -30px;*/
       }
       paper-icon-button.confirmbtn {
         margin-left: 5px;
@@ -168,7 +168,7 @@ This components allow a Swarm Citizen to reply on a request.
 <!--           <paper-input disabled id="amountinput" label="Your counteroffer" class="swtamount" value="{{replyamount}}" type="number">
           </paper-input>
           <p class="swtwithoffer bold">SWT</p> -->
-          <p class="swtwithoffer bold"><sc-tokenbalanceformatter value="{{deducthalfof(itemdata.amount,itemdata.dealdata.commissionValue)}}" rounding="false" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></p>          
+          <p class="swtwithoffer reg">- for <sc-tokenbalanceformatter value="{{deducthalfof(itemdata.amount,itemdata.dealdata.commissionValue)}}" rounding="false" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></p>          
         </div>
         <div class="totalwidth confirmbtns">
           <iron-icon icon="sc-icons:decline" class="grey3" on-tap="toggleForm">close collapse</iron-icon>
