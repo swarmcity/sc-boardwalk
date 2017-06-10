@@ -504,7 +504,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       },
 
       checkFocus: function() {
-        var offerinputform = this.shadowRoot.getElementById('offerinputform');
+        var offerinputform = this.$.offerinputform;
         if (this.$.offerinput.focused || this.$.offerinputamount.focused) {
           this.showavatar = true;
           this.totalstate = "totalopen";
