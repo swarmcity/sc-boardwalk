@@ -761,7 +761,7 @@ This components is the representation of a request in the requests-list on sc-ha
       toggleItem: function(){
         //console.log('*toggleitem*',this.item);
 
-        var toggler = this.shadowRoot.getElementById('repliescollapser');
+        var toggler = this.$.repliescollapser;
         if(this.iamprovider){
           this.fire('redirect', {
             target: '/dealfortwoprovider/' + this.item.hashtag + '/' + this.item.id + '/' + this.item.selectedreply
