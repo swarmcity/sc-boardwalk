@@ -162,7 +162,7 @@ This components allow a Swarm Citizen to reply on a request.
         </sc-avatar>
         <paper-input id="replyinput" label="Your reply" class="flex grey2unfocus replyinput" value="{{replytext}}"  on-focused-changed="checkFocus"></paper-input>
       </div>
-    <iron-collapse id="replyform" class="totalwidth">
+    <iron-collapse id="replyform" opened="{{replyform_opened}}" class="totalwidth">
       <div class="totalwidth vertic centercenter">
         <div class="horizont end startjust totalwidth">
 <!--           <paper-input disabled id="amountinput" label="Your counteroffer" class="swtamount" value="{{replyamount}}" type="number">
@@ -375,14 +375,14 @@ This components allow a Swarm Citizen to reply on a request.
       },
 
       checkFocus: function(){
-        var replyform = this.$.replyform;
+        //var replyform = this.$.replyform;
         if (this.$.replyinput.focused) {
           this.focusclass = "infocus";
-          replyform.opened = true;
+          this.replyform_opened = true;
         } else {
             if (!this.$.replyinput.value) {
               this.focusclass = "outfocus";
-              replyform.opened = false;
+              this.replyform_opened = false;
             }
         };
       }

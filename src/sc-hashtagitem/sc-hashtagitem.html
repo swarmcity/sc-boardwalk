@@ -372,7 +372,7 @@ This components is the representation of a request in the requests-list on sc-ha
           </template>
 <!--           </template> -->
 
-          <iron-collapse id="repliescollapser" class="totalwidth">
+          <iron-collapse id="repliescollapser" opened="{{repliescollapser_opened}}" class="totalwidth">
             <template is="dom-if" if="{{!phoneview}}">
               <div class="whitespace"></div>
             </template>
@@ -572,7 +572,7 @@ This components is the representation of a request in the requests-list on sc-ha
                 <div class="dealmessage totalwidth horizontal center endjust">
                   <p class$="small {{dealmessageclass}} bold">{{dealmessage}}</p>
                 </div>
-                <iron-collapse id="repliescollapser" class="totalwidth">
+                <iron-collapse id="repliescollapser" opened="{{repliescollapser_opened}}" class="totalwidth">
                   <div class="dealmessagechosen totalwidth horizontal center endjust">
                     <p class="small grey3 reg">{{dealmessagechosen}}</p>
                   </div>
@@ -761,23 +761,23 @@ This components is the representation of a request in the requests-list on sc-ha
       toggleItem: function(){
         //console.log('*toggleitem*',this.item);
 
-        var toggler = this.$.repliescollapser;
+//        var toggler = this.$.repliescollapser;
         if(this.iamprovider){
           this.fire('redirect', {
             target: '/dealfortwoprovider/' + this.item.hashtag + '/' + this.item.id + '/' + this.item.selectedreply
           });
         } else {
 
-        if (toggler.opened) {
+        if (this.repliescollapser_opened) {
 
           this.customStyle['--my-totalbg-color'] = 'rgba(255,255,255,0.25)';
           this.updateStyles();
-          toggler.opened = false;
+          this.repliescollapser_opened = false;
           if (this.dealmessage) {
             this.showdealmsg = true;
           };
         } else {
-          toggler.opened = true;
+          this.repliescollapser_opened = true;
           this.customStyle['--my-totalbg-color'] = 'var(--sc-white)';
           this.updateStyles();
           this.showdealmsg = false;
