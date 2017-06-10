@@ -519,7 +519,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       },
 
       closeNewcollapser: function() {
-        var offerinputform = this.shadowRoot.getElementById('offerinputform');
+        var offerinputform = this.$.offerinputform;
         offerinputform.opened = false;
         this.showavatar = false;
         this.totalstate = "totalclosed";

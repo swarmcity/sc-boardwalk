@@ -433,7 +433,7 @@ This components is the representation of a request in the requests-list on sc-ha
 
 
       collapseSteps: function(){
-        var steps = this.shadowRoot.getElementById('steps_collapser');
+        var steps = this.$.steps_collapser;
         steps.toggle();
 
         if (steps.opened){

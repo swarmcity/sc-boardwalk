@@ -1153,7 +1153,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
 
       showDetails: function(){
-        var details = this.shadowRoot.getElementById('details_collapser');
+        var details = this.$.details_collapser;
         details.toggle();
         if (details.opened){
           this.dealdetailsmsg = "Hide details";
@@ -1166,7 +1166,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
 
       showSteps: function(){
-        var steps = this.shadowRoot.getElementById('steps_collapser');
+        var steps = this.$.steps_collapser;
         steps.toggle();
 
         if (steps.opened){

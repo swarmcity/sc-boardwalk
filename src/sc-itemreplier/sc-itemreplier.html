@@ -288,7 +288,7 @@ This components allow a Swarm Citizen to reply on a request.
       },
 
       toggleForm: function(){
-        var replyform = this.shadowRoot.getElementById('replyform');
+        var replyform = this.$.replyform;
         replyform.toggle();
         this.btnvisible = !this.btnvisible;
       },
@@ -375,7 +375,7 @@ This components allow a Swarm Citizen to reply on a request.
       },
 
       checkFocus: function(){
-        var replyform = this.shadowRoot.getElementById('replyform');
+        var replyform = this.$.replyform;
         if (this.$.replyinput.focused) {
           this.focusclass = "infocus";
           replyform.opened = true;

@@ -160,7 +160,7 @@
 
 
       showDetails: function(){
-        var completeddeals = this.shadowRoot.getElementById('completeddeals_collapser');
+        var completeddeals = this.$.completeddeals_collapser;
         completeddeals.toggle();
         if (completeddeals.opened){
           this.collapsestate = 'opened';
