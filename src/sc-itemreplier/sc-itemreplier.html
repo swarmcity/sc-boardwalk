@@ -234,7 +234,7 @@ This components allow a Swarm Citizen to reply on a request.
           return;
         }
         // fallback to hashtag commission
-        if (this.itemdata && this.itemdata.hashtag && this.hashtaginfo){
+        if (this.itemdata && this.itemdata.hashtag && this.hashtaginfo && this.hashtaginfo[this.itemdata.hashtag]){
           this.hashtagcommission = this.hashtaginfo[this.itemdata.hashtag].commission;
         }        
       },

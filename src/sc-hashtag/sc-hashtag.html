@@ -405,6 +405,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
         </sc-newitem>
 
         <div class="mydeals_repeater">
+          <!-- my deals -->
           <template is="dom-repeat" items="{{deals}}" filter="filter1" sort="sortOnTimestamp">
             <sc-hashtagitem
               item="[[item]]"
@@ -414,6 +415,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
             </sc-hashtagitem>
           </template>
 
+          <!-- deals where I was accepted as provider -->
           <template is="dom-repeat" items="{{deals}}" filter="filter2" sort="sortOnTimestamp">
             <sc-hashtagitem
               item="[[item]]"
@@ -428,9 +430,23 @@ This is the component showing all requests of a certain hashtag. It contains a r
           <sc-filter id="locationfilter" currentid="locationfilter" range$="{{_getHashTagRange(hashtag)}}" location range="{{range}}"></sc-filter>
         </div>
 
+        <!-- others' deals I can reply to -->
         <div class="deals_repeater">
           <template is="dom-repeat" items="{{deals}}" filter="filter3" sort="sortOnTimestamp">
             <sc-hashtagitem
+              item="[[item]]"
+              identity="[[identity]]"
+              hashtagcommission="[[hashtagcommission]]"              
+              on-to-detail="hashtag_to_detail"
+              class$="{{dealsopacity}}">
+            </sc-hashtagitem>
+          </template>
+        </div>
+
+        <!-- done deals from throughout the network -->
+        <div class="deals_repeater">
+          <template is="dom-repeat" items="{{deals}}" filter="filter4" sort="sortOnTimestamp">
+           <sc-hashtagitem
               item="[[item]]"
               identity="[[identity]]"
               hashtagcommission="[[hashtagcommission]]"              
@@ -786,6 +802,11 @@ This is the component showing all requests of a certain hashtag. It contains a r
         if (this.isMyDeal(item)) return false;
         if (item.selectedreply) return false;
         return (item.dealstate == 'created');
+      },
+
+      filter4: function(item){
+        if (item.dealstate == 'payout') return true;
+        return false;
       },
 
       isMyDeal: function(item){
