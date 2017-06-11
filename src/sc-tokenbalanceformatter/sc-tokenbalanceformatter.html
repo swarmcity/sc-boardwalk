@@ -39,9 +39,7 @@
       },
 
       _value: function() {
-
         this.value = parseFloat(this.value);
-
         if (this.$.config.config && this.value && !isNaN(this.value)) {
           for (i = Object.keys(this.$.config.config.swtunits).length-1 ; i >= 0; --i){
             var key = Object.keys(this.$.config.config.swtunits)[i];
@@ -60,13 +58,6 @@
             }
           }
         }
-
-        // if (this.onlybalance){
-        //   this.denomination = '';
-        // }
-        // if (this.onlydenomination){
-        //   this.formattedvalue = '';
-        // }
       }
     });
   </script>

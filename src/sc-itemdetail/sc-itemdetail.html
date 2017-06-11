@@ -600,7 +600,7 @@ This components shows the detailed view of a request.
       },
 
       showSteps: function(){
-        var steps = this.shadowRoot.getElementById('steps_collapser');
+        var steps = this.$.steps_collapser;
         steps.toggle();
         if (steps.opened){
           this.collapsestate = 'opened';

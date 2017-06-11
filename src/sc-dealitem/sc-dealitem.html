@@ -150,7 +150,7 @@ This components is the representation of a request in the requests-list on sc-ha
               </template>
 
               <p class$="myoffer bold yellow {{amountopacity}}">
-<sc-tokenbalanceformatter value="{{item.amount-item.dealdata.commissionvalue}}" rounding="false" decimals=3 denomination="SWT"></sc-tokenbalanceformatter>
+<sc-tokenbalanceformatter value="{{subtract(item.amount,item.amount)}}" rounding="false" decimals=3 denomination="SWT"></sc-tokenbalanceformatter>
               </p>
               <div class="replycount_box horizont center endjust">
                 <p class="bold">{{replycount}}</p>
@@ -290,6 +290,11 @@ This components is the representation of a request in the requests-list on sc-ha
           b = true;
         }
         return a === b;
+      },
+
+      subtract: function(a,b){
+        debugger;
+        return a-b;
       },
 
 

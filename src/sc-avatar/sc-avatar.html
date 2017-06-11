@@ -153,7 +153,12 @@ This component shows the avatar. The size can be determined with the property `s
     </style>    
     <sc-ipfs id="ipfs"></sc-ipfs>
     <div class$="avatar {{size}}">
-      <img src="{{ipfsurl(ipfshash)}}">
+      <template is="dom-if" if="{{isDefaultAvatar(ipfshash)}}">
+        <img src="defaultavatar.png">
+      </template>
+      <template is="dom-if" if="{{!isDefaultAvatar(ipfshash)}}">
+        <img src="{{ipfsurl(ipfshash)}}">
+      </template>
     </div>
   </template>
 
@@ -207,6 +212,9 @@ This component shows the avatar. The size can be determined with the property `s
         return a === b;
       },
 
+      isDefaultAvatar: function(hash){
+        return hash == 'Qme5k7WUAoo5JwySiYGfhm4umvhUCTqVKPw2yfP7jhiqPT'
+      },
 
       /**
       * 'ipfsurl' gets a hash from the ipfs-component, resolves it and sets it as source for the avatar.

@@ -13,8 +13,9 @@
 <link rel="import" href="../sc-geohash/sc-geohash.html">
 <link rel="import" href="../sc-hashtagitem/sc-hashtagitem.html">
 <link rel="import" href="../sc-newitem/sc-newitem.html">
-<link rel="import" href="../sc-itemdetail/sc-itemdetail.html">
-<link rel="import" href="../sc-itemreply/sc-itemreply.html">
+<!-- <link rel="import" href="../sc-itemdetail/sc-itemdetail.html">
+ -->
+ <link rel="import" href="../sc-itemreply/sc-itemreply.html">
 <link rel="import" href="../sc-redux/sc-redux.html">
 <link rel="import" href="../sc-filter/sc-filter.html">
 <link rel="import" href="../sc-loader/sc-loader.html">
@@ -406,6 +407,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
         </sc-newitem>
 
         <div class="mydeals_repeater">
+          <!-- my deals -->
           <template is="dom-repeat" items="{{deals}}" filter="filter1" sort="sortOnTimestamp">
             <sc-hashtagitem
               item="[[item]]"
@@ -415,6 +417,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
             </sc-hashtagitem>
           </template>
 
+          <!-- deals where I was accepted as provider -->
           <template is="dom-repeat" items="{{deals}}" filter="filter2" sort="sortOnTimestamp">
             <sc-hashtagitem
               item="[[item]]"
@@ -424,17 +427,31 @@ This is the component showing all requests of a certain hashtag. It contains a r
             </sc-hashtagitem>
           </template>
         </div>
-
         <!-- filterbox -->
         <div class="filterbox">
-          <sc-filter id="locationfilter" currentid="locationfilter" location range="{{range}}"></sc-filter>
+          <sc-filter id="locationfilter" currentid="locationfilter" range$="{{_getHashTagRange(hashtag)}}" location range="{{range}}"></sc-filter>
         </div>
 
+        <!-- others' deals I can reply to -->
         <div class="deals_repeater">
           <template is="dom-repeat" items="{{deals}}" filter="filter3" sort="sortOnTimestamp">
             <sc-hashtagitem
               item="[[item]]"
               identity="[[identity]]"
+              hashtagcommission="[[hashtagcommission]]"              
+              on-to-detail="hashtag_to_detail"
+              class$="{{dealsopacity}}">
+            </sc-hashtagitem>
+          </template>
+        </div>
+
+        <!-- done deals from throughout the network -->
+        <div class="deals_repeater">
+          <template is="dom-repeat" items="{{deals}}" filter="filter4" sort="sortOnTimestamp">
+           <sc-hashtagitem
+              item="[[item]]"
+              identity="[[identity]]"
+              hashtagcommission="[[hashtagcommission]]"              
               on-to-detail="hashtag_to_detail"
               class$="{{dealsopacity}}">
             </sc-hashtagitem>
@@ -613,6 +630,10 @@ This is the component showing all requests of a certain hashtag. It contains a r
         return this.config.hashtagcontractToName(hashtagaddress);
       },
 
+      _getHashTagRange: function(hashtagaddress){
+        return this.config.contractnameToRange(this.config.hashtagcontractToName(hashtagaddress));
+      },
+
       _hashtagcontractloaded: function(){
         //debugger;
         var self = this;
@@ -627,7 +648,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
             }
           });
           // this is to display this in this component
-          self.hashtagcommission = res;
+          self.hashtagcommission = res.toNumber(10);
         });
       },
 
@@ -783,6 +804,11 @@ This is the component showing all requests of a certain hashtag. It contains a r
         if (this.isMyDeal(item)) return false;
         if (item.selectedreply) return false;
         return (item.dealstate == 'created');
+      },
+
+      filter4: function(item){
+        if (item.dealstate == 'payout') return true;
+        return false;
       },
 
       isMyDeal: function(item){

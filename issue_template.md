@@ -1,4 +1,4 @@
-## Enviroment
+## Environment
 OS, Browser, Version
 
 ## Actual behavior:

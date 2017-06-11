@@ -111,7 +111,7 @@ This components shows the in-app notifications in Swarm City.
         @apply(--layout-start);
         @apply(--layout-start-justified);
         box-sizing:border-box;
-        padding: 0px;       
+        padding: 0px;
       }
 
 
@@ -167,7 +167,7 @@ This components shows the in-app notifications in Swarm City.
         @apply(--layout-vertical);
         @apply(--layout-center-center);
         box-sizing:border-box;
-        padding: 0px;       
+        padding: 0px;
       }
 
 
@@ -228,7 +228,7 @@ This components shows the in-app notifications in Swarm City.
             <iron-icon on-tap="leave" icon="sc-icons:decline" class="backhash grey4">back</iron-icon>
             </div>
           </template>
-          <template is="dom-if" if="{{showdefaultmsg}}">
+          <template is="dom-if" if="{{hasnotifications(notifications)}}">
             <div class="nomsg">
               <p class="grey2 light">You have no messages.</p>
             </div>
@@ -245,7 +245,7 @@ This components shows the in-app notifications in Swarm City.
                 <p class="timestamp grey3"><moment-js date="{{item.timestamp}}" format="HH:mm:ss.SSS" from-now></moment-js> | #{{hashtagcontractToName(item.hashtag)}}</p>
                 <div class="totalwidth horizont start startjust">
                 <p class="msg grey4 flex">{{item.msg}}</p>
-                <iron-icon icon="sc-icons:arrowright" class="blue"></iron-icon>
+                <!-- <iron-icon icon="sc-icons:arrowright" class="blue"></iron-icon> -->
                 </div>
               </div>
             </div>
@@ -269,7 +269,7 @@ This components shows the in-app notifications in Swarm City.
       ],
 
       observers: [
-      '_notifications(notifications)'
+      // '_notifications(notifications)'
       ],
 
 
@@ -396,6 +396,10 @@ This components shows the in-app notifications in Swarm City.
 
       },
 
+      hasnotifications:function(notifications){
+        return (!this.notifications || this.notifications.length === 0);
+      },
+
       hashtagcontractToName: function(a){
         return this.$.config.hashtagcontractToName(a);
       },
@@ -469,13 +473,13 @@ This components shows the in-app notifications in Swarm City.
         }
       },
 
-      _notifications: function(){
-        if(this.notifications.length<=0){
-          this.showdefaultmsg = true;
-        } else {
-          this.showdefaultmsg = false;
-        }
-      }
+      // _notifications: function(){
+      //   if(this.notifications.length<=0){
+      //     this.showdefaultmsg = true;
+      //   } else {
+      //     this.showdefaultmsg = false;
+      //   }
+      // }
 
     });
   </script>

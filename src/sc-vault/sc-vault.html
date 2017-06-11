@@ -1001,6 +1001,7 @@
 
       ready: function(){
         this.loadingpassw = false;
+        this.loadVault();
       },
 
       reset: function() {
@@ -1164,8 +1165,12 @@
 
       // Load vault from local storage
       loadVault: function(){
-        var tmpvault = JSON.parse(window.localStorage.getItem('sc-vault'));
-        this._parseVault(tmpvault);
+        if (window.localStorage.getItem('sc-vault')){
+          var tmpvault = JSON.parse(window.localStorage.getItem('sc-vault'));
+          this._parseVault(tmpvault);
+        }else{
+          console.log('No vault found');
+        }
       },
 
       // returns TRUE is this is a v1 backup file
@@ -1266,6 +1271,7 @@
 
       deleteVault: function(){
         //debugger;
+        this.privatekey = "0000000000000000000000000000000000000000000000000000000000000000";
         this.privatekey = null;
         this.$.privatekeyinput.inputvalue = null;
         this.$.privatekeyethinput.inputvalue = null;

@@ -240,7 +240,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         <template is="dom-if" if="{{!loading}}">
           <div class="confirmbtns totalwidth">
             <div class="hashtagfeemsg flex">
-              <p class="grey2b reg">The hashtagfee of #{{hashtagcontractToName(hashtagaddress)}} is
+              <p class="grey2b reg">The hashtag fee of #{{hashtagcontractToName(hashtagaddress)}} is
                 <sc-tokenbalanceformatter value="{{d2}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></p>
               <template is="dom-if" if="{{showtotal}}">
                 <p class="grey3 reg"><span class="bold">Total:</span>
@@ -504,7 +504,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       },
 
       checkFocus: function() {
-        var offerinputform = this.shadowRoot.getElementById('offerinputform');
+        var offerinputform = this.$.offerinputform;
         if (this.$.offerinput.focused || this.$.offerinputamount.focused) {
           this.showavatar = true;
           this.totalstate = "totalopen";
@@ -519,7 +519,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       },
 
       closeNewcollapser: function() {
-        var offerinputform = this.shadowRoot.getElementById('offerinputform');
+        var offerinputform = this.$.offerinputform;
         offerinputform.opened = false;
         this.showavatar = false;
         this.totalstate = "totalclosed";

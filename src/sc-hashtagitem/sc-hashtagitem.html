@@ -13,6 +13,7 @@
 <link rel="import" href="../sc-avatar/sc-avatar.html">
 <link rel="import" href="../sc-hashtagcontract/sc-hashtagrep.html">
 <link rel="import" href="../sc-dealstate/sc-dealstate.html">
+<link rel="import" href="../sc-itemreplier/sc-itemreplier.html">
 <link rel="import" href="../sc-tokenbalanceformatter/sc-tokenbalanceformatter.html">
 
 
@@ -298,7 +299,6 @@ This components is the representation of a request in the requests-list on sc-ha
       }
 
     </style>
-
     <iron-media-query query="(min-width:0px) and (max-width: 540px)" query-matches="{{phoneview}}"></iron-media-query>
 <!-- <pre>{{jsondump(item)}}</pre> -->
       <!-- WHEN REPLY == NOT SELECTED YET -->
@@ -357,7 +357,7 @@ This components is the representation of a request in the requests-list on sc-ha
 
             <div class="amountstuff vertic end endjust">
               <small class="bold yellow">for</small>
-              <p class="bold yellow"><sc-tokenbalanceformatter value="{{item.amount}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter></p>
+              <p class="bold yellow"><sc-tokenbalanceformatter value="{{deducthalfcommission(item.amount,hashtagcommission)}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter></p>
             </div>
 
 
@@ -372,13 +372,15 @@ This components is the representation of a request in the requests-list on sc-ha
           </template>
 <!--           </template> -->
 
-          <iron-collapse id="repliescollapser" class="totalwidth">
+          <iron-collapse id="repliescollapser" opened="{{repliescollapser_opened}}" class="totalwidth">
             <template is="dom-if" if="{{!phoneview}}">
               <div class="whitespace"></div>
             </template>
             <template is="dom-if" if="{{!youareowner(item.seeker.pubkey)}}">
               <template is="dom-if" if="{{!item.ireplied}}">
-                  <sc-itemreplier itemdata="{{item}}">
+                  <sc-itemreplier
+                    itemdata="{{item}}"
+                  >
                   </sc-itemreplier>
               </template>
             </template>
@@ -387,6 +389,7 @@ This components is the representation of a request in the requests-list on sc-ha
               item="{{item}}"
               btnshow="{{youareowner(item.seeker.pubkey)}}"
               reply="{{currentreply}}"
+              commission="{{hashtagcommission}}"
              >
               </sc-itemreply>
             </template>
@@ -442,7 +445,7 @@ This components is the representation of a request in the requests-list on sc-ha
                   </div>
                   <div class="amountstuff vertic end endjust">
                     <small class="bold yellow">for</small>
-                    <p class="bold yellow"><sc-tokenbalanceformatter value="{{item.amount}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter></p>
+                    <p class="bold yellow"><sc-tokenbalanceformatter value="{{deducthalfcommission(item.amount,hashtagcommission)}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter></p>
                   </div>
                 </template>
 
@@ -509,7 +512,7 @@ This components is the representation of a request in the requests-list on sc-ha
 
                   <div class="amountstuff vertic end endjust">
                     <small class="bold green">for</small>
-                    <p class="bold green"><sc-tokenbalanceformatter value="{{item.amount}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter></p>
+                    <p class="bold green"><sc-tokenbalanceformatter value="{{deducthalfcommission(item.amount,hashtagcommission)}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter></p>
                   </div>
 
                 </template>
@@ -548,7 +551,7 @@ This components is the representation of a request in the requests-list on sc-ha
                   </div>
                   <div class="amountstuff vertic end endjust">
                     <small class="bold yellow">for</small>
-                    <p class="bold yellow"><sc-tokenbalanceformatter value="{{item.amount}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter></p>
+                    <p class="bold yellow"><sc-tokenbalanceformatter value="{{deducthalfcommission(item.amount,hashtagcommission)}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter></p>
                   </div>
 
                 </template>
@@ -569,7 +572,7 @@ This components is the representation of a request in the requests-list on sc-ha
                 <div class="dealmessage totalwidth horizontal center endjust">
                   <p class$="small {{dealmessageclass}} bold">{{dealmessage}}</p>
                 </div>
-                <iron-collapse id="repliescollapser" class="totalwidth">
+                <iron-collapse id="repliescollapser" opened="{{repliescollapser_opened}}" class="totalwidth">
                   <div class="dealmessagechosen totalwidth horizontal center endjust">
                     <p class="small grey3 reg">{{dealmessagechosen}}</p>
                   </div>
@@ -605,7 +608,7 @@ This components is the representation of a request in the requests-list on sc-ha
                     </div>
                     <div class="amountstuff vertic end endjust">
                       <small class="bold blue">for</small>
-                      <p class="bold blue"><sc-tokenbalanceformatter value="{{item.amount}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter></p>
+                      <p class="bold blue"><sc-tokenbalanceformatter value="{{deducthalfcommission(item.amount,hashtagcommission)}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter></p>
                     </div>
                   </template>
 
@@ -616,7 +619,7 @@ This components is the representation of a request in the requests-list on sc-ha
                     </div>
                     <div class="amountstuff vertic end endjust">
                       <small class="bold green">for</small>
-                      <p class="bold green"><sc-tokenbalanceformatter value="{{item.amount}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter></p>
+                      <p class="bold green"><sc-tokenbalanceformatter value="{{deducthalfcommission(item.amount,hashtagcommission)}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter></p>
                     </div>
                   </template>
 
@@ -633,7 +636,7 @@ This components is the representation of a request in the requests-list on sc-ha
                     </div>
                     <div class="amountstuff vertic end endjust">
                       <small class="bold green">for</small>
-                      <p class="bold green"><sc-tokenbalanceformatter value="{{item.amount}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter></p>
+                      <p class="bold green"><sc-tokenbalanceformatter value="{{deducthalfcommission(item.amount,hashtagcommission)}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter></p>
                     </div>
                   </template>
 
@@ -659,9 +662,15 @@ This components is the representation of a request in the requests-list on sc-ha
 
       is: 'sc-hashtagitem',
 
+      behaviors: [
+        ReduxBehavior
+      ],
+
+
       observers: [
         '_log(dealstate)',
-        '_item(item,item.replies,identity)'
+        '_item(item,item.dealdata,identity)',
+        '_hashtaginfo(item,item.dealdata,item.hashtag,hashtaginfo)'
       ],
 
       properties: {
@@ -669,19 +678,37 @@ This components is the representation of a request in the requests-list on sc-ha
        * `` .
        */
         item: {
-          type: Object
+          type: Object,
         },
-        // item.replies: {
-        //   type: Object,
-        //   observer: '_itemreply'
-        // },
         identity: {
           type: Object,
           statePath: 'identity',
         },
         yourreply: {
           type: String
+        },
+        hashtaginfo: {
+          type: Object,
+          statePath: 'hashtaginfo',
+        },
+
+      },
+
+      _hashtaginfo: function(){
+        // fetch this deal's commission
+        if (this.item.dealdata && this.item.dealdata.commissionValue){
+          this.hashtagcommission = this.item.dealdata.commissionValue;
+          return;
         }
+        // fallback to hashtag commission
+        if (this.item && this.item.hashtag && this.hashtaginfo){
+          this.hashtagcommission = this.hashtaginfo[this.item.hashtag].commission;
+        }        
+      },
+
+      deducthalfcommission: function(v,c){
+        var r = v-c/2;
+        return r;
       },
 
       jsondump: function(a){
@@ -697,6 +724,7 @@ This components is the representation of a request in the requests-list on sc-ha
       // },
 
       ready: function(){
+        this.hashtagcommission = 0;
       },
 
       /**
@@ -733,23 +761,23 @@ This components is the representation of a request in the requests-list on sc-ha
       toggleItem: function(){
         //console.log('*toggleitem*',this.item);
 
-        var toggler = this.shadowRoot.getElementById('repliescollapser');
+//        var toggler = this.$.repliescollapser;
         if(this.iamprovider){
           this.fire('redirect', {
             target: '/dealfortwoprovider/' + this.item.hashtag + '/' + this.item.id + '/' + this.item.selectedreply
           });
         } else {
 
-        if (toggler.opened) {
+        if (this.repliescollapser_opened) {
 
           this.customStyle['--my-totalbg-color'] = 'rgba(255,255,255,0.25)';
           this.updateStyles();
-          toggler.opened = false;
+          this.repliescollapser_opened = false;
           if (this.dealmessage) {
             this.showdealmsg = true;
           };
         } else {
-          toggler.opened = true;
+          this.repliescollapser_opened = true;
           this.customStyle['--my-totalbg-color'] = 'var(--sc-white)';
           this.updateStyles();
           this.showdealmsg = false;
@@ -770,58 +798,54 @@ This components is the representation of a request in the requests-list on sc-ha
 
       youareowner: function(pubkey){
         //debugger;
+        if (!this.identity){
+          return false;
+        }
         return (this.identity.pubkey == pubkey);
       },
 
-
-      _item: function(){
+      _item: function() {
 
         var self = this;
         var deal = this.item;
-          if(deal.ireplied) {
-            self.showdealmsg = true;
-            self.dealmessage = "You replied to this.";
-            self.dealmessageclass = "grey4";
-          } else {
-            self.showdealmsg = false;
-          }
+        if (deal.ireplied) {
+          self.showdealmsg = true;
+          self.dealmessage = "You replied to this.";
+          self.dealmessageclass = "grey4";
+        } else {
+          self.showdealmsg = false;
+        }
 
-          // this slice is neccesary to prevent a polymer databinding flaw..
+        // this slice is neccesary to prevent a polymer databinding flaw..
+        if (deal.replies) {
+          this.item.replies = deal.replies.slice(0);
+        }
 
-          if (deal.replies){
-            this.item.replies = deal.replies.slice(0);
-          }
+        if (deal.selectedreply) {
 
-          if(deal.selectedreply) {
+          var foundReply = deal.replies.find(function(item) {
+            return item.id === deal.selectedreply;
+          });
 
-            var foundReply = deal.replies.find(function(item){
-              return item.id === deal.selectedreply;
-            });
-
-            if (foundReply){
-              self.currentprovider = foundReply.provider;
-                if(self.currentprovider.pubkey === self.identity.pubkey) {
-                  self.dealmessage = deal.seeker.username+" chose you for this request!";
-                  self.dealmessagechosen = "";
-                  self.dealmessageclass = "blue";
-                  self.iamprovider = true;
-                  self.showdealmsg = false;
-                  //debugger;
-                } else {
-                self.dealmessage = "";
-                self.dealmessagechosen = deal.seeker.username+" chose "+self.currentprovider.username+" for this request.";
-              }
+          if (foundReply) {
+            self.currentprovider = foundReply.provider;
+            if (self.currentprovider.pubkey === self.identity.pubkey) {
+              self.dealmessage = deal.seeker.username + " chose you for this request!";
+              self.dealmessagechosen = "";
+              self.dealmessageclass = "blue";
+              self.iamprovider = true;
+              self.showdealmsg = false;
+            } else {
+              self.dealmessage = "";
+              self.dealmessagechosen = deal.seeker.username + " chose " + self.currentprovider.username + " for this request.";
             }
           }
-
+        }
       },
-
 
       _log: function(target){
           console.log("HAZ THIS in hashtagitem??!!!!",this.item.msg, target);
       },
-
-
 
       /**
       * '_is', a function to bind a template to a certain value of a variable.

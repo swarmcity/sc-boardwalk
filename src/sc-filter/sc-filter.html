@@ -156,14 +156,14 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
         <iron-media-query query="(min-width:0px) and (max-width: 540px)"
                           query-matches="{{phoneview}}"></iron-media-query>
 
-        <iron-localstorage 
+        <iron-localstorage
           name="sc-filter-value"
           value="{{range}}">
-        </iron-localstorage>  
+        </iron-localstorage>
         <!-- <template is="dom-if" if="{{location}}"> -->
 
         <!-- <template is="dom-if" if="{{!phoneview}}"> -->
-        <div class="locationtotal totalwidth vertical center startjust">
+        <div class="locationtotal totalwidth vertical center startjust" on-tap="toggleSlider">
             <div class="horizont center startjust">
                 <div class$="triangle {{collapsestate}}">
                     <svg id="triangle_icon" x="0px" y="0px" viewBox="0 0 50 50" fill="#666666" onmouseover=""
@@ -171,7 +171,7 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
                         <polygon points="6.5,4.9 6.5,44.5 42,24.9 "/>
                     </svg>
                 </div>
-                <p class="distance grey3" on-tap="toggleSlider">{{distance}}</p>
+                <p class="distance grey3" >{{distance}}</p>
             </div>
             <iron-collapse opened="false" id="sliderbox" class="">
                 <div class$="inner_sliderbox horizont centercenter {{mobile_classes}}">
@@ -278,7 +278,6 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
 
                 range: {
                     type: Number,
-                    value: 2,
                     notify: true,
                     observer: 'toggleSlider'
                 },
@@ -300,6 +299,7 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
                     this.mobile_classes = '';
                 }
             },
+
 
             ready: function () {
                 this.immediaterange = this.range;
@@ -360,7 +360,7 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
             toggleSlider: function () {
 
 
-                // var sliderbox = this.shadowRoot.getElementById('sliderbox');
+                // var sliderbox = this.$.sliderbox;
 
                 // if (!sliderbox){
                 //   return;
@@ -381,31 +381,31 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
 
                 switch (this.immediaterange) {
                     case 0:
-                        this.distance = "In your area"
+                        this.distance = "Within walking distance";
                         this.distance_n = "(+/-125m)";
                         break;
                     case 1:
-                        this.distance = "In your area"
+                        this.distance = "Within driving distance";
                         this.distance_n = "(+/-5km)";
                         break;
                     case 2:
-                        this.distance = "In your area"
+                        this.distance = "A long drive away";
                         this.distance_n = "(+/-40km)";
                         break;
                     case 3:
-                        this.distance = "In your area"
+                        this.distance = "A flight away";
                         this.distance_n = "(+/-150km)";
                         break;
                     case 4:
-                        this.distance = "In your area"
-                        this.distance_n = "(+/-150km)";
+                        this.distance = "A long flight away";
+                        this.distance_n = "(+/-1250km)";
                         break;
                     case 5:
-                        this.distance = "In your area"
+                        this.distance = "An overnight journey away";
                         this.distance_n = "(+/-5000km)";
                         break;
                     case 6:
-                        this.distance = "Worldwide"
+                        this.distance = "Worldwide";
                         this.distance_n = "Worldwide";
                         break;
                 }

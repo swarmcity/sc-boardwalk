@@ -162,13 +162,13 @@ This components allow a Swarm Citizen to reply on a request.
         </sc-avatar>
         <paper-input id="replyinput" label="Your reply" class="flex grey2unfocus replyinput" value="{{replytext}}"  on-focused-changed="checkFocus"></paper-input>
       </div>
-    <iron-collapse id="replyform" class="totalwidth">
+    <iron-collapse id="replyform" opened="{{replyform_opened}}" class="totalwidth">
       <div class="totalwidth vertic centercenter">
         <div class="horizont end startjust totalwidth">
 <!--           <paper-input disabled id="amountinput" label="Your counteroffer" class="swtamount" value="{{replyamount}}" type="number">
           </paper-input>
           <p class="swtwithoffer bold">SWT</p> -->
-          <p class="swtwithoffer reg">- for <sc-tokenbalanceformatter value="{{deducthalfof(itemdata.amount,itemdata.dealdata.commissionValue)}}" rounding="false" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></p>          
+          <p class="swtwithoffer reg">for <sc-tokenbalanceformatter value="{{deducthalfof(itemdata.amount,itemdata.dealdata.commissionValue)}}" rounding="false" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></p>          
         </div>
         <div class="totalwidth confirmbtns">
           <iron-icon icon="sc-icons:decline" class="grey3" on-tap="toggleForm">close collapse</iron-icon>
@@ -185,7 +185,9 @@ This components allow a Swarm Citizen to reply on a request.
       is: 'sc-itemreplier',
 
       observers: [
-        '_itemdata(itemdata)'
+        '_itemdata(itemdata)',
+        '_hashtaginfo(itemdata,hashtaginfo)'
+
       ],
 
       properties: {
@@ -203,6 +205,11 @@ This components allow a Swarm Citizen to reply on a request.
           statePath: 'identity',
         },
 
+        hashtaginfo: {
+          type: Object,
+          statePath: 'hashtaginfo',
+        },        
+
         btnvisible: {
           type: Boolean,
           value:true
@@ -219,6 +226,19 @@ This components allow a Swarm Citizen to reply on a request.
         ReduxBehavior
       ],
 
+
+      _hashtaginfo: function(){
+        // fetch this deal's commission
+        if (this.itemdata.dealdata && this.itemdata.dealdata.commissionValue){
+          this.hashtagcommission = this.itemdata.dealdata.commissionValue;
+          return;
+        }
+        // fallback to hashtag commission
+        if (this.itemdata && this.itemdata.hashtag && this.hashtaginfo && this.hashtaginfo[this.itemdata.hashtag]){
+          this.hashtagcommission = this.hashtaginfo[this.itemdata.hashtag].commission;
+        }        
+      },
+
       // please someone - refactor this functions into the sc-helper TY.
       deducthalfof: function(v,w){
         return v-(w/2);
@@ -226,7 +246,7 @@ This components allow a Swarm Citizen to reply on a request.
 
 
       ready: function(){
-        this.onEnter();
+        this.clearForm();
       },
 
       /**
@@ -234,7 +254,12 @@ This components allow a Swarm Citizen to reply on a request.
       * use this to initialize any variables to start the component
       */
       onEnter: function(){
+        this.clearForm();
+      },
+
+      clearForm: function(){
         this.replystate = 'init';
+        this.$.replyinput.value = '';
         this.submittingreply = false;
         this.bgcolor = "whiteback";
         this.borderz = "lightgreytopborder";
@@ -245,7 +270,6 @@ This components allow a Swarm Citizen to reply on a request.
       * use this to reset any variables when leaving this component while it remains loaded.
       */
       onExit: function(){
-        this.backtoInit();
       },
 
       /**
@@ -264,7 +288,7 @@ This components allow a Swarm Citizen to reply on a request.
       },
 
       toggleForm: function(){
-        var replyform = this.shadowRoot.getElementById('replyform');
+        var replyform = this.$.replyform;
         replyform.toggle();
         this.btnvisible = !this.btnvisible;
       },
@@ -340,6 +364,9 @@ This components allow a Swarm Citizen to reply on a request.
           } else {
             console.log('sc-itemreplier -> whisper error:', err);
           }
+
+          self.clearForm();
+
           self.bgcolor = "whiteback";
           self.borderz = "lightgreytopborder";
           self.$.replybtn.disabled = false;
@@ -348,14 +375,14 @@ This components allow a Swarm Citizen to reply on a request.
       },
 
       checkFocus: function(){
-        var replyform = this.shadowRoot.getElementById('replyform');
+        //var replyform = this.$.replyform;
         if (this.$.replyinput.focused) {
           this.focusclass = "infocus";
-          replyform.opened = true;
+          this.replyform_opened = true;
         } else {
             if (!this.$.replyinput.value) {
               this.focusclass = "outfocus";
-              replyform.opened = false;
+              this.replyform_opened = false;
             }
         };
       }
