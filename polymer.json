@@ -23,6 +23,20 @@
     "bower_components/webcomponentsjs/webcomponents-lite.min.js",
     "bower_components/sc-style/sc-fonts/*",
     "src/sc-enter/images/*",
-    "src/sc-ipfs/js-ipfs-api.js"
-  ]
+    "src/sc-ipfs/js-ipfs-api.js",
+    "src/sc-enter/defaultavatar.png",
+    "src/sc-avatar/defaultavatar.png"
+  ], 
+    "builds": [ 
+  { 
+    "name": "default", 
+    "js": {"minify": false}, 
+    "css": {"minify": false}, 
+    "html": {"minify": false}, 
+    "bundle": false, 
+    "addServiceWorker": true, 
+    "addPushManifest": true, 
+    "insertPrefetchLinks": true 
+  } 
+] 
 }
