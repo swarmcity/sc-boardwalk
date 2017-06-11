@@ -24,5 +24,17 @@
     "bower_components/sc-style/sc-fonts/*",
     "src/sc-enter/images/*",
     "src/sc-ipfs/js-ipfs-api.js"
-  ]
+  ], 
+    "builds": [ 
+  { 
+    "name": "default", 
+    "js": {"minify": true}, 
+    "css": {"minify": true}, 
+    "html": {"minify": true}, 
+    "bundle": true, 
+    "addServiceWorker": true, 
+    "addPushManifest": true, 
+    "insertPrefetchLinks": true 
+  } 
+] 
 }
