@@ -1,5 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/neon-animation/neon-animation.html">
+
 <link rel="import" href="../../bower_components/moment-js/moment-js.html">
 <link rel="import" href="../../bower_components/sc-style/sc-style.html">
 <link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
@@ -168,6 +170,12 @@ This components shows the in-app notifications in Swarm City.
         padding: 0px;       
       }
 
+
+      .nomsg p {
+        font-size: 22px;
+        line-height: 28px;       
+      }
+
     }
 
 
@@ -194,12 +202,14 @@ This components shows the in-app notifications in Swarm City.
           <div class="horizont centercenter noSelect">
             <sc-username
             class$="{{visibleclass}}"
-            id="hashtagusername"
+            id="notifusername"
             identity="[[identity]]"
             pubkey="[[identity.pubkey]]"
             size="small"
             ></sc-username>
-            <sc-notificationbadge on-tap="tonotifications" class="notifbadge noSelect" notifnumber="{{notifnumber}}" dummynotifications="{{notifications}}"></sc-notificationbadge>
+<!--             <template is="dom-if" if="{{!phoneview}}">
+              <sc-notificationbadge on-tap="tonotifications" class="notifbadge noSelect" notifnumber="{{notifnumber}}" dummynotifications="{{notifications}}"></sc-notificationbadge>
+            </template> -->
           </div>
 
           <div id="balancebox" class="notifbalance_box" on-tap="toWalletview">
@@ -262,6 +272,7 @@ This components shows the in-app notifications in Swarm City.
       '_notifications(notifications)'
       ],
 
+
       actions: {
         notifications_mark_all_read: function() {
           //debugger;
@@ -294,6 +305,95 @@ This components shows the in-app notifications in Swarm City.
           type: Boolean,
           observer: '_checkSize'
         },
+
+
+        /**
+       * `sharedElements` is used to share elements between components for doing animations.
+       */
+        sharedElements: {
+          type: Object,
+          value: function() {
+            return {
+              'hero': this.$.notifavatar,
+              // 'hero2': this.$.notifusername,
+              // 'hero3': this.$.balancebox
+            }
+          }
+        },
+
+        /**
+       * `animationConfig` is used to configure animations.
+       */
+        animationConfig: {
+          type: Object,
+          value: function() {
+            return {
+              'entry': [{
+                name: 'slide-up-animation',
+                node:this.$.notifcontent,
+                toPage: this,
+                timing: {
+                  duration: 2000
+                }
+              }, {
+                name: 'hero-animation',
+                id: 'hero',
+                toPage: this,
+                timing: {
+                    duration: 200
+                }
+              // }, {
+              //   name: 'hero-animation',
+              //   id: 'hero2',
+              //   toPage: this,
+              //   timing: {
+              //       duration: 200
+              //   }
+              // }, {
+              //   name: 'hero-animation',
+              //   id: 'hero3',
+              //   toPage: this,
+              //   timing: {
+              //       duration: 200
+              //   }
+              }],
+
+              'exit': [{
+              //   name: 'fade-out-animation',
+              //   node:this.$.notifcontent,
+              //   fromPage: this,
+              //   timing: {
+              //     duration: 200
+              //   }
+              // }, {
+              //   name: 'hero-animation',
+              //   id: 'hero',
+              //   fromPage: this,
+              //   timing: {
+              //       duration: 200
+              //   }
+              // }, {
+              //   name: 'hero-animation',
+              //   id: 'hero2',
+              //   fromPage: this,
+              //   timing: {
+              //       duration: 200
+              //   }
+
+              // }, {
+              //   name: 'hero-animation',
+              //   id: 'hero3',
+              //   fromPage: this,
+              //   timing: {
+              //       duration: 200
+              //   }
+
+                }]
+              }
+            },
+          },
+
+
       },
 
       hashtagcontractToName: function(a){

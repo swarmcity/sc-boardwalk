@@ -372,7 +372,10 @@ This is the component showing all requests of a certain hashtag. It contains a r
               <p class="semibold">#</p>
             </div>
             <p class="bold wordbreak">{{_getHashTagName(hashtag)}}</p>
-
+            <p class="infocollapser" on-tap="collapseHashtaginfo">i</p>
+          <iron-collapse id="hashtaginfocollapser" class="totalwidth">
+          <p>Jooo details hashtag</p>
+          </iron-collapse>
             <!--
 
             Here we should have some hashtag info collapser or something
@@ -547,7 +550,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
                 node: this.$.pagecontent,
                 fromPage: this,
                 timing: {
-                  duration: 1000
+                  duration: 125
                 }
               }, {
 
@@ -793,6 +796,12 @@ This is the component showing all requests of a certain hashtag. It contains a r
       opacityFull: function(){
         this.dealsopacity = "full";
       },
+
+      collapseHashtaginfo: function(){
+
+      }
+
+
     });
   </script>
 </dom-module>
