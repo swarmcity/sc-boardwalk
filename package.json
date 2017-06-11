@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/swarmcity/sc-boardwalk#readme",
   "dependencies": {
+    "netlify-cli": "^1.2.2",
     "polymer-cli": "^1.1.0",
     "redux": "^3.6.0"
   }
