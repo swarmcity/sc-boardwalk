@@ -554,12 +554,12 @@
             //if (key =='b4e85acb-bfe9-4cae-a444-86c1e4496e4c') debugger;
             var currentgate = this.messagequeue[key].currentgate;
             // empty all gates up to the current gate
-            for (gates = 0 ; gates <= currentgate; gates++){
+            for (inspectedgate = 0 ; inspectedgate <= currentgate; inspectedgate++){
               var opennextgate = false;
-              if (this.messagequeue[key].gatequeue[currentgate]){              
-                while (this.messagequeue[key].gatequeue[currentgate].length > 0){
+              if (this.messagequeue[key].gatequeue[inspectedgate]){              
+                while (this.messagequeue[key].gatequeue[inspectedgate].length > 0){
                   opennextgate = true;
-                  msg = this.messagequeue[key].gatequeue[currentgate].pop();
+                  msg = this.messagequeue[key].gatequeue[inspectedgate].pop();
                   this.parsemessage(msg);
                 }
               }
