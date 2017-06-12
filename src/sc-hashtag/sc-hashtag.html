@@ -56,7 +56,9 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       .hashtagtitle {
         margin: 0px 0px 5px 0px;
-
+        @apply(--layout-horizontal);
+        @apply(--layout-end);
+        @apply(--layout-start-justified);        
       }
 
       .hashtagtitle p {
@@ -192,6 +194,62 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       }
 
+      .infocollapser {
+        margin: 0px 0px 5px 10px;
+        width: 18px;
+        height: 18px;
+/*        border-radius: 50%;*/
+/*        border-bottom: 2px solid var(--sc-grey2);*/
+        @apply(--layout-horizontal);
+        @apply(--layout-center-center);
+      }
+
+      .infocollapser:hover {
+        cursor: pointer;
+      }
+
+      .infocollapser p {
+        font-size: 12px;
+        line-height: 12px;
+      }
+
+      .infocollapser_inner {
+        max-width: 600px;
+        width: 100%;
+        margin: 10px 0px;
+        box-sizing:border-box;
+        padding: 30px;
+      }
+
+      .infocollapser_inner p {
+        font-size: 14px;
+        line-height: 20px;
+      } 
+
+      .infocollapser_inner a {
+        font-size: 14px;
+        line-height: 20px;
+      } 
+
+      .infocollapser_closer {
+        padding: 26px 0px 0px 0px;
+      }
+
+      .pubk {
+        word-break: break-all;
+      }
+
+
+      .warningbackup {
+        margin-left: 10px;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        border: 2px solid var(--sc-blue);
+      }
+
+
+
     @media all and (min-width: 0) and (max-width: 540px) {
 
       #pagecontent {
@@ -223,6 +281,9 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       .hashtagtitle {
         margin: 0px;
+        @apply(--layout-horizontal);
+        @apply(--layout-start);
+        @apply(--layout-start-justified);   
       }
 
       .hashtagtitle p {
@@ -311,6 +372,23 @@ This is the component showing all requests of a certain hashtag. It contains a r
         width: 100%;
         margin: 20px 0px 0px 0px;
       }
+
+      .infocollapser {
+        margin: 6px 0px 0px 10px;
+        width: 16px;
+        height: 16px;
+/*        border-radius: 50%;*/
+/*        border-bottom: 2px dotted var(--sc-grey2);*/
+        @apply(--layout-horizontal);
+        @apply(--layout-center-center);
+      }
+
+      .infocollapser p {
+        font-size: 11px;
+        line-height: 11px;
+        color: var(--sc-grey3);
+      }
+
     }
 
     </style>
@@ -347,6 +425,9 @@ This is the component showing all requests of a certain hashtag. It contains a r
             size="small"
             on-tap="toProfile"
             ></sc-username>
+            <template is="dom-if" if="{{!lastbackup}}">
+              <div class="warningbackup blue vertic centercenter"><p class="bold blue">!</p></div>
+            </template>
 
             <template is="dom-if" if="{{!phoneview}}">
               <sc-notificationbadge on-to-notifications="toNotifs" class="notifbadge noSelect" notifnumber="{{notifnumber}}" dummynotifications="{{notifs}}" id="notifsdesktop"></sc-notificationbadge>
@@ -368,15 +449,14 @@ This is the component showing all requests of a certain hashtag. It contains a r
       <div id="pagecontent" class="pagecontent totalwidth">
         <div class="hashtagtotal totalwidth horizont center startjust">
           <paper-icon-button on-tap="leave" icon="sc-icons:arrowleft" class="backarrow" noink>back to hashtaglist</paper-icon-button>
-          <div class="hashtagtitle horizont start startjust"  id="currenttag">
+          <div class="hashtagtitle"  id="currenttag">
             <div class="symbol">
               <p class="semibold">#</p>
             </div>
             <p class="bold wordbreak">{{_getHashTagName(hashtag)}}</p>
-            <p class="infocollapser" on-tap="collapseHashtaginfo">i</p>
-          <iron-collapse id="hashtaginfocollapser" class="totalwidth">
-          <p>Jooo details hashtag</p>
-          </iron-collapse>
+<!--             <template is="dom-if" if="{{showiicon}}"> -->
+              <div class="infocollapser darkerer" on-tap="collapseHashtaginfo"><p class="small grey3">i</p></div>
+<!--             </template> -->
             <!--
 
             Here we should have some hashtag info collapser or something
@@ -390,7 +470,33 @@ This is the component showing all requests of a certain hashtag. It contains a r
           </div>
         </div>
 
+          <iron-collapse id="hashtaginfocollapser" class="totalwidth">
+            <div class="infocollapser_inner vertic start startjust darker">
+<!--               <div class="infocollapser_closer totalwidth horizont end endjust"><iron-icon icon="sc-icons:decline" class="grey4" on-tap="collapseHashtaginfo"></iron-icon></div> -->
+              <p class="grey3">'{{_getHashTagName(hashtag)}}' is maintained by <span class="reg">Pioneerio <span class="pubk">(0x369D787F3EcF4a0e57cDfCFB2Db92134e1983f669)</span></span>. The hashtagcommission is <span class="reg"> 0,001 SWT</span></p>
 
+              <div class="whitespace"></div>
+
+              <p class="small grey2">Contact</p>
+              <div class="minispace"></div>
+              <a href="" target="_blank">@pioneerio</a>
+              <div class="minispace"></div>
+              <a href="mailto:" target="_blank">pioneerio@swarmmail.com</a>
+
+<!--               <p class="small grey2">Pub key of hashtagmaintainer</p>
+              <p class="grey3">0x369D787F3EcF4a0e57cDfCFB2Db92134e1983f669</p>
+              <div class="minispace"></div>
+              <p class="small grey2">Twitter handle</p>
+              <p class="grey3">@pioneerio</p>
+              <div class="minispace"></div>
+              <p class="small grey2">E-mail address</p>
+              <p class="grey3">pioneerio@gmail.com</p>
+              <div class="minispace"></div>
+              <p class="small grey2">Hashtag fee</p>
+              <p class="grey3">0.05 SWT</p>
+              <div class="minispace"></div>    -->           
+            </div>
+          </iron-collapse>
 
         <sc-newitem
           data-action="newitem"
@@ -510,6 +616,12 @@ This is the component showing all requests of a certain hashtag. It contains a r
           statePath: 'deals',
           observer: '_deals'
         },
+
+        showiicon: {
+          type: Boolean,
+          value: true
+        },
+
         /**
          * `phoneview` is a boolean to determine the viewport.
          */
@@ -824,7 +936,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
       },
 
       collapseHashtaginfo: function(){
-
+        this.$.hashtaginfocollapser.toggle();
+        this.showiicon = !this.showiicon;
       }
 
 

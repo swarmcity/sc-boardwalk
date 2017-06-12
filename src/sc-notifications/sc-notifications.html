@@ -31,7 +31,7 @@ This components shows the in-app notifications in Swarm City.
         display: block;
       }
 
-
+/*
       .avatar_username_balance_hashtagcontent {
         @apply(--layout-horizontal);
         @apply(--layout-start);
@@ -40,7 +40,7 @@ This components shows the in-app notifications in Swarm City.
         padding: 0px 14vw 0px 14vw;
         height: 100%;
       }
-
+*/
       .avatar_username_balance {
         height: 100%;
         box-sizing:border-box;
@@ -64,7 +64,7 @@ This components shows the in-app notifications in Swarm City.
 
       #notifcontent {
         box-sizing:border-box;
-        padding: 18vh 0vw 0px 0vw;
+        padding: 18vh 14vw 0px 0vw;
         overflow-y:scroll;
         height: 100%;
         width: 100%;
@@ -118,13 +118,13 @@ This components shows the in-app notifications in Swarm City.
 
     @media all and (min-width: 0) and (max-width: 420px) {
 
-      .avatar_username_balance_hashtagcontent {
+/*      .avatar_username_balance_hashtagcontent {
         @apply(--layout-vertical);
         @apply(--layout-center-center);
         box-sizing:border-box;
         padding: 0px;
       }
-
+*/
       .avatar_username_balance {
         width: 100%;
         height: 14%;
@@ -184,7 +184,7 @@ This components shows the in-app notifications in Swarm City.
     <sc-config id="config" config="{{config}}"></sc-config>
 
 
-    <div class="avatar_username_balance_hashtagcontent totalwidth">
+    <div class="avatar_username_balance_content totalwidth">
         <div class="avatar_username_balance" on-tap="toProfile">
 
           <template is="dom-if" if="{{phoneview}}">

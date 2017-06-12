@@ -286,6 +286,27 @@
         padding: 2vh 10vw 2vh 10vw;
       }
 
+      .gastank {
+        width: 100%;
+
+        @apply(--layout-vertical);
+        @apply(--layout-start);
+        @apply(--layout-start-justified); 
+              
+        box-sizing:border-box;
+        padding: 0px 10vw 0px 10vw;        
+      }
+      
+      .gastank p {
+        font-size: 14px;
+        line-height: 20px;
+      }
+
+
+      .grey2b {
+        color: #999999;
+      }
+
 
       @media all and (min-width: 0) and (max-width: 420px) {
 
@@ -379,6 +400,24 @@
           box-sizing:border-box;
           padding: 5vh 15vw 5vh 15vw;
         }
+
+        .gastank {
+          width: 100%;
+
+          @apply(--layout-vertical);
+          @apply(--layout-start);
+          @apply(--layout-start-justified); 
+                
+          box-sizing:border-box;
+          padding: 5vh 15vw 5vh 15vw;  
+          text-align: center;      
+        }
+
+      .gastank p {
+        font-size: 12px;
+        line-height: 18px;
+      }
+
 
       }
 
@@ -504,6 +543,7 @@
               </template>
             </div>
 
+
             <template is="dom-if" if="{{!phoneview}}">
               <paper-button class="darkerer blue bold logoutbtn" on-tap="logout" noink>Log out</paper-button>
             </template>
@@ -525,9 +565,7 @@
   "Please leave this here, still working on this, ty!" - Faffy Dee
   ******
 
-      <template is="dom-if" if="{{phoneview}}">
-        <div class="fivespace"></div>
-      </template>
+
       <div class="dottedline"></div>
 
 
@@ -538,6 +576,13 @@
         </template>
       </div> -->
 
+          <template is="dom-if" if="{{phoneview}}">
+            <div class="fivespace"></div>
+          </template>
+          <div class="dottedline"></div>
+            <div class="gastank">
+              <p class="grey2b">You currently have {{ethbalance}} ETH on this profile.</p>
+            </div>
 
 
           <div class="dottedline"></div>
