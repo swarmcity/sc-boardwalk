@@ -279,7 +279,7 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
                 range: {
                     type: Number,
                     notify: true,
-                    observer: 'toggleSlider'
+                    observer: '_rangechanged'
                 },
 
                 distance: {
@@ -339,42 +339,26 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
                 return a === b;
             },
 
-            // select: function(e){
-            //   this.selecteditem = e.target.content;
-            //   this.toggleCollapse();
-            // },
-
             _filteroptions: function () {
                 this.selecteditem = this.filteroptions[0];
             },
 
-            // toggleCollapse: function(){
-            //   this.$.currentid.toggle();
-            //   if (this.$.currentid.opened){
-            //     this.collapsestate = 'opened';
-            //   } else {
-            //     this.collapsestate = '';
-            //   }
-            // },
+            _rangechanged: function(range,oldrange){
+                if (!oldrange===undefined){
+                    this.toggleSlider();
+                }else{
+                    this.collapsestate = 'closed';
+                    this.$.sliderbox.hide();
+                }
+            },
 
             toggleSlider: function () {
-
-
-                // var sliderbox = this.$.sliderbox;
-
-                // if (!sliderbox){
-                //   return;
-                // }
-
-//        console.log(sliderbox);
                 this.$.sliderbox.toggle();
-
                 if (this.$.sliderbox.opened) {
                     this.collapsestate = 'opened';
                 } else {
                     this.collapsestate = '';
                 }
-
             },
 
             _rangetoDistance: function () {
