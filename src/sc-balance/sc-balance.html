@@ -233,6 +233,9 @@ This component shows the SWT-balance and the reference currency (when in sc-wall
       * '_swtbalance'... **TBC**
       */
       _swtbalance: function() {
+        if (!this.swtbalance){
+          return;
+        }
         var charcount = this.swtbalance.toString().length;
         this.balancesize = charcount * this.basesize;
         this.balanceref = this.convertcurrency(this.swtbalance);
