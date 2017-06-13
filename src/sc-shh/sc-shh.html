@@ -24,7 +24,7 @@
         identity: {
           type: Object,
           statePath: 'identity',
-          observer: '_testsign'
+          //observer: '_testsign'
         },
       },
 
@@ -42,22 +42,42 @@
         }
       },
 
+      // this is some sample code to sign and verify a payload
+      // using the user's identity + ethereum utils.
       _testsign: function(){
-        if (this.identity.pubkey && this.identity.privatekey){
- //         debugger;
 
-          var msgHash = EthJS.Util.rlphash('f');
+        if (this.identity.privatekey){
+          // Create a buffer containing pub and private key
+          var pubkey_buf = EthJS.Util.privateToPublic(this.identity.privatekey);
+          var privkey_buf = EthJS.Util.toBuffer(this.identity.privatekey);
 
+          // create a message hash
+          var msgHash = EthJS.Util.rlphash('this is the message');
+          // sign this hash with the PrivateKey
+          var signature = EthJS.Util.ecsign(msgHash,privkey_buf); 
 
-          var s = EthJS.Util.ecsign(msgHash,EthJS.Util.toBuffer('0x' + this.identity.privatekey))          
-          var derivedpubkey = EthJS.Util.ecrecover(msgHash, s.v, s.r, s.s)
-          var comparepubkey = EthJS.Util.toBuffer(this.identity.pubkey);
+          // check signature -> derive the pubkey from the hash + signature
+          var derivedpubkey = EthJS.Util.ecrecover(msgHash, signature.v, signature.r, signature.s);
 
-  debugger;          
+          // and compare if we got the correct pubkey again
+          if (derivedpubkey.compare(pubkey_buf) === 0){
+            console.log('signature is OK');
+          }else{
+            console.log('signature is wrong');
+          }
 
-          // if (derivedpubkey === this.identity.pubkey){
-          //   console.log('signature OK');
-          // }
+          // now we manipulate the message ( and thus create another hash)
+          var wrong_msgHash = EthJS.Util.rlphash('this is another message');
+
+          // recover the pubkey from the manipulated hash
+          derivedpubkey = EthJS.Util.ecrecover(wrong_msgHash, signature.v, signature.r, signature.s)
+
+          // and this should yield into different data than the pubkey
+          if (derivedpubkey.compare(pubkey_buf) === 0){
+            console.log('signature is OK');
+          }else{
+            console.log('signature is wrong');
+          }
 
 
 
