@@ -771,7 +771,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                             <p class="reg"><sc-tokenbalanceformatter value="{{halfof(hashtagcommission)}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></p></p>
                           </div>
                         </template>
-                        
+
                         <div class="detail">
                           <p class="cat">Hashtag</p>
                           <p class="reg bold">#{{hashtagcontractToName(requestdata.hashtag)}}</p>
@@ -915,7 +915,10 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                 <template is="dom-if" if="{{!payoutinitiated}}">
                 <paper-icon-button icon="sc-icons:v" noink class="confirmbtn green big white shadow" on-tap="approveDeal"></paper-icon-button>
                 </template>
-                <template is="dom-if" if="{{payoutinitiated}}">(...wait)
+                <template is="dom-if" if="{{payoutinitiated}}">
+                  <!-- waiting icon -->
+                  <sc-loader small color="white"></sc-loader>
+
                 </template>
               </div>
             </div>
@@ -956,7 +959,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         hashtaginfo: {
           type: Object,
           statePath: 'hashtaginfo',
-        },        
+        },
 
         web3: {
           type: Object,
@@ -986,7 +989,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         // fallback to hashtag commission
         if (this.requestdata && this.requestdata.hashtag && this.hashtaginfo){
           this.hashtagcommission = this.hashtaginfo[this.requestdata.hashtag].commission;
-        }        
+        }
       },
 
 
