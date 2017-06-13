@@ -3,8 +3,11 @@
 
 <dom-module id="sc-tokenbalanceformatter">
   <template>
-    <sc-config config="{{config}}"></sc-config>
-    <span>{{formattedvalue}} {{denomination}}</span>
+    <sc-config id="config" config="{{config}}"></sc-config>
+    <span>
+      <template is="dom-if" if="{{!onlydenomination}}">{{formattedvalue}}</template>
+      <template is="dom-if" if="{{!onlybalance}}"> {{denomination}}</template>
+    </span>
   </template>
   <script>
     Polymer({
@@ -12,49 +15,53 @@
       properties: {
         value: {
           type: Number,
-          observer: '_value'
+          observer:'_value'
         },
         onlybalance: {
           type: Boolean,
+          value: false,
         },
         onlydenomination: {
           type: Boolean,
+          value: false,
+        },
+        decimals: {
+          type: Number,
+          value: 2
+        },
+        denomination:{
+          type: String
+        },
+        rounding: {
+          type: Boolean,
+          value: true
         }
       },
-      observers: [
-        '_value(config)'
-      ],
+
       _value: function() {
-
         this.value = parseFloat(this.value);
-
-        if (this.config && this.value && !isNaN(this.value)) {
-
-          
-          for (i = Object.keys(this.config.swtunits).length-1 ; i >= 0; --i){
-            var unit = this.config.swtunits[Object.keys(this.config.swtunits)[i]];
-            if ((this.value / unit) > 0.009){
-              this.formattedvalue = (this.value / unit).toFixed(2);
-              if (this.formattedvalue.endsWith('00')){
-                this.formattedvalue = this.formattedvalue.substring(0,this.formattedvalue.length-3);
+        if (this.$.config.config && !isNaN(this.value)) {
+          if (this.value === 0){
+            this.formattedvalue = (0).toFixed(this.decimals);
+            this.denomination = 'SWT';
+            return;
+          }
+          for (i = Object.keys(this.$.config.config.swtunits).length-1 ; i >= 0; --i){
+            var key = Object.keys(this.$.config.config.swtunits)[i];
+            var unit = this.$.config.config.swtunits[key];
+            if ((this.denomination === key) || (this.value / unit) >= (1/(10*this.decimals))){
+              this.formattedvalue = (this.value / unit).toFixed(this.decimals);
+              // remove any trailing zeroes
+              if (this.rounding){
+                this.formattedvalue = parseFloat(this.formattedvalue).toString();
               }
-              this.denomination = Object.keys(this.config.swtunits)[i];
+              // if (this.formattedvalue.endsWith('00')){
+              //   this.formattedvalue = this.formattedvalue.substring(0,this.formattedvalue.length-decimals-1);
+              // }
+              this.denomination = key;
               return;
             }
           }
-          this.formattedvalue = '?';
-          this.denomination = 'SWT';
-          
-        } else {
-          this.formattedvalue = '?';
-          this.denomination = 'SWT';
-        }
-
-        if (this.onlybalance){
-          this.denomination = '';
-        }
-        if (this.onlydenomination){
-          this.formattedvalue = '';
         }
       }
     });

@@ -1,5 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/neon-animation/neon-animation.html">
+
 <link rel="import" href="../../bower_components/moment-js/moment-js.html">
 <link rel="import" href="../../bower_components/sc-style/sc-style.html">
 <link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
@@ -9,8 +11,7 @@
 <link rel="import" href="../sc-balance/sc-balance.html">
 <link rel="import" href="../sc-redux/sc-redux.html">
 <link rel="import" href="../sc-notifications/sc-notificationbadge.html">
-
-<!--<link rel="import" href="../sc-balance/sc-balance.html"> -->
+<link rel="import" href="../sc-config/sc-config.html">
 
 
 <!--
@@ -18,7 +19,7 @@
 
 This components shows the in-app notifications in Swarm City.
 
-@demo src/sc-notifications/demo/index.html 
+@demo src/sc-notifications/demo/index.html
 -->
 
 <dom-module id="sc-notifications">
@@ -30,16 +31,16 @@ This components shows the in-app notifications in Swarm City.
         display: block;
       }
 
-
+/*
       .avatar_username_balance_hashtagcontent {
         @apply(--layout-horizontal);
         @apply(--layout-start);
-        @apply(--layout-start-justified); 
+        @apply(--layout-start-justified);
         box-sizing:border-box;
-        padding: 0px 14vw 0px 14vw;   
+        padding: 0px 14vw 0px 14vw;
         height: 100%;
       }
-
+*/
       .avatar_username_balance {
         height: 100%;
         box-sizing:border-box;
@@ -63,7 +64,7 @@ This components shows the in-app notifications in Swarm City.
 
       #notifcontent {
         box-sizing:border-box;
-        padding: 18vh 0vw 0px 0vw;
+        padding: 18vh 14vw 0px 0vw;
         overflow-y:scroll;
         height: 100%;
         width: 100%;
@@ -103,17 +104,27 @@ This components shows the in-app notifications in Swarm City.
           margin-top: 4px;
       }
 
+      .nomsg {
+        width: 100%;
+        height: 100%;
+        @apply(--layout-vertical);
+        @apply(--layout-start);
+        @apply(--layout-start-justified);
+        box-sizing:border-box;
+        padding: 0px;
+      }
 
 
-    @media all and (min-width: 0) and (max-width: 420px) { 
 
-      .avatar_username_balance_hashtagcontent {
+    @media all and (min-width: 0) and (max-width: 420px) {
+
+/*      .avatar_username_balance_hashtagcontent {
         @apply(--layout-vertical);
         @apply(--layout-center-center);
         box-sizing:border-box;
-        padding: 0px;            
+        padding: 0px;
       }
-
+*/
       .avatar_username_balance {
         width: 100%;
         height: 14%;
@@ -138,13 +149,31 @@ This components shows the in-app notifications in Swarm City.
 
       #notifcontent {
         box-sizing:border-box;
-        padding-top: 0px;
+        padding: 10px 40px;
         width: 100%;
 
       }
+
+
       .notif_item {
         box-sizing:border-box;
         padding: 15px 10px 15px 10px;
+      }
+
+
+      .nomsg {
+        width: 100%;
+        height: 100%;
+        @apply(--layout-vertical);
+        @apply(--layout-center-center);
+        box-sizing:border-box;
+        padding: 0px;
+      }
+
+
+      .nomsg p {
+        font-size: 22px;
+        line-height: 28px;       
       }
 
     }
@@ -152,8 +181,10 @@ This components shows the in-app notifications in Swarm City.
 
     </style>
     <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
+    <sc-config id="config" config="{{config}}"></sc-config>
 
-    <div class="avatar_username_balance_hashtagcontent totalwidth">
+
+    <div class="avatar_username_balance_content totalwidth">
         <div class="avatar_username_balance" on-tap="toProfile">
 
           <template is="dom-if" if="{{phoneview}}">
@@ -165,24 +196,22 @@ This components shows the in-app notifications in Swarm City.
           id="notifavatar"
           size="{{currentviewmode}}"
           ></sc-avatar>
-          
+
 
 
           <div class="horizont centercenter noSelect">
             <sc-username
             class$="{{visibleclass}}"
-            id="hashtagusername"
+            id="notifusername"
             identity="[[identity]]"
-            pubkey="[[pubkey]]"
+            pubkey="[[identity.pubkey]]"
             size="small"
             ></sc-username>
-            <sc-notificationbadge on-tap="tonotifications" class="notifbadge noSelect" notifnumber="{{notifnumber}}" dummynotifications="{{notifications}}"></sc-notificationbadge>
+<!--             <template is="dom-if" if="{{!phoneview}}">
+              <sc-notificationbadge on-tap="tonotifications" class="notifbadge noSelect" notifnumber="{{notifnumber}}" dummynotifications="{{notifications}}"></sc-notificationbadge>
+            </template> -->
           </div>
 
-<!--           <div class="pubk" on-tap="toProfile">
-            <p>{{pubkey}}</p>
-          </div>
- -->
           <div id="balancebox" class="notifbalance_box" on-tap="toWalletview">
             <sc-balance
               refcur="EUR"
@@ -196,22 +225,27 @@ This components shows the in-app notifications in Swarm City.
         <div id="notifcontent">
           <template is="dom-if" if="{{!phoneview}}">
             <div class="totalwidth horizont endjust center">
-            <iron-icon on-tap="leave" icon="sc-icons:decline" class="small backhash grey4">back</iron-icon>
+            <iron-icon on-tap="leave" icon="sc-icons:decline" class="backhash grey4">back</iron-icon>
             </div>
           </template>
-            <template is="dom-repeat" items="{{notifications}}">
+          <template is="dom-if" if="{{hasnotifications(notifications)}}">
+            <div class="nomsg">
+              <p class="grey2 light">You have no messages.</p>
+            </div>
+          </template>
+
+            <template is="dom-repeat" items="{{notifications}}" sort="sortOnTimestamp">
             <div on-tap="notificationTapHandler" class="notif_item horizont start startjust">
               <sc-avatar
               class="subjectavatar"
-              ipfshash="[[item.subjectavatar]]"
+              ipfshash="[[item.senderidentity.avatarhash]]"
               size="verysmall"
               ></sc-avatar>
               <div class="flex vertic start startjust">
-READ={{item.read}}
-                <p class="timestamp grey3"><moment-js date="{{item.timestamp}}" format="HH:mm:ss.SSS" from-now></moment-js> | #{{item.dealhashtag}}</p>
+                <p class="timestamp grey3"><moment-js date="{{item.timestamp}}" format="HH:mm"></moment-js> | #{{hashtagcontractToName(item.hashtag)}}</p>
                 <div class="totalwidth horizont start startjust">
-                <p class="msg grey4 flex"><span class="reg" on-tap="gotoUserprofile">{{item.subjectusername}} </span>{{item.msg}}</p>
-                <iron-icon icon="sc-icons:arrowright" class="blue"></iron-icon>
+                <p class="msg grey4 flex">{{item.msg}}</p>
+                <!-- <iron-icon icon="sc-icons:arrowright" class="blue"></iron-icon> -->
                 </div>
               </div>
             </div>
@@ -235,67 +269,160 @@ READ={{item.read}}
       ],
 
       observers: [
-      '_web3(web3)'
-
+      // '_notifications(notifications)'
       ],
 
+
       actions: {
-        update: function(notification) {
+        notifications_mark_all_read: function() {
+          //debugger;
+          var notifications = this.notifications.slice(0);
+
+          for (var i=0 ; i< notifications.length ; i++){
+            notifications[i].read = true;
+          }
+
           return {
             type: 'NOTIFICATIONS',
-            identity: identitydata
+            notifications: notifications
           };
         },
       },
 
       properties: {
-
-        pubkey: {
-          type: Object,
-          statePath: 'pubkey',
-          observer: '_pubkey'
-        },  
-
         identity: {
           type: Object,
           statePath: 'identity'
-        },  
-
-        // notifications: {
-        //   type: Object,
-        //   observer: '_notifications'
-        // },
-
+        },
         notifications: {
           type: Array,
           statePath: 'notifications',
-          //observer: 'countnotifications'
         },
         /**
        * `phoneview` is a boolean to determine the viewport.
-       */ 
+       */
         phoneview: {
           type: Boolean,
           observer: '_checkSize'
         },
+
+
+        /**
+       * `sharedElements` is used to share elements between components for doing animations.
+       */
+        sharedElements: {
+          type: Object,
+          value: function() {
+            return {
+              'hero': this.$.notifavatar,
+              // 'hero2': this.$.notifusername,
+              // 'hero3': this.$.balancebox
+            }
+          }
+        },
+
+        /**
+       * `animationConfig` is used to configure animations.
+       */
+        animationConfig: {
+          type: Object,
+          value: function() {
+            return {
+              'entry': [{
+                name: 'slide-up-animation',
+                node:this.$.notifcontent,
+                toPage: this,
+                timing: {
+                  duration: 2000
+                }
+              }, {
+                name: 'hero-animation',
+                id: 'hero',
+                toPage: this,
+                timing: {
+                    duration: 200
+                }
+              // }, {
+              //   name: 'hero-animation',
+              //   id: 'hero2',
+              //   toPage: this,
+              //   timing: {
+              //       duration: 200
+              //   }
+              // }, {
+              //   name: 'hero-animation',
+              //   id: 'hero3',
+              //   toPage: this,
+              //   timing: {
+              //       duration: 200
+              //   }
+              }],
+
+              'exit': [{
+              //   name: 'fade-out-animation',
+              //   node:this.$.notifcontent,
+              //   fromPage: this,
+              //   timing: {
+              //     duration: 200
+              //   }
+              // }, {
+              //   name: 'hero-animation',
+              //   id: 'hero',
+              //   fromPage: this,
+              //   timing: {
+              //       duration: 200
+              //   }
+              // }, {
+              //   name: 'hero-animation',
+              //   id: 'hero2',
+              //   fromPage: this,
+              //   timing: {
+              //       duration: 200
+              //   }
+
+              // }, {
+              //   name: 'hero-animation',
+              //   id: 'hero3',
+              //   fromPage: this,
+              //   timing: {
+              //       duration: 200
+              //   }
+
+                }]
+              }
+            },
+          },
+
+
       },
 
+      hasnotifications:function(notifications){
+        return (!this.notifications || this.notifications.length === 0);
+      },
+
+      hashtagcontractToName: function(a){
+        return this.$.config.hashtagcontractToName(a);
+      },
 
       ready: function() {
           this._checkSize();
+          this.showdefaultmsg = true;
+
       },
 
-
+      sortOnTimestamp: function(a,b){
+        return b.timestamp - a.timestamp;
+      },
 
       /**
-      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
+      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage
       * use this to initialize any variables to start the component
       */
       onEnter: function(){
       },
 
       /**
-      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage 
+      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage
       * use this to reset any variables when leaving this component while it remains loaded.
       */
       onExit: function(){
@@ -305,8 +432,10 @@ READ={{item.read}}
       * 'leave' fires the 'leave' to the parent-element. (This also contains animation-config for going back to sc-home.)
       */
       leave: function(){
-       
-        this.fire('leave');
+        this.dispatch('notifications_mark_all_read');
+        window.history.go(-1);
+
+        //this.fire('leave');
       },
 
 
@@ -317,13 +446,12 @@ READ={{item.read}}
         if (b === undefined){
           b = true;
         }
-        //console.log(a ,'(',typeof a,') is',b,'(',typeof b,') they are equal for ==',a == b,', they are equal for ===',a === b);
         return a === b;
       },
 
       /**
       * '_checkSize' responds to the iron-media-query and sets some variables according to the result.
-      */      
+      */
       _checkSize: function() {
         if (this.phoneview) {
         this.visibleclass = 'mobile';
@@ -334,47 +462,24 @@ READ={{item.read}}
         }
       },
 
-
-      gotoUserprofile: function(e){
-        // console.log("yep ----------------",e);
-      },
-
-
-
-
-     _web3: function() {
-        
-        if (!this.web3){
-          throw new Error('web3 not set while requesting whisper listener');
-        }
-
-       console.log("yep ----------------",this.web3);
-      },
-
-
-      _pubkey: function(){
-        console.log("THIS IS pubkeeeeyy. IN notificationsSS:", this.pubkey);
-      },
-
       notificationTapHandler: function(e) {
-        //debugger;
-        switch (e.model.item.type) {
-          case 'reply-to-deal':
-            this.fire('jump-to', {
-              target: '/hashtag/' + e.model.item.dealhashtag + '/detail/' + e.model.item.dealid
-            });
-            break;
-          case 'engage-in-deal':
-            this.fire('jump-to', {
-              target: '/simpledealprovider/' + e.model.item.dealhashtag + '/' + e.model.item.dealid + '/' + e.model.item.replyid
-            });
-            break;
 
-          default:
-            console.log('unknown notification-type to handle', e.model.item);
-            break;
+        this.dispatch('notifications_mark_all_read');
+
+        if (e.model.item.target){
+             this.fire('redirect', {
+          target: e.model.item.target
+          });
         }
       },
+
+      // _notifications: function(){
+      //   if(this.notifications.length<=0){
+      //     this.showdefaultmsg = true;
+      //   } else {
+      //     this.showdefaultmsg = false;
+      //   }
+      // }
 
     });
   </script>

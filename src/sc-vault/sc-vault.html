@@ -8,6 +8,8 @@
 <link rel="import" href="../sc-ipfs/sc-ipfs.html">
 <link rel="import" href="../sc-redux/sc-redux.html">
 
+<link rel="import" href="../sc-avatar/sc-avatar.html">
+
 <script src="./lightwallet.min.js"></script>
 <link rel="import" href="../../bower_components/neon-animation/neon-animation.html">
 <link rel="import" href="../../bower_components/sc-style/sc-style.html">
@@ -163,6 +165,13 @@
     max-width: 370px;
     margin: 4px;
   }
+
+.avatar_username_box {
+  width: 100%;
+  height: 100%;
+  box-sizing:border-box;
+  padding-top: 15vh;
+}
 
 
     </style>
@@ -594,7 +603,22 @@
         </div>
         <template is="dom-if" if="{{!tappedunlockbtn}}">
         <div class="pascanvasunderexit vertic centercenter paddingsides">
-
+        <div class="avatar_username_box vertic center startjust noSelect">
+          <sc-avatar
+          ipfshash="[[currentidentity.avatarhash]]"
+          id="homeavatar"
+          on-tap="toProfile"
+          ></sc-avatar>
+          <div class="horizont centercenter noSelect">
+            <sc-username
+            identity="[[currentidentity]]"
+            pubkey="[[pubkey]]"
+            id="homeusername"
+            size="small"
+            on-tap="toProfile"
+            ></sc-username>
+          </div>
+          <div class="whitespace"></div>
         <template is="dom-if" if="{{loadingpassw}}">
           <sc-loader color="blue" small>Unlocking</sc-loader>
           <div class="whitespace"></div>
@@ -968,7 +992,7 @@
             this.$.privatekeyethinput.inputvalue = null;
             this.saveVault();
             this.loadVault();
-            sessionStorage.setItem('vaultpassword', this.password);
+            //sessionStorage.setItem('vaultpassword', this.password);
             this.status = 'unlocked';
             this.fire('ready');
           }.bind(this));
@@ -977,6 +1001,7 @@
 
       ready: function(){
         this.loadingpassw = false;
+        this.loadVault();
       },
 
       reset: function() {
@@ -996,7 +1021,7 @@
         this.backup_download = true;
         this.download_backup_available = false;
 
-        this.password = sessionStorage.getItem('vaultpassword');
+        //this.password = sessionStorage.getItem('vaultpassword');
         
         if (!this.hasVault()) {
           this.status = 'novault';
@@ -1051,7 +1076,6 @@
 
       unlockvault: function(e) {
 
-
         var self=this;
         self.unlockpasswordwrong = false;
         if (!this.hasVault()) {
@@ -1070,7 +1094,7 @@
             setTimeout(function(){
               self.loadingpassw = false;
             },5*1000);
-            sessionStorage.setItem('vaultpassword',self.password);
+            //sessionStorage.setItem('vaultpassword',self.password);
             self.status = 'unlocked';
             self.fire('ready');
           } else {
@@ -1140,8 +1164,12 @@
 
       // Load vault from local storage
       loadVault: function(){
-        var tmpvault = JSON.parse(window.localStorage.getItem('sc-vault'));
-        this._parseVault(tmpvault);
+        if (window.localStorage.getItem('sc-vault')){
+          var tmpvault = JSON.parse(window.localStorage.getItem('sc-vault'));
+          this._parseVault(tmpvault);
+        }else{
+          console.log('No vault found');
+        }
       },
 
       // returns TRUE is this is a v1 backup file
@@ -1231,7 +1259,7 @@
         this.keystore = null;
         this.set('currentkeystore',null);
         //this.set('currentidentity',null);
-        sessionStorage.removeItem('vaultpassword');
+        //sessionStorage.removeItem('vaultpassword');
         this.set('status','locked');
       },
 
@@ -1242,6 +1270,7 @@
 
       deleteVault: function(){
         //debugger;
+        this.privatekey = "0000000000000000000000000000000000000000000000000000000000000000";
         this.privatekey = null;
         this.$.privatekeyinput.inputvalue = null;
         this.$.privatekeyethinput.inputvalue = null;

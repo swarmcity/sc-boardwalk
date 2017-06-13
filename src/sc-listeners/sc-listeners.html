@@ -5,21 +5,26 @@
 <link rel="import" href="../sc-config/sc-config.html">
 <link rel="import" href="../sc-dealfortwo/sc-dealfortwo.html">
 <script type="text/javascript" src="../../bower_components/uuid-js/lib/uuid.js"></script>
+<script src="html-css-sanitizer-minified.js"></script>
 
 <dom-module id="sc-listeners">
   <template>
     <sc-dealfortwo id="dealfortwo"></sc-dealfortwo>
     <sc-web3 id="web3" web3="{{web3}}"></sc-web3>
-    <sc-shh web3="{{shhweb3}}"></sc-shh>  
+    <sc-shh web3="{{shhweb3}}"></sc-shh>
     <sc-config config="{{config}}"></sc-config>
   </template>
   <script>
 
 //  var sc_listeners_listening = false;
 
+    function sanitize(incoming) {
+       return html_sanitize(incoming);
+    };
+
     Polymer({
       is: 'sc-listeners',
-      
+
       properties: {
         deals: {
           type: Array,
@@ -39,7 +44,13 @@
         },
         hashtag: {
           type: String,
-          observer: '_changefilter'          
+          observer: '_changefilter'
+        },
+        // even with all data present you can disable the filter using this switch
+        enabled: {
+          type: Boolean,
+          value: true,
+          observer: '_changefilter'
         }
       },
 
@@ -55,105 +66,105 @@
 
         // clear the deal array ( for example when reloading list
         // after change in range filter )
-        clear_deals: function(mutation){  
+        clear_deals: function(mutation){
           return {
             type: 'DEALS',
             deals: []
           };
-        }, 
+        },
 
-        // update deal providing a mutation 
+        // update deal providing a mutation
         // mutation looks like this :
         // mutation = {
         //  id: <dealID>,
-        //  <any_field>: <any_value>  
-        // } 
-        update_deal: function(mutation){
-          
+        //  <any_field>: <any_value>
+        // }
+        update_deal: function(mutation) {
+
           let deals = this.deals.slice(0);
-          mutation.lastupdate = Date.now();          
+          mutation.lastupdate = Date.now();
           var foundDeal = deals.findIndex(function(item) {
             return item.id === mutation.id;
           });
 
           if (foundDeal > -1) {
-            if (mutation.targetdealstate){
+            if (mutation.targetdealstate) {
               var targetstate;
 
-          switch ((deals[foundDeal].dealstate || 'init') + '_' + mutation.targetdealstate) {
+              switch ((deals[foundDeal].dealstate || 'init') + '_' + mutation.targetdealstate) {
 
-            case 'init_created':
-            case 'init_accepted':
-            case 'init_indeal':
-            case 'init_payout':
-              targetstate = mutation.targetdealstate;
-              break;
-            case 'created_created':
-              targetstate = 'created';
-              break;              
-            case 'created_accepted':
-              targetstate = 'accepted';
-              break;
-            case 'created_indeal':
-              targetstate = 'indeal';
-              break;
-            case 'created_payout':
-              targetstate = 'payout';
-              break;
-            case 'accepted_accepted':
-              targetstate = 'accepted';
-              break;
-            case 'accepted_created':
-              targetstate = 'accepted';
-              break;
-            case 'accepted_indeal':
-              targetstate = 'indeal';
-              break;
-            case 'accepted_payout':
-              targetstate = 'payout';
-              break;
-            case 'indeal_indeal':
-              targetstate = 'indeal';
-              break;
-            case 'indeal_created':
-              targetstate = 'indeal';
-              break;
-            case 'indeal_accepted':
-              targetstate = 'indeal';
-              break;
-            case 'indeal_payout':
-              targetstate = 'payout';
-              break;
-            case 'payout_created':
-              targetstate = 'payout';
-              break;
-            case 'payout_indeal':
-              targetstate = 'payout';
-              break;
-            case 'payout_accepted':
-              targetstate = 'payout';
-              break;
-            case 'payout_payout':
-              targetstate = 'payout';
-              break;
-            default:
-              targetstate = 'init';
-              debugger;
-              break;
-          }
+                case 'init_created':
+                case 'init_accepted':
+                case 'init_indeal':
+                case 'init_payout':
+                  targetstate = mutation.targetdealstate;
+                  break;
+                case 'created_created':
+                  targetstate = 'created';
+                  break;
+                case 'created_accepted':
+                  targetstate = 'accepted';
+                  break;
+                case 'created_indeal':
+                  targetstate = 'indeal';
+                  break;
+                case 'created_payout':
+                  targetstate = 'payout';
+                  break;
+                case 'accepted_accepted':
+                  targetstate = 'accepted';
+                  break;
+                case 'accepted_created':
+                  targetstate = 'accepted';
+                  break;
+                case 'accepted_indeal':
+                  targetstate = 'indeal';
+                  break;
+                case 'accepted_payout':
+                  targetstate = 'payout';
+                  break;
+                case 'indeal_indeal':
+                  targetstate = 'indeal';
+                  break;
+                case 'indeal_created':
+                  targetstate = 'indeal';
+                  break;
+                case 'indeal_accepted':
+                  targetstate = 'indeal';
+                  break;
+                case 'indeal_payout':
+                  targetstate = 'payout';
+                  break;
+                case 'payout_created':
+                  targetstate = 'payout';
+                  break;
+                case 'payout_indeal':
+                  targetstate = 'payout';
+                  break;
+                case 'payout_accepted':
+                  targetstate = 'payout';
+                  break;
+                case 'payout_payout':
+                  targetstate = 'payout';
+                  break;
+                default:
+                  targetstate = 'init';
+                  //debugger;
+                  break;
+              }
 
-          mutation.dealstate = targetstate;
+              mutation.dealstate = targetstate;
 
-//              mutation.dealstate = this.gettargetdealstate(deals[foundDeal].dealstate,mutation.targetdealstate);
+              //              mutation.dealstate = this.gettargetdealstate(deals[foundDeal].dealstate,mutation.targetdealstate);
               delete mutation.targetdealstate;
             }
 
             deals[foundDeal].ireplied = false;
-            if (deals[foundDeal].replies){
+            if (deals[foundDeal].replies) {
               for (var i = 0; i < deals[foundDeal].replies.length; i++) {
-                if (deals[foundDeal].replies[i].provider.pubkey === this.identity.pubkey){
+                if (deals[foundDeal].replies[i].provider.pubkey === this.identity.pubkey) {
                   deals[foundDeal].ireplied = true;
-                  if (deals[foundDeal].selectedreply == deals[foundDeal].replies[i].id){
+                  if (deals[foundDeal].selectedreply == deals[foundDeal].replies[i].id) {
                     //debugger;
                     deals[foundDeal].iamprovider = true;
                   }
@@ -161,21 +172,24 @@
               }
             }
 
-
-
-            if (deals[foundDeal].seeker.pubkey === this.identity.pubkey){
+            if (deals[foundDeal].seeker.pubkey === this.identity.pubkey) {
               mutation.ismydeal = true;
-            }else{
+            } else {
               mutation.ismydeal = false;
             }
             Object.assign(deals[foundDeal], mutation);
-          }else{
+          } else {
             // this is a new deal
-            if (mutation.targetdealstate){
+            if (mutation.targetdealstate) {
               mutation.dealstate = mutation.targetdealstate;
               delete mutation.targetdealstate;
             }
-            deals.push(Object.assign(this.getEmptyDeal(),mutation));
+            if (mutation.seeker.pubkey === this.identity.pubkey) {
+              mutation.ismydeal = true;
+            } else {
+              mutation.ismydeal = false;
+            }
+            deals.push(Object.assign(this.getEmptyDeal(), mutation));
           }
           return {
             type: 'DEALS',
@@ -192,7 +206,7 @@
             Object.assign(notifications[indexFound], mutation);
           }else{
             notifications.push(Object.assign(this.getEmptyNotification(),mutation));
-          }        
+          }
           return {
             type: 'NOTIFICATIONS',
             notifications: notifications
@@ -223,7 +237,7 @@
           var foundDeal = deals.findIndex(function(item) {
             return item.id === replydata.parentrequestid;
           });
-          
+
           var deal;
           if (foundDeal > -1) {
             deal = Object.assign({},deals[foundDeal]); // Object.assign(getEmptyDeal(),deals[foundDeal]);
@@ -267,7 +281,17 @@
             };
             deal = Object.assign(this.getEmptyDeal(),newDeal);
             deals.push(deal);
-            //console.error('no deal found for reply with ID=', replydata.id)
+          }
+
+          if (deal.ismydeal){
+            // create a notification
+            this.dispatch('update_notification',{
+              id: replyMutation.parentrequestid + '_' + replyMutation.replytime,
+              senderidentity : replyMutation.provider,
+              timestamp: replyMutation.replytime,
+              msg: replyMutation.provider.username + ' responded to your request.',
+              hashtag: deal.hashtag
+            });
           }
 
           return {
@@ -275,11 +299,11 @@
             deals: deals
           };
         },
-     
+
 
         // seeker says : I just selected this reply as my provider
         select_provider: function(payload){
-          
+          //debugger;
           var mutation = {
             id : payload.requestid,
             lastupdate : Date.now(),
@@ -353,20 +377,30 @@
                   break;
                 default:
                   targetstate = 'init';
-                  debugger;
+                  //debugger;
                   break;
               }
-
               mutation.dealstate = targetstate;
             }
             var deal = deals[foundDeal];
             Object.assign(deals[foundDeal],mutation);
 
-            //deals[foundDeal] = Object.assign(getEmptyDeal(), deals[foundDeal], mutation);
           }else{
             mutation.dealstate = 'accepted';
             deals.push(Object.assign(this.getEmptyDeal(),mutation));
           }
+          //debugger;
+          if (!deal.ismydeal && deal.ireplied){
+            // create a notification
+            this.dispatch('update_notification',{
+              id: deal.id + '_' + payload.timestamp,
+              senderidentity : deal.seeker,
+              timestamp: payload.timestamp,
+              msg: deal.seeker.username + ' selected you as a provider.',
+              hashtag: deal.hashtag
+            })
+          }
+
           return {
             type: 'DEALS',
             deals: deals
@@ -396,35 +430,32 @@
 
       _changefilter: function(){
 
-        if (!this.hashtag || !this.geohash){
-          return false;
+        if (!this.hashtag || !this.geohash || this.enabled != true){
+          this._stophastaglistener();
+          return;
         }
 
-        console.log('sc-filter -> Change filter',this.hashtag ,this.geohash);
+        console.log('sc-filter -> Install new filter on',this.hashtag ,this.geohash);
 
-        this.__starthastaglistener();
+        this._starthastaglistener();
 
       },
 
 
-      __starthastaglistener: function() {
-        
+      _starthastaglistener: function() {
+
         // if (sc_listeners_listening){
         //   console.log('skipping init listeners. Already lsitening');
         //   return;
         // }
 
         var self = this;
-        
+
         if (!self.shhweb3){
           return;
         }
 
-        if (this.filter) {
-          console.log("sc-listeners: killing existing filter");
-          this.filter.stopWatching();
-          delete this.filter;
-        }
+        this._stophastaglistener();
 
         if (this.shhweb3 && this.hashtag) {
           var mytopics = [
@@ -432,38 +463,39 @@
             null,
             self.shhweb3.encodetopic(this.hashtag),
             null, // ID
-            // [self.shhweb3.encodetopic('all'),this.geohash.length > 1 ? self.shhweb3.encodetopic(this.geohash.slice(0, 1)) : null],
-            // [self.shhweb3.encodetopic('all'),this.geohash.length > 2 ? self.shhweb3.encodetopic(this.geohash.slice(0, 2)) : null],
-            // [self.shhweb3.encodetopic('all'),this.geohash.length > 3 ? self.shhweb3.encodetopic(this.geohash.slice(0, 3)) : null],
-            // [self.shhweb3.encodetopic('all'),this.geohash.length > 4 ? self.shhweb3.encodetopic(this.geohash.slice(0, 4)) : null],
             self.geohash.length > 1 ? [self.shhweb3.encodetopic('all'),self.shhweb3.encodetopic(self.geohash.slice(0, 1))] : null,
             self.geohash.length > 2 ? [self.shhweb3.encodetopic('all'),self.shhweb3.encodetopic(self.geohash.slice(0, 2))] : null,
             self.geohash.length > 3 ? [self.shhweb3.encodetopic('all'),self.shhweb3.encodetopic(self.geohash.slice(0, 3))] : null,
-            self.geohash.length > 4 ? [self.shhweb3.encodetopic('all'),self.shhweb3.encodetopic(self.geohash.slice(0, 4))] : null,            
-            // self.shhweb3.encodetopic(this.geohash.slice(0, 2)),
-            // self.shhweb3.encodetopic(this.geohash.slice(0, 3)),
-            // self.shhweb3.encodetopic(this.geohash.slice(0, 4)),
+            self.geohash.length > 4 ? [self.shhweb3.encodetopic('all'),self.shhweb3.encodetopic(self.geohash.slice(0, 4))] : null,
           ];
-
-          //self.shhweb3.dumptopics(mytopics);
 
           this.filter = self.shhweb3.shh.filter({
             "topics": mytopics,
           });
 
-          console.log("sc-listeners: channelswitch, start listening to", mytopics);
-          this.filter.watch(this._processmessage.bind(this));
-
           // clear deals... pretty rough...(wss)
           this.dispatch('clear_deals');
 
-          //sc_listeners_listening = true;
+          // and clear the local cache
+          this.messagequeue = {}
 
+          console.log("sc-listeners: channelswitch, start listening to", mytopics);
+          this.filter.watch(this._processmessage.bind(this));
+
+        }
+      },
+
+      _stophastaglistener: function(){
+        if (this.filter) {
+          console.log("sc-listeners: killing existing filter");
+          this.filter.stopWatching();
+          delete this.filter;
         }
       },
 
       // processinging of channel setup messages.
       _processmessage: function(error, result) {
+
         //debugger;
         var payload;
         var self = this;
@@ -474,13 +506,94 @@
           console.log(e);
         }
 
+        if (!this.messagequeue){
+          this.messagequeue = {};
+        }
+
+        // re-order and buffer items by gate
+        // gate 1 : create request
+        // gate 2 : reply to a request
+        // gate 3 : selection of provider
+        // gate 4 : funding of deal by provider
+        // gate 5 : approval of deal
+        switch (payload.type){
+          case 'dealfortwo-request-create':
+            var dealid = payload.id;
+            if(!this.messagequeue[dealid]){ this.messagequeue[dealid] = this.payloadStructure(); }
+            this.messagequeue[dealid].gatequeue[0].push(payload);
+            break;
+          case 'dealfortwo-request-reply':
+            var dealid = payload.parentrequestid;
+            if(!this.messagequeue[dealid]){ this.messagequeue[dealid] = this.payloadStructure(); }
+            this.messagequeue[dealid].gatequeue[1].push(payload);
+            break;
+          case 'dealfortwo-select-provider':
+            var dealid = payload.requestid;
+            if(!this.messagequeue[dealid]){ this.messagequeue[dealid] = this.payloadStructure(); }
+            this.messagequeue[dealid].gatequeue[2].push(payload);
+            break;
+          case 'dealfortwo-provider-funding':
+            var dealid = payload.id;
+            if(!this.messagequeue[dealid]){ this.messagequeue[dealid] = this.payloadStructure(); }
+            this.messagequeue[dealid].gatequeue[3].push(payload);
+            break;
+          case 'dealfortwo-approve':
+            var dealid = payload.requestid;
+            if(!this.messagequeue[dealid]){ this.messagequeue[dealid] = this.payloadStructure(); }
+            this.messagequeue[dealid].gatequeue[4].push(payload);
+            break;
+          default:
+            console.log('unknown gate for message',payload);
+            break;
+        }
+
+        //console.log('MQ before',JSON.stringify(this.messagequeue,null,1));
+        this.purgeQueue();
+        //console.log('MQ after',JSON.stringify(this.messagequeue,null,1));
+
+      },
+
+      purgeQueue:function(){
+        // purge the queue
+        for (var key in this.messagequeue) {
+          if (this.messagequeue.hasOwnProperty(key)) {
+            //if (key =='b4e85acb-bfe9-4cae-a444-86c1e4496e4c') debugger;
+            var currentgate = this.messagequeue[key].currentgate;
+            // empty all gates up to the current gate
+            for (inspectedgate = 0 ; inspectedgate <= currentgate; inspectedgate++){
+              var opennextgate = false;
+              if (this.messagequeue[key].gatequeue[inspectedgate]){
+                while (this.messagequeue[key].gatequeue[inspectedgate].length > 0){
+                  opennextgate = true;
+                  msg = this.messagequeue[key].gatequeue[inspectedgate].pop();
+                  this.parsemessage(msg);
+                }
+              }
+              // increase the gate number if this one contains items.
+              if(opennextgate){
+                this.messagequeue[key].currentgate++;
+                this.purgeQueue();
+              }
+            }
+          }
+        }
+      },
+
+      payloadStructure: function(){
+        return {
+          currentgate: 0,
+          gatequeue: [[],[],[],[],[]]
+        }
+      },
+
+      parsemessage : function(payload){
         switch(payload.type){
           case 'dealfortwo-request-create':
             var self = this;
             var newDeal = {
               id: payload.id,
               seeker: payload.seeker,
-              msg: payload.offer,
+              msg: sanitize(payload.offer),
               creationtx: payload.offercreationtx,
               creationallowancetx: payload.offercreationallowancetx,
               amount: payload.offeramount,
@@ -499,7 +612,7 @@
                 self.$.dealfortwo.readDeal(newDeal.id,newDeal.seeker.pubkey,function(err,data){
                   self.dispatch('update_deal', {
                     id: newDeal.id,
-                    dealdata : data,                   
+                    dealdata : data,
                   });
                 });
               });
@@ -511,7 +624,7 @@
                   creationallowancetx_mined: true
                 });
               });
-            }            
+            }
             this.dispatch('update_deal', newDeal);
             this.requestsloaded = true;
             break;
@@ -536,6 +649,7 @@
 
             // watch for the TX to finish & update the state
             if (mutation.providerfundingtx) {
+              var self = this;
               this.web3.waitTx(mutation.providerfundingtx, function(err, res) {
                 //debugger;
                 if (err){
@@ -564,6 +678,7 @@
             }
             // watch the TX to finish & update the state
             if (mutation.providerfundingallowancetx) {
+              var self = this;
               this.web3.waitTx(mutation.providerfundingallowancetx, function(err, res) {
                 if (err){
                   console.log('error in providerfundingallowancetx');
@@ -574,21 +689,39 @@
                   providerfundingallowancetx_mined: true
                 });
               });
-            }            
-            //this.dispatch('request_provider_funding', payload);
+            }
+
+            // send a notification ?
+            var deal = this.getDeal(mutation.id);
+            if (deal.ismydeal) {
+              //debugger;
+              var reply = this.getReply(mutation.id, deal.selectedreply);
+              if (reply){
+                this.dispatch('update_notification', {
+                  id: deal.id + '_' + payload.time,
+                  senderidentity: reply.provider,
+                  timestamp: payload.time,
+                  msg: 'You\'re now in a deal with ' + reply.provider.username,
+                  hashtag: deal.hashtag
+                });
+              }else{
+                console.log('INCONSITENCY : reply not found');
+              }
+            }
+
             break;
 
           case 'dealfortwo-approve':
-         
+
             var mutation = {
               id: payload.requestid,
               payouttx: payload.transactionhash,
               targetdealstate: 'payout',
-
             };
 
             this.dispatch('update_deal', mutation);
             if (mutation.payouttx) {
+              var self=this;
               this.web3.waitTx(mutation.payouttx, function(err, res) {
                 if (err){
                   console.log('error in payouttx');
@@ -601,13 +734,42 @@
                 });
                 self.fire('updatebalance');
               });
-            }                 
-            break;   
+            }
+
+            // send a notification ?
+            var deal = this.getDeal(mutation.id);
+            if (!deal.ismydeal && deal.iamprovider) {
+              this.dispatch('update_notification', {
+                id: deal.id + '_' + payload.timestamp,
+                senderidentity: deal.seeker,
+                timestamp: payload.timestamp,
+                msg: deal.seeker.username + ' paid out your deal. ',
+                hashtag: deal.hashtag
+              })
+            }
+
+
+            break;
           default:
             console.log('unknown message:',payload);
             break;
         }
       },
+
+      getDeal: function(dealid){
+        return this.deals.find(function(item){
+              return item.id === dealid;
+        });
+      },
+
+      getReply: function(dealid,replyid){
+        return this.getDeal(dealid).replies.find(function(item){
+              return item.id === replyid;
+        });
+      },
+
+
+
     });
   </script>
 </dom-module>

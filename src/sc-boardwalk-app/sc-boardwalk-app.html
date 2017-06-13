@@ -8,11 +8,8 @@
 <link rel="import" href="../sc-vault/sc-vault.html">
 <link rel="import" href="../sc-loader/sc-loader.html">
 <link rel="import" href="../sc-helpers/sc-helpers.html">
-
 <link rel="import" href="../sc-intro/sc-intro.html">
 <link rel="import" href="../sc-home/sc-home.html">
-<link rel="import" href="../sc-dealfortwo/sc-dealfortwo-seeker.html">
-<link rel="import" href="../sc-dealfortwo/sc-dealfortwo-provider.html">
 
 <link rel="import" href="../sc-hashtag/sc-hashtag.html">
 
@@ -86,7 +83,7 @@
         >
     </sc-wallet>
 
-  <neon-animated-pages fallback-selection="loadingstate"  id="mainpages" attr-for-selected="data-page" selected="[[routedata.page]]">
+    <neon-animated-pages fallback-selection="loadingstate"  id="mainpages" attr-for-selected="data-page" selected="[[routedata.page]]">
 
     <div data-page="loadingstate">
       <div class="fullcanvas">
@@ -169,6 +166,7 @@
       on-deletevault="deletevault"
       on-show-pk="doThis"
       pk="{{ditissem}}"
+      ethbalance="{{ethbalance}}"
       >
 
     </sc-profile>
@@ -197,8 +195,9 @@
       keystore="[[keystore]]"
       pubkey="[[account]]"
       swtbalance="[[swtbalance]]"
+      lastbackup="[[lastbackup]]"
       on-leave="hashtag_tohome"
-      on-redirect="hashtag_redirect"
+      on-redirect="redirectTo"
       on-to-notifications="hashtag_tonotifications"
       on-to-profile="hashtag_toProfile"
       on-updatebalance="refreshwallet"
@@ -214,7 +213,7 @@
       route="{{pageTail2}}"
       id="dealfortwoseeker"
       web3="[[web3]]"
-      on-redirect="hashtag_redirect"
+      on-redirect="redirectTo"
     >
     </sc-dealfortwo-seeker>
 
@@ -224,7 +223,7 @@
       route="{{pageTail3}}"
       id="dealfortwoprovider"
       web3="[[web3]]"
-      on-redirect="hashtag_redirect"
+      on-redirect="redirectTo"
      >
     </sc-dealfortwo-provider>
     
@@ -239,13 +238,10 @@
       pubkey="[[account]]"
       swtbalance="[[swtbalance]]"
       on-leave="notifications_tohome"
-      on-jump-to="notifications_jumpto"
+      on-redirect="redirectTo"
       >
     </sc-notifications>
 
-
-
-    
     <sc-appuser
       data-page="appuser"
       id="appuser"
@@ -263,9 +259,6 @@
       data-page="view404">
       <h1>404</h1>
     </div>
-
-
-
 
  </neon-animated-pages>
 
@@ -329,7 +322,6 @@
       },
 
       checkready: function(e) {
-
         console.log('checkready -> ',this.route);
 
         // does not work when coming from /vault.importPK when fires ready...
@@ -359,6 +351,7 @@
           if (!this.walletstatus){
             return;
           }
+
           if (this.walletstatus == 'ready'){
             // no NOW we can check ARC/SWT balance
             if (this.arcbalance>0){
@@ -405,22 +398,30 @@
         if (!page){
           return;
         }
-        console.log('sc-boardwalk-app -> _onRouteDataChanged',oldpage,'->',page);
-
-        if (page == "home"){
-          // when arriving at the homepage.. load some more components
-//          this.$.helpers.getfile(this.resolveUrl('../sc-makedeal/sc-makedeal.html'));
-          this.$.helpers.getfile(this.resolveUrl('../sc-walletview/sc-walletview.html'));
-          this.$.helpers.getfile(this.resolveUrl('../sc-swtconversion/sc-swtconversion.html'));
-          this.$.helpers.getfile(this.resolveUrl('../sc-profile/sc-profile.html'));
-//          this.$.helpers.getfile(this.resolveUrl('../sc-hashtag/sc-hashtag.html'));
+        console.log('sc-boardwalk-app -> _mainpageLazyLoader',oldpage,'->',page);
+        var loadurls = [];
+        // add components here that need to be loaded for each main route
+        switch(page){
+          case 'home':
+            loadurls.push('../sc-walletview/sc-walletview.html');
+            loadurls.push('../sc-swtconversion/sc-swtconversion.html');
+            loadurls.push('../sc-profile/sc-profile.html');
+            break;
+          case 'hashtag':
+            loadurls.push('../sc-dealfortwo/sc-dealfortwo-seeker.html');
+            loadurls.push('../sc-dealfortwo/sc-dealfortwo-provider.html');
+            break;
+          default:
+            loadurls.push('../sc-' + page + '/sc-' + page + '.html');
+            break;
         }
-
-        const resolvedPageUrl = this.resolveUrl('../sc-' + page + '/sc-' + page + '.html');
-        console.log('loading',resolvedPageUrl);
-        this.$.helpers.getfile(resolvedPageUrl,function(){
-          console.log('loaded...',resolvedPageUrl);
-        });
+        for (var i = 0, len = loadurls.length; i < len; i++) {
+          console.log('loading', loadurls[i]);
+          var url = this.resolveUrl(loadurls[i])
+          this.$.helpers.getfile(url, function() {
+            console.log('loaded...', url);
+          });
+        }
       },
 
       _showPage404(){
@@ -531,7 +532,7 @@
         // console.log("Ik heb zeeeeeeee !!!!!!!", this.notifs);
       },
 
-      hashtag_redirect: function(e){
+      redirectTo: function(e){
         //debugger;
         this.transitionto(e.detail.target);
       },

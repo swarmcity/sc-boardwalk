@@ -1,14 +1,9 @@
 <link rel="import" href="../../bower_components/polymer-redux/polymer-redux.html">
-
+<script src="../../node_modules/redux/dist/redux.min.js"></script>
 <script>
 
 
     function getLS(key){
-
-        // if you want to disable caching return null
-        // to enable caching - put the line below in comment
-        return null;
-
         var v = window.localStorage.getItem(key);
         return JSON.parse(v);
     }
@@ -17,20 +12,15 @@
     }
         
     var initialdeals = [];
-    var initialmydeals = [];
-    var initialotherdeals = [];
+    var initialnotifications = []
 
-    var initialdeals = getLS('sc-deals') || [];
-    var initialmydeals = getLS('sc-mydeals') || [];
-    var initialotherdeals = getLS('sc-otherdeals') || [];
+    initialnotifications = getLS('sc-notifications') || [];
+    // uncomment this line to enable caching of deals
+    //initialdeals = getLS('sc-deals') || [];
 
     let initialState = {
         deals: initialdeals,
-        //mydeals: initialmydeals,
-        //otherdeals: initialotherdeals,
-        notifications: [],
-        //mydeals: [],
-        //otherdeals: [],
+        notifications: initialnotifications,
         identity: {
             username: 'username',
             avatarhash: 'Qme5k7WUAoo5JwySiYGfhm4umvhUCTqVKPw2yfP7jhiqPT'
@@ -45,13 +35,20 @@
         };
         switch (action.type) {
             case 'NOTIFICATIONS':
+                var notifications = [];
+                for (var i = 0; i < action.notifications.length; i++) {
+                    notifications.push(Object.assign({}, action.notifications[i]));
+                }
+                // save this in localstorage
+                setLS('sc-notifications', notifications);
                 return Object.assign({}, state, {
-                    notifications: action.notifications
+                    notifications: notifications
                 });
                 break;
             case 'HASHTAGINFO':
+                var h = Object.assign({},action.hashtaginfo);
                 return Object.assign({}, state, {
-                    hashtaginfo: action.hashtaginfo
+                    hashtaginfo: h
                 });
                 break;
             case 'DEALS':
