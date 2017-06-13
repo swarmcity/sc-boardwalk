@@ -992,7 +992,7 @@
             this.$.privatekeyethinput.inputvalue = null;
             this.saveVault();
             this.loadVault();
-            sessionStorage.setItem('vaultpassword', this.password);
+            //sessionStorage.setItem('vaultpassword', this.password);
             this.status = 'unlocked';
             this.fire('ready');
           }.bind(this));
@@ -1021,7 +1021,7 @@
         this.backup_download = true;
         this.download_backup_available = false;
 
-        this.password = sessionStorage.getItem('vaultpassword');
+        //this.password = sessionStorage.getItem('vaultpassword');
         
         if (!this.hasVault()) {
           this.status = 'novault';
@@ -1076,7 +1076,6 @@
 
       unlockvault: function(e) {
 
-
         var self=this;
         self.unlockpasswordwrong = false;
         if (!this.hasVault()) {
@@ -1095,7 +1094,7 @@
             setTimeout(function(){
               self.loadingpassw = false;
             },5*1000);
-            sessionStorage.setItem('vaultpassword',self.password);
+            //sessionStorage.setItem('vaultpassword',self.password);
             self.status = 'unlocked';
             self.fire('ready');
           } else {
@@ -1260,7 +1259,7 @@
         this.keystore = null;
         this.set('currentkeystore',null);
         //this.set('currentidentity',null);
-        sessionStorage.removeItem('vaultpassword');
+        //sessionStorage.removeItem('vaultpassword');
         this.set('status','locked');
       },
 
