@@ -706,13 +706,24 @@
       actions: {
         update: function(identitydata) {
           var newidentitydata = Object.assign({}, identitydata, {
-            pubkey: this.currentaccount
+            pubkey: this.currentaccount,
+            privatekey: this.privatekey
           });
           return {
             type: 'IDENTITY',
-            identity: newidentitydata
+            identity: newidentitydata,
           };
         },
+        setpk: function(pk) {
+          var newidentitydata = Object.assign({}, this.currentidentity, {
+            privatekey: pk
+          });
+          return {
+            type: 'IDENTITY',
+            identity: newidentitydata,
+          };
+        },
+
       },
 
       properties: {
@@ -1094,6 +1105,11 @@
             setTimeout(function(){
               self.loadingpassw = false;
             },5*1000);
+            self.exportPrivateKey(function(err,pk){
+              self.privatekey = pk;
+              self.dispatch('setpk',pk);
+            })
+
             //sessionStorage.setItem('vaultpassword',self.password);
             self.status = 'unlocked';
             self.fire('ready');

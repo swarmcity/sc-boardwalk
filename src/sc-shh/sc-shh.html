@@ -2,6 +2,7 @@
 <script src="../../bower_components/browser-builds/dist/ethereumjs-tx.js"></script>
 <script src="../../bower_components/web3/dist/web3.min.js"></script>
 <link rel="import" href="../sc-config/sc-config.html">
+<link rel="import" href="../sc-redux/sc-redux.html">
 
 <dom-module id="sc-shh">
   <template>
@@ -20,18 +21,45 @@
           type: Object,
           notify: true
         },
+        identity: {
+          type: Object,
+          statePath: 'identity',
+          observer: '_testsign'
+        },
       },
 
       observers: [
         '_host(host)'
       ],
+      
+      behaviors: [
+        ReduxBehavior
+      ],
 
       ready: function(){
-        var msg = {
-          a: 'QUAAK'
-        };
-        //debugger;
         if (!acshh_identity){
+
+        }
+      },
+
+      _testsign: function(){
+        if (this.identity.pubkey && this.identity.privatekey){
+ //         debugger;
+
+          var msgHash = EthJS.Util.rlphash('f');
+
+
+          var s = EthJS.Util.ecsign(msgHash,EthJS.Util.toBuffer('0x' + this.identity.privatekey))          
+          var derivedpubkey = EthJS.Util.ecrecover(msgHash, s.v, s.r, s.s)
+          var comparepubkey = EthJS.Util.toBuffer(this.identity.pubkey);
+
+  debugger;          
+
+          // if (derivedpubkey === this.identity.pubkey){
+          //   console.log('signature OK');
+          // }
+
+
 
         }
       },
