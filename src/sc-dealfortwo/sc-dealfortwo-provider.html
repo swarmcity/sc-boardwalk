@@ -883,7 +883,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         hashtaginfo: {
           type: Object,
           statePath: 'hashtaginfo',
-        },        
+        },
 
         seekeraccept: {
           type: Boolean,
@@ -924,7 +924,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         // fallback to hashtag commission
         if (this.requestdata && this.requestdata.hashtag && this.hashtaginfo){
           this.hashtagcommission = this.hashtaginfo[this.requestdata.hashtag].commission;
-        }        
+        }
       },
 
       deducthalfcommission: function(v,c){
@@ -1089,7 +1089,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
             myContractInstance.transfer.sendTransaction(pubkey, amount, {
               from: self.identity.pubkey,
               gasPrice: gasPrice,
-              gas: 200000
+              gas: 40000
             }, function(err, result) {
               if (err){
                 if (cb) {
