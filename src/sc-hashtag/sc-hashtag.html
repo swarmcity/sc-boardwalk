@@ -249,6 +249,14 @@ This is the component showing all requests of a certain hashtag. It contains a r
       }
 
 
+      .hasnogeohash {
+        width: 100%;
+        max-width: 600px;
+        box-sizing:border-box;
+        padding:20px 10px 25px 10px;
+      }
+
+
 
     @media all and (min-width: 0) and (max-width: 540px) {
 
@@ -446,6 +454,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
         </div>
 
     <div class="contentcanvas">
+
       <div id="pagecontent" class="pagecontent totalwidth">
         <div class="hashtagtotal totalwidth horizont center startjust">
           <paper-icon-button on-tap="leave" icon="sc-icons:arrowleft" class="backarrow" noink>back to hashtaglist</paper-icon-button>
@@ -497,6 +506,14 @@ This is the component showing all requests of a certain hashtag. It contains a r
               <div class="minispace"></div>    -->           
             </div>
           </iron-collapse>
+
+      <template is="dom-if" if="{{_is(geohash,'')}}">
+        <div class="hasnogeohash">
+          <p class="grey2">Looking for your location. If you disabled location-services, please enable and reload the app.</p>
+        </div>
+      </template>
+
+      <template is="dom-if" if="{{geohash}}">
 
         <sc-newitem
           data-action="newitem"
@@ -563,6 +580,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
             </sc-hashtagitem>
           </template>
         </div>
+      </template>
 
         <div class="tenspace"></div>
         <div class="tenspace"></div>
@@ -586,7 +604,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
       observers: [
         '_routedata(data)',
         '_updatelistener(data.hashtag,range,geohash)',
-        '_hashtagcontractloaded(hcready)'
+        '_hashtagcontractloaded(hcready)',
+        '_log(geohash)'
       ],
       properties: {
 
@@ -943,8 +962,12 @@ This is the component showing all requests of a certain hashtag. It contains a r
       collapseHashtaginfo: function(){
         this.$.hashtaginfocollapser.toggle();
         this.showiicon = !this.showiicon;
-      }
+      },
 
+
+      _log: function(target){
+        console.log("in hashtaaaggggg",target);
+      }
 
     });
   </script>
