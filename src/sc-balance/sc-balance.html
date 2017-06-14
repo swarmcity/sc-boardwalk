@@ -71,6 +71,11 @@ This component shows the SWT-balance and the reference currency (when in sc-wall
         margin-bottom: 4px;
       }
 
+      .letters {
+        font-size: 15px;
+        line-height: 22px;  
+      }
+
 
       @media all and (min-width: 0) and (max-width: 420px) {
 
@@ -110,7 +115,7 @@ This component shows the SWT-balance and the reference currency (when in sc-wall
             <sc-loader small color="grey2"></sc-loader>
         </template>
         <template is="dom-if" if="{{_is( viewmode, 'small')}}">
-          <h1 class="yellow bold"><sc-tokenbalanceformatter value="{{swtbalance}}" onlybalance></sc-tokenbalanceformatter></h1>
+          <h1 class="yellow bold"><sc-tokenbalanceformatter value="{{swtbalance}}" onlybalance></sc-tokenbalanceformatter><!--  <span class="letters">SWT</span> --></h1>
         </template>
         <template is="dom-if" if="{{_is( viewmode, 'normal')}}">
           <h1 class="yellow bold"><sc-tokenbalanceformatter value="{{swtbalance}}" onlybalance></sc-tokenbalanceformatter></h1>

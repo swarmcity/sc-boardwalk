@@ -516,7 +516,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         .approver {
           width: 100vw;
           height: 100vh;
-          background-color: var(--sc-green);
           padding: 0px;
           margin: 0px;
           @apply(--layout-vertical);
@@ -901,7 +900,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           </neon-animatable>
 
           <neon-animatable data-action="approvethis">
-          <div class="approver">
+          <div class="approver greenback">
             <div class="topbar">
               <span class="flex"></span>
               <paper-icon-button on-tap="backfromapproveDeal" icon="sc-icons:decline" noink class="white">back</paper-icon-button>
@@ -1048,7 +1047,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           this.requestdata = request;
           this.requestdatadealstate = request.dealstate;
 
-          if (this.requestdatadealstate == 'indeal'){
+          if (this.requestdatadealstate == 'indeal' || this.requestdatadealstate === 'payout'){
             this.bottombg = 'greenback';
           }else{
             this.bottombg = 'blueback';
