@@ -1,4 +1,5 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<script src="../../bower_components/browser-builds/dist/ethereumjs-tx.js"></script>
 <script src="../../bower_components/web3/dist/web3.min.js"></script>
 <link rel="import" href="../sc-config/sc-config.html">
 
@@ -26,6 +27,10 @@
       ],
 
       ready: function(){
+        var msg = {
+          a: 'QUAAK'
+        };
+        //debugger;
         if (!acshh_identity){
 
         }
@@ -40,8 +45,14 @@
           if (!this.host){
             return;
           }
-          acshh = new Web3(new Web3.providers.HttpProvider(this.host));
-          acshh_identity = acshh.shh.newIdentity();
+          try{
+            acshh = new Web3(new Web3.providers.HttpProvider(this.host));
+            acshh_identity = acshh.shh.newIdentity();
+          }catch(e){
+            // cannot connect to node
+            console.log('you\'re offline');
+            return;
+          }
           //acshh.shh._filter = acshh.shh.filter;
           console.log('sc-shh -> created Web3. Identity=',this.identity);
         }

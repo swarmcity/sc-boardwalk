@@ -750,6 +750,11 @@ This is the component showing all requests of a certain hashtag. It contains a r
         //debugger;
         var self = this;
         this.$.hashtagcontract.getCommission(function(err,res){
+          if (err){
+            delete self.commission;
+            delete self.hashtagcommission;
+            return;
+          }
           self.commission = res;
           // we update this in the app state too ( should be done better
           // cause now state only updates when you're in this screen ... )

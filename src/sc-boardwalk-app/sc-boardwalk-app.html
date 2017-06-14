@@ -322,7 +322,6 @@
       },
 
       checkready: function(e) {
-
         console.log('checkready -> ',this.route);
 
         // does not work when coming from /vault.importPK when fires ready...
@@ -352,6 +351,7 @@
           if (!this.walletstatus){
             return;
           }
+
           if (this.walletstatus == 'ready'){
             // no NOW we can check ARC/SWT balance
             if (this.arcbalance>0){
