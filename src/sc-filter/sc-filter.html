@@ -94,6 +94,10 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
                 height: 18px;
             }
 
+            .margers {
+                margin: 0px 20px 0px 10px;
+            }
+
             paper-slider {
                 width: 100%;
             }
@@ -115,7 +119,7 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
             .inner_sliderbox {
                 width: 100%;
                 box-sizing: border-box;
-                padding: 6px 12px 6px 12px;
+                padding: 6px 12px 6px 6px;
             }
 
             .location {
@@ -135,6 +139,10 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
                 cursor: pointer;
             }
 
+            .leftmargers {
+                margin-left: 14px;
+            }
+
             @media all and (max-width: 500px) {
                 /*      .locationtotal {
                         width: 100%;
@@ -149,6 +157,12 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
                 .leftmargers {
                     margin-left: 14px;
                 }
+            .inner_sliderbox {
+                width: 100%;
+                box-sizing: border-box;
+                padding: 6px 12px 6px 12px;
+            }
+
             }
 
         </style>
@@ -175,14 +189,14 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
             </div>
             <iron-collapse opened="false" id="sliderbox" class="">
                 <div class$="inner_sliderbox horizont centercenter {{mobile_classes}}">
-                    <div class="horizont centercenter flex ">
+                    <div class="horizont centercenter flex">
                         <iron-icon icon="sc-icons:location_edgeless" class="slidericon grey3"></iron-icon>
                         <paper-slider noink id="ratings" min="1" max="6" value="{{range}}"
                                       immediate-value="{{immediaterange}}"></paper-slider>
-                        <iron-icon icon="sc-icons:globe_edgeless" class="slidericon grey3"></iron-icon>
+                        <iron-icon icon="sc-icons:globe_edgeless" class="slidericon grey3 margers"></iron-icon>
                     </div>
-                    <paper-icon-button icon="sc-icons:v" on-tap="toggleSlider" class="grey3 leftmargers"
-                                       noink></paper-icon-button>
+<!--                     <paper-icon-button icon="sc-icons:v" on-tap="toggleSlider" class="grey3 leftmargers"
+                                       noink></paper-icon-button> -->
                     <p class="bold grey3">{{distance_n}}</p>
                 </div>
             </iron-collapse>
@@ -278,8 +292,7 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
 
                 range: {
                     type: Number,
-                    notify: true,
-                    observer: 'toggleSlider'
+                    notify: true
                 },
 
                 distance: {
@@ -289,7 +302,8 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
             },
             observers: [
                 '_rangetoDistance(immediaterange)',
-                '_phoneview(phoneview)'
+                '_phoneview(phoneview)',
+                'rangeChange(immediaterange)'
             ],
 
             _phoneview: function () {
@@ -309,6 +323,7 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
                     'Option 3'
                 ];
                 this._rangetoDistance();
+                this.$.sliderbox.opened = false;
 
                 // this.distance = 40;
             },
@@ -359,14 +374,6 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
 
             toggleSlider: function () {
 
-
-                // var sliderbox = this.$.sliderbox;
-
-                // if (!sliderbox){
-                //   return;
-                // }
-
-//        console.log(sliderbox);
                 this.$.sliderbox.toggle();
 
                 if (this.$.sliderbox.opened) {
@@ -375,6 +382,10 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
                     this.collapsestate = '';
                 }
 
+            },
+
+            rangeChange: function(oldVal,newVal){
+                console.log("bluuueee",oldVal,newVal);
             },
 
             _rangetoDistance: function () {
@@ -409,6 +420,7 @@ This component shows a filter-component in Swarm City Style. It's a dropdown-men
                         this.distance_n = "Worldwide";
                         break;
                 }
+
 
             }
 
