@@ -9,6 +9,7 @@
 <link rel="import" href="../sc-redux/sc-redux.html">
 <link rel="import" href="../sc-ipfs/sc-ipfs.html">
 <link rel="import" href="../sc-notifications/sc-notificationbadge.html">
+<link rel="import" href="../sc-gasstation/sc-gasstation.html">
 
 <!--
 `sc-home` is homeview of the Swarm City app. It shows your avatar/username/pubkey ( > to go to profile-view), your balance ( > to go to sc-wallet-view) and the hashtaglist ( > to go to a specific hashtag).
@@ -114,6 +115,7 @@
     </style>
     <sc-ipfs id="ipfs"></sc-ipfs>
     <sc-config config="{{config}}"></sc-config>
+    <sc-gasstation></sc-gasstation>
     <iron-media-query query="(min-width:0px) and (max-width: 540px)" query-matches="{{phoneview}}"></iron-media-query>
 
     <div class="avatar_username_balance_content horizont start startjust wrap">

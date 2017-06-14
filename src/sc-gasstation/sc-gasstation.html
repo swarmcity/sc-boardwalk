@@ -1,0 +1,79 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../sc-config/sc-config.html">
+<link rel="import" href="../sc-web3/sc-web3.html">
+<link rel="import" href="../sc-minime/sc-minime.html">
+<link rel="import" href="../sc-redux/sc-redux.html">
+<link rel="import" href="../../bower_components/iron-request/iron-request.html">
+
+<script src="../../bower_components/browser-builds/dist/ethereumjs-tx.js"></script>
+
+<dom-module id="sc-gasstation">
+  <template>
+    <sc-web3 web3="{{web3}}"></sc-web3>
+    <sc-config config="{{config}}"></sc-config>
+    <iron-request id="xhr"></iron-request>
+    <sc-minime id="minime" contractinstance="{{minimecontractinstance}}"></sc-minime>
+  </template>
+  <script>
+    Polymer({
+      is: 'sc-gasstation',
+      properties: {
+        identity: {
+          type: Object,
+          statePath: 'identity',
+          //observer: '_testsign'
+        },        
+      },
+      
+      behaviors: [
+        ReduxBehavior
+      ],      
+      
+      observers: [
+        '_testsign(web3,identity,config,minimecontractinstance)'
+        //'_getready(web3,config)',
+      ],
+
+      _testsign: function() {
+        if (!this.identity.privatekey || !this.minimecontractinstance || !this.config || !this.web3) {
+          return
+        }
+        this.maketx();
+      },
+
+      maketx: function() {
+        var self = this;
+
+        var dataToSign = this.minimecontractinstance.approve.getData(self.config.dealfortwofactory, 10);
+        var nonce = 1; // self.web3.eth.getTransactionCount(this.identity.pubkey);
+        var txParams = {
+          from: this.identity.pubkey,
+          nonce: self.web3.toHex(nonce),
+          gas: 250000,
+          gasPrice: 1000000,
+          gasLimit: 250000,
+          to: this.minimecontractinstance.address,
+          data: dataToSign,
+          chainId: 1
+        };
+        var tx = new EthJS.Tx(txParams);
+//        debugger;
+        var privkey_buf = EthJS.Util.toBuffer(this.identity.privatekey);
+        tx.sign(privkey_buf);
+        const serializedTx = tx.serialize();
+
+        var payload = JSON.stringify(tx.serialize());
+
+        this.$.xhr.send({
+          url: 'http://localhost:3000/fill',
+          body: {
+            tx: payload
+          }
+        });
+
+      }
+    
+
+    });
+  </script>
+</dom-module>

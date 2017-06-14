@@ -11,6 +11,10 @@
     Polymer({
       is: 'sc-minime',
       properties: {
+        contractinstance: {
+          type: Object,
+          notify: true,
+        },
         abi: {
           type: Object,
           value: [{
@@ -418,12 +422,12 @@
         }
 
         var MiniMeContract = this.web3.eth.contract(this.abi);
-        this.MiniMeContractInstance = MiniMeContract.at(this.config.swttokencontractaddress);
+        this.contractinstance = MiniMeContract.at(this.config.swttokencontractaddress);
 
       },
 
       readAllowance: function(owner,spender,cb){
-        this.MiniMeContractInstance.allowance.call(owner,spender, function(err, result) {
+        this.contractinstance.allowance.call(owner,spender, function(err, result) {
             if (err) {
               if (cb) {
                 return cb(err);
@@ -449,8 +453,8 @@
           // (this is a limitation in the MiniMeToken contract)
           self.web3.cached.getGasPrice(function(err, gasPrice) {
             console.log('setting allowance to 0');
-            self.MiniMeContractInstance.approve.estimateGas(to, 0, function(err, gasNeeded) {
-              self.MiniMeContractInstance.approve(to, 0, {
+            self.contractinstance.approve.estimateGas(to, 0, function(err, gasNeeded) {
+              self.contractinstance.approve(to, 0, {
                 from: from,
                 gasPrice: gasPrice,
                 gas: gasNeeded
@@ -462,8 +466,8 @@
                 }
                 console.log('allowance set to 0. txhash=',txhash);
                 console.log('Now setting allowance to',amount);
-                self.MiniMeContractInstance.approve.estimateGas(to, amount, function(err, gasNeeded) {
-                  self.MiniMeContractInstance.approve(to, amount, {
+                self.contractinstance.approve.estimateGas(to, amount, function(err, gasNeeded) {
+                  self.contractinstance.approve(to, amount, {
                     from: from,
                     gasPrice: gasPrice,
                     gas: gasNeeded
@@ -488,8 +492,8 @@
         } else {
           // there is no allowance / allowance is 0
           self.web3.cached.getGasPrice(function(err, gasPrice) {
-            self.MiniMeContractInstance.approve.estimateGas(to, amount, function(err, gasNeeded) {
-              self.MiniMeContractInstance.approve(to, amount, {
+            self.contractinstance.approve.estimateGas(to, amount, function(err, gasNeeded) {
+              self.contractinstance.approve(to, amount, {
                 from: from,
                 gasPrice: gasPrice,
                 gas: gasNeeded
