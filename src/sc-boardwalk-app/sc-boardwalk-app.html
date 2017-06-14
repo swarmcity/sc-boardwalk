@@ -337,8 +337,10 @@
 
         if (this.vaultstatus == 'locked') {
           // TODO this is a patch for when we uploaded a JSON file. Should be part of larger router...
-          if (this.route.path != '/vault/importfile' ){
-            return this.transitionto('/vault/unlock');
+          //debugger;
+          if (this.route.path != '/vault/importfile' && this.route.path.substring(0,13) !== '/vault/unlock'){
+            return this.transitionto('/vault/unlock/' + this.route.path);
+//            return this.transitionto('/vault/unlock');
           }
         }
 
@@ -359,10 +361,17 @@
               return this.transitionto('/swtconversion/intro');
             }else{
               console.log('no SRC balance -> head home');
-              if (this.route && this.route.path !== "" && this.route.path !== "/vault/unlock" && this.route.path !== "/vault/createnew" && this.route.path !== "/vault/restore" && this.route.path !== "/vault/importethwallet" && this.route.path !== "/vault/importpk"  && this.route.path !== "/vault/importfile"){
+              if (this.route && this.route.path !== "" && this.route.path.substring(0,13) !== "/vault/unlock" && this.route.path !== "/vault/createnew" && this.route.path !== "/vault/restore" && this.route.path !== "/vault/importethwallet" && this.route.path !== "/vault/importpk"  && this.route.path !== "/vault/importfile"){
+                // if you're on one of the known paths that don't need redirection.
                 console.log('all ready -> go to ',this.route.path);
                 return;
-              }else{
+              }else if(this.route.path.substring(0,14) == '/vault/unlock/' && this.route.path.length > 14){
+                // when we were redirected from another path
+                var target = this.route.path.substring(14);
+                return this.transitionto(target);
+              }
+              else{
+                // if the path was empty
                 console.log('all ready -> head home');
                 return this.transitionto('/home');
               }
