@@ -89,6 +89,9 @@
             // so that next to the textbox you can say 'xxx SWT'
             this.swtinputunit = this.swtunits['SWT'];
 
+
+            this.shhttl = 60 * 60 * 24 * 5;
+
             this.set('config', {
               ipfs: this.ipfs,
               web3host: this.web3host,
@@ -105,6 +108,7 @@
               swtinputunit: this.swtinputunit,
               hashtagcontractToName: this.hashtagcontractToName,
               contractnameToRange: this.contractnameToRange,
+              shhttl: this.shhttl
             });
 
             break;

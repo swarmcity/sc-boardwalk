@@ -403,12 +403,7 @@ This components shows the detailed view of a request.
           type: String,
           value: 'stepinit'
         },
-
-        // youareowner: {
-        //   type: Boolean,
-        //   value: false
-        // },
-
+        
         /**
        * `identity` is received from parent-element, as an object containing an IPFS-hash, which is img-source.
        */
@@ -430,7 +425,6 @@ This components shows the detailed view of a request.
                 }
 
               }],
-
               'exit': [{
                 name: 'fade-out-animation',
                 node: this.$.itemdetailcontent,
@@ -442,10 +436,7 @@ This components shows the detailed view of a request.
             }
           },
         }
-
-
       },
-
 
       _web3: function() {
        // this.startListener();
@@ -528,67 +519,15 @@ This components shows the detailed view of a request.
         this.fire('to-dealfortwo-provider', e.detail);;
       },
 
-      // toMakeDeal: function(e) {
-      //   var self = this;
-      //   var replydata = e.detail;
-      //   //debugger;
-      //   var message = {
-      //     type: 'dealfortwo-select-provider',
-      //     requestid: self.itemdata.id,
-      //     replyid: replydata.id,
-      //     timestamp: Date.now(),
-      //   };
-
-      //   var topics = [
-      //     self.shhweb3.encodetopic('swarmcity-v1'),
-      //     self.shhweb3.encodetopic(message.type),
-      //     self.shhweb3.encodetopic(self.itemdata.hashtag),
-      //     self.shhweb3.encodetopic(self.itemdata.id),
-      //   ];
-
-      //   var options = {
-      //     "from": self.shhweb3.identity,
-      //     "topics": topics,
-      //     "payload": self.shhweb3.fromAscii(JSON.stringify(message)),
-      //     "ttl": 60 * 60 * 24,
-      //     "priority": 1000
-      //   };
-
-      //   console.log('posting to topics', topics);
-
-      //   self.shhweb3.shh.post(options, function(err, res) {
-      //     if (!err) {
-      //       console.log(message.type, '-> Reply posted');
-      //     } else {
-      //       console.log(message.type, '-> whisper error:', err);
-      //     }
-      //   });
-      //   this.fire('to-makedeal', e.detail);
-      // },
-
       _dealstate: function(target) {
         switch(this.itemdata.dealstate){
-          // case 'init': 
-          //   this.totalopacity = 'halfop';
-          //   this.amountopacity = 'halfop';
-          //   this.notreadyyet = true;
-          //   this.dealstatemsg = "Creating this request - 1/2";
-          // break;
           case 'created': 
             this.totalopacity = 'fullop';
             this.amountopacity = 'halfop';
             this.steponestate = 'stepdone';
             this.notreadyyet = true;
           break;
-          // case 'seekerfunding': 
-          //   this.totalopacity = 'fullop';
-          //   this.amountopacity = 'halfop';
-          //   this.dealstatemsg = "Creating this request - 2/2";
-          //   this.steponestate = 'stepdone';
-          //   this.notreadyyet = true;
-          // break;
           case 'accepted': 
-          // case 'bothaccepted': 
           case 'indeal': 
             this.totalopacity = 'fullop';
             this.amountopacity = 'fullop';
@@ -616,9 +555,6 @@ This components shows the detailed view of a request.
       tempTapfour: function(){
             this.steptwostate = 'stepdone';
       },
-
-
-
 
     });
   </script>
