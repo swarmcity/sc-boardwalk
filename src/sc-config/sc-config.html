@@ -72,23 +72,6 @@
               default: 2,
               BoardwalkTesting: 6
             };
-
-            this.swtunits = {
-              'Nema': 1,
-              'Brancha': 1e3,
-              'Anto' : 1e6,
-              'Vespa': 1e9,
-              'Orto': 1e12,
-              'Pado': 1e15,
-              'SWT': 1e18,
-            },
-
-            // the default unit of any input textbox
-            // needs to be multiplied with to obtain the unit of token to be sent to
-            // a smart contract if you're talking about tokens units.
-            // so that next to the textbox you can say 'xxx SWT'
-            this.swtinputunit = this.swtunits['SWT'];
-
             this.set('config', {
               ipfs: this.ipfs,
               web3host: this.web3host,
@@ -101,8 +84,6 @@
               shhprefix: this.shhprefix,
               hashtagcontracts : this.hashtagcontracts,
               contractranges: this.contractranges,
-              swtunits: this.swtunits,
-              swtinputunit: this.swtinputunit,
               hashtagcontractToName: this.hashtagcontractToName,
               contractnameToRange: this.contractnameToRange,
             });
