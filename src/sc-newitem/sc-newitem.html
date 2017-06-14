@@ -368,8 +368,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       },
 
       _btnable: function(){
-        var inputvalidated = true;
-        //debugger;
+
         if (!this.offermsg || !this.offeramount || !this.geohash ||
           !this.wallet || !this.wallet.swtbalance || !this.hashtagaddress ||
           !this.hashtaginfo || !this.hashtaginfo[this.hashtagaddress])
@@ -503,9 +502,27 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         this.$.offerinput.focus();
       },
 
+      _checkPrerequisites: function(){
+        if (this.wallet.ethbalance < (49913 + 175000 + 284121) * 1.0 * 1000000000) {
+          msg = 'you don\'t have enough ETH';
+          return msg;
+        }
+
+        if (this.hashtaginfo[this.hashtagaddress] && this.hashtaginfo[this.hashtagaddress].commission > this.wallet.swtbalance){
+          msg = 'you don\'t have enough SWT';
+          return msg;
+        }
+
+      },
+
       checkFocus: function() {
+        
         var offerinputform = this.$.offerinputform;
         if (this.$.offerinput.focused || this.$.offerinputamount.focused) {
+
+          this.errormessage = this._checkPrerequisites();
+          // if errormessage = '' - everything is OK.
+
           this.showavatar = true;
           this.totalstate = "totalopen";
           offerinputform.opened = true;
@@ -519,6 +536,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       },
 
       closeNewcollapser: function() {
+
         var offerinputform = this.$.offerinputform;
         offerinputform.opened = false;
         this.showavatar = false;
