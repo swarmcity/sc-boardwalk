@@ -615,6 +615,7 @@
                     dealdata : data,
                   });
                 });
+                self.fire('updatebalance');
               });
             }
             if (newDeal.creationallowancetx) {
@@ -661,19 +662,9 @@
                   id: mutation.id,
                   providerfundingtx_mined: true,
                   targetdealstate: 'indeal',
-                  // fundsuccess: true,
-                  // balance : 3,
                 });
-
-                // I don't have the seeker here...
-
-                // self.$.dealfortwo.readDeal(mutation.id,newDeal.seeker.pubkey,function(err,data){
-                //   self.dispatch('update_deal', {
-                //     id: newDeal.id,
-                //     dealdata : data,
-                //   });
-                // });
-
+                // do an update of your balance 
+                self.fire('updatebalance');
               });
             }
             // watch the TX to finish & update the state
@@ -705,7 +696,7 @@
                   hashtag: deal.hashtag
                 });
               }else{
-                console.log('INCONSITENCY : reply not found');
+                console.log('INCONSISTENCY : reply not found');
               }
             }
 
