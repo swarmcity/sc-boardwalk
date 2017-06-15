@@ -493,8 +493,26 @@
           };
           cb(err,res);
         });        
+      },
+   
+      getConflictResolver: function(cb){
+        var self = this;
+        if (!this.hashtagcontract){
+          cb('no rep contract yet');
+        }
+        if (schashtagrep_cache[self.hashtagcontract]){
+          if (schashtagrep_cache[self.hashtagcontract].created < Date.now() - 60*1000){
+            return cb(null,schashtagrep_cache[self.hashtagcontract].conflictresolver);
+          }
+        }
+        this.hashtagcontract.getConflictResolver.call(function(err, res) {
+          schashtagrep_cache[self.hashtagcontract] = {
+            conflictresolver: res,
+            created: Date.now()
+          };
+          cb(err,res);
+        });        
       }
-
     });
   </script>
 </dom-module>

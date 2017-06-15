@@ -24,6 +24,7 @@
 <link rel="import" href="../sc-dealitem/sc-dealitem.html">
 <link rel="import" href="../sc-listeners/sc-listeners.html">
 <link rel="import" href="../sc-hashtagcontract/sc-hashtagcontract.html">
+<link rel="import" href="../sc-tokenbalanceformatter/sc-tokenbalanceformatter.html">
 
 <script type="text/javascript" src="../../bower_components/uuid-js/lib/uuid.js"></script>
 
@@ -506,15 +507,15 @@ This is the component showing all requests of a certain hashtag. It contains a r
           <iron-collapse id="hashtaginfocollapser" class="totalwidth">
             <div class="infocollapser_inner vertic start startjust darker">
 <!--               <div class="infocollapser_closer totalwidth horizont end endjust"><iron-icon icon="sc-icons:decline" class="grey4" on-tap="collapseHashtaginfo"></iron-icon></div> -->
-              <p class="grey3">'{{_getHashTagName(hashtag)}}' is maintained by <span class="reg">Pioneerio <span class="pubk">(0x369D787F3EcF4a0e57cDfCFB2Db92134e1983f669)</span></span>. The hashtagcommission is <span class="reg"> 0,001 SWT</span></p>
+              <p class="grey3">'{{_getHashTagName(hashtag)}}' is maintained by <span class="reg"><span class="pubk">{{conflictresolver}}</span></span>. The hashtagcommission is <span class="reg"><sc-tokenbalanceformatter value="{{halfof(hashtagcommission)}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></span></p>
 
               <div class="whitespace"></div>
 
               <p class="small grey2">Contact</p>
               <div class="minispace"></div>
-              <a href="" target="_blank">@pioneerio</a>
+              <a href="mailto:support@swarm.city" target="_blank"> support@swarm.city</a>
               <div class="minispace"></div>
-              <a href="mailto:" target="_blank">pioneerio@swarmmail.com</a>
+              <a href="https://swarm-slack-invite.herokuapp.com/">slack</a>
 
 <!--               <p class="small grey2">Pub key of hashtagmaintainer</p>
               <p class="grey3">0x369D787F3EcF4a0e57cDfCFB2Db92134e1983f669</p>
@@ -781,6 +782,10 @@ This is the component showing all requests of a certain hashtag. It contains a r
         return a === b;
       },
 
+      halfof: function(v){
+        return v/2;
+      },
+
       _getHashTagName: function(hashtagaddress){
         return this.config.hashtagcontractToName(hashtagaddress);
       },
@@ -809,6 +814,22 @@ This is the component showing all requests of a certain hashtag. It contains a r
           });
           // this is to display this in this component
           self.hashtagcommission = res.toNumber(10);
+        });
+        
+        this.$.hashtagcontract.getConflictResolver(function(err,res){
+         if (err){
+            delete self.conflictresolver;
+            return;
+          }
+          self.conflictresolver = res;
+          // we update this in the app state too ( should be done better
+          // cause now state only updates when you're in this screen ... )
+          self.dispatch('update_hashtaginfo',{
+            hashtagaddress: self.data.hashtag,
+            hashtaginfo: {
+              conflictresolver: res
+            }
+          });
         });
       },
 
