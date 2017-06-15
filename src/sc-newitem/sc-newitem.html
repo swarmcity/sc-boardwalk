@@ -247,6 +247,11 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
                   <sc-tokenbalanceformatter value="{{offeramount}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter>
                 </p>
               </template>
+
+              <template is="dom-if" if="{{errormessage}}">
+                <p class="red bold">{{errormessage}}</p>
+              </template>
+
             </div>
             <div class="confirmbtn">
               <paper-icon-button icon="sc-icons:v" class="medium blueback white" on-tap="confirmRequest" noink disabled="{{!btnable}}">show</paper-icon-button>
@@ -504,12 +509,12 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
       _checkPrerequisites: function(){
         if (this.wallet.ethbalance < (49913 + 175000 + 284121) * 1.0 * 1000000000) {
-          msg = 'you don\'t have enough ETH';
+          msg = 'You don\'t have enough ETH to post a new request.';
           return msg;
         }
 
         if (this.hashtaginfo[this.hashtagaddress] && this.hashtaginfo[this.hashtagaddress].commission > this.wallet.swtbalance){
-          msg = 'you don\'t have enough SWT';
+          msg = 'You don\'t have enough SWT to post a new request.';
           return msg;
         }
 
