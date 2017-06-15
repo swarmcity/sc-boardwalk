@@ -290,7 +290,8 @@
               senderidentity : replyMutation.provider,
               timestamp: replyMutation.replytime,
               msg: replyMutation.provider.username + ' responded to your request.',
-              hashtag: deal.hashtag
+              hashtag: deal.hashtag,
+              target: '/hashtag/' + deal.hashtag + '/list'
             });
           }
 
@@ -397,7 +398,8 @@
               senderidentity : deal.seeker,
               timestamp: payload.timestamp,
               msg: deal.seeker.username + ' selected you as a provider.',
-              hashtag: deal.hashtag
+              hashtag: deal.hashtag,
+              target: '/hashtag/' + deal.hashtag + '/list'
             })
           }
 
@@ -695,7 +697,8 @@
                   senderidentity: reply.provider,
                   timestamp: payload.time,
                   msg: 'You\'re now in a deal with ' + reply.provider.username,
-                  hashtag: deal.hashtag
+                  hashtag: deal.hashtag,
+                  target: '/hashtag/' + deal.hashtag + '/list'
                 });
               }else{
                 console.log('INCONSISTENCY : reply not found');
@@ -737,7 +740,8 @@
                 senderidentity: deal.seeker,
                 timestamp: payload.timestamp,
                 msg: deal.seeker.username + ' paid out your deal. ',
-                hashtag: deal.hashtag
+                hashtag: deal.hashtag,
+                target: '/hashtag/' + deal.hashtag + '/list'
               })
             }
 
