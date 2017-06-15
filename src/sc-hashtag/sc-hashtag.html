@@ -196,8 +196,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       .infocollapser {
         margin: 0px 0px 5px 10px;
-        width: 18px;
-        height: 18px;
+/*        width: 18px;
+        height: 18px;*/
 /*        border-radius: 50%;*/
 /*        border-bottom: 2px solid var(--sc-grey2);*/
         @apply(--layout-horizontal);
@@ -211,6 +211,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
       .infocollapser p {
         font-size: 12px;
         line-height: 12px;
+        margin: 0px;
+        color: var(--sc-grey2);
       }
 
       .infocollapser_inner {
@@ -256,7 +258,27 @@ This is the component showing all requests of a certain hashtag. It contains a r
         padding:20px 10px 25px 10px;
       }
 
+      .avatar_username_balance {
+/*        width: 100%;
+        height: 14vh;
+        min-height: 82px;
+        box-sizing: border-box;
+        padding: 30px 30px 0px 50px;
+        margin-right: 0px;
+        @apply(--layout-horizontal-reverse);
+        @apply(--layout-center);
+        @apply(--layout-start-justified);
+        background-color: red;*/
+      }
 
+/*      sc-avatar {
+        background-color: green;
+      }
+
+      #hashtagbalancebox {
+        background-color: blue;
+      }
+*/
 
     @media all and (min-width: 0) and (max-width: 540px) {
 
@@ -352,7 +374,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
 
       sc-avatar {
-        margin: 0px 0px 0px 20px;
+        margin: 0px 6px 0px 20px;
       }
 
       .balance_box {
@@ -383,10 +405,10 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       .infocollapser {
         margin: 6px 0px 0px 10px;
-        width: 16px;
+/*        width: 16px;
         height: 16px;
-/*        border-radius: 50%;*/
-/*        border-bottom: 2px dotted var(--sc-grey2);*/
+        border-radius: 50%;
+        border-bottom: 2px dotted var(--sc-grey2);*/
         @apply(--layout-horizontal);
         @apply(--layout-center-center);
       }
@@ -394,7 +416,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
       .infocollapser p {
         font-size: 11px;
         line-height: 11px;
-        color: var(--sc-grey3);
+        margin: 0px;
+        color: var(--sc-grey2);
       }
 
     }
@@ -465,7 +488,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
             </div>
             <p class="bold wordbreak">{{_getHashTagName(hashtag)}}</p>
 <!--             <template is="dom-if" if="{{showiicon}}"> -->
-              <div class="infocollapser darkerer" on-tap="collapseHashtaginfo"><p class="small grey3">i</p></div>
+              <div class="infocollapser" on-tap="collapseHashtaginfo"><p class="small">info</p></div>
 <!--             </template> -->
             <!--
 

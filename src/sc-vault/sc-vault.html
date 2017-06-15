@@ -609,6 +609,8 @@
           id="homeavatar"
           on-tap="toProfile"
           ></sc-avatar>
+          <div class="minispace"></div>
+
           <div class="horizont centercenter noSelect">
             <sc-username
             identity="[[currentidentity]]"
@@ -620,7 +622,7 @@
           </div>
           <div class="whitespace"></div>
         <template is="dom-if" if="{{loadingpassw}}">
-          <sc-loader color="blue" small>Unlocking</sc-loader>
+          <sc-loader color="blue" small></sc-loader>
           <div class="whitespace"></div>
           <div class="whitespace"></div>
         </template>
@@ -632,7 +634,7 @@
         </template>
         <template is="dom-if" if="{{tappedunlockbtn}}">
         <div class="pascanvasunderexit vertic centercenter paddingwithouttop">
-          <sc-loader small color="blue" class="blue">Unlocking</sc-loader>
+          <sc-loader small color="blue" class="blue"></sc-loader>
         </div>
         </template>
 
