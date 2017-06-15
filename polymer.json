@@ -22,6 +22,7 @@
     "node_modules/redux/dist/redux.min.js",
     "bower_components/webcomponentsjs/webcomponents-lite.min.js",
     "bower_components/sc-style/sc-fonts/*",
+    "bower_components/moment/min/moment.min.js",
     "src/sc-enter/images/*",
     "src/sc-ipfs/js-ipfs-api.js",
     "src/sc-enter/defaultavatar.png",
