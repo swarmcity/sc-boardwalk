@@ -329,11 +329,11 @@ This components shows the in-app notifications in Swarm City.
           value: function() {
             return {
               'entry': [{
-                name: 'slide-up-animation',
+                name: 'fade-out-animation',
                 node:this.$.notifcontent,
                 toPage: this,
                 timing: {
-                  duration: 2000
+                  duration: 200
                 }
               }, {
                 name: 'hero-animation',
@@ -359,34 +359,34 @@ This components shows the in-app notifications in Swarm City.
               }],
 
               'exit': [{
-              //   name: 'fade-out-animation',
-              //   node:this.$.notifcontent,
-              //   fromPage: this,
-              //   timing: {
-              //     duration: 200
-              //   }
-              // }, {
-              //   name: 'hero-animation',
-              //   id: 'hero',
-              //   fromPage: this,
-              //   timing: {
-              //       duration: 200
-              //   }
-              // }, {
-              //   name: 'hero-animation',
-              //   id: 'hero2',
-              //   fromPage: this,
-              //   timing: {
-              //       duration: 200
-              //   }
+                name: 'fade-out-animation',
+                node:this.$.notifcontent,
+                fromPage: this,
+                timing: {
+                  duration: 200
+                }
+              }, {
+                name: 'hero-animation',
+                id: 'hero',
+                fromPage: this,
+                timing: {
+                    duration: 200
+                }
+              }, {
+                name: 'hero-animation',
+                id: 'hero2',
+                fromPage: this,
+                timing: {
+                    duration: 200
+                }
 
-              // }, {
-              //   name: 'hero-animation',
-              //   id: 'hero3',
-              //   fromPage: this,
-              //   timing: {
-              //       duration: 200
-              //   }
+              }, {
+                name: 'hero-animation',
+                id: 'hero3',
+                fromPage: this,
+                timing: {
+                    duration: 200
+                }
 
                 }]
               }

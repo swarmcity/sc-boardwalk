@@ -533,10 +533,12 @@
         // if (this.phoneview) {
           this.sharedElements = {
             'hero': this.$.homeavatar,
+            'hero2': this.$.homeusername,
+            'hero3': this.$.homebalance
             };
           this.animationConfig = {
                 'entry': [
-                // {
+                {
                 //   name: 'fade-in-animation',
                 //   node:this.$.homebalance,
                 //   toPage: this,
@@ -544,24 +546,42 @@
                 //     duration: 200
                 //   }
                 // }, 
-                {
-                  name: 'fade-in-animation',
-                  node:this.$.homeusername,
-                  toPage: this,
-                  timing: {
-                    duration: 200
-                  }
-                },{
+                // {
+                //   name: 'fade-in-animation',
+                //   node:this.$.homeusername,
+                //   toPage: this,
+                //   timing: {
+                //     duration: 200
+                //   }
+                // },{
                   name: 'hero-animation',
                   id: 'hero',
                   toPage: this,
                   timing: {
                       duration: 600
                   }
+
+                },{
+                  name: 'hero-animation',
+                  id: 'hero2',
+                  toPage: this,
+                  timing: {
+                      duration: 600
+                  }
+                },{
+                  name: 'hero-animation',
+                  id: 'hero3',
+                  toPage: this,
+                  timing: {
+                      duration: 600
+                  }
+
+
+
                 }],
 
                 'exit': [
-                // {
+                {
                 //   name: 'fade-out-animation',
                 //   node:this.$.homebalance,
                 //   fromPage: this,
@@ -569,20 +589,41 @@
                 //       duration: 200
                 //   }
                 // }, 
-                {
-                  name: 'slide-down-animation',
-                  node:this.$.homeusername,
-                  fromPage: this,
-                  timing: {
-                      duration: 2000
-                  }
-                },{
+
+                // {
+                //   name: 'slide-down-animation',
+                //   node:this.$.homeusername,
+                //   fromPage: this,
+                //   timing: {
+                //       duration: 2000
+                //   }
+                // },{
+
                   name: 'hero-animation',
                   id: 'hero',
                   fromPage: this,
                   timing: {
                       duration: 600
                   }
+
+                },{
+
+                  name: 'hero-animation',
+                  id: 'hero2',
+                  fromPage: this,
+                  timing: {
+                      duration: 600
+                  }
+                },{
+
+                  name: 'hero-animation',
+                  id: 'hero3',
+                  fromPage: this,
+                  timing: {
+                      duration: 600
+                  }
+
+
                 }]
             };
 
