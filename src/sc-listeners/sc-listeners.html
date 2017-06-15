@@ -500,10 +500,12 @@
         var payload;
         var self = this;
         try {
-          payload = JSON.parse(self.shhweb3.toAscii(result.payload));
-          console.log('incoming whisper message', payload);
+          var rawpayload = self.shhweb3.toAscii(result.payload);
+          payload = JSON.parse(rawpayload);
+          console.log('incoming whisper message', rawpayload);
         } catch (e) {
           console.log(e);
+          return;
         }
 
         if (!this.messagequeue){
