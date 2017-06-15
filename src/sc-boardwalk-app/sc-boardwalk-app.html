@@ -336,7 +336,7 @@
           // TODO this is a patch for when we uploaded a JSON file. Should be part of larger router...
           //debugger;
           if (this.route.path != '/vault/importfile' && this.route.path.substring(0,13) !== '/vault/unlock'){
-            return this.transitionto('/vault/unlock/' + this.route.path);
+            return this.transitionto('/vault/unlock'); // + this.route.path);
 //            return this.transitionto('/vault/unlock');
           }
         }

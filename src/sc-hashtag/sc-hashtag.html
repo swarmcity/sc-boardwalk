@@ -426,7 +426,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
     <sc-config config="{{config}}"></sc-config>
     <sc-helpers id="helpers"></sc-helpers>
     <sc-geohash on-geohashchanged="_updatelistener" geohash="{{geohash}}" enabled="{{enabled}}"></sc-geohash>
-    <sc-hashtagcontract id="hashtagcontract" hashtagcontract="{{hashtagdata.address}}" loaded="{{hcready}}"></sc-hashtagcontract>
+    <sc-hashtagcontract id="hashtagcontract" hashtagcontract="{{data.hashtag}}" loaded="{{hcready}}"></sc-hashtagcontract>
     <sc-listeners
       id="listeners"
       on-updatebalance="_updatebalance"
@@ -435,8 +435,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
     ></sc-listeners>
     <iron-media-query query="(min-width:0px) and (max-width: 540px)" query-matches="{{phoneview}}"></iron-media-query>
 
-    <app-route route="{{route}}" pattern="/:hashtag/:action" data="{{data}}" tail="{{subroute}}"></app-route>
-    <app-route route="{{route}}" pattern="/hashtag/:address" data="{{hashtagdata}}" tail="{{subroute}}"></app-route>
+    <app-route route="{{route}}" pattern="/:hashtag/:address" data="{{data}}" tail="{{subroute}}"></app-route>
+   
 
     <div class="avatar_username_balance_content totalwidth">
         <div class="avatar_username_balance">

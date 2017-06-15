@@ -46,9 +46,9 @@
                 });
                 break;
             case 'HASHTAGINFO':
-                var h = Object.assign({},action.hashtaginfo);
+                //var h = Object.assign({},action.hashtaginfo);
                 return Object.assign({}, state, {
-                    hashtaginfo: h
+                    hashtaginfo: action.hashtaginfo
                 });
                 break;
             case 'DEALS':
