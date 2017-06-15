@@ -486,7 +486,7 @@
       },
 
       _stophastaglistener: function(){
-        if (this.filter) {
+        if (this.filter && this.filter.filterId) {
           console.log("sc-listeners: killing existing filter");
           this.filter.stopWatching();
           delete this.filter;
