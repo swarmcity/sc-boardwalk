@@ -266,7 +266,7 @@
       <div class="sendcoiners">
 
           <template is="dom-if" if="{{_is(sendcoinstate,'sendform')}}">
-            <paper-input class="sendinputter" autofocus type="number" label="Amount" value="{{amount}}">
+            <paper-input class="sendinputter" allowed-pattern="[0-9.]" autofocus type="number" label="Amount" value="{{amount}}">
               <div suffix>SWT</div>
             </paper-input>
             <paper-input class="sendinputter" type="text" label="Receiver's shortcode or public key" value="{{pincode}}">
