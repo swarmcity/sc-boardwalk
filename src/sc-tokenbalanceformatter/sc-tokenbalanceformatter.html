@@ -1,10 +1,10 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 
 <dom-module id="sc-tokenbalanceformatter">
-  <template>
+  <template strip-whitespace>
     <span>
-      <template is="dom-if" if="{{!onlydenomination}}">{{formattedvalue}}</template>
-      <template is="dom-if" if="{{!onlybalance}}"> {{denomination}}</template>
+      <template is="dom-if" if="{{!onlydenomination}}">&nbsp;{{formattedvalue}}&nbsp;</template>
+      <template is="dom-if" if="{{!onlybalance}}">{{denomination}}&nbsp;</template>
     </span>
   </template>
   <script>
