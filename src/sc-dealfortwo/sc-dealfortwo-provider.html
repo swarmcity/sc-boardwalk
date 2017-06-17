@@ -798,9 +798,9 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 <!-- Here we also need to add the hashtagcommission / 2 -->
           <div class$="bottomhalf {{bottombg}} totalwidth">
             <template is="dom-if" if="{{!provideraccept}}">
-              
+
               <p class="white light centertxt">By accepting, you're putting <sc-tokenbalanceformatter value="{{requestdata.amount}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter> on this deal. At payout, you will be refunded <sc-tokenbalanceformatter value="{{deducthalfcommission(requestdata.amount,hashtagcommission)}}" rounding="false" decimals=3 denomination="SWT"></sc-tokenbalanceformatter>.</p>
-     
+
 
 
               <!-- <p class="white light centertxt">By accepting, <sc-tokenbalanceformatter value="{{requestdata.amount}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter> will be locked on this deal. At payout you will be refunded</p>
@@ -1093,7 +1093,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
             myContractInstance.transfer.sendTransaction(pubkey, amount, {
               from: self.identity.pubkey,
               gasPrice: gasPrice,
-              gas: 40000
+              gas: 200000
             }, function(err, result) {
               if (err){
                 if (cb) {
