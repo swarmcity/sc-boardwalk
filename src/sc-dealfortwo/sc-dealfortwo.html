@@ -9,7 +9,7 @@
 <dom-module id="sc-dealfortwo">
   <template>
     <sc-web3 web3="{{web3}}"></sc-web3>
-    <sc-config config="{{config}}"></sc-config>
+    <sc-config id="config" config="{{config}}"></sc-config>
     <sc-minime id="minime"></sc-minime>
 
   </template>
@@ -274,7 +274,31 @@
             provider: result[3]
           });
         });
-      }
+      },
+
+      getDeals: function(pubkey) {
+        //debugger;
+        sig = 'makeDealForTwo(string,uint)';
+        var c = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef";;
+
+        var filter = this.web3.eth.filter({
+          //address: pubkey,
+          fromBlock: 3885031,
+          toBlock: 3885031
+        });
+
+        filter.get(function(error, logs) {
+  var foundDeal = logs.find(function(item) {
+            return item.transactionHash === '0xea31682fe5a3e0c9cadbe5704545709cbe76acbb4d9e1c985e6940a9b583550b';
+          });
+
+
+          debugger;
+          console.log('ikke', logs);
+        });
+
+      },
+
       // makeDeal: function(dealID,offerAmount, cb) {
       //   var self = this;
 
