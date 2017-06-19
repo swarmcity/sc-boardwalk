@@ -13,6 +13,7 @@
 <link rel="import" href="../sc-geohash/sc-geohash.html">
 <link rel="import" href="../sc-hashtagitem/sc-hashtagitem.html">
 <link rel="import" href="../sc-newitem/sc-newitem.html">
+<link rel="import" href="../sc-dealchat/sc-dealchat.html">
 <!-- <link rel="import" href="../sc-itemdetail/sc-itemdetail.html">
  -->
  <link rel="import" href="../sc-itemreply/sc-itemreply.html">
@@ -420,8 +421,45 @@ This is the component showing all requests of a certain hashtag. It contains a r
         margin: 0px;
         color: var(--sc-grey2);
       }
+        
+      .chatbtn {
+        @apply(--layout-self-end)
+      }
+
+      paper-icon-button.chatbtn_iconbtn {
+        width: 52px;
+        height: 52px;
+        min-width: 52px;
+        min-height: 52px;
+        padding: 12px;
+        margin-left: 10px;
+      }
+        
+      .container-popup {
+      position: relative;
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: rgba(0,0,0,.8);
+      }
+
+      .popup {
+      width: 50%;
+      height: 50%;
+      background: #1abcb9;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      margin: auto;
+      }
 
     }
+        
+    
 
     </style>
     <sc-config config="{{config}}"></sc-config>
@@ -484,12 +522,14 @@ This is the component showing all requests of a certain hashtag. It contains a r
         <div class="hashtagtotal totalwidth horizont center startjust">
           <paper-icon-button on-tap="leave" icon="sc-icons:arrowleft" class="backarrow" noink>back to hashtaglist</paper-icon-button>
           <div class="hashtagtitle"  id="currenttag">
+            
             <div class="symbol">
               <p class="semibold">#</p>
             </div>
             <p class="bold wordbreak">{{_getHashTagName(hashtag)}}</p>
 <!--             <template is="dom-if" if="{{showiicon}}"> -->
               <div class="infocollapser" on-tap="collapseHashtaginfo"><p class="small">info</p></div>
+              <div class="infocollapser"  on-tap="collapseHashtagchat"><p class="small">chatter</p></div>
 <!--             </template> -->
             <!--
 
@@ -503,7 +543,20 @@ This is the component showing all requests of a certain hashtag. It contains a r
              -->
           </div>
         </div>
-
+          
+          
+          <iron-collapse id="hashtagchatcollapser" class="totalwidth">
+              <div class="container-popup">
+                <div class="popup">
+                    <sc-dealchat
+                        topic="[[data.hashtag]]"
+                        hashtag="[[data.hashtag]]"
+                        on-back="collapseHashtagchat">
+                    </sc-dealchat>
+                  </div>
+              </div>
+          </iron-collapse>
+          
           <iron-collapse id="hashtaginfocollapser" class="totalwidth">
             <div class="infocollapser_inner vertic start startjust darker">
 <!--               <div class="infocollapser_closer totalwidth horizont end endjust"><iron-icon icon="sc-icons:decline" class="grey4" on-tap="collapseHashtaginfo"></iron-icon></div> -->
@@ -531,7 +584,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
               <div class="minispace"></div>    -->           
             </div>
           </iron-collapse>
-
       <template is="dom-if" if="{{_is(geohash,'')}}">
         <div class="hasnogeohash">
           <p class="grey2">Looking for your location. If you disabled location-services, please enable and reload the app.</p>
@@ -957,6 +1009,19 @@ This is the component showing all requests of a certain hashtag. It contains a r
       toNotifs: function(){
         this.fire('to-notifications');
       },
+        
+      toDealchat: function(){
+        this.seekerpagesentry = 'slide-from-right-animation';
+        this.seekerpagesexit = 'slide-left-animation';
+        this.selecteddealpage = 'dealchat';
+      },
+        
+      backfromChat: function(){
+        this.seekerpagesentry = 'slide-from-left-animation';
+        this.seekerpagesexit = 'slide-right-animation';
+        this.selecteddealpage = 'dodeal';
+      },
+
 
       // items I'm seeker of, whatever state their in - except payout state deals
       filter1: function(item){
@@ -1006,6 +1071,11 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       collapseHashtaginfo: function(){
         this.$.hashtaginfocollapser.toggle();
+        this.showiicon = !this.showiicon;
+      },
+        
+     collapseHashtagchat: function(){
+        this.$.hashtagchatcollapser.toggle();
         this.showiicon = !this.showiicon;
       },
 
