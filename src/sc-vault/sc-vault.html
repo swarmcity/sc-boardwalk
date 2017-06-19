@@ -86,6 +86,10 @@
       width: 100%;
     }
 
+    .clearerror {
+      margin-left: 20px;
+    }
+
 
       .smaller {
         font-size: 14px;
@@ -343,7 +347,10 @@
         <sc-loader small color="blue">Downloading from IPFS</sc-loader>
         </template>
         <template is="dom-if" if="{{_is(importipfsstatus,'error')}}">
-        <p class="red bold">Something went wrong. {{importipfserrormessage}}</p>
+          <div class="horizont">
+            <p class="red bold">Something went wrong. {{importipfserrormessage}}</p>
+            <iron-icon class="grey4 clearerror" icon="sc-icons:decline" on-tap="retryipfs">retry</iron-icon>
+          </div>
         </template>
 
           </div>
@@ -868,6 +875,11 @@
 
       uploadclick_vault: function() {
         this.$.uploadbackupfile_vault.click();
+      },
+
+      retryipfs: function() {
+          this.importipfsstatus = 'init';
+          this.importipfserrormessage = '';
       },
 
       importipfshashuploadclick: function() {
