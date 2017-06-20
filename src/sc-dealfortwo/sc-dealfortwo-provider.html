@@ -842,7 +842,9 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       <neon-animatable data-action="dealchat">
         <sc-dealchat
         topic="[[requestdata.id]]"
-        hashtag="[[data.hashtag]]"
+        hashtag="[[requestdata.hashtag]]"
+        active="[[_dealChatSelected(selecteddealpage)]]"
+        route="[[route]]"
         on-back="backfromChat">
         </sc-dealchat>
       </neon-animatable>
@@ -1267,6 +1269,10 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         this.providerpagesentry = 'slide-from-left-animation';
         this.providerpagesexit = 'slide-right-animation';
         this.selecteddealpage = 'dodeal';
+      },
+
+      _dealChatSelected: function(selectedPage) {
+          return selectedPage === 'dealchat';
       },
 
 
