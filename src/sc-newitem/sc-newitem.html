@@ -226,7 +226,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       <iron-collapse id="offerinputform" class="totalwidth">
         <div class="incollapser totalwidth vertic centercenter">
           <div class="horizont end startjust totalwidth">
-            <paper-input on-focused-changed="checkFocus" id="offerinputamount" label="What do you offer?" class="swtamount" value="{{firstofferamount}}" type="number" min="0.1" step="0.1">
+            <paper-input on-focused-changed="checkFocus" allowed-pattern="[0-9.]" id="offerinputamount" label="What do you offer?" class="swtamount" value="{{firstofferamount}}" type="number" min="0.1" step="0.1">
             </paper-input>
             <p class="swtwithoffer bold">SWT</p>
           </div>

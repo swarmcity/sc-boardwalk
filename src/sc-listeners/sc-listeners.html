@@ -225,7 +225,7 @@
             id: replydata.id,
             lastupdate : Date.now(),
             ismyreply: ismyreply,
-            msg: replydata.reply,
+            msg: sanitize(replydata.reply),
             provider: replydata.replyer,
             replytime: replydata.replytime,
             parentrequestid: replydata.parentrequestid,
