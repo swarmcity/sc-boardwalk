@@ -704,7 +704,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
     <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
     <!-- <sc-dealstate deal="{{requestdata}}" dealstate="{{dealstate}}"></sc-dealstate> -->
 
-    <app-route route="{{route}}" pattern="/:hashtag/:requestid/:replyid" data="{{data}}"></app-route>
+    <app-route route="{{route}}" pattern="/:hashtag/:requestid/:replyid" data="{{data}}" tail="{{page}}"></app-route>
+    <app-route route="{{page}}" pattern="/:page" data="{{pageRouteData}}"></app-route>
 
 
         <neon-animated-pages id="seekerpages" attr-for-selected="data-action" selected="{{selecteddealpage}}" entry-animation="{{seekerpagesentry}}" exit-animation="{{seekerpagesexit}}">
@@ -970,6 +971,10 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           type: Object,
           observer: '_route'
         },
+        pageRouteData: {
+            type: Object,
+            observer: '_pageRoute',
+        },
         deals: {
           type: Array,
           statePath: 'deals',
@@ -1022,6 +1027,13 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
       _route: function(){
         this._hashtag();
+      },
+
+      _pageRoute: function() {
+        switch (this.pageRouteData.page) {
+          case 'dealchat':
+            this.selecteddealpage = 'dealchat';
+        }
       },
 
       _hashtag: function(){
