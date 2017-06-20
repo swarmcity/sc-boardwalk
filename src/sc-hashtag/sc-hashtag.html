@@ -1011,19 +1011,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
       toNotifs: function(){
         this.fire('to-notifications');
       },
-        
-      toDealchat: function(){
-        this.seekerpagesentry = 'slide-from-right-animation';
-        this.seekerpagesexit = 'slide-left-animation';
-        this.selecteddealpage = 'dealchat';
-      },
-        
-      backfromChat: function(){
-        this.seekerpagesentry = 'slide-from-left-animation';
-        this.seekerpagesexit = 'slide-right-animation';
-        this.selecteddealpage = 'dodeal';
-      },
-
 
       // items I'm seeker of, whatever state their in - except payout state deals
       filter1: function(item){
