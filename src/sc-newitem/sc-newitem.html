@@ -251,6 +251,9 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
               <template is="dom-if" if="{{errormessage}}">
                 <p class="red bold">{{errormessage}}</p>
               </template>
+              <template is="dom-if" if="{{offererrormessage}}">
+                <p class="red bold">{{offererrormessage}}</p>
+              </template>
 
             </div>
             <div class="confirmbtn">
@@ -374,8 +377,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
       _btnable: function(){
 
-        if (!this.offermsg || !this.offeramount || !this.geohash ||
-          !this.wallet || !this.wallet.swtbalance || !this.hashtagaddress ||
+        if (!this.offermsg || !this.geohash || !this.wallet ||  !this.hashtagaddress ||
           !this.hashtaginfo || !this.hashtaginfo[this.hashtagaddress])
         {
           this.btnable = false;
@@ -384,26 +386,26 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
         var amount = parseFloat(this.offeramount);
 
-        if (amount === NaN){
-          console.log('this is NOT a number');
+        if (isNaN(amount)){
+          this.offererrormessage = 'offer amount is NOT a number';
           this.btnable = false;
           return;
         }
 
-        if (amount < 0){
-          console.log('this is a negative number');
+        if (amount <= 0){
+          this.offererrormessage = 'offer amount must be greater then 0';
           this.btnable = false;
           return;
         }
 
         if (this.wallet.swtbalance < amount){
-          console.log('your balance is too low...');
+          this.offererrormessage = 'your balance is too low...';
           this.btnable = false;
           return;
         }
 
-        if (this.hashtaginfo[this.hashtagaddress] && this.hashtaginfo[this.hashtagaddress].commission > amount){
-          console.log('you must offer more than the commission');
+        if (this.hashtagcommission && this.d2 > amount) {
+          this.offererrormessage = 'you must offer more than the commission';
           this.btnable = false;
           return;
         }
@@ -414,11 +416,12 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         }
 
         if (this.offermsg.length > 400){
-          console.log('message too long');
+          this.offererrormessage = 'message too long';
           this.btnable = false;
           return;
         }
 
+        this.offererrormessage = '';
         this.btnable = true;
       },
 
