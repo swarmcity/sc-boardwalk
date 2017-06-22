@@ -240,7 +240,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         <template is="dom-if" if="{{!loading}}">
           <div class="confirmbtns totalwidth">
             <div class="hashtagfeemsg flex">
-              <p class="grey2b reg">The hashtag fee of #{{hashtagcontractToName(hashtagaddress)}} is
+              <p class="grey2b reg">The hashtag fee of #{{hashtagcontractToName(hashtagaddress)}} is&nbsp;
                 <sc-tokenbalanceformatter value="{{d2}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></p>
               <template is="dom-if" if="{{showtotal}}">
                 <p class="grey3 reg"><span class="bold">Total:</span>
