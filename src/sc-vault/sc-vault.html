@@ -374,7 +374,7 @@
               <div class="whitespace"></div>
             </template>
             <div class="maxwidth">
-              <h1 class="bold blue">Vault backup as a json-file</h1>
+              <h1 class="bold blue">Restore local backup</h1>
               <div class="whitespace"></div>
               <template is="dom-if" if="{{!pkshowpassw}}">
                 <p class="reg grey4">Locate your Vault backup json-file.</p>
@@ -489,15 +489,15 @@
               <div class="whitespace"></div>
               <div class="whitespace"></div>        -->   
             <template is="dom-if" if="{{_is(vaulttoipfsstatus,'init')}}">
+              <paper-button on-tap="vaulttoipfs" class="blue bigbtn lighter centertxt">Backup to IPFS</paper-button>
 
-              <p class="bold centertxt">IPFS is the Distributed Web</p><br>
-            <p class="centertxt">A peer-to-peer hypermedia protocol to make the web faster, safer, and more open.</p><br>   
+            <p class="centertxt">Back up your vault to IPFS, a peer-to-peer data storage service</p><br>
             <a href="https://ipfs.io/" target="_blank" class="centertxt blue">learn more</a>   
             <div class="whitespace"></div>
             <div class="whitespace"></div>
             <div class="whitespace"></div>
 
-              <paper-button on-tap="vaulttoipfs" class="blue bigbtn lighter centertxt">Backup to IPFS</paper-button>
+
   <!--             <paper-button on-tap="vaulttodownload" class="blue bigbtn lighter centertxt">Download Backup</paper-button>  -->             
             </template>    
 
