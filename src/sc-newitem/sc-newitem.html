@@ -385,25 +385,25 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         var amount = parseFloat(this.offeramount);
 
         if (amount === NaN){
-          console.log('this is NOT a number');
+          this.errormessage = 'offer amount is NOT a number';
           this.btnable = false;
           return;
         }
 
         if (amount < 0){
-          console.log('this is a negative number');
+          this.errormessage = 'offer amount is a negative number';
           this.btnable = false;
           return;
         }
 
         if (this.wallet.swtbalance < amount){
-          console.log('your balance is too low...');
+          this.errormessage = 'your balance is too low...';
           this.btnable = false;
           return;
         }
 
         if (this.hashtaginfo[this.hashtagaddress] && this.hashtaginfo[this.hashtagaddress].commission > amount){
-          console.log('you must offer more than the commission');
+          this.errormessage = 'you must offer more than the commission';
           this.btnable = false;
           return;
         }
@@ -414,7 +414,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         }
 
         if (this.offermsg.length > 400){
-          console.log('message too long');
+          this.errormessage = 'message too long';
           this.btnable = false;
           return;
         }
