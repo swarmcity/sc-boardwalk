@@ -51,12 +51,16 @@ This components shows the in-app notifications in Swarm City.
         @apply(--layout-start-justified);
       }
 
-      .notifbalance_box {
-        margin-top: 26px;
-        min-width: 180px;
+
+      .balance_box {
         @apply(--layout-horizontal);
-        @apply(--layout-center-center);
+        @apply(--layout-end-justified);
+        @apply(--layout-center);
+        min-width: 180px;
+        box-sizing:border-box;
+        padding-top: 0px;
       }
+
 
       #notifavatar {
         margin: 0px 0px 20px 0px;
@@ -115,6 +119,14 @@ This components shows the in-app notifications in Swarm City.
       }
 
 
+/*      sc-avatar {
+        background-color: green;
+      }
+
+      #notifbalancebox {
+        background-color: blue;
+      }
+*/
 
     @media all and (min-width: 0) and (max-width: 420px) {
 
@@ -127,9 +139,9 @@ This components shows the in-app notifications in Swarm City.
 */
       .avatar_username_balance {
         width: 100%;
-        height: 14%;
+        height: 14vh;
         min-height: 82px;
-        box-sizing:border-box;
+        box-sizing: border-box;
         padding: 30px 30px 0px 50px;
         margin-right: 0px;
         @apply(--layout-horizontal-reverse);
@@ -137,7 +149,7 @@ This components shows the in-app notifications in Swarm City.
         @apply(--layout-start-justified);
       }
 
-      .notifbalance_box {
+      .balancebox {
         margin-top: 0px;
         @apply(--layout-horizontal);
         @apply(--layout-end-justified);
@@ -212,7 +224,7 @@ This components shows the in-app notifications in Swarm City.
             </template> -->
           </div>
 
-          <div id="balancebox" class="notifbalance_box" on-tap="toWalletview">
+          <div id="notifbalancebox" class="balance_box" on-tap="toWalletview">
             <sc-balance
               refcur="EUR"
               swtbalance="[[swtbalance]]"
@@ -315,8 +327,8 @@ This components shows the in-app notifications in Swarm City.
           value: function() {
             return {
               'hero': this.$.notifavatar,
-              // 'hero2': this.$.notifusername,
-              // 'hero3': this.$.balancebox
+              'hero2': this.$.notifusername,
+              'hero3': this.$.notifbalancebox
             }
           }
         },
@@ -329,11 +341,11 @@ This components shows the in-app notifications in Swarm City.
           value: function() {
             return {
               'entry': [{
-                name: 'slide-up-animation',
+                name: 'fade-out-animation',
                 node:this.$.notifcontent,
                 toPage: this,
                 timing: {
-                  duration: 2000
+                  duration: 200
                 }
               }, {
                 name: 'hero-animation',
@@ -342,51 +354,51 @@ This components shows the in-app notifications in Swarm City.
                 timing: {
                     duration: 200
                 }
-              // }, {
-              //   name: 'hero-animation',
-              //   id: 'hero2',
-              //   toPage: this,
-              //   timing: {
-              //       duration: 200
-              //   }
-              // }, {
-              //   name: 'hero-animation',
-              //   id: 'hero3',
-              //   toPage: this,
-              //   timing: {
-              //       duration: 200
-              //   }
+              }, {
+                name: 'hero-animation',
+                id: 'hero2',
+                toPage: this,
+                timing: {
+                    duration: 200
+                }
+              }, {
+                name: 'hero-animation',
+                id: 'hero3',
+                toPage: this,
+                timing: {
+                    duration: 200
+                }
               }],
 
               'exit': [{
-              //   name: 'fade-out-animation',
-              //   node:this.$.notifcontent,
-              //   fromPage: this,
-              //   timing: {
-              //     duration: 200
-              //   }
-              // }, {
-              //   name: 'hero-animation',
-              //   id: 'hero',
-              //   fromPage: this,
-              //   timing: {
-              //       duration: 200
-              //   }
-              // }, {
-              //   name: 'hero-animation',
-              //   id: 'hero2',
-              //   fromPage: this,
-              //   timing: {
-              //       duration: 200
-              //   }
+                name: 'fade-out-animation',
+                node:this.$.notifcontent,
+                fromPage: this,
+                timing: {
+                  duration: 200
+                }
+              }, {
+                name: 'hero-animation',
+                id: 'hero',
+                fromPage: this,
+                timing: {
+                    duration: 200
+                }
+              }, {
+                name: 'hero-animation',
+                id: 'hero2',
+                fromPage: this,
+                timing: {
+                    duration: 200
+                }
 
-              // }, {
-              //   name: 'hero-animation',
-              //   id: 'hero3',
-              //   fromPage: this,
-              //   timing: {
-              //       duration: 200
-              //   }
+              }, {
+                name: 'hero-animation',
+                id: 'hero3',
+                fromPage: this,
+                timing: {
+                    duration: 200
+                }
 
                 }]
               }

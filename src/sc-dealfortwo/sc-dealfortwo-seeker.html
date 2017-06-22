@@ -516,7 +516,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         .approver {
           width: 100vw;
           height: 100vh;
-          background-color: var(--sc-green);
           padding: 0px;
           margin: 0px;
           @apply(--layout-vertical);
@@ -705,7 +704,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
     <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
     <!-- <sc-dealstate deal="{{requestdata}}" dealstate="{{dealstate}}"></sc-dealstate> -->
 
-    <app-route route="{{route}}" pattern="/:hashtag/:requestid/:replyid" data="{{data}}"></app-route>
+    <app-route route="{{route}}" pattern="/:hashtag/:requestid/:replyid" data="{{data}}" tail="{{page}}"></app-route>
+    <app-route route="{{page}}" pattern="/:page" data="{{pageRouteData}}"></app-route>
 
 
         <neon-animated-pages id="seekerpages" attr-for-selected="data-action" selected="{{selecteddealpage}}" entry-animation="{{seekerpagesentry}}" exit-animation="{{seekerpagesexit}}">
@@ -895,13 +895,15 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           <neon-animatable data-action="dealchat">
             <sc-dealchat
             topic="[[requestdata.id]]"
-            hashtag="[[data.hashtag]]"
+            hashtag="[[requestdata.hashtag]]"
+            active="[[_dealChatSelected(selecteddealpage)]]"
+            route="[[route]]"
             on-back="backfromChat">
             </sc-dealchat>
           </neon-animatable>
 
           <neon-animatable data-action="approvethis">
-          <div class="approver">
+          <div class="approver greenback">
             <div class="topbar">
               <span class="flex"></span>
               <paper-icon-button on-tap="backfromapproveDeal" icon="sc-icons:decline" noink class="white">back</paper-icon-button>
@@ -969,6 +971,10 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           type: Object,
           observer: '_route'
         },
+        pageRouteData: {
+            type: Object,
+            observer: '_pageRoute',
+        },
         deals: {
           type: Array,
           statePath: 'deals',
@@ -1023,6 +1029,13 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         this._hashtag();
       },
 
+      _pageRoute: function() {
+        switch (this.pageRouteData.page) {
+          case 'dealchat':
+            this.selecteddealpage = 'dealchat';
+        }
+      },
+
       _hashtag: function(){
       },
 
@@ -1048,7 +1061,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           this.requestdata = request;
           this.requestdatadealstate = request.dealstate;
 
-          if (this.requestdatadealstate == 'indeal'){
+          if (this.requestdatadealstate == 'indeal' || this.requestdatadealstate === 'payout'){
             this.bottombg = 'greenback';
           }else{
             this.bottombg = 'blueback';
@@ -1340,6 +1353,10 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         this.seekerpagesentry = 'slide-from-left-animation';
         this.seekerpagesexit = 'slide-right-animation';
         this.selecteddealpage = 'dodeal';
+      },
+
+      _dealChatSelected: function(selectedPage) {
+        return selectedPage == 'dealchat';
       },
 
       // _dealstate: function(){

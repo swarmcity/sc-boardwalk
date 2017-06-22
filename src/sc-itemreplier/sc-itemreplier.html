@@ -95,7 +95,9 @@ This components allow a Swarm Citizen to reply on a request.
         margin:0px 0px 5px 50px;
       }
 
-
+      .swtwithoffererror {
+          color: var(--sc-red);
+      }
 
       .addreplybtn iron-icon {
           margin-left: 5px;
@@ -164,11 +166,14 @@ This components allow a Swarm Citizen to reply on a request.
       </div>
     <iron-collapse id="replyform" opened="{{replyform_opened}}" class="totalwidth">
       <div class="totalwidth vertic centercenter">
-        <div class="horizont end startjust totalwidth">
+        <div class="vertic startjust totalwidth">
 <!--           <paper-input disabled id="amountinput" label="Your counteroffer" class="swtamount" value="{{replyamount}}" type="number">
           </paper-input>
           <p class="swtwithoffer bold">SWT</p> -->
-          <p class="swtwithoffer reg">for <sc-tokenbalanceformatter value="{{deducthalfof(itemdata.amount,itemdata.dealdata.commissionValue)}}" rounding="false" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></p>          
+          <p class="swtwithoffer reg">for <sc-tokenbalanceformatter value="{{deducthalfof(itemdata.amount,itemdata.dealdata.commissionValue)}}" rounding="false" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></p>
+          <template is="dom-if" if="{{errormessage}}">
+              <p class="red bold swtwithoffer swtwithoffererror">{{errormessage}}</p>
+          </template>
         </div>
         <div class="totalwidth confirmbtns">
           <iron-icon icon="sc-icons:decline" class="grey3" on-tap="toggleForm">close collapse</iron-icon>
@@ -208,7 +213,7 @@ This components allow a Swarm Citizen to reply on a request.
         hashtaginfo: {
           type: Object,
           statePath: 'hashtaginfo',
-        },        
+        },
 
         btnvisible: {
           type: Boolean,
@@ -236,7 +241,7 @@ This components allow a Swarm Citizen to reply on a request.
         // fallback to hashtag commission
         if (this.itemdata && this.itemdata.hashtag && this.hashtaginfo && this.hashtaginfo[this.itemdata.hashtag]){
           this.hashtagcommission = this.hashtaginfo[this.itemdata.hashtag].commission;
-        }        
+        }
       },
 
       // please someone - refactor this functions into the sc-helper TY.
@@ -305,17 +310,17 @@ This components allow a Swarm Citizen to reply on a request.
         }
 
         if (amount < 0){
-          console.log('this is a negative number');
+          this.errormessage = 'this is a negative number';
           return;
         }
 
         if (this.wallet.swtbalance < amount){
-          console.log('your balance is too low...');
+          this.errormessage = 'your balance is too low...';
           return;
         }
 
         if (this.itemdata.amount < amount){
-          console.log('you cant bid more than the deal amount...');
+          this.errormessage = 'you cant bid more than the deal amount...';
           return;
         }
 

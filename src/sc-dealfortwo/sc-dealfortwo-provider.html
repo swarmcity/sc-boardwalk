@@ -640,7 +640,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
     <sc-hashtagcontract id="hashtagcontract" hashtagcontract="{{routedata.hashtag}}"  loaded="{{hcready}}"></sc-hashtagcontract>
     <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
 
-    <app-route route="{{route}}" pattern="/:hashtag/:requestid/:replyid" data="{{routedata}}"></app-route>
+    <app-route route="{{route}}" pattern="/:hashtag/:requestid/:replyid" data="{{routedata}}" tail="{{page}}"></app-route>
+    <app-route route="{{page}}" pattern="/:page" data="{{pageRouteData}}"></app-route>
     <neon-animated-pages id="providerpages" attr-for-selected="data-action" selected="{{selecteddealpage}}" entry-animation="{{providerpagesentry}}" exit-animation="{{providerpagesexit}}">
 
       <neon-animatable data-action="dodeal">
@@ -799,8 +800,12 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           <div class$="bottomhalf {{bottombg}} totalwidth">
             <template is="dom-if" if="{{!provideraccept}}">
 
-              <p class="white light centertxt">By accepting, <sc-tokenbalanceformatter value="{{requestdata.amount}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter> will be locked on this deal until payout.</p>
-              <p class="white light centertxt">from that amount <sc-tokenbalanceformatter value="{{halfof(hashtagcommission)}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter> will be sent to the hashtag maintainer upon payout.</p>
+              <p class="white light centertxt">By accepting, you're putting <sc-tokenbalanceformatter value="{{requestdata.amount}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter> on this deal. At payout, you will be refunded <sc-tokenbalanceformatter value="{{deducthalfcommission(requestdata.amount,hashtagcommission)}}" rounding="false" decimals=3 denomination="SWT"></sc-tokenbalanceformatter>.</p>
+
+
+
+              <!-- <p class="white light centertxt">By accepting, <sc-tokenbalanceformatter value="{{requestdata.amount}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter> will be locked on this deal. At payout you will be refunded</p>
+              <p class="white light centertxt">from that amount <sc-tokenbalanceformatter value="{{halfof(hashtagcommission)}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter> will be sent to the hashtag maintainer upon payout.</p> -->
 
               <div class="confirmbtns">
                 <template is="dom-if" if="{{btntapped}}">
@@ -838,7 +843,9 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       <neon-animatable data-action="dealchat">
         <sc-dealchat
         topic="[[requestdata.id]]"
-        hashtag="[[data.hashtag]]"
+        hashtag="[[requestdata.hashtag]]"
+        active="[[_dealChatSelected(selecteddealpage)]]"
+        route="[[route]]"
         on-back="backfromChat">
         </sc-dealchat>
       </neon-animatable>
@@ -873,6 +880,10 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         route: {
           type: Object,
           observer: '_route'
+        },
+        pageRouteData: {
+          type: Object,
+          observer: '_pageRoute'
         },
         deals: {
           type: Array,
@@ -971,6 +982,13 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
       _route: function(){
         this._getdata();
+      },
+
+      _pageRoute: function() {
+        switch (this.pageRouteData.page) {
+          case 'dealchat':
+            this.selecteddealpage = 'dealchat';
+        }
       },
 
       _hashtag: function(){
@@ -1089,7 +1107,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
             myContractInstance.transfer.sendTransaction(pubkey, amount, {
               from: self.identity.pubkey,
               gasPrice: gasPrice,
-              gas: 40000
+              gas: 200000
             }, function(err, result) {
               if (err){
                 if (cb) {
@@ -1263,6 +1281,10 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         this.providerpagesentry = 'slide-from-left-animation';
         this.providerpagesexit = 'slide-right-animation';
         this.selecteddealpage = 'dodeal';
+      },
+
+      _dealChatSelected: function(selectedPage) {
+          return selectedPage === 'dealchat';
       },
 
 

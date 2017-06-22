@@ -86,6 +86,10 @@
       width: 100%;
     }
 
+    .clearerror {
+      margin-left: 20px;
+    }
+
 
       .smaller {
         font-size: 14px;
@@ -343,7 +347,10 @@
         <sc-loader small color="blue">Downloading from IPFS</sc-loader>
         </template>
         <template is="dom-if" if="{{_is(importipfsstatus,'error')}}">
-        <p class="red bold">Something went wrong. {{importipfserrormessage}}</p>
+          <div class="horizont">
+            <p class="red bold">Something went wrong. {{importipfserrormessage}}</p>
+            <iron-icon class="grey4 clearerror" icon="sc-icons:decline" on-tap="retryipfs">retry</iron-icon>
+          </div>
         </template>
 
           </div>
@@ -609,6 +616,8 @@
           id="homeavatar"
           on-tap="toProfile"
           ></sc-avatar>
+          <div class="minispace"></div>
+
           <div class="horizont centercenter noSelect">
             <sc-username
             identity="[[currentidentity]]"
@@ -620,7 +629,7 @@
           </div>
           <div class="whitespace"></div>
         <template is="dom-if" if="{{loadingpassw}}">
-          <sc-loader color="blue" small>Unlocking</sc-loader>
+          <sc-loader color="blue" small></sc-loader>
           <div class="whitespace"></div>
           <div class="whitespace"></div>
         </template>
@@ -632,7 +641,7 @@
         </template>
         <template is="dom-if" if="{{tappedunlockbtn}}">
         <div class="pascanvasunderexit vertic centercenter paddingwithouttop">
-          <sc-loader small color="blue" class="blue">Unlocking</sc-loader>
+          <sc-loader small color="blue" class="blue"></sc-loader>
         </div>
         </template>
 
@@ -866,6 +875,11 @@
 
       uploadclick_vault: function() {
         this.$.uploadbackupfile_vault.click();
+      },
+
+      retryipfs: function() {
+          this.importipfsstatus = 'init';
+          this.importipfserrormessage = '';
       },
 
       importipfshashuploadclick: function() {

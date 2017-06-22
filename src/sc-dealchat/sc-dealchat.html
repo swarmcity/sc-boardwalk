@@ -108,11 +108,35 @@ This is dealchat.
         ReduxBehavior
       ],
 
+      actions: {
+        notify: function(notification) {
+            let notifications = this.notifications.slice(0);
+
+            var indexFound = notifications.findIndex(function(item) {
+                return item.id === notification.id;
+            });
+
+            if (indexFound === -1) {
+                notifications.push(notification);
+            }
+
+            return {
+                type: 'NOTIFICATIONS',
+                notifications: notifications
+            };
+        }
+      },
+
       properties: {
 
         identity: {
           type: Object,
           statePath: 'identity',
+        },
+
+        notifications: {
+            type: Array,
+            statePath: 'notifications',
         },
         
         target: {
@@ -129,6 +153,14 @@ This is dealchat.
 
         hashtag: {
           type: String
+        },
+
+        active: {
+          type: Boolean,
+        },
+
+        route: {
+          type: String,
         },
 
       },
@@ -187,6 +219,22 @@ This is dealchat.
           case 'chatmsg':
             this.unshift('chatballoons',payload.msg);
             //this.push('chatballoons',payload.msg);
+
+            if (payload.msg.chatterpubkey !== this.identity.pubkey) {
+                this.dispatch("notify", {
+                    id: this.topic + '_' + payload.msg.chattime,
+                    read: this.active,
+                    msg: 'new chat message from ' + payload.msg.chattername,
+                    timestamp: payload.msg.chattime,
+                    senderidentity: {
+                        username: payload.msg.chattername,
+                        pubkey: payload.msg.chatterpubkey,
+                        avatarhash: payload.msg.chatteravatar
+                    },
+                    hashtag: this.hashtag,
+                    target: this.route.prefix + this.route.path + '/dealchat',
+                });
+            }
             break;
         }
       },

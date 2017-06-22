@@ -54,7 +54,7 @@
             });
 
             this.ipfsgateway = 'https://ipfs.swarm.city/ipfs/';
-
+            this.swtinputunit = 1e18;
             this.web3host = 'https://ethpool.swarm.city/';
             this.shhhost = 'https://eth.swarm.city/';
             this.shhprefix = 'w72-';
@@ -62,33 +62,20 @@
             this.tokencontractaddress = '0xAc709FcB44a43c35F0DA4e3163b117A17F3770f5';
             this.swtconversioncontractaddress = '0x69e5da6904f73dfa845648e1991ad1dcc780f874';
             this.swttokencontractaddress = '0xb9e7f8568e08d5659f5d29c4997173d84cdf2607';
-            this.dealfortwofactory = '0xF693dD8E2d623AC96d8e676B72aFF943492cD6cc';
+            //this.dealfortwofactory = '0xF693dD8E2d623AC96d8e676B72aFF943492cD6cc';
+            this.dealfortwofactory = '0xaae46afad1dddb0666cd939e62fd58d81470ec4e';
+
+            
             this.hashtagcontracts = {
 //              pioneer: "0x5c21b622ac0a51d5b02060d2c483b26252939eee"
 //              BoardwalkTesting: "0x5c21b622ac0a51d5b02060d2c483b26252939eee"
-              BoardwalkTesting: "0xAB2b656cea9D351243A1742e5805Cfb9385feB24",
+              //Pioneer: "0x7d208ae79ab72c3c5beb5c08e942f4e8a0e25f5c",
+               Pioneer: "0x2e17d4c60a2fc3f1d586d2ca9d66b52f80a043c0",
             };
             this.contractranges = {
               default: 2,
               BoardwalkTesting: 6
             };
-
-            this.swtunits = {
-              'Nema': 1,
-              'Brancha': 1e3,
-              'Anto' : 1e6,
-              'Vespa': 1e9,
-              'Orto': 1e12,
-              'Pado': 1e15,
-              'SWT': 1e18,
-            },
-
-            // the default unit of any input textbox
-            // needs to be multiplied with to obtain the unit of token to be sent to
-            // a smart contract if you're talking about tokens units.
-            // so that next to the textbox you can say 'xxx SWT'
-            this.swtinputunit = this.swtunits['SWT'];
-
 
             this.shhttl = 60 * 60 * 24 * 5;
 
@@ -104,8 +91,6 @@
               shhprefix: this.shhprefix,
               hashtagcontracts : this.hashtagcontracts,
               contractranges: this.contractranges,
-              swtunits: this.swtunits,
-              swtinputunit: this.swtinputunit,
               hashtagcontractToName: this.hashtagcontractToName,
               contractnameToRange: this.contractnameToRange,
               shhttl: this.shhttl

@@ -46,7 +46,7 @@ This components simple shows the number of in-app notifications in a badge-icon.
       }
 
       .nopaddings {
-        padding: 3px 0px 0px 0px;
+        padding: 0px;
       }
 
       .newclass {
@@ -71,6 +71,11 @@ This components simple shows the number of in-app notifications in a badge-icon.
       }
 
 
+      .grey2b {
+        color: #999999;
+      }
+
+
 
 
     @media all and (min-width: 0) and (max-width: 420px) {
@@ -85,7 +90,7 @@ This components simple shows the number of in-app notifications in a badge-icon.
             <p class="white bold">{{notificationscounter}}</p>
           </template>
           <template is="dom-if" if="{{_is(notificationscounter,0)}}">
-            <p class="grey2 light">{{notificationscounter}}</p>
+            <p class="grey2b light">{{notificationscounter}}</p>
 <!-- 
               <iron-icon icon="sc-icons:clock" class="grey3 babbleicon">reply-icon</iron-icon>
  -->          </template>
@@ -260,7 +265,7 @@ This components simple shows the number of in-app notifications in a badge-icon.
 
         } else {
           this.paddings = "nopaddings";
-          this.backgr = "";
+          this.backgr = "darkerer ";
         }
 
 

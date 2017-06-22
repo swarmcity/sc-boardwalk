@@ -24,6 +24,7 @@
 <link rel="import" href="../sc-dealitem/sc-dealitem.html">
 <link rel="import" href="../sc-listeners/sc-listeners.html">
 <link rel="import" href="../sc-hashtagcontract/sc-hashtagcontract.html">
+<link rel="import" href="../sc-tokenbalanceformatter/sc-tokenbalanceformatter.html">
 
 <script type="text/javascript" src="../../bower_components/uuid-js/lib/uuid.js"></script>
 
@@ -196,8 +197,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       .infocollapser {
         margin: 0px 0px 5px 10px;
-        width: 18px;
-        height: 18px;
+/*        width: 18px;
+        height: 18px;*/
 /*        border-radius: 50%;*/
 /*        border-bottom: 2px solid var(--sc-grey2);*/
         @apply(--layout-horizontal);
@@ -211,6 +212,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
       .infocollapser p {
         font-size: 12px;
         line-height: 12px;
+        margin: 0px;
+        color: var(--sc-grey2);
       }
 
       .infocollapser_inner {
@@ -249,6 +252,34 @@ This is the component showing all requests of a certain hashtag. It contains a r
       }
 
 
+      .hasnogeohash {
+        width: 100%;
+        max-width: 600px;
+        box-sizing:border-box;
+        padding:20px 10px 25px 10px;
+      }
+
+      .avatar_username_balance {
+/*        width: 100%;
+        height: 14vh;
+        min-height: 82px;
+        box-sizing: border-box;
+        padding: 30px 30px 0px 50px;
+        margin-right: 0px;
+        @apply(--layout-horizontal-reverse);
+        @apply(--layout-center);
+        @apply(--layout-start-justified);
+        background-color: red;*/
+      }
+
+/*      sc-avatar {
+        background-color: green;
+      }
+
+      #hashtagbalancebox {
+        background-color: blue;
+      }
+*/
 
     @media all and (min-width: 0) and (max-width: 540px) {
 
@@ -344,7 +375,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
 
       sc-avatar {
-        margin: 0px 0px 0px 20px;
+        margin: 0px 6px 0px 20px;
       }
 
       .balance_box {
@@ -375,10 +406,10 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       .infocollapser {
         margin: 6px 0px 0px 10px;
-        width: 16px;
+/*        width: 16px;
         height: 16px;
-/*        border-radius: 50%;*/
-/*        border-bottom: 2px dotted var(--sc-grey2);*/
+        border-radius: 50%;
+        border-bottom: 2px dotted var(--sc-grey2);*/
         @apply(--layout-horizontal);
         @apply(--layout-center-center);
       }
@@ -386,7 +417,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
       .infocollapser p {
         font-size: 11px;
         line-height: 11px;
-        color: var(--sc-grey3);
+        margin: 0px;
+        color: var(--sc-grey2);
       }
 
     }
@@ -404,7 +436,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
     ></sc-listeners>
     <iron-media-query query="(min-width:0px) and (max-width: 540px)" query-matches="{{phoneview}}"></iron-media-query>
 
-    <app-route route="{{route}}" pattern="/:hashtag/:action" data="{{data}}" tail="{{subroute}}"></app-route>
+    <app-route route="{{route}}" pattern="/:hashtag/:address" data="{{data}}" tail="{{subroute}}"></app-route>
+   
 
     <div class="avatar_username_balance_content totalwidth">
         <div class="avatar_username_balance">
@@ -446,6 +479,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
         </div>
 
     <div class="contentcanvas">
+
       <div id="pagecontent" class="pagecontent totalwidth">
         <div class="hashtagtotal totalwidth horizont center startjust">
           <paper-icon-button on-tap="leave" icon="sc-icons:arrowleft" class="backarrow" noink>back to hashtaglist</paper-icon-button>
@@ -455,7 +489,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
             </div>
             <p class="bold wordbreak">{{_getHashTagName(hashtag)}}</p>
 <!--             <template is="dom-if" if="{{showiicon}}"> -->
-              <div class="infocollapser darkerer" on-tap="collapseHashtaginfo"><p class="small grey3">i</p></div>
+              <div class="infocollapser" on-tap="collapseHashtaginfo"><p class="small">info</p></div>
 <!--             </template> -->
             <!--
 
@@ -473,15 +507,15 @@ This is the component showing all requests of a certain hashtag. It contains a r
           <iron-collapse id="hashtaginfocollapser" class="totalwidth">
             <div class="infocollapser_inner vertic start startjust darker">
 <!--               <div class="infocollapser_closer totalwidth horizont end endjust"><iron-icon icon="sc-icons:decline" class="grey4" on-tap="collapseHashtaginfo"></iron-icon></div> -->
-              <p class="grey3">'{{_getHashTagName(hashtag)}}' is maintained by <span class="reg">Pioneerio <span class="pubk">(0x369D787F3EcF4a0e57cDfCFB2Db92134e1983f669)</span></span>. The hashtagcommission is <span class="reg"> 0,001 SWT</span></p>
+              <p class="grey3">'{{_getHashTagName(hashtag)}}' is maintained by <span class="reg"><span class="pubk">{{conflictresolver}}</span></span>. The hashtagcommission is <span class="reg"><sc-tokenbalanceformatter value="{{halfof(hashtagcommission)}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></span></p>
 
               <div class="whitespace"></div>
 
               <p class="small grey2">Contact</p>
               <div class="minispace"></div>
-              <a href="" target="_blank">@pioneerio</a>
+              <a href="mailto:support@swarm.city" target="_blank"> support@swarm.city</a>
               <div class="minispace"></div>
-              <a href="mailto:" target="_blank">pioneerio@swarmmail.com</a>
+              <a href="https://swarm-slack-invite.herokuapp.com/">slack</a>
 
 <!--               <p class="small grey2">Pub key of hashtagmaintainer</p>
               <p class="grey3">0x369D787F3EcF4a0e57cDfCFB2Db92134e1983f669</p>
@@ -497,6 +531,14 @@ This is the component showing all requests of a certain hashtag. It contains a r
               <div class="minispace"></div>    -->           
             </div>
           </iron-collapse>
+
+      <template is="dom-if" if="{{_is(geohash,'')}}">
+        <div class="hasnogeohash">
+          <p class="grey2">Looking for your location. If you disabled location-services, please enable and reload the app.</p>
+        </div>
+      </template>
+
+      <template is="dom-if" if="{{geohash}}">
 
         <sc-newitem
           data-action="newitem"
@@ -563,6 +605,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
             </sc-hashtagitem>
           </template>
         </div>
+      </template>
 
         <div class="tenspace"></div>
         <div class="tenspace"></div>
@@ -586,7 +629,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
       observers: [
         '_routedata(data)',
         '_updatelistener(data.hashtag,range,geohash)',
-        '_hashtagcontractloaded(hcready)'
+        '_hashtagcontractloaded(hcready)',
+        '_log(geohash)'
       ],
       properties: {
 
@@ -738,6 +782,10 @@ This is the component showing all requests of a certain hashtag. It contains a r
         return a === b;
       },
 
+      halfof: function(v){
+        return v/2;
+      },
+
       _getHashTagName: function(hashtagaddress){
         return this.config.hashtagcontractToName(hashtagaddress);
       },
@@ -766,6 +814,22 @@ This is the component showing all requests of a certain hashtag. It contains a r
           });
           // this is to display this in this component
           self.hashtagcommission = res.toNumber(10);
+        });
+        
+        this.$.hashtagcontract.getConflictResolver(function(err,res){
+         if (err){
+            delete self.conflictresolver;
+            return;
+          }
+          self.conflictresolver = res;
+          // we update this in the app state too ( should be done better
+          // cause now state only updates when you're in this screen ... )
+          self.dispatch('update_hashtaginfo',{
+            hashtagaddress: self.data.hashtag,
+            hashtaginfo: {
+              conflictresolver: res
+            }
+          });
         });
       },
 
@@ -943,8 +1007,12 @@ This is the component showing all requests of a certain hashtag. It contains a r
       collapseHashtaginfo: function(){
         this.$.hashtaginfocollapser.toggle();
         this.showiicon = !this.showiicon;
-      }
+      },
 
+
+      _log: function(target){
+        console.log("in hashtaaaggggg",target);
+      }
 
     });
   </script>

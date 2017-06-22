@@ -226,7 +226,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       <iron-collapse id="offerinputform" class="totalwidth">
         <div class="incollapser totalwidth vertic centercenter">
           <div class="horizont end startjust totalwidth">
-            <paper-input on-focused-changed="checkFocus" id="offerinputamount" label="What do you offer?" class="swtamount" value="{{firstofferamount}}" type="number">
+            <paper-input on-focused-changed="checkFocus" allowed-pattern="[0-9.]" id="offerinputamount" label="What do you offer?" class="swtamount" value="{{firstofferamount}}" type="number" min="0.1" step="0.1">
             </paper-input>
             <p class="swtwithoffer bold">SWT</p>
           </div>
@@ -247,6 +247,11 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
                   <sc-tokenbalanceformatter value="{{offeramount}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter>
                 </p>
               </template>
+
+              <template is="dom-if" if="{{errormessage}}">
+                <p class="red bold">{{errormessage}}</p>
+              </template>
+
             </div>
             <div class="confirmbtn">
               <paper-icon-button icon="sc-icons:v" class="medium blueback white" on-tap="confirmRequest" noink disabled="{{!btnable}}">show</paper-icon-button>
@@ -368,8 +373,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       },
 
       _btnable: function(){
-        var inputvalidated = true;
-        //debugger;
+
         if (!this.offermsg || !this.offeramount || !this.geohash ||
           !this.wallet || !this.wallet.swtbalance || !this.hashtagaddress ||
           !this.hashtaginfo || !this.hashtaginfo[this.hashtagaddress])
@@ -503,9 +507,27 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         this.$.offerinput.focus();
       },
 
+      _checkPrerequisites: function(){
+        if (this.wallet.ethbalance < (49913 + 175000 + 284121) * 1.0 * 1000000000) {
+          msg = 'You don\'t have enough ETH to post a new request.';
+          return msg;
+        }
+
+        if (this.hashtaginfo[this.hashtagaddress] && this.hashtaginfo[this.hashtagaddress].commission > this.wallet.swtbalance){
+          msg = 'You don\'t have enough SWT to post a new request.';
+          return msg;
+        }
+
+      },
+
       checkFocus: function() {
+        
         var offerinputform = this.$.offerinputform;
         if (this.$.offerinput.focused || this.$.offerinputamount.focused) {
+
+          this.errormessage = this._checkPrerequisites();
+          // if errormessage = '' - everything is OK.
+
           this.showavatar = true;
           this.totalstate = "totalopen";
           offerinputform.opened = true;
@@ -519,6 +541,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       },
 
       closeNewcollapser: function() {
+
         var offerinputform = this.$.offerinputform;
         offerinputform.opened = false;
         this.showavatar = false;

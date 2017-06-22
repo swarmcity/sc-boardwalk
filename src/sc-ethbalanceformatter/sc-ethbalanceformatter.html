@@ -1,6 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 
-<dom-module id="sc-tokenbalanceformatter">
+<dom-module id="sc-ethbalanceformatter">
   <template strip-whitespace>
     <span>
       <template is="dom-if" if="{{!onlydenomination}}">{{formattedvalue}} </template>
@@ -9,7 +9,7 @@
   </template>
   <script>
     Polymer({
-      is: 'sc-tokenbalanceformatter',
+      is: 'sc-ethbalanceformatter',
       properties: {
         value: {
           type: Number,
@@ -40,15 +40,15 @@
 
         this.value = parseFloat(this.value);
         if (!isNaN(this.value)) {
-          
-          var swtunits = {
-              'Nema': 1,
-              'Brancha': 1e3,
-              'Anto' : 1e6,
-              'Vespa': 1e9,
-              'Orto': 1e12,
-              'Pado': 1e15,
-              'SWT': 1e18,
+
+          var ethunits = {  
+              'wei':          1,
+              'kwei':         1e3,
+              'mwei':         1e6,
+              'gwei':         1e9,
+              'szabo':        1e12,
+              'finney':       1e15,
+              'ether':        1e18,
             }
           if (this.value === 0){
             this.formattedvalue = (0).toFixed(this.decimals);
@@ -56,12 +56,12 @@
             // needs to be multiplied with to obtain the unit of token to be sent to
             // a smart contract if you're talking about tokens units.
             // so that next to the textbox you can say 'xxx SWT'
-            this.denomination = 'SWT';
+            this.denomination = 'ether';
             return;
           }
-          for (i = Object.keys(swtunits).length-1 ; i >= 0; --i){
-            var key = Object.keys(swtunits)[i];
-            var unit = swtunits[key];
+          for (i = Object.keys(ethunits).length-1 ; i >= 0; --i){
+            var key = Object.keys(ethunits)[i];
+            var unit = ethunits[key];
             if ((this.denomination === key) || (this.value / unit) >= (1/(10*this.decimals))){
               this.formattedvalue = (this.value / unit).toFixed(this.decimals);
               // remove any trailing zeroes
