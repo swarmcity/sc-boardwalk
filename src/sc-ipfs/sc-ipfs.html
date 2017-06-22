@@ -54,7 +54,8 @@
 
       size: function(hash, cb) {
         var self = this;
-        this.ipfs.file.ls(hash, function(err, res) {
+        this.ipfs.ls(hash, function(err, res) {
+          debugger;
           console.log(res);
           if (res[0][1] < 10000000) {
             return cb(null);
@@ -68,7 +69,7 @@
       cat: function(hash, cb) {
         var self = this;
         console.log("checking size");
-        size(hash, function (err) {
+        this.size(hash, function (err) {
           if (err) {
             return cb(err);
           }
