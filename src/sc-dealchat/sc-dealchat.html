@@ -222,6 +222,7 @@ This is dealchat.
                 this.dispatch("notify", {
                     id: this.topic + '_' + payload.msg.chattime,
                     read: this.active,
+                    dismissed: this.active,
                     msg: 'new chat message from ' + payload.msg.chattername,
                     timestamp: payload.msg.chattime,
                     senderidentity: {
