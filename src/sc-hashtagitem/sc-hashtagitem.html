@@ -389,7 +389,7 @@ This components is the representation of a request in the requests-list on sc-ha
                   </sc-itemreplier>
               </template>
             </template>
-            <template is="dom-repeat" as="currentreply" items="{{item.replies}}">
+            <template is="dom-repeat" as="currentreply" sort="sortOnTimestamp" items="{{item.replies}}">
               <sc-itemreply
               item="{{item}}"
               btnshow="{{youareowner(item.seeker.pubkey)}}"
@@ -798,8 +798,9 @@ This components is the representation of a request in the requests-list on sc-ha
 
       },
 
-
-
+      sortOnTimestamp: function(a,b){
+          return b.replytime - a.replytime;
+      },
 
       youareowner: function(pubkey){
         //debugger;

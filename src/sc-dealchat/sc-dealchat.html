@@ -11,6 +11,8 @@
 <link rel="import" href="../sc-avatar/sc-avatar.html">
 <link rel="import" href="./sc-dealchatitem.html">
 <link rel="import" href="../sc-shh/sc-shh.html">
+<link rel="import" href="../sc-config/sc-config.html">
+
 
 <!--
 `sc-dealchat`
@@ -67,7 +69,7 @@ This is dealchat.
     </style>
 
     <sc-shh web3="{{shhweb3}}"></sc-shh>
-
+    <sc-config config="{{config}}"></sc-config>
     <div class="dealchat_container vertic center startjust">
       <div class="topbar">
         <span class="flex"></span>
@@ -106,11 +108,35 @@ This is dealchat.
         ReduxBehavior
       ],
 
+      actions: {
+        notify: function(notification) {
+            let notifications = this.notifications.slice(0);
+
+            var indexFound = notifications.findIndex(function(item) {
+                return item.id === notification.id;
+            });
+
+            if (indexFound === -1) {
+                notifications.push(notification);
+            }
+
+            return {
+                type: 'NOTIFICATIONS',
+                notifications: notifications
+            };
+        }
+      },
+
       properties: {
 
         identity: {
           type: Object,
           statePath: 'identity',
+        },
+
+        notifications: {
+            type: Array,
+            statePath: 'notifications',
         },
         
         target: {
@@ -127,6 +153,14 @@ This is dealchat.
 
         hashtag: {
           type: String
+        },
+
+        active: {
+          type: Boolean,
+        },
+
+        route: {
+          type: String,
         },
 
       },
@@ -185,6 +219,22 @@ This is dealchat.
           case 'chatmsg':
             this.unshift('chatballoons',payload.msg);
             //this.push('chatballoons',payload.msg);
+
+            if (payload.msg.chatterpubkey !== this.identity.pubkey) {
+                this.dispatch("notify", {
+                    id: this.topic + '_' + payload.msg.chattime,
+                    read: this.active,
+                    msg: 'new chat message from ' + payload.msg.chattername,
+                    timestamp: payload.msg.chattime,
+                    senderidentity: {
+                        username: payload.msg.chattername,
+                        pubkey: payload.msg.chatterpubkey,
+                        avatarhash: payload.msg.chatteravatar
+                    },
+                    hashtag: this.hashtag,
+                    target: this.route.prefix + this.route.path + '/dealchat',
+                });
+            }
             break;
         }
       },
@@ -257,7 +307,7 @@ This is dealchat.
           "from": self.shhweb3.identity,
           "topics": topics,
           "payload": self.shhweb3.fromAscii(JSON.stringify(message)),
-          "ttl": 60 * 60 * 24,
+          "ttl": this.config.sshttl,
           "priority": 1000
         };
 
