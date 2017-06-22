@@ -374,8 +374,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
       _btnable: function(){
 
-        if (!this.offermsg || !this.offeramount || !this.geohash ||
-          !this.wallet || !this.wallet.swtbalance || !this.hashtagaddress ||
+        if (!this.offermsg || !this.geohash || !this.wallet ||  !this.hashtagaddress ||
           !this.hashtaginfo || !this.hashtaginfo[this.hashtagaddress])
         {
           this.btnable = false;
@@ -384,7 +383,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
 
         var amount = parseFloat(this.offeramount);
 
-        if (amount === NaN){
+        if (isNaN(amount)){
           this.errormessage = 'offer amount is NOT a number';
           this.btnable = false;
           return;
