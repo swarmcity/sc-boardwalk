@@ -263,7 +263,34 @@
             provider: result[3]
           });
         });
+      },
 
+      cancelDeal: function(dealId, from, cb) {
+        var self = this;
+        self.web3.cached.getGasPrice(function(err, gasPrice) {
+          self.DealForTwoFactoryContractInstance.cancelDeal.estimateGas(dealId, {
+            from: from
+          }, function(err, gasNeeded) {
+            if (gasNeeded) {
+              gasNeeded = Math.floor(gasNeeded * 1.2);
+            } else {
+              gasNeeded = 600000;
+            }
+            self.DealForTwoFactoryContractInstance.cancelDeal.sendTransaction(dealId, {
+              from: from,
+              gasPrice: gasPrice,
+              gas: gasNeeded
+            }, function(err, result) {
+              if (err) {
+                if (cb) {
+                  return cb(err);
+                }
+              }
+              cb(null, result);
+              console.log(err, result);
+            });
+          });
+        });
       },
 
       getDeals: function(pubkey) {
