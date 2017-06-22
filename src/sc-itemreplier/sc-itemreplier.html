@@ -356,7 +356,7 @@ This components allow a Swarm Citizen to reply on a request.
           "from": this.shhweb3.identity,
           "topics": topics,
           "payload": this.shhweb3.fromAscii(JSON.stringify(message)),
-          "ttl": 60 * 60 * 24,
+          "ttl": this.config.shhttl,
           "priority": 1000
         };
 
