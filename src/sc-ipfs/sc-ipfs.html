@@ -51,23 +51,43 @@
       // Returns a Buffer with the IPFS data at that hash.
       // throws on error.
       //
+
+      size: function(hash, cb) {
+        var self = this;
+        this.ipfs.file.ls(hash, function(err, res) {
+          console.log(res);
+          if (res[0][1] < 10000000) {
+            return cb(null);
+          }
+          else {
+            return cb("ipfs hash %s bigger than 10 Mega bytes")
+          }
+        });
+      },
+
       cat: function(hash, cb) {
         var self = this;
-        this.ipfs.cat(hash, function(err, res) {
-          var buf = "";
+        console.log("checking size");
+        size(hash, function (err) {
           if (err) {
             return cb(err);
           }
-          res
-            .on('error', function(err) {
-              throw (err);
-            })
-            .on('data', function(data) {
-              buf += data;
-            })
-            .on('end', function() {
-              return cb(null, buf);
-            });
+          this.ipfs.cat(hash, function(err, res) {
+            var buf = "";
+            if (err) {
+              return cb(err);
+            }
+            res
+              .on('error', function(err) {
+                throw (err);
+              })
+              .on('data', function(data) {
+                buf += data;
+              })
+              .on('end', function() {
+                return cb(null, buf);
+              });
+          });
         });
       },
 
