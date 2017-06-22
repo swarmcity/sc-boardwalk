@@ -10,6 +10,7 @@
 <link rel="import" href="../sc-shh/sc-shh.html">
 <link rel="import" href="../sc-hashtagcontract/sc-hashtagrep.html">
 <link rel="import" href="../sc-tokenbalanceformatter/sc-tokenbalanceformatter.html">
+<link rel="import" href="../sc-config/sc-config.html">
 
 
 <!--
@@ -277,6 +278,7 @@ This component shows a reply on a request.
 
     </style>
     <sc-shh web3="{{shhweb3}}"></sc-shh>
+    <sc-config config="{{config}}"></sc-config>
     <iron-media-query query="(min-width:0px) and (max-width: 540px)" query-matches="{{phoneview}}"></iron-media-query>
     <template is="dom-if" if="{{_is(viewmode,'normal')}}">
 
@@ -525,7 +527,7 @@ This component shows a reply on a request.
           "from": self.shhweb3.identity,
           "topics": topics,
           "payload": self.shhweb3.fromAscii(JSON.stringify(message)),
-          "ttl": 60 * 60 * 24,
+          "ttl": self.config.shhttl,
           "priority": 1000
         };
 

@@ -640,7 +640,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
     <sc-hashtagcontract id="hashtagcontract" hashtagcontract="{{routedata.hashtag}}"  loaded="{{hcready}}"></sc-hashtagcontract>
     <iron-media-query query="(min-width:0px) and (max-width: 420px)" query-matches="{{phoneview}}"></iron-media-query>
 
-    <app-route route="{{route}}" pattern="/:hashtag/:requestid/:replyid" data="{{routedata}}"></app-route>
+    <app-route route="{{route}}" pattern="/:hashtag/:requestid/:replyid" data="{{routedata}}" tail="{{page}}"></app-route>
+    <app-route route="{{page}}" pattern="/:page" data="{{pageRouteData}}"></app-route>
     <neon-animated-pages id="providerpages" attr-for-selected="data-action" selected="{{selecteddealpage}}" entry-animation="{{providerpagesentry}}" exit-animation="{{providerpagesexit}}">
 
       <neon-animatable data-action="dodeal">
@@ -842,7 +843,9 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       <neon-animatable data-action="dealchat">
         <sc-dealchat
         topic="[[requestdata.id]]"
-        hashtag="[[data.hashtag]]"
+        hashtag="[[requestdata.hashtag]]"
+        active="[[_dealChatSelected(selecteddealpage)]]"
+        route="[[route]]"
         on-back="backfromChat">
         </sc-dealchat>
       </neon-animatable>
@@ -877,6 +880,10 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         route: {
           type: Object,
           observer: '_route'
+        },
+        pageRouteData: {
+          type: Object,
+          observer: '_pageRoute'
         },
         deals: {
           type: Array,
@@ -977,6 +984,13 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         this._getdata();
       },
 
+      _pageRoute: function() {
+        switch (this.pageRouteData.page) {
+          case 'dealchat':
+            this.selecteddealpage = 'dealchat';
+        }
+      },
+
       _hashtag: function(){
         // if (this.routedata.hashtag){
         //   this.$.listeners._starthastaglistener(this.routedata.hashtag);
@@ -1060,7 +1074,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
               "from": self.shhweb3.identity,
               "topics": topics,
               "payload": self.shhweb3.fromAscii(JSON.stringify(payload)),
-              "ttl": 60 * 60 * 24,
+              "ttl": self.config.sshttl,
               "priority": 1000
             };
 
@@ -1267,6 +1281,10 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         this.providerpagesentry = 'slide-from-left-animation';
         this.providerpagesexit = 'slide-right-animation';
         this.selecteddealpage = 'dodeal';
+      },
+
+      _dealChatSelected: function(selectedPage) {
+          return selectedPage === 'dealchat';
       },
 
 

@@ -31,7 +31,8 @@
     "bower": "*",
     "install": "^1.0.4",
     "uuid.js": "v3.0",
-    "moment-js": "^0.7.2"
+    "moment-js": "^0.7.2",
+    "browser-builds": "https://github.com/ethereumjs/browser-builds.git"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",

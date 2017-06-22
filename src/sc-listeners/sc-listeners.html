@@ -397,7 +397,8 @@
               senderidentity : deal.seeker,
               timestamp: payload.timestamp,
               msg: deal.seeker.username + ' selected you as a provider.',
-              hashtag: deal.hashtag
+              hashtag: deal.hashtag,
+              target: '/dealfortwoprovider/' + deal.hashtag + '/' + deal.id + '/' + deal.selectedreply
             })
           }
 
@@ -703,7 +704,8 @@
                   senderidentity: reply.provider,
                   timestamp: payload.time,
                   msg: 'You\'re now in a deal with ' + reply.provider.username,
-                  hashtag: deal.hashtag
+                  hashtag: deal.hashtag,
+                  target: '/dealfortwoseeker/' + deal.hashtag + '/' + deal.id + '/' + deal.selectedreply,
                 });
               }else{
                 console.log('INCONSISTENCY : reply not found');
@@ -745,7 +747,8 @@
                 senderidentity: deal.seeker,
                 timestamp: payload.timestamp,
                 msg: deal.seeker.username + ' paid out your deal. ',
-                hashtag: deal.hashtag
+                hashtag: deal.hashtag,
+                target: '/dealfortwoprovider/' + deal.hashtag + '/' + deal.id + '/' + deal.selectedreply,
               })
             }
 

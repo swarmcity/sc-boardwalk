@@ -76,6 +76,9 @@
               default: 2,
               BoardwalkTesting: 6
             };
+
+            this.shhttl = 60 * 60 * 24 * 5;
+
             this.set('config', {
               ipfs: this.ipfs,
               web3host: this.web3host,
@@ -88,9 +91,10 @@
               shhprefix: this.shhprefix,
               hashtagcontracts : this.hashtagcontracts,
               contractranges: this.contractranges,
+              swtinputunit: this.swtinputunit,
               hashtagcontractToName: this.hashtagcontractToName,
               contractnameToRange: this.contractnameToRange,
-              swtinputunit: this.swtinputunit
+              shhttl: this.shhttl
             });
 
             break;

@@ -887,12 +887,6 @@
         var self= this;
         this.importipfsstatus = 'downloading';
         this.$.ipfs.cat(this.importipfshash, function(err, data) {
-          try{
-            data = JSON.parse(data);
-          }catch(e){
-            err= e;
-          }
-
           if (err) {
             self.importipfsstatus = 'error';
             self.importipfserrormessage = 'Error downloading IPFS hash: ' + err;
