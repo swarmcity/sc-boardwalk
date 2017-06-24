@@ -95,6 +95,7 @@
 
                 case 'init_created':
                 case 'init_accepted':
+                case 'init_canceled':
                 case 'init_indeal':
                 case 'init_payout':
                   targetstate = mutation.targetdealstate;
@@ -105,6 +106,9 @@
                 case 'created_accepted':
                   targetstate = 'accepted';
                   break;
+                case 'created_canceled':
+                  targetstate = 'canceled';
+                  break;
                 case 'created_indeal':
                   targetstate = 'indeal';
                   break;
@@ -114,6 +118,9 @@
                 case 'accepted_accepted':
                   targetstate = 'accepted';
                   break;
+                case 'accepted_canceled':
+                  targetstate = 'canceled';
+                  break;
                 case 'accepted_created':
                   targetstate = 'accepted';
                   break;
@@ -122,6 +129,13 @@
                   break;
                 case 'accepted_payout':
                   targetstate = 'payout';
+                  break;
+                case 'canceled_canceled':
+                case 'canceled_indeal':
+                case 'canceled_payout':
+                case 'canceled_accepted':
+                case 'canceled_created':
+                  targetstate = 'canceled';
                   break;
                 case 'indeal_indeal':
                   targetstate = 'indeal';
@@ -525,8 +539,9 @@
         // gate 1 : create request
         // gate 2 : reply to a request
         // gate 3 : selection of provider
-        // gate 4 : funding of deal by provider
-        // gate 5 : approval of deal
+        // gate 4 : deal canceled
+        // gate 5 : funding of deal by provider
+        // gate 6 : approval of deal
         switch (payload.type){
           case 'dealfortwo-request-create':
             var dealid = payload.id;
@@ -543,15 +558,20 @@
             if(!this.messagequeue[dealid]){ this.messagequeue[dealid] = this.payloadStructure(); }
             this.messagequeue[dealid].gatequeue[2].push(payload);
             break;
+          case 'dealfortwo-cancel':
+            var dealid = payload.requestid;
+            if(!this.messagequeue[dealid]){ this.messagequeue[dealid] = this.payloadStructure(); }
+            this.messagequeue[dealid].gatequeue[3].push(payload);
+            break;
           case 'dealfortwo-provider-funding':
             var dealid = payload.id;
             if(!this.messagequeue[dealid]){ this.messagequeue[dealid] = this.payloadStructure(); }
-            this.messagequeue[dealid].gatequeue[3].push(payload);
+            this.messagequeue[dealid].gatequeue[4].push(payload);
             break;
           case 'dealfortwo-approve':
             var dealid = payload.requestid;
             if(!this.messagequeue[dealid]){ this.messagequeue[dealid] = this.payloadStructure(); }
-            this.messagequeue[dealid].gatequeue[4].push(payload);
+            this.messagequeue[dealid].gatequeue[5].push(payload);
             break;
           default:
             console.log('unknown gate for message',payload);
@@ -593,7 +613,7 @@
       payloadStructure: function(){
         return {
           currentgate: 0,
-          gatequeue: [[],[],[],[],[]]
+          gatequeue: [[],[],[],[],[], []]
         }
       },
 
@@ -639,6 +659,53 @@
             }
             this.dispatch('update_deal', newDeal);
             this.requestsloaded = true;
+            break;
+
+          case 'dealfortwo-cancel':
+            var mutation = {
+              id: payload.requestid,
+              seekercanceltx: payload.transactionhash,
+            };
+
+            this.dispatch('update_deal', mutation);
+
+            // watch for the TX to finish & update the state
+            if (mutation.seekercanceltx) {
+              var self = this;
+              this.web3.waitTx(mutation.seekercanceltx, function(err, res) {
+                if (err){
+                  console.log('error in seekercanceltx');
+                  return;
+                }
+                self.dispatch('update_deal', {
+                  id: mutation.id,
+                  seekercanceltx_mined: true,
+                  targetdealstate: 'canceled',
+                });
+                // do an update of your balance
+                self.fire('updatebalance');
+              });
+            }
+
+            var deal = this.getDeal(mutation.id);
+            if (deal.provider.pubkey == this.identity.pubkey && deal.dealstate == 'accepted') {
+              //debugger;
+              var reply = this.getReply(mutation.id, deal.selectedreply);
+              if (reply){
+                this.dispatch('update_notification', {
+                  id: deal.id + '_' + payload.time,
+                  senderidentity: reply.provider,
+                  timestamp: payload.time,
+                  msg: reply.provider.username + ' has canceled your deal.',
+                  hashtag: deal.hashtag,
+                  target: '/dealfortwoseeker/' + deal.hashtag + '/' + deal.id + '/' + deal.selectedreply,
+                });
+              }else{
+                console.log('INCONSISTENCY : reply not found');
+              }
+            }
+
+
             break;
 
           case 'dealfortwo-request-reply':
