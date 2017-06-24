@@ -671,6 +671,10 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
               <h1 class=""><span class="bold">You're in deal</span> with <span class="light blue replyer_username">{{requestdata.seeker.username}}</span>.</h1>
             </template>
 
+            <template is="dom-if" if="{{_is(requestdata.dealstate,'canceled')}}">
+              <h1 class=""><span class="light blue replyer_username">{{requestdata.seeker.username}}</span> has <span class="bold">canceled</span> this deal.</h1>
+            </template>
+
             <!-- Payout. -->
 <!--             <template is="dom-if" if="{{_is(dealstate,'payout')}}">
               <h1 class=""><span class="bold"></span><span class="light blue replyer_username">{{requestdata.seeker.username}}</span> started the payout of this deal (<sc-tokenbalanceformatter value="{{requestdata.amount}}"></sc-tokenbalanceformatter>).</h1>
@@ -799,23 +803,25 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 <!-- Here we also need to add the hashtagcommission / 2 -->
           <div class$="bottomhalf {{bottombg}} totalwidth">
             <template is="dom-if" if="{{!provideraccept}}">
+              <template is="dom-if" if="{{!_is(requestdata.dealstate,'canceled')}}">
 
-              <p class="white light centertxt">By accepting, you're putting <sc-tokenbalanceformatter value="{{requestdata.amount}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter> on this deal. At payout, you will be refunded <sc-tokenbalanceformatter value="{{deducthalfcommission(requestdata.amount,hashtagcommission)}}" rounding="false" decimals=3 denomination="SWT"></sc-tokenbalanceformatter>.</p>
+                  <p class="white light centertxt">By accepting, you're putting <sc-tokenbalanceformatter value="{{requestdata.amount}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter> on this deal. At payout, you will be refunded <sc-tokenbalanceformatter value="{{deducthalfcommission(requestdata.amount,hashtagcommission)}}" rounding="false" decimals=3 denomination="SWT"></sc-tokenbalanceformatter>.</p>
 
 
 
-              <!-- <p class="white light centertxt">By accepting, <sc-tokenbalanceformatter value="{{requestdata.amount}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter> will be locked on this deal. At payout you will be refunded</p>
-              <p class="white light centertxt">from that amount <sc-tokenbalanceformatter value="{{halfof(hashtagcommission)}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter> will be sent to the hashtag maintainer upon payout.</p> -->
+                  <!-- <p class="white light centertxt">By accepting, <sc-tokenbalanceformatter value="{{requestdata.amount}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter> will be locked on this deal. At payout you will be refunded</p>
+                  <p class="white light centertxt">from that amount <sc-tokenbalanceformatter value="{{halfof(hashtagcommission)}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter> will be sent to the hashtag maintainer upon payout.</p> -->
 
-              <div class="confirmbtns">
-                <template is="dom-if" if="{{btntapped}}">
-                  <sc-loader small color="white"></sc-loader>
+                  <div class="confirmbtns">
+                    <template is="dom-if" if="{{btntapped}}">
+                      <sc-loader small color="white"></sc-loader>
+                    </template>
+                    <template is="dom-if" if="{{!btntapped}}">
+                      <iron-icon icon="sc-icons:decline" class="decliner medium white" on-tap="cancelDeal"></iron-icon>
+                      <paper-icon-button icon="sc-icons:v" noink class="confirmbtn blue big white shadow" on-tap="fundThisDeal"></paper-icon-button>
+                    </template>
+                  </div>
                 </template>
-                <template is="dom-if" if="{{!btntapped}}">
-                  <iron-icon icon="sc-icons:decline" class="decliner medium white" on-tap="cancelDeal"></iron-icon>
-                  <paper-icon-button icon="sc-icons:v" noink class="confirmbtn blue big white shadow" on-tap="fundThisDeal"></paper-icon-button>
-                </template>
-              </div>
             </template>
             <template is="dom-if" if="{{provideraccept}}">
               <template is="dom-if" if="{{_is(requestdata.dealstate,'indeal')}}">
@@ -1251,7 +1257,10 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
           // console.log("REQUEST::: assigntx_mined", this.requestdata.assigntx_mined);
         }
         // providerfundingtx_mined check
-        if(this.requestdata.providerfundingtx_mined) {
+        if (this.requestdata.seekercanceltx_mined) {
+          this.bottombg = 'redback';
+          this.indeal = true;
+        } else if(this.requestdata.providerfundingtx_mined) {
           this.bottombg = 'greenback';
           this.indeal = true;
         } else {

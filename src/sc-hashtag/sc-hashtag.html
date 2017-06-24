@@ -574,6 +574,15 @@ This is the component showing all requests of a certain hashtag. It contains a r
               class$="{{dealsopacity}}">
             </sc-hashtagitem>
           </template>
+            <!-- deals where I was accepted as provider -->
+            <template is="dom-repeat" items="{{deals}}" filter="filter2" sort="sortOnTimestamp">
+                <sc-hashtagitem
+                        item="[[item]]"
+                        identity="[[identity]]"
+                        on-to-detail="hashtag_to_detail"
+                        class$="{{dealsopacity}}">
+                </sc-hashtagitem>
+            </template>
         </div>
         <!-- filterbox -->
         <div class="filterbox">
@@ -960,7 +969,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
 
       // items I'm seeker of, whatever state their in - except payout state deals
       filter1: function(item){
-        if (item.dealstate == 'payout') return false;
+        if (item.dealstate == 'payout' || item.dealstate == 'canceled') return false;
         return (this.isMyDeal(item));
       },
 
@@ -968,8 +977,8 @@ This is the component showing all requests of a certain hashtag. It contains a r
       // also deals that are in-deal
       filter2: function(item){
 
-        // deals that are done are not shown
-        if (item.dealstate == 'payout') return false;
+        // deals that are done or canceled are not shown
+        if (item.dealstate == 'payout' || item.dealstate == 'canceled') return false;
 
         // the seeker has chosen me , but I havent accepted this deal
         if (item.ireplied==true && item.dealstate == 'accepted') return true;
@@ -988,7 +997,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
       },
 
       filter4: function(item){
-        if (item.dealstate == 'payout') return true;
+        if (item.dealstate == 'payout' || item.dealstate == 'canceled') return true;
         return false;
       },
 
