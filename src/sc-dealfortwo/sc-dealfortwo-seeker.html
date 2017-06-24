@@ -294,6 +294,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       }
 
       paper-icon-button.confirmbtn.red {
+      paper-icon-button.confirmbtn.red {
         background-color: #f66a6a;
       }
 
@@ -934,7 +935,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                     <p class="white light centertxt">Cancel deal with {{replydata.provider.username}}.</p>
                     <template is="dom-if" if="{{phoneview}}"><div class="whitespace"></div></template>
                     <div class="confirmbtns">
-                      <paper-icon-button icon="sc-icons:decline" class="white big confirmbtn red shadow" on-tap="cancelDeal"></paper-icon-button>
+                      <paper-icon-button icon="sc-icons:decline" class="white big confirmbtn red shadow" on-tap="toCancelDeal"></paper-icon-button>
                     </div>
                   </div>
                   </div>
@@ -992,6 +993,31 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
               </div>
             </div>
           </div>
+          </neon-animatable>
+
+          <neon-animatable data-action="cancelThis">
+            <div class="approver redback">
+              <div class="topbar">
+                <span class="flex"></span>
+                <paper-icon-button on-tap="backFromCancelDeal" icon="sc-icons:decline" noink class="white">back</paper-icon-button>
+              </div>
+              <div class="approver_inner">
+                <h1 class="light white centertxt">Are you sure you want to cancel your deal with <span class="bold">{{replydata.provider.username}}</span>?</h1>
+                <div class="fivespace"></div>
+                <div class="whitespace"></div>
+                <div class="approver_confirmbtns">
+                  <iron-icon icon="sc-icons:decline" class="decliner medium white" on-tap="backFromCancelDeal"></iron-icon>
+                  <template is="dom-if" if="{{!cancelInitiated}}">
+                    <paper-icon-button icon="sc-icons:v" noink class="confirmbtn red big white shadow" on-tap="cancelDeal"></paper-icon-button>
+                  </template>
+                  <template is="dom-if" if="{{cancelInitiated}}">
+                    <!-- waiting icon -->
+                    <sc-loader small color="white"></sc-loader>
+
+                  </template>
+                </div>
+              </div>
+            </div>
           </neon-animatable>
         </neon-animated-pages>
   </template>
@@ -1115,6 +1141,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
       _getdata: function(){
         this.payoutinitiated = false;
+        this.cancelInitiated = false;
 
         var self = this;
         if (!this.deals || !this.requestid || !this.replyid){
@@ -1340,9 +1367,21 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
       },
 
+      toCancelDeal: function(){
+        this.seekerpagesentry = 'slide-from-right-animation';
+        this.seekerpagesexit = 'slide-left-animation';
+        this.selecteddealpage = 'cancelThis';
+      },
+
+      backFromCancelDeal: function(){
+        this.seekerpagesentry = 'slide-from-left-animation';
+        this.seekerpagesexit = 'slide-right-animation';
+        this.selecteddealpage = 'dodeal';
+      },
+
       cancelDeal: function() {
         var self = this;
-//        self.cancelinitiated = true;
+        self.cancelInitiated = true;
 
         this.$.dealfortwo.cancelDeal(self.requestdata.id, self.identity.pubkey, function(err, cancelTx) {
 
@@ -1386,6 +1425,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
               console.log('cancelDeal -> whisper error:', err);
             }
 
+            this.selecteddealpage = 'dodeal';
             self.leave();
 
           });
