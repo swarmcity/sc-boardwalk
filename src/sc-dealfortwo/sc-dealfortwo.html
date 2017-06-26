@@ -1,19 +1,17 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../sc-config/sc-config.html">
+<link rel="import" href="../sc-ipfs/sc-ipfs.html">
 <link rel="import" href="../sc-web3/sc-web3.html">
 <link rel="import" href="../sc-minime/sc-minime.html">
 <script type="text/javascript" src="../../bower_components/uuid-js/lib/uuid.js"></script>
-<<<<<<< HEAD
 <script src="./coder.js"></script>
 <script src="./function.js"></script>
-=======
-<script type="text/javascript" src="../../bower_components/browser-builds/dist/ethereumjs-tx.js"></script>
->>>>>>> 6dbbaaa... getDeals function added ( in progress )
 
 <dom-module id="sc-dealfortwo">
   <template>
     <sc-web3 web3="{{web3}}"></sc-web3>
-    <sc-config id="config" config="{{config}}"></sc-config>
+    <sc-config config="{{config}}"></sc-config>
+    <sc-ipfs id="ipfs"></sc-ipfs>
     <sc-minime id="minime"></sc-minime>
 
   </template>
@@ -310,7 +308,7 @@
       },
 
       // starts making a dealfortwo. callback with TXhash.
-      makeDealForTwo: function(dealID, from, offerAmount, cb) {
+      makeDealForTwo: function(dealID, from, offerAmount, metadata, cb) {
         var self = this;
         var extratx = {};
         this.$.minime.checkOrGiveAllowance(from, this.config.dealfortwofactory, offerAmount, function(err, tx) {
@@ -332,20 +330,27 @@
               //   debugger;
               //   return cb(err);
               // }
-              // If the allowance is not OK yet - gas extimation will not work
+              // If the allowance is not OK yet - gas estimation will not work
               // so use a safe value.
               gasNeeded = gasNeeded || 175000;
 
-              self.DealForTwoFactoryContractInstance.makeDealForTwo.sendTransaction(dealID, offerAmount,'', {
-                from: from,
-                gasPrice: gasPrice,
-                gas: gasNeeded
-              }, function(err, makeDealForTwoTx) {
+              self._storeMetadata(metadata, function(err, metadataHash) {
                 if (err) {
-                    return cb(err);
+                  debugger;
+                  return cb(err);
                 }
-                cb(null, makeDealForTwoTx,extratx);
-                console.log(err, makeDealForTwoTx);
+
+                self.DealForTwoFactoryContractInstance.makeDealForTwo.sendTransaction(dealID, offerAmount, metadataHash, {
+                    from: from,
+                    gasPrice: gasPrice,
+                    gas: gasNeeded
+                }, function(err, makeDealForTwoTx) {
+                    if (err) {
+                        return cb(err);
+                    }
+                    cb(null, makeDealForTwoTx,extratx);
+                    console.log(err, makeDealForTwoTx);
+                });
               });
             });
           });
@@ -434,7 +439,7 @@
             } else {
               gasNeeded = 75000;
             }
-            self.DealForTwoFactoryContractInstance.cancelDeal.sendTransaction(dealId, {
+            self.DealForTwoFactoryContractInstance.cancelDeal.sendTransaction(dealId, "IPFS HASH", {
               from: from,
               gasPrice: gasPrice,
               gas: gasNeeded
@@ -532,6 +537,18 @@
           });
        });
       },
+
+      _storeMetadata: function(metadata, cb) {
+        var metadataBuffer = this.$.ipfs.ipfs.Buffer(JSON.stringify(metadata));
+
+        this.$.ipfs.add(metadataBuffer, function(err, result) {
+          if (err || !result || !result[0]){
+            cb(err, null);
+          } else{
+            cb(null, result[0].hash);
+          }
+        });
+      }
 
     });
   </script>
