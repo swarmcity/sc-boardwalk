@@ -688,7 +688,7 @@
             }
 
             var deal = this.getDeal(mutation.id);
-            //if (deal.provider.pubkey == this.identity.pubkey && deal.dealstate == 'accepted') {
+            if (deal.provider && deal.provider.pubkey == this.identity.pubkey && deal.dealstate == 'accepted') {
               //debugger;
               var reply = this.getReply(mutation.id, deal.selectedreply);
               if (reply){
@@ -703,7 +703,7 @@
               }else{
                 console.log('INCONSISTENCY : reply not found');
               }
-            //}
+            }
 
 
             break;
