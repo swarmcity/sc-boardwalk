@@ -262,8 +262,60 @@
             provider: result[3]
           });
         });
-      }
+      },
 
+      cancelDeal: function(dealId, from, cb) {
+        var self = this;
+        self.web3.cached.getGasPrice(function(err, gasPrice) {
+          self.DealForTwoFactoryContractInstance.cancelDeal.estimateGas(dealId, {
+            from: from
+          }, function(err, gasNeeded) {
+            if (gasNeeded) {
+              gasNeeded = Math.floor(gasNeeded * 1.2);
+            } else {
+              gasNeeded = 75000;
+            }
+            self.DealForTwoFactoryContractInstance.cancelDeal.sendTransaction(dealId, {
+              from: from,
+              gasPrice: gasPrice,
+              gas: gasNeeded
+            }, function(err, result) {
+              if (err) {
+                if (cb) {
+                  return cb(err);
+                }
+              }
+              cb(null, result);
+              console.log(err, result);
+            });
+          });
+        });
+      },
+
+      getDeals: function(pubkey) {
+        debugger;
+        sig = EthJS.Util.rlphash('makeDealForTwo(string,uint)');
+        //                  var msgHash = EthJS.Util.rlphash('this is the message');
+
+        var c = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef";;
+
+        var filter = this.web3.eth.filter({
+          //address: pubkey,
+          fromBlock: 3885031,
+          toBlock: 3885031
+        });
+
+        filter.get(function(error, logs) {
+          var foundDeal = logs.find(function(item) {
+            return item.transactionHash === '0xea31682fe5a3e0c9cadbe5704545709cbe76acbb4d9e1c985e6940a9b583550b';
+          });
+
+
+          debugger;
+          console.log('ikke', logs);
+        });
+
+      },
 
     });
   </script>
