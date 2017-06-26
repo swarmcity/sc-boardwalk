@@ -1,5 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../sc-config/sc-config.html">
+<link rel="import" href="../sc-ipfs/sc-ipfs.html">
 <link rel="import" href="../sc-web3/sc-web3.html">
 <link rel="import" href="../sc-minime/sc-minime.html">
 <script type="text/javascript" src="../../bower_components/uuid-js/lib/uuid.js"></script>
@@ -8,6 +9,7 @@
   <template>
     <sc-web3 web3="{{web3}}"></sc-web3>
     <sc-config config="{{config}}"></sc-config>
+    <sc-ipfs id="ipfs"></sc-ipfs>
     <sc-minime id="minime"></sc-minime>
 
   </template>
@@ -20,119 +22,120 @@
           type: Object,
           value: [{
             "constant": false,
-            "inputs": [{
-              "name": "_dealid",
-              "type": "string"
-            }, {
-              "name": "_dealowner",
-              "type": "address"
-            }],
-            "name": "fundDeal",
+            "inputs": [{"name": "_dealid", "type": "string"}, {"name": "_metadata", "type": "string"}],
+            "name": "cancelDeal",
             "outputs": [],
             "payable": false,
             "type": "function"
           }, {
-            "constant": false,
-            "inputs": [{
-              "name": "_dealid",
-              "type": "string"
-            }],
-            "name": "payout",
-            "outputs": [],
+            "constant": true,
+            "inputs": [],
+            "name": "hashtagToken",
+            "outputs": [{"name": "", "type": "address"}],
             "payable": false,
             "type": "function"
           }, {
             "constant": false,
-            "inputs": [{
-              "name": "_dealid",
-              "type": "string"
-            }, {
-              "name": "_dealowner",
-              "type": "address"
-            }, {
-              "name": "_seekerFraction",
-              "type": "uint256"
-            }],
-            "name": "resolve",
-            "outputs": [],
-            "payable": false,
-            "type": "function"
-          }, {
-            "constant": false,
-            "inputs": [{
-              "name": "_dealid",
-              "type": "string"
-            }, {
-              "name": "_dealowner",
-              "type": "address"
-            }],
+            "inputs": [{"name": "_dealid", "type": "string"}, {"name": "_dealowner", "type": "address"}],
             "name": "readDeal",
-            "outputs": [{
-              "name": "status",
-              "type": "uint8"
-            }, {
+            "outputs": [{"name": "status", "type": "uint8"}, {
               "name": "commissionValue",
               "type": "uint256"
-            }, {
-              "name": "dealValue",
-              "type": "uint256"
-            }, {
-              "name": "provider",
-              "type": "address"
-            }],
+            }, {"name": "dealValue", "type": "uint256"}, {"name": "provider", "type": "address"}],
             "payable": false,
             "type": "function"
           }, {
             "constant": false,
-            "inputs": [{
-              "name": "_dealid",
-              "type": "string"
-            }, {
+            "inputs": [{"name": "_dealid", "type": "string"}, {
               "name": "_offerValue",
               "type": "uint256"
-            }],
+            }, {"name": "_metadata", "type": "string"}],
             "name": "makeDealForTwo",
             "outputs": [],
             "payable": false,
             "type": "function"
           }, {
             "constant": false,
-            "inputs": [{
-              "name": "_dealid",
-              "type": "string"
-            }, {
-              "name": "_dealowner",
-              "type": "address"
-            }],
-            "name": "dispute",
+            "inputs": [{"name": "_dealid", "type": "string"}, {"name": "_metadata", "type": "string"}],
+            "name": "payout",
             "outputs": [],
             "payable": false,
             "type": "function"
           }, {
             "constant": false,
-            "inputs": [{
-              "name": "_dealid",
-              "type": "string"
-            }],
-            "name": "cancelDeal",
+            "inputs": [{"name": "_dealid", "type": "string"}, {
+              "name": "_dealowner",
+              "type": "address"
+            }, {"name": "_seekerFraction", "type": "uint256"}, {"name": "_metadata", "type": "string"}],
+            "name": "resolve",
             "outputs": [],
             "payable": false,
             "type": "function"
           }, {
-            "inputs": [{
-              "name": "_hashtag",
+            "constant": false,
+            "inputs": [{"name": "_dealid", "type": "string"}, {
+              "name": "_dealowner",
               "type": "address"
-            }],
+            }, {"name": "_metadata", "type": "string"}],
+            "name": "fundDeal",
+            "outputs": [],
+            "payable": false,
+            "type": "function"
+          }, {
+            "constant": true,
+            "inputs": [],
+            "name": "hashtag",
+            "outputs": [{"name": "", "type": "address"}],
+            "payable": false,
+            "type": "function"
+          }, {
+            "constant": false,
+            "inputs": [{"name": "_dealid", "type": "string"}, {
+              "name": "_dealowner",
+              "type": "address"
+            }, {"name": "_metadata", "type": "string"}],
+            "name": "dispute",
+            "outputs": [],
+            "payable": false,
+            "type": "function"
+          }, {
+            "inputs": [{"name": "_hashtag", "type": "address"}],
             "payable": false,
             "type": "constructor"
           }, {
             "anonymous": false,
-            "inputs": [{
+            "inputs": [{"indexed": false, "name": "owner", "type": "address"}, {
               "indexed": false,
-              "name": "dealForTwoAddress",
-              "type": "address"
-            }],
+              "name": "dealid",
+              "type": "string"
+            }, {"indexed": false, "name": "metadata", "type": "string"}],
             "name": "NewDealForTwo",
+            "type": "event"
+          }, {
+            "anonymous": false,
+            "inputs": [{"indexed": false, "name": "provider", "type": "address"}, {
+              "indexed": false,
+              "name": "owner",
+              "type": "address"
+            }, {"indexed": false, "name": "dealid", "type": "string"}, {
+              "indexed": false,
+              "name": "metadata",
+              "type": "string"
+            }],
+            "name": "FundDeal",
+            "type": "event"
+          }, {
+            "anonymous": false,
+            "inputs": [{"indexed": false, "name": "owner", "type": "address"}, {
+              "indexed": false,
+              "name": "dealid",
+              "type": "string"
+            }, {"indexed": false, "name": "newstatus", "type": "uint8"}, {
+              "indexed": false,
+              "name": "metadata",
+              "type": "string"
+            }],
+            "name": "DealStatusChange",
             "type": "event"
           }]
         }
@@ -151,7 +154,7 @@
       },
 
       // starts making a dealfortwo. callback with TXhash.
-      makeDealForTwo: function(dealID, from, offerAmount, cb) {
+      makeDealForTwo: function(dealID, from, offerAmount, metadata, cb) {
         var self = this;
         var extratx = {};
         this.$.minime.checkOrGiveAllowance(from, this.config.dealfortwofactory, offerAmount, function(err, tx) {
@@ -173,20 +176,27 @@
               //   debugger;
               //   return cb(err);
               // }
-              // If the allowance is not OK yet - gas extimation will not work
+              // If the allowance is not OK yet - gas estimation will not work
               // so use a safe value.
               gasNeeded = gasNeeded || 175000;
 
-              self.DealForTwoFactoryContractInstance.makeDealForTwo.sendTransaction(dealID, offerAmount, {
-                from: from,
-                gasPrice: gasPrice,
-                gas: gasNeeded
-              }, function(err, makeDealForTwoTx) {
+              self._storeMetadata(metadata, function(err, metadataHash) {
                 if (err) {
-                    return cb(err);
+                  debugger;
+                  return cb(err);
                 }
-                cb(null, makeDealForTwoTx,extratx);
-                console.log(err, makeDealForTwoTx);
+
+                self.DealForTwoFactoryContractInstance.makeDealForTwo.sendTransaction(dealID, offerAmount, metadataHash, {
+                    from: from,
+                    gasPrice: gasPrice,
+                    gas: gasNeeded
+                }, function(err, makeDealForTwoTx) {
+                    if (err) {
+                        return cb(err);
+                    }
+                    cb(null, makeDealForTwoTx,extratx);
+                    console.log(err, makeDealForTwoTx);
+                });
               });
             });
           });
@@ -203,7 +213,7 @@
           }
           extratx.allowancetx = tx;
           self.web3.cached.getGasPrice(function(err, gasPrice) {
-            self.DealForTwoFactoryContractInstance.fundDeal.estimateGas(dealID, dealOwner, function(err, gasNeeded) {
+            self.DealForTwoFactoryContractInstance.fundDeal.estimateGas(dealID, dealOwner, "IPFS HASH", function(err, gasNeeded) {
               gasNeeded = gasNeeded || 175000;
               self.DealForTwoFactoryContractInstance.fundDeal.sendTransaction(dealID, dealOwner, {
                 from: from, //self.identity.pubkey,
@@ -226,7 +236,7 @@
       payout: function(dealID, from, cb) {
         var self = this;
         self.web3.cached.getGasPrice(function(err, gasPrice) {
-          self.DealForTwoFactoryContractInstance.payout.estimateGas(dealID, {
+          self.DealForTwoFactoryContractInstance.payout.estimateGas(dealID, "IPFS HASH", {
             from: from
           }, function(err, gasNeeded) {
             if (gasNeeded) {
@@ -275,7 +285,7 @@
             } else {
               gasNeeded = 75000;
             }
-            self.DealForTwoFactoryContractInstance.cancelDeal.sendTransaction(dealId, {
+            self.DealForTwoFactoryContractInstance.cancelDeal.sendTransaction(dealId, "IPFS HASH", {
               from: from,
               gasPrice: gasPrice,
               gas: gasNeeded
@@ -316,6 +326,18 @@
         });
 
       },
+
+      _storeMetadata: function(metadata, cb) {
+        var metadataBuffer = this.$.ipfs.ipfs.Buffer(JSON.stringify(metadata));
+
+        this.$.ipfs.add(metadataBuffer, function(err, result) {
+          if (err || !result || !result[0]){
+            cb(err, null);
+          } else{
+            cb(null, result[0].hash);
+          }
+        });
+      }
 
     });
   </script>
