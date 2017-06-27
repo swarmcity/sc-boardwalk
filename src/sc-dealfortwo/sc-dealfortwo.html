@@ -336,12 +336,21 @@
                   try {
                     var method = self.methods[signature];
                     var decodedParams = SolidityCoder.decodeParams(method._inputTypes, paramdata);
+                    var methodName = method.displayName();
 
-                    resolve2({
+                    var dealdata = {
                       dealid: decodedParams[0],
                       method: method.displayName(),
                       txhash: logTx.transactionHash
-                    });
+                    };
+
+                    if (methodName === 'makeDealForTwo') {
+                      dealdata.seeker = {
+                        pubkey: tx.from
+                      }
+                    }
+
+                    resolve2(dealdata);
                   } catch (e) {
                     console.log('dealfortwo-tx -> err decoding tx:', logTx);
                   }
