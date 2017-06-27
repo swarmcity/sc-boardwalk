@@ -812,15 +812,14 @@ This components is the representation of a request in the requests-list on sc-ha
       },
 
       toggleItem: function(){
-        //console.log('*toggleitem*',this.item);
-debugger;;
-        //        var toggler = this.$.repliescollapser;
+        // my item + no replies yet -> go to the detail screen to allow cancel.
         if (this.item.ismydeal && (!this.item.replies || this.item.replies.length ==0)) {
           return this.fire('redirect', {
-            target: '/dealfortwoseeker/' + this.item.hashtag + '/' + this.item.id //+ '/' + this.item.selectedreply
+            target: '/dealfortwoseeker/' + this.item.hashtag + '/' + this.item.id 
           });
         }
 
+        // if i was selected as provider
         if(this.iamprovider){
           this.fire('redirect', {
             target: '/dealfortwoprovider/' + this.item.hashtag + '/' + this.item.id + '/' + this.item.selectedreply
