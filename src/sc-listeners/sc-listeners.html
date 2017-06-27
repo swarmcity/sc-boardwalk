@@ -535,13 +535,14 @@
           this.messagequeue = {};
         }
 
-        // re-order and buffer items by gate
+        // re-order and buffer items by gate.
+        // a gate is a queue that needs to be processed in order 
+        // to simplify state transitions later on. 
         // gate 1 : create request
         // gate 2 : reply to a request
-        // gate 3 : selection of provider
-        // gate 4 : deal canceled
-        // gate 5 : funding of deal by provider
-        // gate 6 : approval of deal
+        // gate 3 : selection of provider / deal cancel
+        // gate 4 : funding of deal by provider
+        // gate 5 : approval of deal / dispute
         switch (payload.type){
           case 'dealfortwo-request-create':
             var dealid = payload.id;
@@ -554,33 +555,27 @@
             this.messagequeue[dealid].gatequeue[1].push(payload);
             break;
           case 'dealfortwo-select-provider':
+          case 'dealfortwo-cancel':
             var dealid = payload.requestid;
             if(!this.messagequeue[dealid]){ this.messagequeue[dealid] = this.payloadStructure(); }
             this.messagequeue[dealid].gatequeue[2].push(payload);
             break;
-          case 'dealfortwo-cancel':
-            var dealid = payload.requestid;
-            if(!this.messagequeue[dealid]){ this.messagequeue[dealid] = this.payloadStructure(); }
-            this.messagequeue[dealid].gatequeue[3].push(payload);
-            break;
           case 'dealfortwo-provider-funding':
             var dealid = payload.id;
             if(!this.messagequeue[dealid]){ this.messagequeue[dealid] = this.payloadStructure(); }
-            this.messagequeue[dealid].gatequeue[4].push(payload);
+            this.messagequeue[dealid].gatequeue[3].push(payload);
             break;
           case 'dealfortwo-approve':
             var dealid = payload.requestid;
             if(!this.messagequeue[dealid]){ this.messagequeue[dealid] = this.payloadStructure(); }
-            this.messagequeue[dealid].gatequeue[5].push(payload);
+            this.messagequeue[dealid].gatequeue[4].push(payload);
             break;
           default:
             console.log('unknown gate for message',payload);
             break;
         }
 
-        //console.log('MQ before',JSON.stringify(this.messagequeue,null,1));
         this.purgeQueue();
-        //console.log('MQ after',JSON.stringify(this.messagequeue,null,1));
 
       },
 
@@ -600,7 +595,8 @@
                   this.parsemessage(msg);
                 }
               }
-              // increase the gate number if this one contains items.
+              // increase the gate number after processing items in this one
+              // and start processing the next gate. 
               if(opennextgate){
                 this.messagequeue[key].currentgate++;
                 this.purgeQueue();
@@ -613,7 +609,7 @@
       payloadStructure: function(){
         return {
           currentgate: 0,
-          gatequeue: [[],[],[],[],[], []]
+          gatequeue: [[],[],[],[],[]]
         }
       },
 
