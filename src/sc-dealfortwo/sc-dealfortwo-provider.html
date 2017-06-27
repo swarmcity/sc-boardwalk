@@ -1046,8 +1046,22 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
 
 
 //dealID, dealOwner, offerAmount, from, cb
+        var metadata = {
+          msg: this.requestdata.msg,
+          initialreply: this.replydata.msg,
+          hashtag: this.requestdata.hashtag,
+          amount: this.requestdata.amount,
+          selectedreply: this.requestdata.selectedreply,
+          creationtx: this.requestdata.creationtx,
+          seeker: this.requestdata.seeker,
+          provider: {
+            avatarhash: this.identity.avatarhash,
+            username: this.identity.username,
+            pubkey: this.identity.pubkey
+          }
+        };
 
-        this.$.dealfortwo.fundDeal(dealID,this.requestdata.seeker.pubkey, this.requestdata.amount,this.identity.pubkey, function(err, providerfundingTx, extraTx) {
+        this.$.dealfortwo.fundDeal(dealID,this.requestdata.seeker.pubkey, this.requestdata.amount,this.identity.pubkey, metadata, function(err, providerfundingTx, extraTx) {
 
          if (err){
             console.log('tx error',err);
