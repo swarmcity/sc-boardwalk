@@ -3,6 +3,8 @@
 <link rel="import" href="../sc-web3/sc-web3.html">
 <link rel="import" href="../sc-minime/sc-minime.html">
 <script type="text/javascript" src="../../bower_components/uuid-js/lib/uuid.js"></script>
+<script src="./coder.js"></script>
+<script src="./function.js"></script>
 
 <dom-module id="sc-dealfortwo">
   <template>
@@ -292,29 +294,65 @@
         });
       },
 
-      getDeals: function(pubkey) {
-        debugger;
-        sig = EthJS.Util.rlphash('makeDealForTwo(string,uint)');
-        //                  var msgHash = EthJS.Util.rlphash('this is the message');
+      // temp function to retrieve deal transactions from the contract where we didn't have events. This will return all
+      // makeDealForTwo & fundDeal txs. Returns a promise with the following resolve data:
+      // [
+      //   {
+      //     dealid: 'someId',
+      //     method: 'DealForTwo contract method name. either 'fundDeal' or 'makeDealForTwo',
+      //     txhash: 'the hash of the transaction'
+      //   }
+      // ]
+      getDealTxs: function() {
+        return new Promise((resolve) => {
+          var self = this;
+          this.methods = {};
 
-        var c = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef";;
-
-        var filter = this.web3.eth.filter({
-          //address: pubkey,
-          fromBlock: 3885031,
-          toBlock: 3885031
-        });
-
-        filter.get(function(error, logs) {
-          var foundDeal = logs.find(function(item) {
-            return item.transactionHash === '0xea31682fe5a3e0c9cadbe5704545709cbe76acbb4d9e1c985e6940a9b583550b';
+          this.abi.filter(function (json) {
+            return json.type === 'function';
+          }).forEach(function (json) {
+            var func = new window.SolidityFunction(self.web3.eth, json, self.config.dealfortwofactory);
+            self.methods[func.signature()] = func;
           });
 
+          var transferEvent = this.$.minime.MiniMeContractInstance.Transfer({_to: this.config.dealfortwofactory}, {fromBlock: 3879365, toBlock: 'latest'}); // fromBlock is where the first tx happens
 
-          debugger;
-          console.log('ikke', logs);
-        });
+          // get the txHash of each Transfer event to the DealForTwoFactory. This event is emitted on makeDealForTwo and fundDeal functions
+          transferEvent.get(function(err, logs) {
 
+            var promises = [];
+
+            logs.forEach(function(logTx) {
+              promises.push(new Promise((resolve2) => {
+
+                self.web3.eth.getTransaction(logTx.transactionHash, function(err, tx) {
+                  if (err) {
+                    console.log('dealfortwo-tx -> err decoding tx:', logTx);
+                    return;
+                  }
+                  var signature = tx.input.substr(2, 8);
+                  var paramdata = tx.input.substr(10);
+
+                  try {
+                    var method = self.methods[signature];
+                    var decodedParams = SolidityCoder.decodeParams(method._inputTypes, paramdata);
+
+                    resolve2({
+                      dealid: decodedParams[0],
+                      method: method.displayName(),
+                      txhash: logTx.transactionHash
+                    });
+                  } catch (e) {
+                    console.log('dealfortwo-tx -> err decoding tx:', logTx);
+                  }
+                })
+              }));
+            });
+
+            resolve(Promise.all(promises));
+
+          });
+       });
       },
 
     });
