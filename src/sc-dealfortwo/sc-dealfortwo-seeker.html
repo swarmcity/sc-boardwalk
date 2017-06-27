@@ -1344,7 +1344,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         var self = this;
         self.payoutinitiated = true;
 
-        this.$.dealfortwo.payout(self.requestdata.id,self.identity.pubkey, function(err, payoutTx) {
+        this.$.dealfortwo.payout(self.requestdata.id,self.identity.pubkey, self._dealMetadata(), function(err, payoutTx) {
 
           var message = {
             type: 'dealfortwo-approve',
@@ -1412,7 +1412,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         var self = this;
         self.cancelInitiated = true;
 
-        this.$.dealfortwo.cancelDeal(self.requestdata.id, self.identity.pubkey, function(err, cancelTx) {
+        this.$.dealfortwo.cancelDeal(self.requestdata.id, self.identity.pubkey, self._dealMetadata(), function(err, cancelTx) {
 
           if (err) {
             console.log('cancelDeal -> dealfortwo error:', err);
@@ -1551,6 +1551,21 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
       _dealChatSelected: function(selectedPage) {
         return selectedPage == 'dealchat';
       },
+
+      _dealMetadata: function() {
+        return {
+          msg: this.requestdata.msg,
+          initialreply: this.replydata.msg,
+          hashtag: this.requestdata.hashtag,
+          amount: this.requestdata.amount,
+          selectedreply: this.requestdata.selectedreply,
+          creationtx: this.requestdata.creationtx,
+          seeker: this.requestdata.seeker,
+          provider: this.requestdata.provider,
+          providerfundingtx: this.requestdata.providerfundingtx,
+          providerfundingallowancetx: this.requestdata.providerfundingallowancetx
+        };
+      }
 
       // _dealstate: function(){
       //   console.log("dit is deellzz88",this.dealstate);

@@ -357,7 +357,7 @@
         });
       },
 
-      fundDeal: function(dealID, dealOwner, offerAmount, from, cb) {
+      fundDeal: function(dealID, dealOwner, offerAmount, from, metadata, cb) {
         var self = this;
         var extratx = {};
         this.$.minime.checkOrGiveAllowance(from, this.config.dealfortwofactory, offerAmount, function(err, tx) {
@@ -366,28 +366,36 @@
             return cb(err);
           }
           extratx.allowancetx = tx;
-          self.web3.cached.getGasPrice(function(err, gasPrice) {
-            self.DealForTwoFactoryContractInstance.fundDeal.estimateGas(dealID, dealOwner,'', function(err, gasNeeded) {
+          self.web3.cached.getGasPrice(function (err, gasPrice) {
+            self.DealForTwoFactoryContractInstance.fundDeal.estimateGas(dealID, dealOwner, function (err, gasNeeded) {
               gasNeeded = gasNeeded || 175000;
-              self.DealForTwoFactoryContractInstance.fundDeal.sendTransaction(dealID, dealOwner,'', {
-                from: from, //self.identity.pubkey,
-                gasPrice: gasPrice,
-                gas: gasNeeded
-              }, function(err, result) {
+
+              self._storeMetadata(metadata, function (err, metadataHash) {
                 if (err) {
-                  if (cb) {
-                    return cb(err);
-                  }
+                  debugger;
+                  return cb(err);
                 }
-                cb(null, result, extratx);
-                console.log(err, result);
+
+                self.DealForTwoFactoryContractInstance.fundDeal.sendTransaction(dealID, dealOwner, metadataHash, {
+                  from: from, //self.identity.pubkey,
+                  gasPrice: gasPrice,
+                  gas: gasNeeded
+                }, function (err, result) {
+                  if (err) {
+                    if (cb) {
+                      return cb(err);
+                    }
+                  }
+                  cb(null, result, extratx);
+                  console.log(err, result);
+                });
               });
             });
           });
         });
       },
 
-      payout: function(dealID, from, cb) {
+      payout: function(dealID, from, metadata, cb) {
         var self = this;
         self.web3.cached.getGasPrice(function(err, gasPrice) {
           self.DealForTwoFactoryContractInstance.payout.estimateGas(dealID,'', {
@@ -398,18 +406,26 @@
             } else {
               gasNeeded = 600000;
             }
-            self.DealForTwoFactoryContractInstance.payout.sendTransaction(dealID,'', {
-              from: from,
-              gasPrice: gasPrice,
-              gas: gasNeeded
-            }, function(err, result) {
+
+            self._storeMetadata(metadata, function(err, metadataHash) {
               if (err) {
-                if (cb) {
-                  return cb(err);
-                }
+                debugger;
+                return cb(err);
               }
-              cb(null, result);
-              console.log(err, result);
+
+              self.DealForTwoFactoryContractInstance.payout.sendTransaction(dealID, metadataHash, {
+                from: from,
+                gasPrice: gasPrice,
+                gas: gasNeeded
+              }, function (err, result) {
+                if (err) {
+                  if (cb) {
+                    return cb(err);
+                  }
+                }
+                cb(null, result);
+                console.log(err, result);
+              });
             });
           });
         });
@@ -439,18 +455,25 @@
             } else {
               gasNeeded = 75000;
             }
-            self.DealForTwoFactoryContractInstance.cancelDeal.sendTransaction(dealId, "IPFS HASH", {
-              from: from,
-              gasPrice: gasPrice,
-              gas: gasNeeded
-            }, function(err, result) {
+
+            self._storeMetadata(metadata, function(err, metadataHash) {
               if (err) {
-                if (cb) {
-                  return cb(err);
-                }
+                debugger;
+                return cb(err);
               }
-              cb(null, result);
-              console.log(err, result);
+              self.DealForTwoFactoryContractInstance.cancelDeal.sendTransaction(dealId, metadataHash, {
+                from: from,
+                gasPrice: gasPrice,
+                gas: gasNeeded
+              }, function (err, result) {
+                if (err) {
+                  if (cb) {
+                    return cb(err);
+                  }
+                }
+                cb(null, result);
+                console.log(err, result);
+              });
             });
           });
         });
