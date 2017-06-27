@@ -768,7 +768,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
               <div class="dealid" on-tap="showDetails">
                 <p class="small light grey2">Dealid {{requestdata.id}}</p>
               </div>
-
+              
                <template is="dom-if" if="{{_is(requestdatadealstate,'accepted')}}">
                   <h1 class="">You selected <span class="light blue replyer_username">{{replydata.provider.username}}</span> to make a deal for <span class=""><sc-tokenbalanceformatter value="{{deducthalfcommission(requestdata.amount,hashtagcommission)}}" rounding="false" decimals=3 denomination="SWT"></sc-tokenbalanceformatter></span>.</h1>
                </template>
@@ -831,11 +831,12 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                           <p class="cat">Requester</p>
                           <a href="https://etherscan.io/address/[[requestdata.seeker.pubkey]]" target="_new" class="reg blue">[[requestdata.seeker.username]]</a>
                         </div>
-
-                        <div class="detail">
-                          <p class="cat">Provider</p>
-                          <a href="https://etherscan.io/address/[[replydata.provider.pubkey]]" target="_new"  class="reg blue">[[replydata.provider.username]]</a>
-                        </div>
+                        <template is="dom-if" if="{{replydata.provider}}">
+                          <div class="detail">
+                            <p class="cat">Provider</p>
+                            <a href="https://etherscan.io/address/[[replydata.provider.pubkey]]" target="_new"  class="reg blue">[[replydata.provider.username]]</a>
+                          </div>
+                        </template>
 
 
                         <div class="detail">
@@ -849,11 +850,13 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                           <p class="reg">[[requestdata.msg]]</p>
                         </div>
 
-                        <div class="detail">
-                          <p class="cat">Selected reply</p>
-                          <p class="reg">[[replydata.msg]]</p>
-                        </div>
-                        <div class="whitespace"></div>
+                        <template is="dom-if" if="{{replydata.provider}}">
+                          <div class="detail">
+                            <p class="cat">Selected reply</p>
+                            <p class="reg">[[replydata.msg]]</p>
+                          </div>
+                          <div class="whitespace"></div>
+                        </template>
 
                         <template is="dom-if" if="{{requestdata.creationtx}}">
                           <div class="detail">
@@ -896,15 +899,17 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                       on-tap="tempTapto"
                       ></sc-avatar>
                   </div>
-                  <div class="avatar_funding">
-                    <sc-avatar
-                      ipfshash="[[replydata.provider.avatarhash]]"
-                      pubkey="[[replydata.provider.pubkey]]"
-                      id="makedeal_otheravatar"
-                      size="{{provideravatarsize}}"
-                      on-tap="tempTap"
-                      ></sc-avatar>
-                  </div>
+                  <template is="dom-if" if="{{replydata.provider}}">
+                    <div class="avatar_funding">
+                      <sc-avatar
+                        ipfshash="[[replydata.provider.avatarhash]]"
+                        pubkey="[[replydata.provider.pubkey]]"
+                        id="makedeal_otheravatar"
+                        size="{{provideravatarsize}}"
+                        on-tap="tempTap"
+                        ></sc-avatar>
+                    </div>
+                  </template>
                   <template is="dom-if" if="{{_is(requestdatadealstate,'indeal')}}">
                     <div class="chatbtn">
                       <paper-icon-button id="chatbutton" class="chatbtn_iconbtn shadow blue grey4" icon="sc-icons:babble" on-tap="toDealchat"></paper-icon-button>
@@ -916,41 +921,55 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
               </div>
 
               <div class$="bottomhalf {{bottombg}} totalwidth">
-                <template is="dom-if" if="{{_is(requestdatadealstate,'accepted')}}">
-                  <div class="accepted-container">
-                  <template is="dom-if" if="{{!phoneview}}">
-                    <sc-loader class="white halfopacity waiting-msg" color="white" small><span class="light">Waiting for {{replydata.provider.username}} to respond</span></sc-loader>
-                  </template>
-                  <template is="dom-if" if="{{phoneview}}">
-                    <div class="totalwidth vertic centercenter waiting-msg halfopacity">
-                      <p class="white light">Waiting for {{replydata.provider.username}} to respond</p>
-                      <div class="whitespace"></div>
-                      <sc-loader class="white" color="white" small></sc-loader>
-                    </div>
-                  </template>
-
+              
+                <!-- cancel button if no provider has been selected -->
+                <template is="dom-if" if="{{_is(requestdatadealstate,'created')}}">
+                 <div class="accepted-container">
                   <div class="cancel-container redback">
-
-                    <p class="white light centertxt">Cancel deal with {{replydata.provider.username}}.</p>
+                    <p class="white light centertxt">Cancel deal.</p>
                     <template is="dom-if" if="{{phoneview}}"><div class="whitespace"></div></template>
                     <div class="confirmbtns">
                       <paper-icon-button icon="sc-icons:decline" class="white big confirmbtn red shadow" on-tap="toCancelDeal"></paper-icon-button>
                     </div>
                   </div>
                   </div>
-                </template>
-                <!-- <template is="dom-if" if="{{provideraccept}}"> -->
-                  <template is="dom-if" if="{{_is(requestdatadealstate,'indeal')}}">
+                </template>     
+                         
+                <template is="dom-if" if="{{_is(requestdatadealstate,'accepted')}}">
+                  <div class="accepted-container">
                     <template is="dom-if" if="{{!phoneview}}">
-                      <div class="flex"></div>
+                      <sc-loader class="white halfopacity waiting-msg" color="white" small><span class="light">Waiting for {{replydata.provider.username}} to respond</span></sc-loader>
                     </template>
-                    <div class="confirmbtns">
-                      <paper-button on-tap="toapproveDeal" class="confirmbtn payoutbtn green white shadow" noink>Payout
-                        <iron-icon icon="sc-icons:v" class="medium white"></iron-icon>
-                      </paper-button>
+                    <template is="dom-if" if="{{phoneview}}">
+                      <div class="totalwidth vertic centercenter waiting-msg halfopacity">
+                        <p class="white light">Waiting for {{replydata.provider.username}} to respond</p>
+                        <div class="whitespace"></div>
+                        <sc-loader class="white" color="white" small></sc-loader>
+                      </div>
+                    </template>
+                    <!-- cancel button if a provider has been selected -->
+                    <div class="cancel-container redback">
+                      <p class="white light centertxt">Cancel deal with {{replydata.provider.username}}.</p>
+                      <template is="dom-if" if="{{phoneview}}"><div class="whitespace"></div></template>
+                      <div class="confirmbtns">
+                        <paper-icon-button icon="sc-icons:decline" class="white big confirmbtn red shadow" on-tap="toCancelDeal"></paper-icon-button>
+                      </div>
                     </div>
+                  </div>
+                </template>
+
+                <!-- in deal -->
+                <template is="dom-if" if="{{_is(requestdatadealstate,'indeal')}}">
+                  <template is="dom-if" if="{{!phoneview}}">
+                    <div class="flex"></div>
                   </template>
-                <!-- </template> -->
+                  <div class="confirmbtns">
+                    <paper-button on-tap="toapproveDeal" class="confirmbtn payoutbtn green white shadow" noink>Payout
+                      <iron-icon icon="sc-icons:v" class="medium white"></iron-icon>
+                    </paper-button>
+                  </div>
+                </template>
+            
               </div>
             </div>
             <sc-dealfortwo id="dealfortwo" on-status-update="handle"></sc-dealfortwo>
@@ -1001,7 +1020,11 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                 <paper-icon-button on-tap="backFromCancelDeal" icon="sc-icons:decline" noink class="white">back</paper-icon-button>
               </div>
               <div class="approver_inner">
-                <h1 class="light white centertxt">Are you sure you want to cancel your deal with <span class="bold">{{replydata.provider.username}}</span>?</h1>
+                <h1 class="light white centertxt">Are you sure you want to cancel your deal 
+                <template is="dom-if" if="{{replydata.provider}}">
+                with <span class="bold">{{replydata.provider.username}}</span>
+                </template>
+                ?</h1>
                 <div class="fivespace"></div>
                 <div class="whitespace"></div>
                 <div class="approver_confirmbtns">
@@ -1135,15 +1158,15 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         this.requestid = this.data.requestid;
         this.replyid = this.data.replyid;
         this._getdata();
-        console.log("joooo uit deal42seeker", this.data);
       },
 
       _getdata: function(){
+
         this.payoutinitiated = false;
         this.cancelInitiated = false;
 
         var self = this;
-        if (!this.deals || !this.requestid || !this.replyid){
+        if (!this.deals || !this.requestid){
           return;
         }
         var request = this.deals.find(function(item){
@@ -1163,8 +1186,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
             }
           }
 
-
-        if (request && request.replies){
+        if (request && request.replies && this.replyid){
           var reply = request.replies.find(function(item){
             return item.id === self.replyid;
           });
