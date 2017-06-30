@@ -70,14 +70,16 @@
 //              pioneer: "0x5c21b622ac0a51d5b02060d2c483b26252939eee"
 //              BoardwalkTesting: "0x5c21b622ac0a51d5b02060d2c483b26252939eee"
               //Pioneer: "0x7d208ae79ab72c3c5beb5c08e942f4e8a0e25f5c",
-               Pioneer: "0x2e17d4c60a2fc3f1d586d2ca9d66b52f80a043c0",
+               Pioneer: {
+                address: "0x2e17d4c60a2fc3f1d586d2ca9d66b52f80a043c0",
+              }
             };
             this.contractranges = {
               default: 2,
               BoardwalkTesting: 6
             };
 
-            this.shhttl = 60 * 60 * 24 * 5;
+            this.shhttl = 60 * 60 * 24 * 7;
 
             this.set('config', {
               ipfs: this.ipfs,
@@ -107,7 +109,7 @@
       hashtagcontractToName: function(address) {
         for (var key in this.hashtagcontracts) {
           if (this.hashtagcontracts.hasOwnProperty(key)) {
-            if (this.hashtagcontracts[key] == address){
+            if (this.hashtagcontracts[key].address == address){
               return key;
             }
           }

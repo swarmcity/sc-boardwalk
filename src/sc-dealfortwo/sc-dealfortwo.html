@@ -303,7 +303,7 @@
       //     txhash: 'the hash of the transaction'
       //   }
       // ]
-      getDealTxs: function() {
+      getDealTxs: function(pubkey) {
         return new Promise((resolve) => {
           var self = this;
           this.methods = {};
@@ -315,7 +315,14 @@
             self.methods[func.signature()] = func;
           });
 
-          var transferEvent = this.$.minime.MiniMeContractInstance.Transfer({_to: this.config.dealfortwofactory}, {fromBlock: 3879365, toBlock: 'latest'}); // fromBlock is where the first tx happens
+          var transferEvent = this.$.minime.MiniMeContractInstance.Transfer({
+            _from: pubkey,
+            _to: this.config.dealfortwofactory
+          }, {
+            
+            fromBlock: 3879365,
+            toBlock: 'latest'
+          }); // fromBlock is where the first tx happens
 
           // get the txHash of each Transfer event to the DealForTwoFactory. This event is emitted on makeDealForTwo and fundDeal functions
           transferEvent.get(function(err, logs) {
@@ -338,19 +345,24 @@
                     var decodedParams = SolidityCoder.decodeParams(method._inputTypes, paramdata);
                     var methodName = method.displayName();
 
-                    var dealdata = {
-                      dealid: decodedParams[0],
-                      method: method.displayName(),
-                      txhash: logTx.transactionHash
-                    };
+                    self.readDeal(decodedParams[0], pubkey, function(err,res) {
+                      var dealdata = {
+                        dealid: decodedParams[0],
+                        commissionValue: res.commissionValue,
+                        dealValue : res.dealValue,
+                        provider: res.provider,
+                        status: res.status,
+                        method: method.displayName(),
+                        txhash: logTx.transactionHash
+                      };
 
-                    if (methodName === 'makeDealForTwo') {
-                      dealdata.seeker = {
-                        pubkey: tx.from
+                      if (methodName === 'makeDealForTwo') {
+                        dealdata.seeker = {
+                          pubkey: tx.from
+                        }
                       }
-                    }
-
-                    resolve2(dealdata);
+                      resolve2(dealdata);
+                    });
                   } catch (e) {
                     console.log('dealfortwo-tx -> err decoding tx:', logTx);
                   }

@@ -1,0 +1,232 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
+<link rel="import" href="../../bower_components/sc-style/sc-style.html">
+<link rel="import" href="../../bower_components/sc-iconset/sc-iconset.html">
+<link rel="import" href="../sc-dealfortwo/sc-dealfortwo.html">
+<link rel="import" href="../sc-tokenbalanceformatter/sc-tokenbalanceformatter.html">
+<link rel="import" href="../sc-redux/sc-redux.html">
+
+
+<!--
+`sc-hashtagcleaner` is a temporary component to clean out deals that have expired from Whisper channel.
+
+@demo src/sc-hashtagcleaner/demo/index.html 
+-->
+
+<dom-module id="sc-hashtagcleaner">
+
+  <template>
+    <style include="sc-styles">
+      :host {
+        display: block;
+        width: 100%;  
+      }
+
+
+      .hashtagactivity {
+        @apply(--layout-vertical);
+        @apply(--layout-start);
+        @apply(--layout-start-justified);
+        margin-bottom: 2vh;
+      }
+
+      .triangle {
+        width: 12px;
+        transition: all 0.075s linear;
+        margin-right: 10px;
+        margin-left: 2px;
+        opacity: 1;
+      }
+
+      .triangle svg {
+        width: 100%;
+      }
+
+      .opened {
+        transform: rotate(90deg);
+        opacity: 0.75;
+      }
+
+      .completeddeals_toggler {
+        padding: 0px;
+        margin: 0px 0px 0px 0px;
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        @apply(--layout-start-justified);
+      }
+
+      .completeddeals_toggler p {
+        font-size: 14px;
+        line-height: 20px;
+        border-bottom: 1px dotted #bfbfbf;
+      }
+
+      .completeddeals_toggler:hover {
+        cursor: pointer;
+      }
+
+
+      @media all and (min-width: 0) and (max-width: 540px) { 
+
+        .hashtagactivity {
+          @apply(--layout-vertical);
+          @apply(--layout-start);
+          @apply(--layout-start-justified);
+          margin-bottom: 2vh;
+        }
+
+      }
+
+
+
+    </style>
+    <sc-dealfortwo id="dealfortwo"></sc-dealfortwo>
+
+    <iron-media-query query="(min-width:0px) and (max-width: 540px)" query-matches="{{phoneview}}"></iron-media-query>
+
+        <div class="hashtagactivity totalwidth">
+          <p class="bold">Archived deals<span class="bold">1</span></p>
+          <div id="" class="completeddeals_toggler" on-tap="showDetails">
+            <div class$="triangle {{collapsestate}}">
+              <svg id="triangle_icon" x="0px" y="0px" viewBox="0 0 50 50" fill="#B3B3B3">
+              <polygon points="6.5,4.9 6.5,44.5 42,24.9 "/>
+              </svg>
+            </div>
+            <p class="grey3">Show completed deals</p>
+          </div>
+          <iron-collapse id="completeddeals_collapser">
+            <template is="dom-repeat" items="{{expireddeals}}">
+             <div on-tap="_canceldeal">CANCEL DEAL</div>
+            <template is="dom-if" if="{{!_isdone(item)}}">
+              <div>DealId: {{item.dealid}}</div>
+              <div><sc-tokenbalanceformatter value="{{item.amount}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter></div>
+              <template is="dom-if" if="{{_canbecanceled(item)}}">
+               
+             </template>
+                <template is="dom-if" if="{{_canbepaidout(item)}}">
+              PAYOUT DEAL</template>
+                <div></div>
+              </template>
+            </template>
+          </iron-collapse>
+        </div>
+  </template>
+  <script>
+    Polymer({
+
+      is: 'sc-hashtagcleaner',
+
+
+      properties: {
+
+        /**
+       * `identity` is received from parent-element, as an object containing an IPFS-hash, which is img-source.
+       */
+        identity: {
+          type: String,
+          observer: '_identity',
+          statePath: 'identity'
+          //notify: true
+        },
+
+      },
+
+      behaviors: [
+        Polymer.NeonSharedElementAnimatableBehavior,
+        ReduxBehavior
+      ],
+
+      ready: function(){
+        this.onEnter();
+      },
+
+      attached: function(){
+      },
+
+      _identity: function(){
+        var self = this;
+        this.$.dealfortwo.getDealTxs(this.identity.pubkey).then(function(a){
+          //debugger;
+          self.expireddeals = a;
+        });
+
+      },
+
+      _canbecanceled: function(item){
+        if (item.status == 0 && item.provider == '0x0000000000000000000000000000000000000000'){
+          return true;
+        }else{
+          return false;
+        }
+      },
+
+      _hasprovider : function(item){
+        return (item && item.provider != '0x0000000000000000000000000000000000000000');
+      },
+
+      _canbepaidout : function(item){
+        if (!item) {
+          return false;
+        }
+        if (item.status == 0 && item.provider != '0x0000000000000000000000000000000000000000') {
+          return true;
+        }else{
+          return false;
+        }
+      },
+
+      _isdone: function(item){
+        return (item.status == 4);
+      },
+
+      _canceldeal: function(e){
+debugger;
+   this.fire('redirect', {
+          target: '/dealfortwoseeker/' + '0x2e17d4c60a2fc3f1d586d2ca9d66b52f80a043c0' + '/' + e.model.item.dealid
+        });
+
+        //http://localhost:8082/#/dealfortwoseeker/0x2e17d4c60a2fc3f1d586d2ca9d66b52f80a043c0/1d887ade-e388-40a1-a0cd-af094514c862/0
+      },
+
+      /**
+      * 'onEnter' are the behaviors that occur when the router tells this component enters the stage 
+      * use this to initialize any variables to start the component
+      */
+      onEnter: function(){
+      },
+
+      /**
+      * 'onExit' are the behaviors that occur when the router tells this component to leave the stage 
+      * use this to reset any variables when leaving this component while it remains loaded.
+      */
+      onExit: function(){
+      },
+
+
+      /**
+      * '_is', a function to bind a template to a certain value of a variable.
+      */
+      _is: function(a, b) {
+        if (b === undefined){
+          b = true;
+        }
+        return a === b;
+      },
+
+
+      showDetails: function(){
+        var completeddeals = this.$.completeddeals_collapser;
+        completeddeals.toggle();
+        if (completeddeals.opened){
+          this.collapsestate = 'opened';
+        } else {
+          this.collapsestate = '';
+        }
+      },
+
+
+
+
+    });
+  </script>
+</dom-module>
