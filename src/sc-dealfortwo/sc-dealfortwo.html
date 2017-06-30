@@ -444,7 +444,7 @@
         });
       },
 
-      cancelDeal: function(dealId, from, cb) {
+      cancelDeal: function(dealId, from, metadata, cb) {
         var self = this;
         self.web3.cached.getGasPrice(function(err, gasPrice) {
           self.DealForTwoFactoryContractInstance.cancelDeal.estimateGas(dealId, {

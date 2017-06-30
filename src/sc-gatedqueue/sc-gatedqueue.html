@@ -1,0 +1,98 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+
+<!--
+Gated queue that will only open the next gate if the previous gate has been processed.
+
+Example Usage:
+
+    var queue = new GatedQueue(5); // 5 is the number of gates to allocate per id in the queue
+
+    queue.push('b4e85acb-bfe9-4cae-a444-86c1e4496e4c', 0, dealCreated, this, [whisperPayload]);
+    queue.push('b4e85acb-bfe9-4cae-a444-86c1e4496e4c', 1, requestReplyRecieved, this, [whisperPayload]);
+    queue.push('b4e85acb-bfe9-4cae-a444-86c1e4496e4c', 3, providerFunding, this, [whisperPayload]);
+
+    // The following will execute each gate for each id in the queue. In the above example, dealCreated will be executed
+    // first, followed by requestReplyRecieved.
+    // providerFunding will not be executed because gate2 has not been executed
+    queue.purge();
+
+-->
+<dom-module id="sc-gatedqueue">
+    <script>
+      GatedQueue = Polymer({
+        is: 'sc-gatedqueue',
+
+        factoryImpl: function(gates) {
+          this.gates = gates;
+
+          var i = 0;
+          this._gatequeue = [];
+
+          while (i < this.gates) {
+            this._gatequeue.push([]);
+            i++
+          }
+
+        },
+
+        ready: function() {
+          this.queue = {};
+        },
+
+        clear: function() {
+          this.queue = {};
+        },
+
+        push: function(dealid, gate, fn, context, params) {
+          if (!this.queue[dealid]) {
+            this.queue[dealid] = this._payloadStructure();
+          }
+
+          this.queue[dealid].gatequeue[gate].push({
+            fn: fn,
+            context: context,
+            params: params
+          });
+        },
+
+        purge: function() {
+          // purge the queue
+          for (var key in this.queue) {
+
+            if (this.queue.hasOwnProperty(key)) {
+
+              var currentgate = this.queue[key].currentgate;
+
+              // empty all gates up to the current gate
+              for (inspectedgate = 0; inspectedgate <= currentgate; inspectedgate++) {
+
+                var opennextgate = false;
+                if (this.queue[key].gatequeue[inspectedgate]) {
+
+                  while (this.queue[key].gatequeue[inspectedgate].length > 0) {
+                    opennextgate = true;
+                    payload = this.queue[key].gatequeue[inspectedgate].pop();
+                    payload.fn.apply(payload.context, payload.params);
+                  }
+                }
+
+                // increase the gate number if this one contains items.
+                if (opennextgate) {
+                  this.queue[key].currentgate++;
+                  this.purge();
+                }
+              }
+            }
+          }
+        },
+
+        _payloadStructure: function() {
+          return {
+            currentgate: 0,
+            gatequeue: this._gatequeue
+          }
+        },
+      })
+    </script>
+</dom-module>

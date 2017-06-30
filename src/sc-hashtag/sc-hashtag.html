@@ -574,15 +574,6 @@ This is the component showing all requests of a certain hashtag. It contains a r
               class$="{{dealsopacity}}">
             </sc-hashtagitem>
           </template>
-            <!-- deals where I was accepted as provider -->
-            <template is="dom-repeat" items="{{deals}}" filter="filter2" sort="sortOnTimestamp">
-                <sc-hashtagitem
-                        item="[[item]]"
-                        identity="[[identity]]"
-                        on-to-detail="hashtag_to_detail"
-                        class$="{{dealsopacity}}">
-                </sc-hashtagitem>
-            </template>
         </div>
         <!-- filterbox -->
         <div class="filterbox">

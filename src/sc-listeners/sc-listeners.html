@@ -3,6 +3,7 @@
 <link rel="import" href="../sc-shh/sc-shh.html">
 <link rel="import" href="../sc-web3/sc-web3.html">
 <link rel="import" href="../sc-config/sc-config.html">
+<link rel="import" href="../sc-gatedqueue/sc-gatedqueue.html">
 <link rel="import" href="../sc-dealfortwo/sc-dealfortwo.html">
 <script type="text/javascript" src="../../bower_components/uuid-js/lib/uuid.js"></script>
 <script src="html-css-sanitizer-minified.js"></script>
@@ -423,6 +424,10 @@
         },
       },
 
+      ready: function() {
+        this.messagequeue = new GatedQueue(5);
+      },
+
       getEmptyDeal: function() {
         return Object.assign({}, {
           replies: [],
@@ -492,7 +497,7 @@
           this.dispatch('clear_deals');
 
           // and clear the local cache
-          this.messagequeue = {}
+          this.messagequeue.clear();
 
           console.log("sc-listeners: channelswitch, start listening to", mytopics);
           this.filter.watch(this._processmessage.bind(this));
@@ -531,86 +536,44 @@
           return;
         }
 
-        if (!this.messagequeue){
-          this.messagequeue = {};
-        }
-
-        // re-order and buffer items by gate.
-        // a gate is a queue that needs to be processed in order 
-        // to simplify state transitions later on. 
+        // re-order and buffer items by gate
+        // a gate is a queue that needs to be processed in order
+        // to simplify state transitions later on.
         // gate 1 : create request
         // gate 2 : reply to a request
-        // gate 3 : selection of provider / deal cancel
+        // gate 3 : cancel deal or selection of provider
         // gate 4 : funding of deal by provider
-        // gate 5 : approval of deal / dispute
+        // gate 5 : approval of deal
         switch (payload.type){
           case 'dealfortwo-request-create':
             var dealid = payload.id;
-            if(!this.messagequeue[dealid]){ this.messagequeue[dealid] = this.payloadStructure(); }
-            this.messagequeue[dealid].gatequeue[0].push(payload);
+            this.messagequeue.push(dealid, 0, this.parsemessage, this, [payload]);
             break;
           case 'dealfortwo-request-reply':
             var dealid = payload.parentrequestid;
-            if(!this.messagequeue[dealid]){ this.messagequeue[dealid] = this.payloadStructure(); }
-            this.messagequeue[dealid].gatequeue[1].push(payload);
+            this.messagequeue.push(dealid, 1, this.parsemessage, this, [payload]);
             break;
-          case 'dealfortwo-select-provider':
           case 'dealfortwo-cancel':
+          case 'dealfortwo-select-provider':
             var dealid = payload.requestid;
-            if(!this.messagequeue[dealid]){ this.messagequeue[dealid] = this.payloadStructure(); }
-            this.messagequeue[dealid].gatequeue[2].push(payload);
+            this.messagequeue.push(dealid, 2, this.parsemessage, this, [payload]);
             break;
           case 'dealfortwo-provider-funding':
             var dealid = payload.id;
-            if(!this.messagequeue[dealid]){ this.messagequeue[dealid] = this.payloadStructure(); }
-            this.messagequeue[dealid].gatequeue[3].push(payload);
+            this.messagequeue.push(dealid, 3, this.parsemessage, this, [payload]);
             break;
           case 'dealfortwo-approve':
             var dealid = payload.requestid;
-            if(!this.messagequeue[dealid]){ this.messagequeue[dealid] = this.payloadStructure(); }
-            this.messagequeue[dealid].gatequeue[4].push(payload);
+            this.messagequeue.push(dealid, 4, this.parsemessage, this, [payload]);
             break;
           default:
             console.log('unknown gate for message',payload);
             break;
         }
 
-        this.purgeQueue();
-
-      },
-
-      purgeQueue:function(){
-        // purge the queue
-        for (var key in this.messagequeue) {
-          if (this.messagequeue.hasOwnProperty(key)) {
-            //if (key =='b4e85acb-bfe9-4cae-a444-86c1e4496e4c') debugger;
-            var currentgate = this.messagequeue[key].currentgate;
-            // empty all gates up to the current gate
-            for (inspectedgate = 0 ; inspectedgate <= currentgate; inspectedgate++){
-              var opennextgate = false;
-              if (this.messagequeue[key].gatequeue[inspectedgate]){
-                while (this.messagequeue[key].gatequeue[inspectedgate].length > 0){
-                  opennextgate = true;
-                  msg = this.messagequeue[key].gatequeue[inspectedgate].pop();
-                  this.parsemessage(msg);
-                }
-              }
-              // increase the gate number after processing items in this one
-              // and start processing the next gate. 
-              if(opennextgate){
-                this.messagequeue[key].currentgate++;
-                this.purgeQueue();
-              }
-            }
-          }
-        }
-      },
-
-      payloadStructure: function(){
-        return {
-          currentgate: 0,
-          gatequeue: [[],[],[],[],[]]
-        }
+        //console.log('MQ before',JSON.stringify(this.messagequeue,null,1));
+        this.messagequeue.purge();
+        //console.log('MQ after',JSON.stringify(this.messagequeue,null,1));
       },
 
       parsemessage : function(payload){
