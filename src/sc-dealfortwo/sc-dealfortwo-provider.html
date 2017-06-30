@@ -1048,29 +1048,12 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         var self = this;
 
         var offerAmount = this.requestdata.amount;
-        //var dealaddress = this.requestdata.dealaddress;
         var dealID = this.requestdata.id;
 
         //debugger;
 
-
-//dealID, dealOwner, offerAmount, from, cb
-        var metadata = {
-          msg: this.requestdata.msg,
-          initialreply: this.replydata.msg,
-          hashtag: this.requestdata.hashtag,
-          amount: this.requestdata.amount,
-          selectedreply: this.requestdata.selectedreply,
-          creationtx: this.requestdata.creationtx,
-          seeker: this.requestdata.seeker,
-          provider: {
-            avatarhash: this.identity.avatarhash,
-            username: this.identity.username,
-            pubkey: this.identity.pubkey
-          }
-        };
-
-        this.$.dealfortwo.fundDeal(dealID,this.requestdata.seeker.pubkey, this.requestdata.amount,this.identity.pubkey, metadata, function(err, providerfundingTx, extraTx) {
+        // do we want to store all replies on ipfs or just the selected reply?
+        this.$.dealfortwo.fundDeal(dealID,this.requestdata.seeker.pubkey, this.requestdata.amount,this.identity.pubkey, this.requestdata, function(err, providerfundingTx, extraTx) {
 
          if (err){
             console.log('tx error',err);
@@ -1083,7 +1066,6 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
             time: Date.now(),
             offerproviderfundingtx: providerfundingTx,
             offerproviderfundingallowancetx: extraTx.allowancetx
-            //dealaddress: dealaddress,
           };
 
           var topics = [
