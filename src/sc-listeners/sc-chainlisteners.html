@@ -1,0 +1,177 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../sc-redux/sc-redux.html">
+<link rel="import" href="../sc-web3/sc-web3.html">
+<link rel="import" href="../sc-config/sc-config.html">
+<link rel="import" href="../sc-ipfs/sc-ipfs.html">
+<link rel="import" href="../sc-gatedqueue/sc-gatedqueue.html">
+<link rel="import" href="../sc-dealfortwo/sc-dealfortwo.html">
+<script src="html-css-sanitizer-minified.js"></script>
+
+<dom-module id="sc-chainlisteners">
+    <template>
+        <sc-dealfortwo id="dealfortwo"></sc-dealfortwo>
+        <sc-web3 id="web3" web3="{{web3}}"></sc-web3>
+        <sc-config config="{{config}}"></sc-config>
+    </template>
+
+    <script>
+      Polymer({
+        is: 'sc-chainlisteners',
+
+        properties: {
+          deals: {
+            type: Array,
+            statePath: 'deals',
+          },
+          notifications: {
+            type: Array,
+            statePath: 'notifications',
+          },
+          identity: {
+            type: Object,
+            statePath: 'identity'
+          }
+        },
+
+        behaviors: [
+          ReduxBehavior
+        ],
+
+        actions: {
+
+          // update deal providing a mutation
+          // mutation looks like this :
+          // mutation = {
+          //  id: <dealID>,
+          //  <any_field>: <any_value>
+          // }
+          update_deal: function (mutation) {
+
+            let deals = this.deals.slice(0);
+            mutation.lastupdate = Date.now();
+            var foundDeal = deals.findIndex(function (item) {
+              return item.id === mutation.id;
+            });
+
+            if (foundDeal > -1) {
+              if (mutation.targetdealstate) {
+                switch ((deals[foundDeal].dealstate || 'init') + '_' + mutation.targetdealstate) {
+
+                  // valid state transitions
+                  case 'init_created':
+                  case 'init_accepted':
+                  case 'init_canceled':
+                  case 'init_indeal':
+                  case 'init_payout':
+                  case 'created_created':
+                  case 'created_accepted':
+                  case 'created_canceled':
+                  case 'created_indeal':
+                  case 'created_payout':
+                  case 'accepted_accepted':
+                  case 'accepted_canceled':
+                  case 'accepted_indeal':
+                  case 'accepted_payout':
+                  case 'canceled_canceled':
+                  case 'indeal_indeal':
+                  case 'indeal_payout':
+                  case 'payout_payout':
+                    break;
+                  default:
+                    console.log('sc-chainlisteners -> unknown dealstate', (foundDeal.dealstate || 'init') + '_' + mutation.targetdealstate);
+                    debugger;
+                    return; // invalid transition
+                }
+              }
+            }
+
+            mutation.dealstate = mutation.targetdealstate;
+            delete mutation.targetdealstate;
+
+            mutation.ismydeal = (deals[foundDeal].seeker.pubkey === this.identity.pubkey);
+            Object.assign(deals[foundDeal], mutation);
+
+            if (foundDeal === -1) {
+              deals.push(Object.assign(this.getEmptyDeal(), mutation));
+            }
+
+            return {
+              type: 'DEALS',
+              deals: deals
+            };
+          },
+        },
+
+        ready: function () {
+          this.queue = new GatedQueue(5);
+          this._getDealsFromEvents();
+        },
+
+        _getDealsFromEvents: function () {
+          var self = this;
+          var eventOptions = {
+            fromBlock: this.config.eventFromBlock,
+            toBlock: this._getToBlock()
+          };
+
+          var newDealEvent = this.$.dealfortwo.NewDealForTwo(eventOptions);
+
+          newDealEvent.get()
+            .then(function (logs) {
+
+              logs.forEach((log) => {
+                self.$.ipfs.cat(log.args.metadata)
+
+                  .then((result) => {
+                    var metadata = JSON.parse(result);
+
+                    Object.assign(metadata, {
+                      targetdealstate: 'created',
+                      id: log.args.dealid,
+                      reationtx: log.transactionHash,
+                      creationtx_mined: true,
+                      createsuccess: true
+                    });
+
+                    self.queue.push(metadata.id, 0, self._dispatchUpdate, self, [metadata]);
+                    self.queue.purge();
+                  })
+
+                  .then(() => {
+                    self.$.dealfortwo.readDeal(log.args.dealid, log.args.owner, function (err, data) {
+                      self.dispatch('update_deal', {
+                        id: log.args.dealid,
+                        dealdata: data,
+                      });
+                    });
+                  })
+
+                  .catch((err) => console.log('sc-chainlisteners -> err handling newDealForTwo event:', err));
+
+              });
+            });
+
+        },
+
+        _dispatchUpdate: function (mutation) {
+          this.dispatch('update_deal', mutation);
+        },
+
+        _getToBlock: function () {
+          // return the block after whisper messages have expired
+
+          var toBlockTs = Date.now() - this.config.shhttl;
+          var toBlock = this.web3.eth.blockNumber - (this.config.shhttl / 20); // conservative est of 20s blocktime so we have less blocks to check the ts of
+
+          while (this.web3.getBlock(startBlock).timestamp > toBlockTs) {
+            toBlock--;
+          }
+
+          toBlock++; // advance 1 block so we don't loose any deals in between the whisper expiration the startBlock;
+          return toBlock;
+        }
+
+      })
+      ;
+    </script>
+</dom-module>

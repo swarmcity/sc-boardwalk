@@ -438,11 +438,13 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
           var self = this;
           this.loading = true;
           var dealID = UUIDjs.create().toString();
+          var offerTime = Date.now();
 
           var metadata = {
             msg: this.offermsg,
             hashtag: this.offerhashtag,
             amount: this.offeramount,
+            offertime: offerTime,
             seeker: {
               username: this.identity.username,
               pubkey: this.identity.pubkey,
@@ -469,7 +471,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
                 },
                 offer: self.offermsg,
                 offerhashtag: self.hashtagaddress,
-                offertime: Date.now(),
+                offertime: offerTime,
                 offeramount: amount,
                 offercreationtx: txhash,
                 offercreationallowancetx: extratx.allowancetx
