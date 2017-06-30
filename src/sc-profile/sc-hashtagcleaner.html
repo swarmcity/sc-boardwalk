@@ -96,13 +96,13 @@
           </div>
           <iron-collapse id="completeddeals_collapser">
             <template is="dom-repeat" items="{{expireddeals}}">
-             <div on-tap="_canceldeal">CANCEL DEAL</div>
+
             <template is="dom-if" if="{{!_isdone(item)}}">
               <div>DealId: {{item.dealid}}</div>
               <div><sc-tokenbalanceformatter value="{{item.amount}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter></div>
               <template is="dom-if" if="{{_canbecanceled(item)}}">
-               
-             </template>
+               <div on-tap="_canceldeal">CANCEL DEAL</div>
+              </template>
                 <template is="dom-if" if="{{_canbepaidout(item)}}">
               PAYOUT DEAL</template>
                 <div></div>
