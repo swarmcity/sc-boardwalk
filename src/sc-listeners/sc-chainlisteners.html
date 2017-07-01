@@ -10,6 +10,7 @@
 <dom-module id="sc-chainlisteners">
     <template>
         <sc-dealfortwo id="dealfortwo"></sc-dealfortwo>
+        <sc-ipfs id="ipfs"></sc-ipfs>
         <sc-web3 id="web3" web3="{{web3}}"></sc-web3>
         <sc-config config="{{config}}"></sc-config>
     </template>
@@ -53,8 +54,8 @@
               return item.id === mutation.id;
             });
 
-            if (foundDeal > -1) {
-              if (mutation.targetdealstate) {
+            if (mutation.targetdealstate) {
+              if (foundDeal > -1) {
                 switch ((deals[foundDeal].dealstate || 'init') + '_' + mutation.targetdealstate) {
 
                   // valid state transitions
@@ -78,21 +79,28 @@
                   case 'payout_payout':
                     break;
                   default:
-                    console.log('sc-chainlisteners -> unknown dealstate', (foundDeal.dealstate || 'init') + '_' + mutation.targetdealstate);
-                    debugger;
-                    return; // invalid transition
+//                    console.log('sc-chainlisteners -> invalid transition', (deals[foundDeal].dealstate || 'init') + '_' + mutation.targetdealstate);
+                    return; // ignore invalid transition
                 }
               }
+
+              mutation.dealstate = mutation.targetdealstate;
+              delete mutation.targetdealstate;
             }
 
-            mutation.dealstate = mutation.targetdealstate;
-            delete mutation.targetdealstate;
-
-            mutation.ismydeal = (deals[foundDeal].seeker.pubkey === this.identity.pubkey);
-            Object.assign(deals[foundDeal], mutation);
 
             if (foundDeal === -1) {
-              deals.push(Object.assign(this.getEmptyDeal(), mutation));
+              mutation.ismydeal = (mutation.seeker.pubkey === this.identity.pubkey);
+              deals.push(Object.assign({
+                  replies: [],
+                  seeker: {
+                    pubkey: '0x0'
+                  }
+                },
+                mutation));
+            } else {
+              mutation.ismydeal = (deals[foundDeal].seeker.pubkey === this.identity.pubkey);
+              Object.assign(deals[foundDeal], mutation);
             }
 
             return {
@@ -110,139 +118,133 @@
         _getDealsFromEvents: function () {
           var self = this;
           var eventOptions = {
-            fromBlock: this.config.eventFromBlock,
-            toBlock: this._getToBlock()
+            fromBlock: this.config.eventFromBlock
           };
 
-          var fundDealEvent = this.$.dealfortwo.NewDealForTwo(eventOptions);
+          var newDealEvent = this.$.dealfortwo.DealForTwoFactoryContractInstance.NewDealForTwo({}, eventOptions);
 
-          fundDealEvent.get()
-            .then(function (logs) {
+          newDealEvent.get((err, logs) => {
 
-              logs.forEach((log) => {
-                self.$.ipfs.cat(log.args.metadata)
+            if (err) {
+              console.log('sc-chainlisteners -> err getting NewDealForTwo events', err);
+              return;
+            }
 
-                  .then((result) => {
-                    var metadata = JSON.parse(result);
+            logs.forEach((log) => {
+              self.$.ipfs.cat(log.args.metadata, (err, result) => {
 
-                    Object.assign(metadata, {
-                      targetdealstate: 'created',
-                      id: log.args.dealid,
-                      creationtx: log.transactionHash,
-                      creationtx_mined: true,
-                      createsuccess: true
-                    });
+                if (err) {
+                  console.log('sc-chainlisteners -> err getting deal', log.args.dealid, ' metadata', err);
+                  return;
+                }
 
-                    self.queue.push(metadata.id, 0, self._dispatchUpdate, self, [metadata]);
-                    self.queue.purge();
-                  })
+                var metadata = JSON.parse(result);
 
-                  .then(() => {
-                    self.$.dealfortwo.readDeal(log.args.dealid, log.args.owner, function (err, data) {
-                      self.dispatch('update_deal', {
-                        id: log.args.dealid,
-                        dealdata: data,
-                      });
-                    });
-                  })
+                Object.assign(metadata, {
+                  targetdealstate: 'created',
+                  id: log.args.dealid,
+                  creationtx: log.transactionHash,
+                  creationtx_mined: true,
+                  createsuccess: true
+                });
 
-                  .catch((err) => console.log('sc-chainlisteners -> err handling newDealForTwo event:', err));
+                self.queue.push(metadata.id, 0, self._dispatchUpdate, self, [metadata]);
+                self.queue.purge();
 
+                self.$.dealfortwo.readDeal(log.args.dealid, log.args.owner, function (err, data) {
+                  self.dispatch('update_deal', {
+                    id: log.args.dealid,
+                    dealdata: data,
+                  });
+                });
               });
             });
+          });
 
 
-          var fundDealEvent = this.$.dealfortwo.FundDeal(eventOptions);
+          var fundDealEvent = this.$.dealfortwo.DealForTwoFactoryContractInstance.FundDeal({}, eventOptions);
 
-          fundDealEvent.get()
-            .then(function (logs) {
+          fundDealEvent.get((err, logs) => {
 
-              logs.forEach((log) => {
-                self.$.ipfs.cat(log.args.metadata)
+            if (err) {
+              console.log('sc-chainlisteners -> err getting FundDeal events', err);
+              return;
+            }
 
-                  .then((result) => {
-                    var metadata = JSON.parse(result);
+            logs.forEach((log) => {
+              self.$.ipfs.cat(log.args.metadata, (err, result) => {
+                if (err) {
+                  console.log('sc-chainlisteners -> err getting deal', log.args.dealid, ' metadata', err);
+                  return;
+                }
 
+                var metadata = JSON.parse(result);
+
+                Object.assign(metadata, {
+                  targetdealstate: 'indeal',
+                  id: log.args.dealid,
+                  providerfundingtx: log.transactionHash,
+                  provideraccepted: true,
+                  providerfundingtx_mined: true,
+                });
+
+                self.queue.push(metadata.id, 1, self._dispatchUpdate, self, [metadata]);
+                self.queue.purge();
+              });
+            });
+          });
+
+          var dealStatusChangeEvent = this.$.dealfortwo.DealForTwoFactoryContractInstance.DealStatusChange({}, eventOptions);
+
+          dealStatusChangeEvent.get((err, logs) => {
+            if (err) {
+              console.log('sc-chainlisteners -> err getting DealStatusChange events', err);
+              return;
+            }
+
+            logs.forEach((log) => {
+              self.$.ipfs.cat(log.args.metadata, (err, result) => {
+                if (err) {
+                  console.log('sc-chainlisteners -> err getting deal', log.args.dealid, ' metadata', err);
+                  return;
+                }
+
+                var metadata = JSON.parse(result);
+
+                switch (log.args.newstatus.toNumber()) {
+                  case 1: //done
                     Object.assign(metadata, {
-                      targetdealstate: 'indeal',
                       id: log.args.dealid,
-                      providerfundingtx: log.transactionHash,
-                      provideraccepted: true,
-                      providerfundingtx_mined: true,
+                      payouttx: log.transactionHash,
+                      targetdealstate: 'payout',
+                      payouttx_mined: true,
+                      payoutsuccess: true,
                     });
-
+                    self.queue.push(metadata.id, 2, self._dispatchUpdate, self, [metadata]);
+                    break;
+                  case 4: //canceled
+                    Object.assign(metadata, {
+                      id: log.args.dealid,
+                      targetdealstate: 'canceled',
+                      seekercanceltx: log.transactionHash
+                    });
                     self.queue.push(metadata.id, 1, self._dispatchUpdate, self, [metadata]);
-                    self.queue.purge();
-                  })
-
-                  .catch((err) => console.log('sc-chainlisteners -> err handling FundDeal event:', err));
-
+                    break;
+                  default:
+                    console.log('sc-chainlisteners -> unknown dealstatus', log.args.newstatus.toNumber());
+                    return;
+                }
+                self.queue.purge();
               });
             });
-
-          var dealStatusChangeEvent = this.$.dealfortwo.DealStatusChange(eventOptions);
-
-          dealStatusChangeEvent.get()
-            .then(function (logs) {
-
-              logs.forEach((log) => {
-                self.$.ipfs.cat(log.args.metadata)
-
-                  .then((result) => {
-                    var metadata = JSON.parse(result);
-
-                    switch (log.args.newstatus) {
-                      case 1: //done
-                        Object.assign(metadata, {
-                          id: log.args.dealid,
-                          payouttx: log.transactionHash,
-                          targetdealstate: 'payout',
-                          payouttx_mined: true,
-                          payoutsuccess: true,
-                        });
-                        self.queue.push(metadata.id, 2, self._dispatchUpdate, self, [metadata]);
-                        break;
-                      case 4: //canceled
-                        Object.assign(metadata, {
-                          id: log.args.dealid,
-                          targetdealstate: 'canceled',
-                          seekercanceltx: log.transactionHash
-                        });
-                        self.queue.push(metadata.id, 1, self._dispatchUpdate, self, [metadata]);
-                        break;
-                      default:
-                        console.log('sc-chainlisteners -> unknown dealstatus', log.args.newstatus);
-                        return;
-                    }
-                    self.queue.purge();
-                  })
-
-                  .catch((err) => console.log('sc-chainlisteners -> err handling DealStatusChange event:', err));
-
-              });
-            })
+          })
 
         },
 
         _dispatchUpdate: function (mutation) {
           this.dispatch('update_deal', mutation);
-        },
-
-        _getToBlock: function () {
-          // return the block after whisper messages have expired
-
-          var toBlockTs = Date.now() - this.config.shhttl;
-          var toBlock = this.web3.eth.blockNumber - (this.config.shhttl / 20); // conservative est of 20s blocktime so we have less blocks to check the ts of
-
-          while (this.web3.getBlock(startBlock).timestamp > toBlockTs) {
-            toBlock--;
-          }
-
-          toBlock++; // advance 1 block so we don't loose any deals in between the whisper expiration the startBlock;
-          return toBlock;
         }
+      });
 
-      })
-      ;
     </script>
 </dom-module>

@@ -323,7 +323,7 @@
               console.log('getGasPrice failed',err);
               return cb(err);
             }
-            self.DealForTwoFactoryContractInstance.makeDealForTwo.estimateGas(dealID, offerAmount,'', {
+            self.DealForTwoFactoryContractInstance.makeDealForTwo.estimateGas(dealID, offerAmount, 'some46characterhashofthemetadatatoestimategas!', {
                   from: from
                 }, function(err, gasNeeded) {
               // if (err){
@@ -367,7 +367,7 @@
           }
           extratx.allowancetx = tx;
           self.web3.cached.getGasPrice(function (err, gasPrice) {
-            self.DealForTwoFactoryContractInstance.fundDeal.estimateGas(dealID, dealOwner, function (err, gasNeeded) {
+            self.DealForTwoFactoryContractInstance.fundDeal.estimateGas(dealID, dealOwner, 'some46characterhashofthemetadatatoestimategas!', function (err, gasNeeded) {
               gasNeeded = gasNeeded || 175000;
 
               self._storeMetadata(metadata, function (err, metadataHash) {
@@ -398,7 +398,7 @@
       payout: function(dealID, from, metadata, cb) {
         var self = this;
         self.web3.cached.getGasPrice(function(err, gasPrice) {
-          self.DealForTwoFactoryContractInstance.payout.estimateGas(dealID,'', {
+          self.DealForTwoFactoryContractInstance.payout.estimateGas(dealID, 'some46characterhashofthemetadatatoestimategas!', {
             from: from
           }, function(err, gasNeeded) {
             if (gasNeeded) {
@@ -447,7 +447,7 @@
       cancelDeal: function(dealId, from, metadata, cb) {
         var self = this;
         self.web3.cached.getGasPrice(function(err, gasPrice) {
-          self.DealForTwoFactoryContractInstance.cancelDeal.estimateGas(dealId, {
+          self.DealForTwoFactoryContractInstance.cancelDeal.estimateGas(dealId, 'some46characterhashofthemetadatatoestimategas!', {
             from: from
           }, function(err, gasNeeded) {
             if (gasNeeded) {
