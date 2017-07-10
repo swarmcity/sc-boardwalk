@@ -307,7 +307,7 @@ This is dealchat.
           "from": self.shhweb3.identity,
           "topics": topics,
           "payload": self.shhweb3.fromAscii(JSON.stringify(message)),
-          "ttl": this.config.sshttl,
+          "ttl": 60 * 60 * 24 * 7,
           "priority": 1000
         };
 
