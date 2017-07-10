@@ -482,7 +482,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
                   "from": self.shhweb3.identity,
                   "topics": topics,
                   "payload": self.shhweb3.fromAscii(JSON.stringify(newrequest)),
-                  "ttl": self.config.shhttl,
+                  "ttl": 60 * 60 * 24 * 7,
                   "priority": 1000
                 };
                 console.log('posting to topics', topics);
