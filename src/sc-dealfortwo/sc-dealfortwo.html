@@ -359,7 +359,7 @@
         var extratx = {};
         this.$.minime.checkOrGiveAllowance(from, this.config.dealfortwofactory, offerAmount, function(err, tx) {
           if (err) {
-            debugger;
+            //debugger;
             return cb(err);
           }
           extratx.allowancetx = tx;
