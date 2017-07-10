@@ -1,10 +1,10 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../sc-config/sc-config.html">
-<!-- <script src="../../bower_components/browser-builds/dist/ethereumjs-tx.js"></script> -->
 <link rel="import" href="../sc-web3/sc-web3.html">
 <link rel="import" href="../sc-minime/sc-minime.html">
-
 <script type="text/javascript" src="../../bower_components/uuid-js/lib/uuid.js"></script>
+<script src="./coder.js"></script>
+<script src="./function.js"></script>
 
 <dom-module id="sc-dealfortwo">
   <template>
@@ -20,276 +20,123 @@
       properties: {
         abi: {
           type: Object,
-          value: [
-    {
-      "constant": false,
-      "inputs": [
-        {
-          "name": "_dealid",
-          "type": "string"
-        },
-        {
-          "name": "_metadata",
-          "type": "string"
-        }
-      ],
-      "name": "cancelDeal",
-      "outputs": [],
-      "payable": false,
-      "type": "function"
-    },
-    {
-      "constant": true,
-      "inputs": [],
-      "name": "hashtagToken",
-      "outputs": [
-        {
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "payable": false,
-      "type": "function"
-    },
-    {
-      "constant": false,
-      "inputs": [
-        {
-          "name": "_dealid",
-          "type": "string"
-        },
-        {
-          "name": "_dealowner",
-          "type": "address"
-        }
-      ],
-      "name": "readDeal",
-      "outputs": [
-        {
-          "name": "status",
-          "type": "uint8"
-        },
-        {
-          "name": "commissionValue",
-          "type": "uint256"
-        },
-        {
-          "name": "dealValue",
-          "type": "uint256"
-        },
-        {
-          "name": "provider",
-          "type": "address"
-        }
-      ],
-      "payable": false,
-      "type": "function"
-    },
-    {
-      "constant": false,
-      "inputs": [
-        {
-          "name": "_dealid",
-          "type": "string"
-        },
-        {
-          "name": "_offerValue",
-          "type": "uint256"
-        },
-        {
-          "name": "_metadata",
-          "type": "string"
-        }
-      ],
-      "name": "makeDealForTwo",
-      "outputs": [],
-      "payable": false,
-      "type": "function"
-    },
-    {
-      "constant": false,
-      "inputs": [
-        {
-          "name": "_dealid",
-          "type": "string"
-        },
-        {
-          "name": "_metadata",
-          "type": "string"
-        }
-      ],
-      "name": "payout",
-      "outputs": [],
-      "payable": false,
-      "type": "function"
-    },
-    {
-      "constant": false,
-      "inputs": [
-        {
-          "name": "_dealid",
-          "type": "string"
-        },
-        {
-          "name": "_dealowner",
-          "type": "address"
-        },
-        {
-          "name": "_seekerFraction",
-          "type": "uint256"
-        },
-        {
-          "name": "_metadata",
-          "type": "string"
-        }
-      ],
-      "name": "resolve",
-      "outputs": [],
-      "payable": false,
-      "type": "function"
-    },
-    {
-      "constant": false,
-      "inputs": [
-        {
-          "name": "_dealid",
-          "type": "string"
-        },
-        {
-          "name": "_dealowner",
-          "type": "address"
-        },
-        {
-          "name": "_metadata",
-          "type": "string"
-        }
-      ],
-      "name": "fundDeal",
-      "outputs": [],
-      "payable": false,
-      "type": "function"
-    },
-    {
-      "constant": true,
-      "inputs": [],
-      "name": "hashtag",
-      "outputs": [
-        {
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "payable": false,
-      "type": "function"
-    },
-    {
-      "constant": false,
-      "inputs": [
-        {
-          "name": "_dealid",
-          "type": "string"
-        },
-        {
-          "name": "_dealowner",
-          "type": "address"
-        },
-        {
-          "name": "_metadata",
-          "type": "string"
-        }
-      ],
-      "name": "dispute",
-      "outputs": [],
-      "payable": false,
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "name": "_hashtag",
-          "type": "address"
-        }
-      ],
-      "payable": false,
-      "type": "constructor"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": false,
-          "name": "owner",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "name": "dealid",
-          "type": "string"
-        },
-        {
-          "indexed": false,
-          "name": "metadata",
-          "type": "string"
-        }
-      ],
-      "name": "NewDealForTwo",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": false,
-          "name": "provider",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "name": "owner",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "name": "dealid",
-          "type": "string"
-        },
-        {
-          "indexed": false,
-          "name": "metadata",
-          "type": "string"
-        }
-      ],
-      "name": "FundDeal",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": false,
-          "name": "owner",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "name": "dealid",
-          "type": "string"
-        },
-        {
-          "indexed": false,
-          "name": "newstatus",
-          "type": "uint8"
-        },
-        {
-          "indexed": false,
-          "name": "metadata",
-          "type": "string"
-        }
-      ],
-      "name": "DealStatusChange",
-      "type": "event"
-    }
-  ]
+          value: [{
+            "constant": false,
+            "inputs": [{
+              "name": "_dealid",
+              "type": "string"
+            }, {
+              "name": "_dealowner",
+              "type": "address"
+            }],
+            "name": "fundDeal",
+            "outputs": [],
+            "payable": false,
+            "type": "function"
+          }, {
+            "constant": false,
+            "inputs": [{
+              "name": "_dealid",
+              "type": "string"
+            }],
+            "name": "payout",
+            "outputs": [],
+            "payable": false,
+            "type": "function"
+          }, {
+            "constant": false,
+            "inputs": [{
+              "name": "_dealid",
+              "type": "string"
+            }, {
+              "name": "_dealowner",
+              "type": "address"
+            }, {
+              "name": "_seekerFraction",
+              "type": "uint256"
+            }],
+            "name": "resolve",
+            "outputs": [],
+            "payable": false,
+            "type": "function"
+          }, {
+            "constant": false,
+            "inputs": [{
+              "name": "_dealid",
+              "type": "string"
+            }, {
+              "name": "_dealowner",
+              "type": "address"
+            }],
+            "name": "readDeal",
+            "outputs": [{
+              "name": "status",
+              "type": "uint8"
+            }, {
+              "name": "commissionValue",
+              "type": "uint256"
+            }, {
+              "name": "dealValue",
+              "type": "uint256"
+            }, {
+              "name": "provider",
+              "type": "address"
+            }],
+            "payable": false,
+            "type": "function"
+          }, {
+            "constant": false,
+            "inputs": [{
+              "name": "_dealid",
+              "type": "string"
+            }, {
+              "name": "_offerValue",
+              "type": "uint256"
+            }],
+            "name": "makeDealForTwo",
+            "outputs": [],
+            "payable": false,
+            "type": "function"
+          }, {
+            "constant": false,
+            "inputs": [{
+              "name": "_dealid",
+              "type": "string"
+            }, {
+              "name": "_dealowner",
+              "type": "address"
+            }],
+            "name": "dispute",
+            "outputs": [],
+            "payable": false,
+            "type": "function"
+          }, {
+            "constant": false,
+            "inputs": [{
+              "name": "_dealid",
+              "type": "string"
+            }],
+            "name": "cancelDeal",
+            "outputs": [],
+            "payable": false,
+            "type": "function"
+          }, {
+            "inputs": [{
+              "name": "_hashtag",
+              "type": "address"
+            }],
+            "payable": false,
+            "type": "constructor"
+          }, {
+            "anonymous": false,
+            "inputs": [{
+              "indexed": false,
+              "name": "dealForTwoAddress",
+              "type": "address"
+            }],
+            "name": "NewDealForTwo",
+            "type": "event"
+          }]
         }
       },
 
@@ -297,18 +144,12 @@
         '_getready(web3,config)',
       ],
 
-      ready: function(){
-
-      },
-
       _getready: function(){
         if (!this.web3 || !this.config){
           return;
         }
-
         var DealForTwoFactoryContract = this.web3.eth.contract(this.abi);
         this.DealForTwoFactoryContractInstance = DealForTwoFactoryContract.at(this.config.dealfortwofactory);
-
       },
 
       // starts making a dealfortwo. callback with TXhash.
@@ -327,7 +168,7 @@
               console.log('getGasPrice failed',err);
               return cb(err);
             }
-            self.DealForTwoFactoryContractInstance.makeDealForTwo.estimateGas(dealID, offerAmount,'', {
+            self.DealForTwoFactoryContractInstance.makeDealForTwo.estimateGas(dealID, offerAmount, {
                   from: from
                 }, function(err, gasNeeded) {
               // if (err){
@@ -338,7 +179,7 @@
               // so use a safe value.
               gasNeeded = gasNeeded || 175000;
 
-              self.DealForTwoFactoryContractInstance.makeDealForTwo.sendTransaction(dealID, offerAmount,'', {
+              self.DealForTwoFactoryContractInstance.makeDealForTwo.sendTransaction(dealID, offerAmount, {
                 from: from,
                 gasPrice: gasPrice,
                 gas: gasNeeded
@@ -359,14 +200,14 @@
         var extratx = {};
         this.$.minime.checkOrGiveAllowance(from, this.config.dealfortwofactory, offerAmount, function(err, tx) {
           if (err) {
-            //debugger;
+            debugger;
             return cb(err);
           }
           extratx.allowancetx = tx;
           self.web3.cached.getGasPrice(function(err, gasPrice) {
-            self.DealForTwoFactoryContractInstance.fundDeal.estimateGas(dealID, dealOwner,'', function(err, gasNeeded) {
+            self.DealForTwoFactoryContractInstance.fundDeal.estimateGas(dealID, dealOwner, function(err, gasNeeded) {
               gasNeeded = gasNeeded || 175000;
-              self.DealForTwoFactoryContractInstance.fundDeal.sendTransaction(dealID, dealOwner,'', {
+              self.DealForTwoFactoryContractInstance.fundDeal.sendTransaction(dealID, dealOwner, {
                 from: from, //self.identity.pubkey,
                 gasPrice: gasPrice,
                 gas: gasNeeded
@@ -387,7 +228,7 @@
       payout: function(dealID, from, cb) {
         var self = this;
         self.web3.cached.getGasPrice(function(err, gasPrice) {
-          self.DealForTwoFactoryContractInstance.payout.estimateGas(dealID,'', {
+          self.DealForTwoFactoryContractInstance.payout.estimateGas(dealID, {
             from: from
           }, function(err, gasNeeded) {
             if (gasNeeded) {
@@ -395,7 +236,7 @@
             } else {
               gasNeeded = 600000;
             }
-            self.DealForTwoFactoryContractInstance.payout.sendTransaction(dealID,'', {
+            self.DealForTwoFactoryContractInstance.payout.sendTransaction(dealID, {
               from: from,
               gasPrice: gasPrice,
               gas: gasNeeded
@@ -413,11 +254,7 @@
       },
 
       readDeal: function(dealId, dealOwner, cb) {
-        //debugger;
         var self = this;
-//DealStatuses status, uint commissionValue, uint dealValue, address provider){
-//    bytes32 key = sha3(_dealowner,_dealid);
-
         self.DealForTwoFactoryContractInstance.readDeal.call(dealId, dealOwner, function(err, result) {
 
           cb(null, {
@@ -427,115 +264,117 @@
             provider: result[3]
           });
         });
-      }
-      // makeDeal: function(dealID,offerAmount, cb) {
-      //   var self = this;
+      },
 
-      //   this.contracturl = this.resolveUrl('../contracts/DealForTwoFactory.json');
-      //   this.importHref(this.contracturl, function(e) {
-      //     this.contractjson = JSON.parse(e.target.import.body.innerText);
-      //     self.web3.eth.getGasPrice(function(err, result) {
-      //       var gasPrice = result.toNumber(10);
-      //       // console.log('gasprice: ', gasPrice);
-      //       var DealForTwoFactoryContract = self.web3.eth.contract(self.contractjson.abi);
-      //       var DealForTwoFactoryContractInstance = DealForTwoFactoryContract.at(self.config.dealfortwofactory);
-      //       //address _hashtag, address _counterparty,uint _counterpartyThreshold, bytes32 _dealID
-      //       //console.log('doing transfer of ', amount, ' LC to: ', pubkey, 'from: ', self.account);
-      //       DealForTwoFactoryContractInstance.makeDealForTwo.sendTransaction(self.config.hashtagcontracts[self.selectedhashtag], 1, {
-      //         from: self.identity.pubkey,
-      //         gasPrice: gasPrice,
-      //         gas: 1000000
-      //       }, function(err, result) {
-      //         if (err) {
-      //           if (cb) {
-      //             return cb(err);
-      //           }
-      //         }
-      //         cb(null, result);
-      //         console.log(err, result);
-      //         console.log('waiting for TX to happen');
-      //         self.waitTx(result, function(err, res) {
-      //           self.helper_getDealAddressFromTx(result, function(err, dealaddress) {
-      //              //debugger;
-      //             if (!dealaddress){
-      //               return console.log('Cannot find deal address for tx. Skipping token transfer',result);
-      //             }
-                 
-      //             self.transfer(offerAmount, dealaddress, function(err, res) {
+      cancelDeal: function(dealId, from, cb) {
+        var self = this;
+        self.web3.cached.getGasPrice(function(err, gasPrice) {
+          self.DealForTwoFactoryContractInstance.cancelDeal.estimateGas(dealId, {
+            from: from
+          }, function(err, gasNeeded) {
+            if (gasNeeded) {
+              gasNeeded = Math.floor(gasNeeded * 1.2);
+            } else {
+              gasNeeded = 75000;
+            }
+            self.DealForTwoFactoryContractInstance.cancelDeal.sendTransaction(dealId, {
+              from: from,
+              gasPrice: gasPrice,
+              gas: gasNeeded
+            }, function(err, result) {
+              if (err) {
+                if (cb) {
+                  return cb(err);
+                }
+              }
+              cb(null, result);
+              console.log(err, result);
+            });
+          });
+        });
+      },
 
-      //               // ok so the create deal TX is done. Now notify that we're funding this deal.
-      //             var newrequest = {
-      //               id: dealID,
-      //               type: 'dealfortwo-seeker-funding',
-      //               time: Date.now(),
-      //               offerseekerfundingtx: res,
-      //               dealaddress: dealaddress,
-      //               // seeker: {
-      //               //   username: self.identity.username,
-      //               //   pubkey: self.identity.pubkey,
-      //               //   avatarhash: self.identity.avatarhash,
-      //               // },
-      //             };
+      // temp function to retrieve deal transactions from the contract where we didn't have events. This will return all
+      // makeDealForTwo & fundDeal txs. Returns a promise with the following resolve data:
+      // [
+      //   {
+      //     dealid: 'someId',
+      //     method: 'DealForTwo contract method name. either 'fundDeal' or 'makeDealForTwo',
+      //     txhash: 'the hash of the transaction'
+      //   }
+      // ]
+      getDealTxs: function(pubkey) {
+        return new Promise((resolve) => {
+          var self = this;
+          this.methods = {};
 
-      //               var topics = [
-      //                 self.shhweb3.encodetopic("swarmcity-v1"),
-      //                 self.shhweb3.encodetopic(newrequest.type),
-      //                 self.shhweb3.encodetopic(self.hashtag),
-      //                 self.shhweb3.encodetopic(newrequest.id),
-      //                 self.shhweb3.encodetopic(self.geohash.slice(0, 1)),
-      //                 self.shhweb3.encodetopic(self.geohash.slice(0, 2)),
-      //                 self.shhweb3.encodetopic(self.geohash.slice(0, 3)),
-      //                 self.shhweb3.encodetopic(self.geohash.slice(0, 4)),
-      //               ];
+          this.abi.filter(function (json) {
+            return json.type === 'function';
+          }).forEach(function (json) {
+            var func = new window.SolidityFunction(self.web3.eth, json, self.config.dealfortwofactory);
+            self.methods[func.signature()] = func;
+          });
 
-      //               if (self.shhweb3 && self.hashtag) {
+          var transferEvent = this.$.minime.MiniMeContractInstance.Transfer({
+            _from: pubkey,
+            _to: this.config.dealfortwofactory
+          }, {
+            
+            fromBlock: 3879365,
+            toBlock: 'latest'
+          }); // fromBlock is where the first tx happens
 
-      //                 var options = {
-      //                   "from": self.shhweb3.identity,
-      //                   "topics": topics,
-      //                   "payload": self.shhweb3.fromAscii(JSON.stringify(newrequest)),
-      //                   "ttl": 60 * 60 * 24,
-      //                   "priority": 1000
-      //                 };
+          // get the txHash of each Transfer event to the DealForTwoFactory. This event is emitted on makeDealForTwo and fundDeal functions
+          transferEvent.get(function(err, logs) {
 
-      //                 console.log('posting to topics', topics);
+            var promises = [];
 
-      //                 return self.shhweb3.shh.post(options, function(err, res) {
-      //                   console.log(err, res);
-      //                   //self.fire('new-submitted', {dealid:newrequest.id});
-      //                 });
-      //               }
-      //             });
-      //           });
+            logs.forEach(function(logTx) {
+              promises.push(new Promise((resolve2) => {
 
-      //         });
-      //         //self.currenttxhash = result;
+                self.web3.eth.getTransaction(logTx.transactionHash, function(err, tx) {
+                  if (err) {
+                    console.log('dealfortwo-tx -> err decoding tx:', logTx);
+                    return;
+                  }
+                  var signature = tx.input.substr(2, 8);
+                  var paramdata = tx.input.substr(10);
 
-      //       });
-      //     });
-      //   });
-      // },      
+                  try {
+                    var method = self.methods[signature];
+                    var decodedParams = SolidityCoder.decodeParams(method._inputTypes, paramdata);
+                    var methodName = method.displayName();
 
+                    self.readDeal(decodedParams[0], pubkey, function(err,res) {
+                      var dealdata = {
+                        dealid: decodedParams[0],
+                        commissionValue: res.commissionValue,
+                        dealValue : res.dealValue,
+                        provider: res.provider,
+                        status: res.status,
+                        method: method.displayName(),
+                        txhash: logTx.transactionHash
+                      };
 
-      // getContractAddress(account) {
-      //   var self = this;
-      //   return new Promise(function(resolve, reject) {
-      //     self.getNonce(account).then(function(nonce) {
-      //       resolve(window.EthJS.Util.bufferToHex(window.EthJS.Util.generateAddress(account, nonce)));
-      //     });
-      //   });
-      // },
+                      if (methodName === 'makeDealForTwo') {
+                        dealdata.seeker = {
+                          pubkey: tx.from
+                        }
+                      }
+                      resolve2(dealdata);
+                    });
+                  } catch (e) {
+                    console.log('dealfortwo-tx -> err decoding tx:', logTx);
+                  }
+                })
+              }));
+            });
 
-      // getNonce: function(account) {
-      //   var self = this;
-      //   return new Promise(function(resolve, reject) {
-      //     self.web3.eth.getTransactionCount(account, null, function(err, res) {
-      //       var nonce = res || 0;
-      //       console.log('nonce=', nonce);
-      //       resolve(nonce);
-      //     });
-      //   });
-      // },
+            resolve(Promise.all(promises));
+
+          });
+       });
+      },
 
     });
   </script>
