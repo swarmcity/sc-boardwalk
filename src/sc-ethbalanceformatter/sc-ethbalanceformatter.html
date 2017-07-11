@@ -42,13 +42,13 @@
         if (!isNaN(this.value)) {
 
           var ethunits = {  
-              'wei':          1,
-              'kwei':         1e3,
-              'mwei':         1e6,
-              'gwei':         1e9,
-              'szabo':        1e12,
-              'finney':       1e15,
-              'ether':        1e18,
+              ' wei':          1,
+              ' kwei':         1e3,
+              ' mwei':         1e6,
+              ' gwei':         1e9,
+              ' szabo':        1e12,
+              ' finney':       1e15,
+              ' ether':        1e18,
             }
           if (this.value === 0){
             this.formattedvalue = (0).toFixed(this.decimals);
@@ -56,7 +56,7 @@
             // needs to be multiplied with to obtain the unit of token to be sent to
             // a smart contract if you're talking about tokens units.
             // so that next to the textbox you can say 'xxx SWT'
-            this.denomination = 'ether';
+            this.denomination = ' ether';
             return;
           }
           for (i = Object.keys(ethunits).length-1 ; i >= 0; --i){
