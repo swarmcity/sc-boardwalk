@@ -1368,11 +1368,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
             "from": self.shhweb3.identity,
             "topics": topics,
             "payload": self.shhweb3.fromAscii(JSON.stringify(message)),
-<<<<<<< HEAD
-            "ttl": self.config.sshttl,
-=======
             "ttl": 60 * 60 * 24 * 7,
->>>>>>> b4b75c2e98c50cf8a8df1051ae2a47a760c985fa
+
             "priority": 1000
           };
 
