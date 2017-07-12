@@ -131,6 +131,11 @@
             }
 
             logs.forEach((log) => {
+              if (!log.args.metadata) {
+                  console.log('sc-chainlisteners -> skipping deal -> no metadata hash for dealid:', log.args.dealid);
+                  return;
+              }
+
               self.$.ipfs.cat(log.args.metadata, (err, result) => {
 
                 if (err) {
