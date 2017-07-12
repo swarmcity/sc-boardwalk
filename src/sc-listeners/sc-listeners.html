@@ -243,14 +243,14 @@
             msg: sanitize(replydata.reply),
             provider: replydata.replyer,
             replytime: replydata.replytime,
-            parentrequestid: replydata.parentrequestid,
+            requestid: replydata.requestid,
             replyamount: replydata.replyamount
           };
 
           // make a copy of deals - apply changes and return
           let deals = this.deals.slice(0);
           var foundDeal = deals.findIndex(function(item) {
-            return item.id === replydata.parentrequestid;
+            return item.id === replydata.requestid;
           });
 
           var deal;
@@ -290,7 +290,7 @@
           } else {
             // this message comes before the deal info. Create an empty placehodler
             var newDeal = {
-              id: replydata.parentrequestid,
+              id: replydata.requestid,
               replies: [replyMutation],
               ireplied : replyMutation.ismyreply
             };
@@ -301,7 +301,7 @@
           if (deal.ismydeal){
             // create a notification
             this.dispatch('update_notification',{
-              id: replyMutation.parentrequestid + '_' + replyMutation.replytime,
+              id: replyMutation.requestid + '_' + replyMutation.replytime,
               senderidentity : replyMutation.provider,
               timestamp: replyMutation.replytime,
               msg: replyMutation.provider.username + ' responded to your request.',
@@ -541,8 +541,8 @@
         // a gate is a queue that needs to be processed in order
         // to simplify state transitions later on.
         // gate 1 : create request
-        // gate 2 : reply to a request
-        // gate 3 : selection of provider / deal cancel
+        // gate 2 : reply to a request / deal cancel
+        // gate 3 : selection of provider
         // gate 4 : funding of deal by provider
         // gate 5 : approval of deal / dispute
         switch (payload.type){
@@ -550,11 +550,11 @@
             var dealid = payload.id;
             this.messagequeue.push(dealid, 0, this.parsemessage, this, [payload]);
             break;
+          case 'dealfortwo-cancel':
           case 'dealfortwo-request-reply':
-            var dealid = payload.parentrequestid;
+            var dealid = payload.requestid;
             this.messagequeue.push(dealid, 1, this.parsemessage, this, [payload]);
             break;
-          case 'dealfortwo-cancel':
           case 'dealfortwo-select-provider':
             var dealid = payload.requestid;
             this.messagequeue.push(dealid, 2, this.parsemessage, this, [payload]);

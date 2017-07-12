@@ -988,7 +988,7 @@ This is the component showing all requests of a certain hashtag. It contains a r
       },
 
       filter4: function(item){
-        if (item.dealstate == 'payout') return true;
+        if (item.dealstate === 'payout'  || item.dealstate === 'canceled') return true;
         return false;
       },
 

@@ -26,13 +26,6 @@ Example Usage:
         factoryImpl: function(gates) {
           this.gates = gates;
 
-          var i = 0;
-          this._gatequeue = [];
-
-          while (i < this.gates) {
-            this._gatequeue.push([]);
-            i++
-          }
 
         },
 
@@ -88,9 +81,16 @@ Example Usage:
         },
 
         _payloadStructure: function() {
+          let gatequeue = [];
+          let i = 0;
+          while (i < this.gates) {
+            gatequeue.push([]);
+            i++
+          }
+
           return {
             currentgate: 0,
-            gatequeue: this._gatequeue
+            gatequeue: gatequeue
           }
         },
       })

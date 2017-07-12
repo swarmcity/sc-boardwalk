@@ -327,7 +327,7 @@ This components allow a Swarm Citizen to reply on a request.
         var message = {
           type: 'dealfortwo-request-reply',
           id: UUIDjs.create().toString(),
-          parentrequestid: this.itemdata.id,
+          requestid: this.itemdata.id,
           hashtag: this.itemdata.hashtag,
           replyer: {
             avatarhash: this.identity.avatarhash,
