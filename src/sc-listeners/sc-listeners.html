@@ -542,9 +542,9 @@
         // to simplify state transitions later on.
         // gate 1 : create request
         // gate 2 : reply to a request
-        // gate 3 : cancel deal or selection of provider
+        // gate 3 : selection of provider / deal cancel
         // gate 4 : funding of deal by provider
-        // gate 5 : approval of deal
+        // gate 5 : approval of deal / dispute
         switch (payload.type){
           case 'dealfortwo-request-create':
             var dealid = payload.id;
