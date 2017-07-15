@@ -3,8 +3,8 @@
 <dom-module id="sc-ethbalanceformatter">
   <template strip-whitespace>
     <span>
-      <template is="dom-if" if="{{!onlydenomination}}">{{formattedvalue}} </template>
-      <template is="dom-if" if="{{!onlybalance}}">{{denomination}}</template>
+      <template is="dom-if" if="{{!onlydenomination}}">&nbsp;{{formattedvalue}}</template>
+      <template is="dom-if" if="{{!onlybalance}}">{{denomination}}&nbsp;</template>
     </span>
   </template>
   <script>

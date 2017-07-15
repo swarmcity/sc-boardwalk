@@ -3,6 +3,7 @@
 <link rel="import" href="../sc-shh/sc-shh.html">
 <link rel="import" href="../sc-web3/sc-web3.html">
 <link rel="import" href="../sc-config/sc-config.html">
+<link rel="import" href="../sc-gatedqueue/sc-gatedqueue.html">
 <link rel="import" href="../sc-dealfortwo/sc-dealfortwo.html">
 <script type="text/javascript" src="../../bower_components/uuid-js/lib/uuid.js"></script>
 <script src="html-css-sanitizer-minified.js"></script>
@@ -88,88 +89,95 @@
           });
 
           if (foundDeal > -1) {
+            // if (mutation.targetdealstate) {
+            //   var targetstate;
+
+            //   switch ((deals[foundDeal].dealstate || 'init') + '_' + mutation.targetdealstate) {
+
+            //     case 'init_created':
+            //     case 'init_accepted':
+            //     case 'init_canceled':
+            //     case 'init_indeal':
+            //     case 'init_payout':
+            //       targetstate = mutation.targetdealstate;
+            //       break;
+            //     case 'created_created':
+            //       targetstate = 'created';
+            //       break;
+            //     case 'created_accepted':
+            //       targetstate = 'accepted';
+            //       break;
+            //     case 'created_canceled':
+            //       targetstate = 'canceled';
+            //       break;
+            //     case 'created_indeal':
+            //       targetstate = 'indeal';
+            //       break;
+            //     case 'created_payout':
+            //       targetstate = 'payout';
+            //       break;
+            //     case 'accepted_accepted':
+            //       targetstate = 'accepted';
+            //       break;
+            //     case 'accepted_canceled':
+            //       targetstate = 'canceled';
+            //       break;
+            //     case 'accepted_created':
+            //       targetstate = 'accepted';
+            //       break;
+            //     case 'accepted_indeal':
+            //       targetstate = 'indeal';
+            //       break;
+            //     case 'accepted_payout':
+            //       targetstate = 'payout';
+            //       break;
+            //     case 'canceled_canceled':
+            //     case 'canceled_indeal':
+            //     case 'canceled_payout':
+            //     case 'canceled_accepted':
+            //     case 'canceled_created':
+            //       targetstate = 'canceled';
+            //       break;
+            //     case 'indeal_indeal':
+            //       targetstate = 'indeal';
+            //       break;
+            //     case 'indeal_created':
+            //       targetstate = 'indeal';
+            //       break;
+            //     case 'indeal_accepted':
+            //       targetstate = 'indeal';
+            //       break;
+            //     case 'indeal_payout':
+            //       targetstate = 'payout';
+            //       break;
+            //     case 'payout_created':
+            //       targetstate = 'payout';
+            //       break;
+            //     case 'payout_indeal':
+            //       targetstate = 'payout';
+            //       break;
+            //     case 'payout_accepted':
+            //       targetstate = 'payout';
+            //       break;
+            //     case 'payout_payout':
+            //       targetstate = 'payout';
+            //       break;
+            //     default:
+            //       targetstate = 'init';
+            //       //debugger;
+            //       break;
+            //   }
+
+            //   mutation.dealstate = targetstate;
+
+            //   //              mutation.dealstate = this.gettargetdealstate(deals[foundDeal].dealstate,mutation.targetdealstate);
+            //   delete mutation.targetdealstate;
+            // }
+
+            // this code replaces the commented out logic above.
+            // message ordering ( and thus mutation ) is resolved using the gatequeue 
             if (mutation.targetdealstate) {
-              var targetstate;
-
-              switch ((deals[foundDeal].dealstate || 'init') + '_' + mutation.targetdealstate) {
-
-                case 'init_created':
-                case 'init_accepted':
-                case 'init_canceled':
-                case 'init_indeal':
-                case 'init_payout':
-                  targetstate = mutation.targetdealstate;
-                  break;
-                case 'created_created':
-                  targetstate = 'created';
-                  break;
-                case 'created_accepted':
-                  targetstate = 'accepted';
-                  break;
-                case 'created_canceled':
-                  targetstate = 'canceled';
-                  break;
-                case 'created_indeal':
-                  targetstate = 'indeal';
-                  break;
-                case 'created_payout':
-                  targetstate = 'payout';
-                  break;
-                case 'accepted_accepted':
-                  targetstate = 'accepted';
-                  break;
-                case 'accepted_canceled':
-                  targetstate = 'canceled';
-                  break;
-                case 'accepted_created':
-                  targetstate = 'accepted';
-                  break;
-                case 'accepted_indeal':
-                  targetstate = 'indeal';
-                  break;
-                case 'accepted_payout':
-                  targetstate = 'payout';
-                  break;
-                case 'canceled_canceled':
-                case 'canceled_indeal':
-                case 'canceled_payout':
-                case 'canceled_accepted':
-                case 'canceled_created':
-                  targetstate = 'canceled';
-                  break;
-                case 'indeal_indeal':
-                  targetstate = 'indeal';
-                  break;
-                case 'indeal_created':
-                  targetstate = 'indeal';
-                  break;
-                case 'indeal_accepted':
-                  targetstate = 'indeal';
-                  break;
-                case 'indeal_payout':
-                  targetstate = 'payout';
-                  break;
-                case 'payout_created':
-                  targetstate = 'payout';
-                  break;
-                case 'payout_indeal':
-                  targetstate = 'payout';
-                  break;
-                case 'payout_accepted':
-                  targetstate = 'payout';
-                  break;
-                case 'payout_payout':
-                  targetstate = 'payout';
-                  break;
-                default:
-                  targetstate = 'init';
-                  //debugger;
-                  break;
-              }
-
-              mutation.dealstate = targetstate;
-
-              //              mutation.dealstate = this.gettargetdealstate(deals[foundDeal].dealstate,mutation.targetdealstate);
+              mutation.dealstate = mutation.targetdealstate;
               delete mutation.targetdealstate;
             }
 
@@ -242,14 +250,14 @@
             msg: sanitize(replydata.reply),
             provider: replydata.replyer,
             replytime: replydata.replytime,
-            parentrequestid: replydata.parentrequestid,
+            requestid: replydata.requestid,
             replyamount: replydata.replyamount
           };
 
           // make a copy of deals - apply changes and return
           let deals = this.deals.slice(0);
           var foundDeal = deals.findIndex(function(item) {
-            return item.id === replydata.parentrequestid;
+            return item.id === replydata.requestid;
           });
 
           var deal;
@@ -289,7 +297,7 @@
           } else {
             // this message comes before the deal info. Create an empty placehodler
             var newDeal = {
-              id: replydata.parentrequestid,
+              id: replydata.requestid,
               replies: [replyMutation],
               ireplied : replyMutation.ismyreply
             };
@@ -300,7 +308,7 @@
           if (deal.ismydeal){
             // create a notification
             this.dispatch('update_notification',{
-              id: replyMutation.parentrequestid + '_' + replyMutation.replytime,
+              id: replyMutation.requestid + '_' + replyMutation.replytime,
               senderidentity : replyMutation.provider,
               timestamp: replyMutation.replytime,
               msg: replyMutation.provider.username + ' responded to your request.',
@@ -330,78 +338,87 @@
           });
           if (foundDeal > -1) {
 
+            // if (mutation.targetdealstate) {
+            //   var targetstate;
+
+            //   switch ((deals[foundDeal].dealstate || 'init') + '_' + mutation.targetdealstate) {
+
+            //     case 'init_created':
+            //     case 'init_accepted':
+            //     case 'init_indeal':
+            //     case 'init_payout':
+            //       targetstate = mutation.targetdealstate;
+            //       break;
+            //     case 'created_created':
+            //       targetstate = 'created';
+            //       break;
+            //     case 'created_accepted':
+            //       targetstate = 'accepted';
+            //       break;
+            //     case 'created_indeal':
+            //       targetstate = 'indeal';
+            //       break;
+            //     case 'created_payout':
+            //       targetstate = 'payout';
+            //       break;
+            //     case 'accepted_accepted':
+            //       targetstate = 'accepted';
+            //       break;
+            //     case 'accepted_created':
+            //       targetstate = 'accepted';
+            //       break;
+            //     case 'accepted_indeal':
+            //       targetstate = 'indeal';
+            //       break;
+            //     case 'accepted_payout':
+            //       targetstate = 'payout';
+            //       break;
+            //     case 'indeal_indeal':
+            //       targetstate = 'indeal';
+            //       break;
+            //     case 'indeal_created':
+            //       targetstate = 'indeal';
+            //       break;
+            //     case 'indeal_accepted':
+            //       targetstate = 'indeal';
+            //       break;
+            //     case 'indeal_payout':
+            //       targetstate = 'payout';
+            //       break;
+            //     case 'payout_created':
+            //       targetstate = 'payout';
+            //       break;
+            //     case 'payout_indeal':
+            //       targetstate = 'payout';
+            //       break;
+            //     case 'payout_accepted':
+            //       targetstate = 'payout';
+            //       break;
+            //     case 'payout_payout':
+            //       targetstate = 'payout';
+            //       break;
+            //     default:
+            //       targetstate = 'init';
+            //       //debugger;
+            //       break;
+            //   }
+            //   mutation.dealstate = targetstate;
+            // }
+
+            // this code replaces the commented out logic above.
+            // message ordering ( and thus mutation ) is resolved using the gatequeue 
             if (mutation.targetdealstate) {
-              var targetstate;
-
-              switch ((deals[foundDeal].dealstate || 'init') + '_' + mutation.targetdealstate) {
-
-                case 'init_created':
-                case 'init_accepted':
-                case 'init_indeal':
-                case 'init_payout':
-                  targetstate = mutation.targetdealstate;
-                  break;
-                case 'created_created':
-                  targetstate = 'created';
-                  break;
-                case 'created_accepted':
-                  targetstate = 'accepted';
-                  break;
-                case 'created_indeal':
-                  targetstate = 'indeal';
-                  break;
-                case 'created_payout':
-                  targetstate = 'payout';
-                  break;
-                case 'accepted_accepted':
-                  targetstate = 'accepted';
-                  break;
-                case 'accepted_created':
-                  targetstate = 'accepted';
-                  break;
-                case 'accepted_indeal':
-                  targetstate = 'indeal';
-                  break;
-                case 'accepted_payout':
-                  targetstate = 'payout';
-                  break;
-                case 'indeal_indeal':
-                  targetstate = 'indeal';
-                  break;
-                case 'indeal_created':
-                  targetstate = 'indeal';
-                  break;
-                case 'indeal_accepted':
-                  targetstate = 'indeal';
-                  break;
-                case 'indeal_payout':
-                  targetstate = 'payout';
-                  break;
-                case 'payout_created':
-                  targetstate = 'payout';
-                  break;
-                case 'payout_indeal':
-                  targetstate = 'payout';
-                  break;
-                case 'payout_accepted':
-                  targetstate = 'payout';
-                  break;
-                case 'payout_payout':
-                  targetstate = 'payout';
-                  break;
-                default:
-                  targetstate = 'init';
-                  //debugger;
-                  break;
-              }
-              mutation.dealstate = targetstate;
+              mutation.dealstate = mutation.targetdealstate;
+              delete mutation.targetdealstate;
             }
+
             var deal = deals[foundDeal];
             Object.assign(deals[foundDeal],mutation);
 
           }else{
             mutation.dealstate = 'accepted';
-            deals.push(Object.assign(this.getEmptyDeal(),mutation));
+            var deal = Object.assign(this.getEmptyDeal(),mutation);
+            deals.push(deal);
           }
           //debugger;
           if (!deal.ismydeal && deal.ireplied){
@@ -421,6 +438,10 @@
             deals: deals
           };
         },
+      },
+
+      ready: function() {
+        this.messagequeue = new GatedQueue(5);
       },
 
       getEmptyDeal: function() {
@@ -475,9 +496,9 @@
         if (this.shhweb3 && this.hashtag) {
           var mytopics = [
             self.shhweb3.encodetopic("swarmcity-v1"),
-            null,
-            self.shhweb3.encodetopic(this.hashtag),
-            null, // ID
+            null, // message type
+            self.shhweb3.encodetopic(this.hashtag), // hashtag
+            null, // deal ID
             self.geohash.length > 1 ? [self.shhweb3.encodetopic('all'),self.shhweb3.encodetopic(self.geohash.slice(0, 1))] : null,
             self.geohash.length > 2 ? [self.shhweb3.encodetopic('all'),self.shhweb3.encodetopic(self.geohash.slice(0, 2))] : null,
             self.geohash.length > 3 ? [self.shhweb3.encodetopic('all'),self.shhweb3.encodetopic(self.geohash.slice(0, 3))] : null,
@@ -492,7 +513,7 @@
           this.dispatch('clear_deals');
 
           // and clear the local cache
-          this.messagequeue = {}
+          this.messagequeue.clear();
 
           console.log("sc-listeners: channelswitch, start listening to", mytopics);
           this.filter.watch(this._processmessage.bind(this));
@@ -523,7 +544,7 @@
         }
         try {
           payload = JSON.parse(rawpayload);
-          //console.log('incoming whisper message', rawpayload);
+          console.log('incoming whisper message', rawpayload);
         } catch (e) {
           console.log(e);
           console.log('cannot parse payload - ignoring whisper message');
@@ -531,89 +552,50 @@
           return;
         }
 
-        if (!this.messagequeue){
-          this.messagequeue = {};
-        }
-
-        // re-order and buffer items by gate.
-        // a gate is a queue that needs to be processed in order 
-        // to simplify state transitions later on. 
+        // re-order and buffer items by gate
+        // a gate is a queue that needs to be processed in order
+        // to simplify state transitions later on.
         // gate 1 : create request
-        // gate 2 : reply to a request
-        // gate 3 : selection of provider / deal cancel
+        // gate 2 : reply to a request / deal cancel
+        // gate 3 : selection of provider
         // gate 4 : funding of deal by provider
         // gate 5 : approval of deal / dispute
         switch (payload.type){
           case 'dealfortwo-request-create':
             var dealid = payload.id;
-            if(!this.messagequeue[dealid]){ this.messagequeue[dealid] = this.payloadStructure(); }
-            this.messagequeue[dealid].gatequeue[0].push(payload);
+            this.messagequeue.push(dealid, 0, this.parsemessage, this, [payload]);
             break;
+          case 'dealfortwo-cancel':
           case 'dealfortwo-request-reply':
-            var dealid = payload.parentrequestid;
-            if(!this.messagequeue[dealid]){ this.messagequeue[dealid] = this.payloadStructure(); }
-            this.messagequeue[dealid].gatequeue[1].push(payload);
+          debugger;
+            var dealid = payload.parentrequestid || payload.requestid; // TODO change this to only payload.requestid after 7/19/2017
+            this.messagequeue.push(dealid, 1, this.parsemessage, this, [payload]);
             break;
           case 'dealfortwo-select-provider':
-          case 'dealfortwo-cancel':
             var dealid = payload.requestid;
-            if(!this.messagequeue[dealid]){ this.messagequeue[dealid] = this.payloadStructure(); }
-            this.messagequeue[dealid].gatequeue[2].push(payload);
+            this.messagequeue.push(dealid, 2, this.parsemessage, this, [payload]);
             break;
           case 'dealfortwo-provider-funding':
             var dealid = payload.id;
-            if(!this.messagequeue[dealid]){ this.messagequeue[dealid] = this.payloadStructure(); }
-            this.messagequeue[dealid].gatequeue[3].push(payload);
+            this.messagequeue.push(dealid, 3, this.parsemessage, this, [payload]);
             break;
           case 'dealfortwo-approve':
             var dealid = payload.requestid;
-            if(!this.messagequeue[dealid]){ this.messagequeue[dealid] = this.payloadStructure(); }
-            this.messagequeue[dealid].gatequeue[4].push(payload);
+            this.messagequeue.push(dealid, 4, this.parsemessage, this, [payload]);
             break;
           default:
             console.log('unknown gate for message',payload);
             break;
         }
 
-        this.purgeQueue();
-
-      },
-
-      purgeQueue:function(){
-        // purge the queue
-        for (var key in this.messagequeue) {
-          if (this.messagequeue.hasOwnProperty(key)) {
-            //if (key =='b4e85acb-bfe9-4cae-a444-86c1e4496e4c') debugger;
-            var currentgate = this.messagequeue[key].currentgate;
-            // empty all gates up to the current gate
-            for (inspectedgate = 0 ; inspectedgate <= currentgate; inspectedgate++){
-              var opennextgate = false;
-              if (this.messagequeue[key].gatequeue[inspectedgate]){
-                while (this.messagequeue[key].gatequeue[inspectedgate].length > 0){
-                  opennextgate = true;
-                  msg = this.messagequeue[key].gatequeue[inspectedgate].pop();
-                  this.parsemessage(msg);
-                }
-              }
-              // increase the gate number after processing items in this one
-              // and start processing the next gate. 
-              if(opennextgate){
-                this.messagequeue[key].currentgate++;
-                this.purgeQueue();
-              }
-            }
-          }
-        }
-      },
-
-      payloadStructure: function(){
-        return {
-          currentgate: 0,
-          gatequeue: [[],[],[],[],[]]
-        }
+        //console.log('MQ before',JSON.stringify(this.messagequeue,null,1));
+        this.messagequeue.purge();
+        //console.log('MQ after',JSON.stringify(this.messagequeue,null,1));
       },
 
       parsemessage : function(payload){
+        console.log('parsing whisper message', payload);
+
         switch(payload.type){
           case 'dealfortwo-request-create':
             var self = this;

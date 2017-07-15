@@ -172,6 +172,15 @@ This components is the representation of a request in the requests-list on sc-ha
         margin-left: 3px;
       }
 
+      .to-deal {
+        font-weight: 900;
+        margin-left: 3px;
+      }
+
+      .to-deal:hover {
+        cursor: pointer;
+      }
+
       .divider {
         margin-right: 8px;
         margin-left: 8px;
@@ -307,7 +316,7 @@ This components is the representation of a request in the requests-list on sc-ha
     <iron-media-query query="(min-width:0px) and (max-width: 540px)" query-matches="{{phoneview}}"></iron-media-query>
 <!-- <pre>{{jsondump(item)}}</pre> -->
       <!-- WHEN REPLY == NOT SELECTED YET -->
-      <template is="dom-if" if="{{!item.selectedreply}}">
+      <template is="dom-if" if="{{!_showSelected(item)}}">
         <div class$="totalcontainer totalwidth vertic start centerjust {{ownerclass}}">
 
           <div class="itemtotal horizont start startjust" on-tap="toggleItem">
@@ -334,6 +343,12 @@ This components is the representation of a request in the requests-list on sc-ha
                     <iron-icon icon="sc-icons:babble" class="grey2b verysmall">replies</iron-icon>
                   </div>
                 </template>
+                  <template is="dom-if" if="{{_showDetailBtn(item)}}">
+                    <div class="horizont centercenter">
+                      <p class="divider small grey2b light">|</p>
+                      <span class="blue small bold to-deal" on-tap="toDeal">details</span>
+                    </div>
+                  </template>
                 </div>
               </template>
               <template is="dom-if" if="{{!phoneview}}">
@@ -344,6 +359,12 @@ This components is the representation of a request in the requests-list on sc-ha
                     <small class="small grey2b light">{{item.replies.length}}</small>
                     <iron-icon icon="sc-icons:babble" class="grey2b verysmall">replies</iron-icon>
                   </div>
+                  <template is="dom-if" if="{{_showDetailBtn(item)}}">
+                    <div class="horizont centercenter">
+                      <p class="divider small grey2b light">|</p>
+                      <span class="blue small to-deal" on-tap="toDeal">details</span>
+                    </div>
+                  </template>
                 </template>
               </template>
 
@@ -405,8 +426,8 @@ This components is the representation of a request in the requests-list on sc-ha
       </template>
 
 
-      <!-- WHEN REPLY == SELECTED -->
-      <template is="dom-if" if="{{item.selectedreply}}">
+      <!-- WHEN REPLY == SELECTED OR CANCELED -->
+      <template is="dom-if" if="{{_showSelected(item)}}">
 
         <!-- U R NOOOT seeker -->
         <template is="dom-if" if="{{!youareowner(item.seeker.pubkey)}}">
@@ -642,11 +663,13 @@ This components is the representation of a request in the requests-list on sc-ha
                   ipfshash="[[item.seeker.avatarhash]]"
                   size="small">
                 </sc-avatar>
-                <sc-avatar
-                  ipfshash="[[currentprovider.avatarhash]]"
-                  size="small"
-                  class="provavatar">
-                </sc-avatar>
+                <template is="dom-if" if="{{currentprovider.avatarhash}}">
+                  <sc-avatar
+                    ipfshash="[[currentprovider.avatarhash]]"
+                    size="small"
+                    class="provavatar">
+                  </sc-avatar>
+                </template>
 
 
                   <!-- dealstate = accepted. -->
@@ -695,7 +718,12 @@ This components is the representation of a request in the requests-list on sc-ha
                   </template>
 
                 <template is="dom-if" if="{{_is(item.dealstate,'canceled')}}">
-                  <p class="hashtagdealmsg totalwidth grey4">You canceled a deal with {{currentprovider.username}}.</p>
+                  <template is="dom-if" if="{{item.selectedreply}}">
+                      <p class="hashtagdealmsg totalwidth grey4">You canceled a deal with {{currentprovider.username}}.</p>
+                  </template>
+                  <template is="dom-if" if="{{!item.selectedreply}}">
+                    <p class="hashtagdealmsg totalwidth grey4">You canceled this deal.</p>
+                  </template>
                 </template>
 
 
@@ -811,6 +839,10 @@ This components is the representation of a request in the requests-list on sc-ha
         });
       },
 
+      toDeal: function() {
+          this.youareowner(this.item.seeker.pubkey) ? this.toDealForTwoSeeker() : this.toDealForTwoProvider();
+      },
+
       toggleItem: function(){
         // my item + no replies yet -> go to the detail screen to allow cancel.
         if (this.item.ismydeal && (!this.item.replies || this.item.replies.length ==0)) {
@@ -915,6 +947,15 @@ This components is the representation of a request in the requests-list on sc-ha
         }
         return a === b;
       },
+
+      _showSelected: function(item) {
+          return item.selectedreply || item.dealstate === 'canceled';
+      },
+
+      _showDetailBtn: function(item) {
+          return item.ismydeal && item.replies.length > 0;
+      }
+
 
     });
   </script>

@@ -1,5 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../sc-config/sc-config.html">
+<link rel="import" href="../sc-ipfs/sc-ipfs.html">
 <link rel="import" href="../sc-web3/sc-web3.html">
 <link rel="import" href="../sc-minime/sc-minime.html">
 <script type="text/javascript" src="../../bower_components/uuid-js/lib/uuid.js"></script>
@@ -10,6 +11,7 @@
   <template>
     <sc-web3 web3="{{web3}}"></sc-web3>
     <sc-config config="{{config}}"></sc-config>
+    <sc-ipfs id="ipfs"></sc-ipfs>
     <sc-minime id="minime"></sc-minime>
 
   </template>
@@ -306,62 +308,115 @@
       },
 
       // starts making a dealfortwo. callback with TXhash.
-      makeDealForTwo: function(dealID, from, offerAmount, cb) {
+      makeDealForTwo: function(dealID, from, offerAmount, metadata, cb) {
         var self = this;
         var extratx = {};
         this.$.minime.checkOrGiveAllowance(from, this.config.dealfortwofactory, offerAmount, function(err, tx) {
-          if (err){
+          if (err) {
             //debugger;
-            console.log('giving allowance failed',err);
+            console.log('giving allowance failed', err);
             return cb(err);
           }
           extratx.allowancetx = tx;
           self.web3.cached.getGasPrice(function(err, gasPrice) {
-            if (err){
-              console.log('getGasPrice failed',err);
+            if (err) {
+              console.log('getGasPrice failed', err);
               return cb(err);
             }
-            self.DealForTwoFactoryContractInstance.makeDealForTwo.estimateGas(dealID, offerAmount,'', {
-                  from: from
-                }, function(err, gasNeeded) {
-              // if (err){
-              //   debugger;
-              //   return cb(err);
-              // }
-              // If the allowance is not OK yet - gas extimation will not work
-              // so use a safe value.
-              gasNeeded = gasNeeded || 175000;
 
-              self.DealForTwoFactoryContractInstance.makeDealForTwo.sendTransaction(dealID, offerAmount,'', {
-                from: from,
-                gasPrice: gasPrice,
-                gas: gasNeeded
-              }, function(err, makeDealForTwoTx) {
-                if (err) {
+            self._storeMetadata(metadata, function(err, metadataHash) {
+              if (err) {
+                //debugger;
+                return cb(err);
+              }
+
+              self.DealForTwoFactoryContractInstance.makeDealForTwo.estimateGas(dealID, offerAmount, metadataHash, {
+                from: from
+              }, function(err, gasNeeded) {
+                // if (err){
+                //   debugger;
+                //   return cb(err);
+                // }
+                // If the allowance is not OK yet - gas estimation will not work
+                // so use a safe value.
+                gasNeeded = gasNeeded || 175000;
+
+                self.DealForTwoFactoryContractInstance.makeDealForTwo.sendTransaction(dealID, offerAmount, metadataHash, {
+                  from: from,
+                  gasPrice: gasPrice,
+                  gas: gasNeeded
+                }, function(err, makeDealForTwoTx) {
+                  if (err) {
                     return cb(err);
-                }
-                cb(null, makeDealForTwoTx,extratx);
-                console.log(err, makeDealForTwoTx);
+                  }
+                  cb(null, makeDealForTwoTx, extratx);
+                  console.log(err, makeDealForTwoTx);
+                });
               });
             });
           });
         });
       },
 
-      fundDeal: function(dealID, dealOwner, offerAmount, from, cb) {
+      fundDeal: function(dealID, dealOwner, offerAmount, from, metadata, cb) {
         var self = this;
         var extratx = {};
-        this.$.minime.checkOrGiveAllowance(from, this.config.dealfortwofactory, offerAmount, function(err, tx) {
+
+        self._storeMetadata(metadata, function(err, metadataHash) {
+          if (err) {
+            return cb(err);
+          }
+
+          this.$.minime.checkOrGiveAllowance(from, this.config.dealfortwofactory, offerAmount, function(err, tx) {
+            if (err) {
+              //debugger;
+              return cb(err);
+            }
+            extratx.allowancetx = tx;
+            self.web3.cached.getGasPrice(function(err, gasPrice) {
+              self.DealForTwoFactoryContractInstance.fundDeal.estimateGas(dealID, dealOwner, metadataHash, function(err, gasNeeded) {
+                gasNeeded = gasNeeded || 175000;
+
+                self.DealForTwoFactoryContractInstance.fundDeal.sendTransaction(dealID, dealOwner, metadataHash, {
+                  from: from, //self.identity.pubkey,
+                  gasPrice: gasPrice,
+                  gas: gasNeeded
+                }, function(err, result) {
+                  if (err) {
+                    if (cb) {
+                      return cb(err);
+                    }
+                  }
+                  cb(null, result, extratx);
+                  console.log(err, result);
+                });
+              });
+            });
+          });
+        });
+      },
+
+      payout: function(dealID, from, metadata, cb) {
+        var self = this;
+        self._storeMetadata(metadata, function(err, metadataHash) {
           if (err) {
             //debugger;
             return cb(err);
           }
-          extratx.allowancetx = tx;
           self.web3.cached.getGasPrice(function(err, gasPrice) {
-            self.DealForTwoFactoryContractInstance.fundDeal.estimateGas(dealID, dealOwner,'', function(err, gasNeeded) {
-              gasNeeded = gasNeeded || 175000;
-              self.DealForTwoFactoryContractInstance.fundDeal.sendTransaction(dealID, dealOwner,'', {
-                from: from, //self.identity.pubkey,
+            self.DealForTwoFactoryContractInstance.payout.estimateGas(dealID, metadataHash, {
+              from: from
+            }, function(err, gasNeeded) {
+              if (gasNeeded) {
+                gasNeeded = Math.floor(gasNeeded * 1.2);
+              } else {
+                gasNeeded = 600000;
+              }
+
+
+
+              self.DealForTwoFactoryContractInstance.payout.sendTransaction(dealID, metadataHash, {
+                from: from,
                 gasPrice: gasPrice,
                 gas: gasNeeded
               }, function(err, result) {
@@ -370,37 +425,9 @@
                     return cb(err);
                   }
                 }
-                cb(null, result, extratx);
+                cb(null, result);
                 console.log(err, result);
               });
-            });
-          });
-        });
-      },
-
-      payout: function(dealID, from, cb) {
-        var self = this;
-        self.web3.cached.getGasPrice(function(err, gasPrice) {
-          self.DealForTwoFactoryContractInstance.payout.estimateGas(dealID,'', {
-            from: from
-          }, function(err, gasNeeded) {
-            if (gasNeeded) {
-              gasNeeded = Math.floor(gasNeeded * 1.2);
-            } else {
-              gasNeeded = 600000;
-            }
-            self.DealForTwoFactoryContractInstance.payout.sendTransaction(dealID,'', {
-              from: from,
-              gasPrice: gasPrice,
-              gas: gasNeeded
-            }, function(err, result) {
-              if (err) {
-                if (cb) {
-                  return cb(err);
-                }
-              }
-              cb(null, result);
-              console.log(err, result);
             });
           });
         });
@@ -419,29 +446,39 @@
         });
       },
 
-      cancelDeal: function(dealId, from, cb) {
+      cancelDeal: function(dealId, from, metadata, cb) {
         var self = this;
         self.web3.cached.getGasPrice(function(err, gasPrice) {
-          self.DealForTwoFactoryContractInstance.cancelDeal.estimateGas(dealId, {
-            from: from
-          }, function(err, gasNeeded) {
-            if (gasNeeded) {
-              gasNeeded = Math.floor(gasNeeded * 1.2);
-            } else {
-              gasNeeded = 75000;
+          self._storeMetadata(metadata, function(err, metadataHash) {
+            if (err) {
+              return cb(err);
             }
-            self.DealForTwoFactoryContractInstance.cancelDeal.sendTransaction(dealId, {
-              from: from,
-              gasPrice: gasPrice,
-              gas: gasNeeded
-            }, function(err, result) {
-              if (err) {
-                if (cb) {
-                  return cb(err);
-                }
+            self.DealForTwoFactoryContractInstance.cancelDeal.estimateGas(dealId,metadataHash, {
+              from: from
+            }, function(err, gasNeeded) {
+              // if the TX of the creation hasn't been mined yet
+              // then the gas-estimate is way too low
+              // so we additionally check if it is high enough so that this
+              // estimate is considered valid.
+              if (gasNeeded && gasNeeded > 100000) {
+                gasNeeded = Math.floor(gasNeeded * 1.2);
+              } else {
+                gasNeeded = 160000;
               }
-              cb(null, result);
-              console.log(err, result);
+
+              self.DealForTwoFactoryContractInstance.cancelDeal.sendTransaction(dealId, metadataHash, {
+                from: from,
+                gasPrice: gasPrice,
+                gas: gasNeeded
+              }, function(err, result) {
+                if (err) {
+                  if (cb) {
+                    return cb(err);
+                  }
+                }
+                cb(null, result);
+                console.log(err, result);
+              });
             });
           });
         });
@@ -528,6 +565,18 @@
           });
        });
       },
+
+      _storeMetadata: function(metadata, cb) {
+        var metadataBuffer = this.$.ipfs.ipfs.Buffer(JSON.stringify(metadata));
+
+        this.$.ipfs.add(metadataBuffer, function(err, result) {
+          if (err || !result || !result[0]){
+            cb(err, null);
+          } else{
+            cb(null, result[0].hash);
+          }
+        });
+      }
 
     });
   </script>
