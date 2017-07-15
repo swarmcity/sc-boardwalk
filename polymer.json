@@ -32,7 +32,7 @@
   { 
     "name": "default", 
     "js": {"minify": true}, 
-    "css": {"minify": true}, 
+    "css": {"minify": false}, 
     "html": {"minify": true}, 
     "bundle": false, 
     "addServiceWorker": true, 

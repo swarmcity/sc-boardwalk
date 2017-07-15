@@ -367,7 +367,7 @@
             return cb(err);
           }
 
-          this.$.minime.checkOrGiveAllowance(from, this.config.dealfortwofactory, offerAmount, function(err, tx) {
+          self.$.minime.checkOrGiveAllowance(from, self.config.dealfortwofactory, offerAmount, function(err, tx) {
             if (err) {
               //debugger;
               return cb(err);

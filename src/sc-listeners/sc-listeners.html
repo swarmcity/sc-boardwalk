@@ -567,7 +567,6 @@
             break;
           case 'dealfortwo-cancel':
           case 'dealfortwo-request-reply':
-          debugger;
             var dealid = payload.parentrequestid || payload.requestid; // TODO change this to only payload.requestid after 7/19/2017
             this.messagequeue.push(dealid, 1, this.parsemessage, this, [payload]);
             break;
