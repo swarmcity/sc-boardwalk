@@ -1053,7 +1053,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
         //debugger;
 
         // do we want to store all replies on ipfs or just the selected reply?
-        this.$.dealfortwo.fundDeal(dealID,this.requestdata.seeker.pubkey, this.requestdata.amount,this.identity.pubkey, this.requestdata, function(err, providerfundingTx, extraTx) {
+        this.$.dealfortwo.fundDeal(dealID,this.requestdata.seeker.pubkey, this.requestdata.amount,this.identity.pubkey, {}, function(err, providerfundingTx, extraTx) {
 
          if (err){
             console.log('tx error',err);

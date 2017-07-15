@@ -312,44 +312,45 @@
         var self = this;
         var extratx = {};
         this.$.minime.checkOrGiveAllowance(from, this.config.dealfortwofactory, offerAmount, function(err, tx) {
-          if (err){
+          if (err) {
             //debugger;
-            console.log('giving allowance failed',err);
+            console.log('giving allowance failed', err);
             return cb(err);
           }
           extratx.allowancetx = tx;
           self.web3.cached.getGasPrice(function(err, gasPrice) {
-            if (err){
-              console.log('getGasPrice failed',err);
+            if (err) {
+              console.log('getGasPrice failed', err);
               return cb(err);
             }
-            self.DealForTwoFactoryContractInstance.makeDealForTwo.estimateGas(dealID, offerAmount, 'some46characterhashofthemetadatatoestimategas!', {
-                  from: from
-                }, function(err, gasNeeded) {
-              // if (err){
-              //   debugger;
-              //   return cb(err);
-              // }
-              // If the allowance is not OK yet - gas estimation will not work
-              // so use a safe value.
-              gasNeeded = gasNeeded || 175000;
 
-              self._storeMetadata(metadata, function(err, metadataHash) {
-                if (err) {
-                  //debugger;
-                  return cb(err);
-                }
+            self._storeMetadata(metadata, function(err, metadataHash) {
+              if (err) {
+                //debugger;
+                return cb(err);
+              }
+
+              self.DealForTwoFactoryContractInstance.makeDealForTwo.estimateGas(dealID, offerAmount, metadataHash, {
+                from: from
+              }, function(err, gasNeeded) {
+                // if (err){
+                //   debugger;
+                //   return cb(err);
+                // }
+                // If the allowance is not OK yet - gas estimation will not work
+                // so use a safe value.
+                gasNeeded = gasNeeded || 175000;
 
                 self.DealForTwoFactoryContractInstance.makeDealForTwo.sendTransaction(dealID, offerAmount, metadataHash, {
-                    from: from,
-                    gasPrice: gasPrice,
-                    gas: gasNeeded
+                  from: from,
+                  gasPrice: gasPrice,
+                  gas: gasNeeded
                 }, function(err, makeDealForTwoTx) {
-                    if (err) {
-                        return cb(err);
-                    }
-                    cb(null, makeDealForTwoTx,extratx);
-                    console.log(err, makeDealForTwoTx);
+                  if (err) {
+                    return cb(err);
+                  }
+                  cb(null, makeDealForTwoTx, extratx);
+                  console.log(err, makeDealForTwoTx);
                 });
               });
             });
@@ -360,27 +361,27 @@
       fundDeal: function(dealID, dealOwner, offerAmount, from, metadata, cb) {
         var self = this;
         var extratx = {};
-        this.$.minime.checkOrGiveAllowance(from, this.config.dealfortwofactory, offerAmount, function(err, tx) {
+
+        self._storeMetadata(metadata, function(err, metadataHash) {
           if (err) {
-            //debugger;
             return cb(err);
           }
-          extratx.allowancetx = tx;
-          self.web3.cached.getGasPrice(function (err, gasPrice) {
-            self.DealForTwoFactoryContractInstance.fundDeal.estimateGas(dealID, dealOwner, 'some46characterhashofthemetadatatoestimategas!', function (err, gasNeeded) {
-              gasNeeded = gasNeeded || 175000;
 
-              self._storeMetadata(metadata, function (err, metadataHash) {
-                if (err) {
-                  //debugger;
-                  return cb(err);
-                }
+          this.$.minime.checkOrGiveAllowance(from, this.config.dealfortwofactory, offerAmount, function(err, tx) {
+            if (err) {
+              //debugger;
+              return cb(err);
+            }
+            extratx.allowancetx = tx;
+            self.web3.cached.getGasPrice(function(err, gasPrice) {
+              self.DealForTwoFactoryContractInstance.fundDeal.estimateGas(dealID, dealOwner, metadataHash, function(err, gasNeeded) {
+                gasNeeded = gasNeeded || 175000;
 
                 self.DealForTwoFactoryContractInstance.fundDeal.sendTransaction(dealID, dealOwner, metadataHash, {
                   from: from, //self.identity.pubkey,
                   gasPrice: gasPrice,
                   gas: gasNeeded
-                }, function (err, result) {
+                }, function(err, result) {
                   if (err) {
                     if (cb) {
                       return cb(err);
@@ -397,27 +398,28 @@
 
       payout: function(dealID, from, metadata, cb) {
         var self = this;
-        self.web3.cached.getGasPrice(function(err, gasPrice) {
-          self.DealForTwoFactoryContractInstance.payout.estimateGas(dealID, 'some46characterhashofthemetadatatoestimategas!', {
-            from: from
-          }, function(err, gasNeeded) {
-            if (gasNeeded) {
-              gasNeeded = Math.floor(gasNeeded * 1.2);
-            } else {
-              gasNeeded = 600000;
-            }
-
-            self._storeMetadata(metadata, function(err, metadataHash) {
-              if (err) {
-                //debugger;
-                return cb(err);
+        self._storeMetadata(metadata, function(err, metadataHash) {
+          if (err) {
+            //debugger;
+            return cb(err);
+          }
+          self.web3.cached.getGasPrice(function(err, gasPrice) {
+            self.DealForTwoFactoryContractInstance.payout.estimateGas(dealID, metadataHash, {
+              from: from
+            }, function(err, gasNeeded) {
+              if (gasNeeded) {
+                gasNeeded = Math.floor(gasNeeded * 1.2);
+              } else {
+                gasNeeded = 600000;
               }
+
+
 
               self.DealForTwoFactoryContractInstance.payout.sendTransaction(dealID, metadataHash, {
                 from: from,
                 gasPrice: gasPrice,
                 gas: gasNeeded
-              }, function (err, result) {
+              }, function(err, result) {
                 if (err) {
                   if (cb) {
                     return cb(err);
@@ -447,25 +449,28 @@
       cancelDeal: function(dealId, from, metadata, cb) {
         var self = this;
         self.web3.cached.getGasPrice(function(err, gasPrice) {
-          self.DealForTwoFactoryContractInstance.cancelDeal.estimateGas(dealId, 'some46characterhashofthemetadatatoestimategas!', {
-            from: from
-          }, function(err, gasNeeded) {
-            if (gasNeeded) {
-              gasNeeded = Math.floor(gasNeeded * 1.2);
-            } else {
-              gasNeeded = 135000;
+          self._storeMetadata(metadata, function(err, metadataHash) {
+            if (err) {
+              return cb(err);
             }
-
-            self._storeMetadata(metadata, function(err, metadataHash) {
-              if (err) {
-                debugger;
-                return cb(err);
+            self.DealForTwoFactoryContractInstance.cancelDeal.estimateGas(dealId,metadataHash, {
+              from: from
+            }, function(err, gasNeeded) {
+              // if the TX of the creation hasn't been mined yet
+              // then the gas-estimate is way too low
+              // so we additionally check if it is high enough so that this
+              // estimate is considered valid.
+              if (gasNeeded && gasNeeded > 100000) {
+                gasNeeded = Math.floor(gasNeeded * 1.2);
+              } else {
+                gasNeeded = 160000;
               }
+
               self.DealForTwoFactoryContractInstance.cancelDeal.sendTransaction(dealId, metadataHash, {
                 from: from,
                 gasPrice: gasPrice,
                 gas: gasNeeded
-              }, function (err, result) {
+              }, function(err, result) {
                 if (err) {
                   if (cb) {
                     return cb(err);

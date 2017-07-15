@@ -663,11 +663,13 @@ This components is the representation of a request in the requests-list on sc-ha
                   ipfshash="[[item.seeker.avatarhash]]"
                   size="small">
                 </sc-avatar>
-                <sc-avatar
-                  ipfshash="[[currentprovider.avatarhash]]"
-                  size="small"
-                  class="provavatar">
-                </sc-avatar>
+                <template is="dom-if" if="{{currentprovider.avatarhash}}">
+                  <sc-avatar
+                    ipfshash="[[currentprovider.avatarhash]]"
+                    size="small"
+                    class="provavatar">
+                  </sc-avatar>
+                </template>
 
 
                   <!-- dealstate = accepted. -->
