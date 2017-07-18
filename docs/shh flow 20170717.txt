@@ -1,0 +1,110 @@
+shh flow
+
+1. makeDealForTwo
+    id: <REQUESTID>,
+	type: 'dealfortwo-request-create',
+    seeker: {
+      username: self.identity.username,
+      pubkey: self.identity.pubkey,
+      avatarhash: self.identity.avatarhash,
+    },
+    offer: self.offermsg,
+    offerhashtag: self.hashtagaddress,
+    offertime: offerTime,
+    offeramount: amount,
+    offercreationtx: txhash,
+    offercreationallowancetx: extratx.allowancetx
+
+ALT
+	type: 'dealfortwo-request-create'
+	version: 1
+	id: <REQUESTID>
+	metadata: <IPFSHASH>
+	signer: <pubkey>
+	signature: <sig>
+
+METADATA
+	version: 1
+	type: 'deal'
+	id: <REQUESTID>
+    seeker: {
+      username: self.identity.username,
+      pubkey: self.identity.pubkey,
+      avatarhash: self.identity.avatarhash,
+    },
+    offer: self.offermsg,
+    offerhashtag: self.hashtagaddress,
+    offertime: offerTime,
+    offeramount: amount,
+    offercreationtx: txhash,
+    offercreationallowancetx: extratx.allowancetx,
+
+
+
+2. reply to a request
+ 	type: 'dealfortwo-request-reply',
+	id: UUIDjs.create().toString(),
+	requestid: this.itemdata.id,
+	hashtag: this.itemdata.hashtag,
+	replyer: {
+		avatarhash: this.identity.avatarhash,
+		username: this.identity.username,
+		pubkey: this.identity.pubkey
+	},
+	reply: this.replytext,
+	replyamount: amount,
+	replytime: Date.now()
+
+ALT
+	type: 'dealfortwo-request-reply',
+	version: 1
+	id: <REPLYID>,
+	requestid: <REQUESTID>,
+	metadata: <IPFSHASH>,
+	signer: <pubkey>
+	signature: <sig>
+
+METADATA	
+	type: 'reply'
+	version: 1
+	id: <REPLYID>,
+	requestid: <REQUESTID>,
+	hashtag: this.itemdata.hashtag,
+	replyer: {
+		avatarhash: this.identity.avatarhash,
+		username: this.identity.username,
+		pubkey: this.identity.pubkey
+	},
+	reply: this.replytext,
+	replyamount: amount,
+	replytime: Date.now()
+
+
+* choose provider
+   	type: 'dealfortwo-select-provider',
+   	requestid: self.item.id,
+   	replyid: self.reply.id,
+   
+ALT
+   	type: 'dealfortwo-select-provider',
+   	version: 1
+   	requestid: self.item.id,
+   	replyid: self.reply.id,
+   	metadata: <IPFSHASH>
+	signer: <pubkey>
+	signature: <sig>
+
+METADATA
+	type: 'selectprovider',
+	version: 1
+
+
+
+*. funding
+var payload = {
+	id: REQUESTID,
+	type: 'dealfortwo-provider-funding',
+	time: Date.now(),
+	offerproviderfundingtx: providerfundingTx,
+	offerproviderfundingallowancetx: extraTx.allowancetx
+};
