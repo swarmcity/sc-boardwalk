@@ -606,6 +606,7 @@
               creationallowancetx: payload.offercreationallowancetx,
               amount: payload.offeramount,
               hashtag: payload.offerhashtag,
+              factory: payload.factory || this.config.defaultfactory,
               offertime: payload.offertime,
               targetdealstate: 'created'
             };

@@ -452,7 +452,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
             }
           };
 
-          this.$.dealfortwo.makeDealForTwo(dealID, self.identity.pubkey, amount, metadata, function(err, txhash, extratx) {
+          this.$.dealfortwo.makeDealForTwo(self.config.defaultfactory, dealID, self.identity.pubkey, amount, metadata, function(err, txhash, extratx) {
             if (err) {
               console.log('error happened...', err);
               // READY WITH NEWITEM... (failed)
@@ -471,6 +471,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
                 },
                 offer: self.offermsg,
                 offerhashtag: self.hashtagaddress,
+                factory: self.config.defaultfactory,
                 offertime: offerTime,
                 offeramount: amount,
                 offercreationtx: txhash,

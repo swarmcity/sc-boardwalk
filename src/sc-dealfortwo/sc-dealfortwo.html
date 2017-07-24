@@ -303,17 +303,16 @@
         if (!this.web3 || !this.config){
           return;
         }
-        var DealForTwoFactoryContract = this.web3.eth.contract(this.abi);
-        this.DealForTwoFactoryContractInstance = DealForTwoFactoryContract.at(this.config.dealfortwofactory);
+        this.DealForTwoFactoryContract = this.web3.eth.contract(this.abi);
+       
       },
 
       // starts making a dealfortwo. callback with TXhash.
-      makeDealForTwo: function(dealID, from, offerAmount, metadata, cb) {
+      makeDealForTwo: function(factoryaddress, dealID, from, offerAmount, metadata, cb) {
         var self = this;
         var extratx = {};
-        this.$.minime.checkOrGiveAllowance(from, this.config.dealfortwofactory, offerAmount, function(err, tx) {
+        this.$.minime.checkOrGiveAllowance(from, factoryaddress, offerAmount, function(err, tx) {
           if (err) {
-            //debugger;
             console.log('giving allowance failed', err);
             return cb(err);
           }
@@ -326,11 +325,11 @@
 
             self._storeMetadata(metadata, function(err, metadataHash) {
               if (err) {
-                //debugger;
                 return cb(err);
               }
+              var DealForTwoFactoryContractInstance = self.DealForTwoFactoryContract.at(factoryaddress);
 
-              self.DealForTwoFactoryContractInstance.makeDealForTwo.estimateGas(dealID, offerAmount, metadataHash, {
+              DealForTwoFactoryContractInstance.makeDealForTwo.estimateGas(dealID, offerAmount, metadataHash, {
                 from: from
               }, function(err, gasNeeded) {
                 // if (err){
@@ -341,7 +340,7 @@
                 // so use a safe value.
                 gasNeeded = gasNeeded || 175000;
 
-                self.DealForTwoFactoryContractInstance.makeDealForTwo.sendTransaction(dealID, offerAmount, metadataHash, {
+                DealForTwoFactoryContractInstance.makeDealForTwo.sendTransaction(dealID, offerAmount, metadataHash, {
                   from: from,
                   gasPrice: gasPrice,
                   gas: gasNeeded
@@ -358,7 +357,7 @@
         });
       },
 
-      fundDeal: function(dealID, dealOwner, offerAmount, from, metadata, cb) {
+      fundDeal: function(factoryaddress, dealID, dealOwner, offerAmount, from, metadata, cb) {
         var self = this;
         var extratx = {};
 
@@ -374,10 +373,11 @@
             }
             extratx.allowancetx = tx;
             self.web3.cached.getGasPrice(function(err, gasPrice) {
-              self.DealForTwoFactoryContractInstance.fundDeal.estimateGas(dealID, dealOwner, metadataHash, function(err, gasNeeded) {
+              var DealForTwoFactoryContractInstance = self.DealForTwoFactoryContract.at(factoryaddress);              
+              DealForTwoFactoryContractInstance.fundDeal.estimateGas(dealID, dealOwner, metadataHash, function(err, gasNeeded) {
                 gasNeeded = gasNeeded || 175000;
 
-                self.DealForTwoFactoryContractInstance.fundDeal.sendTransaction(dealID, dealOwner, metadataHash, {
+                DealForTwoFactoryContractInstance.fundDeal.sendTransaction(dealID, dealOwner, metadataHash, {
                   from: from, //self.identity.pubkey,
                   gasPrice: gasPrice,
                   gas: gasNeeded
@@ -396,7 +396,7 @@
         });
       },
 
-      payout: function(dealID, from, metadata, cb) {
+      payout: function(factoryaddress, dealID, from, metadata, cb) {
         var self = this;
         self._storeMetadata(metadata, function(err, metadataHash) {
           if (err) {
@@ -404,7 +404,8 @@
             return cb(err);
           }
           self.web3.cached.getGasPrice(function(err, gasPrice) {
-            self.DealForTwoFactoryContractInstance.payout.estimateGas(dealID, metadataHash, {
+              var DealForTwoFactoryContractInstance = self.DealForTwoFactoryContract.at(factoryaddress);              
+              DealForTwoFactoryContractInstance.payout.estimateGas(dealID, metadataHash, {
               from: from
             }, function(err, gasNeeded) {
               if (gasNeeded) {
@@ -415,7 +416,7 @@
 
 
 
-              self.DealForTwoFactoryContractInstance.payout.sendTransaction(dealID, metadataHash, {
+              DealForTwoFactoryContractInstance.payout.sendTransaction(dealID, metadataHash, {
                 from: from,
                 gasPrice: gasPrice,
                 gas: gasNeeded
@@ -433,9 +434,10 @@
         });
       },
 
-      readDeal: function(dealId, dealOwner, cb) {
+      readDeal: function(factoryaddress,dealId, dealOwner, cb) {
         var self = this;
-        self.DealForTwoFactoryContractInstance.readDeal.call(dealId, dealOwner, function(err, result) {
+        var DealForTwoFactoryContractInstance = self.DealForTwoFactoryContract.at(factoryaddress);              
+        DealForTwoFactoryContractInstance.readDeal.call(dealId, dealOwner, function(err, result) {
 
           cb(null, {
             status: result[0].toNumber(10),
@@ -446,14 +448,15 @@
         });
       },
 
-      cancelDeal: function(dealId, from, metadata, cb) {
+      cancelDeal: function(factoryaddress,dealId, from, metadata, cb) {
         var self = this;
         self.web3.cached.getGasPrice(function(err, gasPrice) {
           self._storeMetadata(metadata, function(err, metadataHash) {
             if (err) {
               return cb(err);
             }
-            self.DealForTwoFactoryContractInstance.cancelDeal.estimateGas(dealId,metadataHash, {
+            var DealForTwoFactoryContractInstance = self.DealForTwoFactoryContract.at(factoryaddress);              
+            DealForTwoFactoryContractInstance.cancelDeal.estimateGas(dealId,metadataHash, {
               from: from
             }, function(err, gasNeeded) {
               // if the TX of the creation hasn't been mined yet
@@ -466,7 +469,7 @@
                 gasNeeded = 160000;
               }
 
-              self.DealForTwoFactoryContractInstance.cancelDeal.sendTransaction(dealId, metadataHash, {
+              DealForTwoFactoryContractInstance.cancelDeal.sendTransaction(dealId, metadataHash, {
                 from: from,
                 gasPrice: gasPrice,
                 gas: gasNeeded
