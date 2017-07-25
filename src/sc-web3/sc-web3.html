@@ -5,7 +5,7 @@
 
 <dom-module id="sc-web3">
   <template>
-    <sc-config config="{{config}}" web3host="{{host}}"></sc-config>
+    <sc-config config="{{config}}"></sc-config>
   </template>
   <script>
     var scweb3_web3;
@@ -24,7 +24,7 @@
         }
       },
       observers: [
-        '_host(host)'
+        '_host(config)'
       ],
       _host: function(){
         this.initweb3();        
@@ -39,21 +39,22 @@
       initweb3: function(){
         // If web3 doesn't exist yet - initialize it.
         if (!scweb3_web3){
-          if (!this.host){
+          if (!this.config){
             return;
           }
-          scweb3_web3 = new Web3(new Web3.providers.HttpProvider(this.host));
+          scweb3_web3 = new Web3(new Web3.providers.HttpProvider(this.config.web3host));
           scweb3_web3.cached = {
-            getGasPrice: this.getGasPrice
+            getGasPrice: this.getGasPrice,
+            config: this.config
           };
 
-          console.log('sc-web3 -> created Web3 (',this.host,')');
+          console.log('sc-web3 -> created Web3 (',this.config.web3host,')');
         }
         // If no HookedWeb3Provider was assigned yet - assign it using the given keystore.
-        if (scweb3_web3 && this.keystore && this.host && !acweb3_customproviderset){
+        if (scweb3_web3 && this.keystore && this.config.web3host && !acweb3_customproviderset){
           console.log('sc-web3 -> Creating new HookedWeb3Provider');
           this.web3Provider = new HookedWeb3Provider({
-            host: this.host,
+            host: this.config.web3host,
             transaction_signer: this.keystore
           });
           acweb3_customproviderset = true;
@@ -120,6 +121,9 @@
 
       getGasPrice: function(cb) {
         var self = this;
+        if (this.config.defaultgasprice){
+          return cb(null, this.config.defaultgasprice);
+        }
         if (this.gasPrice) {
           return cb(null, this.gasPrice);
         }

@@ -57,7 +57,7 @@
             this.swtinputunit = 1e18;
             this.web3host = 'https://ethpool.swarm.city/';
             this.shhhost = 'https://eth.swarm.city/';
-            this.shhprefix = 't91-';
+            this.shhprefix = 't92-';
             this.etherscanroot = 'https://etherscan.io/';
             this.tokencontractaddress = '0xAc709FcB44a43c35F0DA4e3163b117A17F3770f5';
             this.swtconversioncontractaddress = '0x69e5da6904f73dfa845648e1991ad1dcc780f874';
@@ -83,6 +83,7 @@
 
             this.shhttl = 60 * 60 * 24 * 7;
             this.eventFromBlock = 3953334;
+            this.defaultgasprice = 2 * 1e9; // 2 GWei
 
             this.set('config', {
               ipfs: this.ipfs,
@@ -102,6 +103,7 @@
               shhttl: this.shhttl,
               eventFromBlock: this.eventFromBlock,
               defaultfactory: this.defaultfactory,
+              defaultgasprice: this.defaultgasprice,
             });
 
             break;

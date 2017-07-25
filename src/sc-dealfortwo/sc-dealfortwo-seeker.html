@@ -933,11 +933,16 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                 <template is="dom-if" if="{{_is(requestdatadealstate,'created')}}">
                  <div class="accepted-container">
                   <div class="cancel-container redback">
-                    <p class="white light centertxt">Cancel deal.</p>
-                    <template is="dom-if" if="{{phoneview}}"><div class="whitespace"></div></template>
-                    <div class="confirmbtns">
-                      <paper-icon-button icon="sc-icons:decline" class="white big confirmbtn red shadow" on-tap="toCancelDeal"></paper-icon-button>
-                    </div>
+                    <template is="dom-if" if="{{requestdata.seekercanceltx}}">
+                      <p class="white light centertxt">This deal is being canceled.</p>
+                    </template>
+                    <template is="dom-if" if="{{!requestdata.seekercanceltx}}">
+                      <p class="white light centertxt">Cancel deal.</p>
+                      <template is="dom-if" if="{{phoneview}}"><div class="whitespace"></div></template>
+                      <div class="confirmbtns">
+                        <paper-icon-button icon="sc-icons:decline" class="white big confirmbtn red shadow" on-tap="toCancelDeal"></paper-icon-button>
+                      </div>
+                    </template>
                   </div>
                   </div>
                 </template>     

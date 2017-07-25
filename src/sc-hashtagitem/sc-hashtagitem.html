@@ -335,20 +335,32 @@ This components is the representation of a request in the requests-list on sc-ha
 
               <template is="dom-if" if="{{phoneview}}">
                 <div class="totalwidth horizont center startjust">
-                <p class="grey2b light small"><moment-js date="{{item.offertime}}" format="HH:mm"></moment-js></p>
-                <template is="dom-if" if="{{item.replies}}">
-                  <div class="replies horizont centercenter">
-                    <p class="divider small grey2b light">|</p>
-                    <small class="small grey2b light">{{item.replies.length}}</small>
-                    <iron-icon icon="sc-icons:babble" class="grey2b verysmall">replies</iron-icon>
-                  </div>
-                </template>
+                  <p class="grey2b light small"><moment-js date="{{item.offertime}}" format="HH:mm"></moment-js></p>
+                  <template is="dom-if" if="{{item.replies}}">
+                    <div class="replies horizont centercenter">
+                      <p class="divider small grey2b light">|</p>
+                      <small class="small grey2b light">{{item.replies.length}}</small>
+                      <iron-icon icon="sc-icons:babble" class="grey2b verysmall">replies</iron-icon>
+                    </div>
+                  </template>
                   <template is="dom-if" if="{{_showDetailBtn(item)}}">
                     <div class="horizont centercenter">
                       <p class="divider small grey2b light">|</p>
                       <span class="blue small bold to-deal" on-tap="toDeal">details</span>
                     </div>
                   </template>
+                  <template is="dom-if" if="{{_checkcreating(item.creationtx,item.creationtx_mined)}}">
+                    <div class="horizont centercenter">
+                      <p class="divider small grey2b light">|</p>
+                      <p class="blue small">This deal is being created.</p>
+                    </div>
+                  </template>
+                  <template is="dom-if" if="{{_checkcanceling(item.seekercanceltx)}}">
+                    <div class="horizont centercenter">
+                      <p class="divider small grey2b light">|</p>
+                      <p class="blue small">This deal is being canceled.</p>
+                    </div>
+                  </template>                  
                 </div>
               </template>
               <template is="dom-if" if="{{!phoneview}}">
@@ -365,6 +377,18 @@ This components is the representation of a request in the requests-list on sc-ha
                       <span class="blue small to-deal" on-tap="toDeal">details</span>
                     </div>
                   </template>
+                  <template is="dom-if" if="{{_checkcreating(item.creationtx,item.creationtx_mined)}}">
+                    <div class="horizont centercenter">
+                      <p class="divider small grey2b light">|</p>
+                      <p class="blue small">This deal is being created.</p>
+                    </div>
+                  </template>
+                  <template is="dom-if" if="{{_checkcanceling(item.seekercanceltx)}}">
+                    <div class="horizont centercenter">
+                      <p class="divider small grey2b light">|</p>
+                      <p class="blue small">This deal is being canceled.</p>
+                    </div>
+                  </template>  
                 </template>
               </template>
 
@@ -385,11 +409,7 @@ This components is the representation of a request in the requests-list on sc-ha
               <small class="bold yellow">for</small>
               <p class="bold yellow"><sc-tokenbalanceformatter value="{{deducthalfcommission(item.amount,hashtagcommission)}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter></p>
             </div>
-
-
           </div>
-
-
 <!--           <template is="dom-if" if="{{_is(item.dealstate,'accepted')}}"> -->
           <template is="dom-if" if="{{showdealmsg}}">
             <div class="dealmessage totalwidth horizontal center endjust">
@@ -954,6 +974,15 @@ This components is the representation of a request in the requests-list on sc-ha
 
       _showDetailBtn: function(item) {
           return item.ismydeal && item.replies.length > 0;
+      },
+
+      _checkcreating: function(creationtx,creationtx_mined){
+        //debugger;
+        return creationtx !== null && creationtx_mined !== true;
+      },
+
+      _checkcanceling: function(canceltx){
+        return canceltx;
       }
 
 
