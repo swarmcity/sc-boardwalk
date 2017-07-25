@@ -89,105 +89,12 @@
           });
 
           if (foundDeal > -1) {
-            // if (mutation.targetdealstate) {
-            //   var targetstate;
-
-            //   switch ((deals[foundDeal].dealstate || 'init') + '_' + mutation.targetdealstate) {
-
-            //     case 'init_created':
-            //     case 'init_accepted':
-            //     case 'init_canceled':
-            //     case 'init_indeal':
-            //     case 'init_payout':
-            //       targetstate = mutation.targetdealstate;
-            //       break;
-            //     case 'created_created':
-            //       targetstate = 'created';
-            //       break;
-            //     case 'created_accepted':
-            //       targetstate = 'accepted';
-            //       break;
-            //     case 'created_canceled':
-            //       targetstate = 'canceled';
-            //       break;
-            //     case 'created_indeal':
-            //       targetstate = 'indeal';
-            //       break;
-            //     case 'created_payout':
-            //       targetstate = 'payout';
-            //       break;
-            //     case 'accepted_accepted':
-            //       targetstate = 'accepted';
-            //       break;
-            //     case 'accepted_canceled':
-            //       targetstate = 'canceled';
-            //       break;
-            //     case 'accepted_created':
-            //       targetstate = 'accepted';
-            //       break;
-            //     case 'accepted_indeal':
-            //       targetstate = 'indeal';
-            //       break;
-            //     case 'accepted_payout':
-            //       targetstate = 'payout';
-            //       break;
-            //     case 'canceled_canceled':
-            //     case 'canceled_indeal':
-            //     case 'canceled_payout':
-            //     case 'canceled_accepted':
-            //     case 'canceled_created':
-            //       targetstate = 'canceled';
-            //       break;
-            //     case 'indeal_indeal':
-            //       targetstate = 'indeal';
-            //       break;
-            //     case 'indeal_created':
-            //       targetstate = 'indeal';
-            //       break;
-            //     case 'indeal_accepted':
-            //       targetstate = 'indeal';
-            //       break;
-            //     case 'indeal_payout':
-            //       targetstate = 'payout';
-            //       break;
-            //     case 'payout_created':
-            //       targetstate = 'payout';
-            //       break;
-            //     case 'payout_indeal':
-            //       targetstate = 'payout';
-            //       break;
-            //     case 'payout_accepted':
-            //       targetstate = 'payout';
-            //       break;
-            //     case 'payout_payout':
-            //       targetstate = 'payout';
-            //       break;
-            //     default:
-            //       targetstate = 'init';
-            //       //debugger;
-            //       break;
-            //   }
-
-            //   mutation.dealstate = targetstate;
-
-            //   //              mutation.dealstate = this.gettargetdealstate(deals[foundDeal].dealstate,mutation.targetdealstate);
-            //   delete mutation.targetdealstate;
-            // }
-
-            // this code replaces the commented out logic above.
-            // message ordering ( and thus mutation ) is resolved using the gatequeue 
-            if (mutation.targetdealstate) {
-              mutation.dealstate = mutation.targetdealstate;
-              delete mutation.targetdealstate;
-            }
-
             deals[foundDeal].ireplied = false;
             if (deals[foundDeal].replies) {
               for (var i = 0; i < deals[foundDeal].replies.length; i++) {
                 if (deals[foundDeal].replies[i].provider.pubkey === this.identity.pubkey) {
                   deals[foundDeal].ireplied = true;
                   if (deals[foundDeal].selectedreply == deals[foundDeal].replies[i].id) {
-                    //debugger;
                     deals[foundDeal].iamprovider = true;
                   }
                 }
@@ -201,11 +108,6 @@
             }
             Object.assign(deals[foundDeal], mutation);
           } else {
-            // this is a new deal
-            if (mutation.targetdealstate) {
-              mutation.dealstate = mutation.targetdealstate;
-              delete mutation.targetdealstate;
-            }
             if (mutation.seeker.pubkey === this.identity.pubkey) {
               mutation.ismydeal = true;
             } else {
@@ -330,91 +232,15 @@
             id : payload.requestid,
             lastupdate : Date.now(),
             selectedreply: payload.replyid,
-            targetdealstate: 'accepted'
+            dealstate: 'accepted'
           };
           let deals = this.deals.slice(0);
           var foundDeal = deals.findIndex(function(item) {
             return item.id === payload.requestid;
           });
           if (foundDeal > -1) {
-
-            // if (mutation.targetdealstate) {
-            //   var targetstate;
-
-            //   switch ((deals[foundDeal].dealstate || 'init') + '_' + mutation.targetdealstate) {
-
-            //     case 'init_created':
-            //     case 'init_accepted':
-            //     case 'init_indeal':
-            //     case 'init_payout':
-            //       targetstate = mutation.targetdealstate;
-            //       break;
-            //     case 'created_created':
-            //       targetstate = 'created';
-            //       break;
-            //     case 'created_accepted':
-            //       targetstate = 'accepted';
-            //       break;
-            //     case 'created_indeal':
-            //       targetstate = 'indeal';
-            //       break;
-            //     case 'created_payout':
-            //       targetstate = 'payout';
-            //       break;
-            //     case 'accepted_accepted':
-            //       targetstate = 'accepted';
-            //       break;
-            //     case 'accepted_created':
-            //       targetstate = 'accepted';
-            //       break;
-            //     case 'accepted_indeal':
-            //       targetstate = 'indeal';
-            //       break;
-            //     case 'accepted_payout':
-            //       targetstate = 'payout';
-            //       break;
-            //     case 'indeal_indeal':
-            //       targetstate = 'indeal';
-            //       break;
-            //     case 'indeal_created':
-            //       targetstate = 'indeal';
-            //       break;
-            //     case 'indeal_accepted':
-            //       targetstate = 'indeal';
-            //       break;
-            //     case 'indeal_payout':
-            //       targetstate = 'payout';
-            //       break;
-            //     case 'payout_created':
-            //       targetstate = 'payout';
-            //       break;
-            //     case 'payout_indeal':
-            //       targetstate = 'payout';
-            //       break;
-            //     case 'payout_accepted':
-            //       targetstate = 'payout';
-            //       break;
-            //     case 'payout_payout':
-            //       targetstate = 'payout';
-            //       break;
-            //     default:
-            //       targetstate = 'init';
-            //       //debugger;
-            //       break;
-            //   }
-            //   mutation.dealstate = targetstate;
-            // }
-
-            // this code replaces the commented out logic above.
-            // message ordering ( and thus mutation ) is resolved using the gatequeue 
-            if (mutation.targetdealstate) {
-              mutation.dealstate = mutation.targetdealstate;
-              delete mutation.targetdealstate;
-            }
-
             var deal = deals[foundDeal];
             Object.assign(deals[foundDeal],mutation);
-
           }else{
             mutation.dealstate = 'accepted';
             var deal = Object.assign(this.getEmptyDeal(),mutation);
@@ -479,11 +305,6 @@
 
 
       _starthastaglistener: function() {
-
-        // if (sc_listeners_listening){
-        //   console.log('skipping init listeners. Already lsitening');
-        //   return;
-        // }
 
         var self = this;
 
@@ -586,10 +407,7 @@
             console.log('unknown gate for message',payload);
             break;
         }
-
-        //console.log('MQ before',JSON.stringify(this.messagequeue,null,1));
         this.messagequeue.purge();
-        //console.log('MQ after',JSON.stringify(this.messagequeue,null,1));
       },
 
       parsemessage : function(payload){
@@ -608,7 +426,7 @@
               hashtag: payload.offerhashtag,
               factory: payload.factory || this.config.defaultfactory,
               offertime: payload.offertime,
-              targetdealstate: 'created'
+              dealstate: 'created'
             };
             if (newDeal.creationtx) {
               this.web3.waitTx(newDeal.creationtx, function(err, res) {
@@ -618,12 +436,13 @@
                   createsuccess: true,
                 });
 
-                self.$.dealfortwo.readDeal(newDeal.id,newDeal.seeker.pubkey,function(err,data){
+                self.$.dealfortwo.readDeal(newDeal.factory,newDeal.id,newDeal.seeker.pubkey,function(err,data){
                   self.dispatch('update_deal', {
                     id: newDeal.id,
                     dealdata : data,
                   });
                 });
+//                debugger;
                 self.fire('updatebalance');
               });
             }
@@ -658,9 +477,10 @@
                 self.dispatch('update_deal', {
                   id: mutation.id,
                   seekercanceltx_mined: true,
-                  targetdealstate: 'canceled',
+                  dealstate: 'canceled',
                 });
                 // do an update of your balance
+                //debugger;
                 self.fire('updatebalance');
               });
             }
@@ -717,7 +537,7 @@
                 self.dispatch('update_deal', {
                   id: mutation.id,
                   providerfundingtx_mined: true,
-                  targetdealstate: 'indeal',
+                  dealstate: 'indeal',
                 });
                 // do an update of your balance 
                 self.fire('updatebalance');
@@ -764,7 +584,7 @@
             var mutation = {
               id: payload.requestid,
               payouttx: payload.transactionhash,
-              targetdealstate: 'payout',
+              dealstate: 'payout',
             };
 
             this.dispatch('update_deal', mutation);

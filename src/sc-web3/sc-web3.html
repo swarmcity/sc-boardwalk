@@ -74,7 +74,8 @@
         console.log('waitTx waiting for tx',txHash);
 
         scweb3_web3.eth.getTransaction(txHash, function(err, res) {
-          if (res) {
+          if (res && res.blockNumber) {
+            console.log('waitTx tx ',txHash,'found in past block',res.blockNumber);
             if (callback)
               return callback(null, res.blockNumber);
             else
@@ -103,7 +104,7 @@
                   filter.stopWatching();
                   filter = null;
                   if (callback){
-                    console.log('waitTx tx mined in block',block.number);
+                    console.log('waitTx tx ',txHash,'mined in block',block.number);
                     return callback(null,block.number);
                   }else{
                     return true;
