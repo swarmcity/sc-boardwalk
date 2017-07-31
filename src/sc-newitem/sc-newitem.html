@@ -349,6 +349,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         this.hasgeohash = false;
         this.loading = false;
         this.showtotal = false;
+        this._clearInput();
       },
 
       /**
@@ -359,6 +360,12 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
         this.btnable = false;
         this.totalstate = "totalclosed";
         this.showavatar = false;
+        this._clearInput();
+      },
+
+      _clearInput: function(){
+        this.firstofferamount = null;
+        this.offermsg = '';
       },
 
       /**
@@ -376,6 +383,8 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
       },
 
       _btnable: function(){
+
+        this.offererrormessage = '';
 
         if (!this.offermsg || !this.geohash || !this.wallet ||  !this.hashtagaddress ||
           !this.hashtaginfo || !this.hashtaginfo[this.hashtagaddress])
@@ -404,8 +413,8 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
           return;
         }
 
-        if (this.hashtagcommission && this.d2 > amount) {
-          this.offererrormessage = 'you must offer more than the commission';
+        if (this.hashtagcommission && this.d2 >= amount) {
+          this.offererrormessage = 'you must offer more than 0';
           this.btnable = false;
           return;
         }
@@ -421,7 +430,6 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
           return;
         }
 
-        this.offererrormessage = '';
         this.btnable = true;
       },
 
@@ -457,8 +465,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
               console.log('error happened...', err);
               // READY WITH NEWITEM... (failed)
               self.closeNewcollapser();
-              self.offermsg = '';
-              self.offeramount = '';
+              self._clearInput();
               return;
             } else {
               var newrequest = {
@@ -504,8 +511,7 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
                 self.shhweb3.shh.post(options, function(err, res) {
                   console.log(err, res);
                   self.loading = false;
-                  self.offermsg = '';
-                  self.offeramount = '';
+                  self._clearInput();
                   self.fire('new-submitted', {
                     dealid: newrequest.id
                   });
@@ -549,6 +555,8 @@ This component lets a Swarm Citizen create a new offer under the selected hashta
           this.showavatar = true;
           this.totalstate = "totalopen";
           offerinputform.opened = true;
+
+
           this.fire('newitem-open');
         } else {
 
