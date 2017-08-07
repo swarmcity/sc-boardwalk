@@ -811,11 +811,8 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
               </template>
 
               <template is="dom-if" if="{{createMined}}">
-                <p class="white light centertxt">By accepting, you're putting <sc-tokenbalanceformatter value="{{requestdata.amount}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter> on this deal. At payout, you will be refunded <sc-tokenbalanceformatter value="{{deducthalfcommission(requestdata.amount,hashtagcommission)}}" rounding="false" decimals=3 denomination="SWT"></sc-tokenbalanceformatter>.</p>
-
-                  <!-- <p class="white light centertxt">By accepting, <sc-tokenbalanceformatter value="{{requestdata.amount}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter> will be locked on this deal. At payout you will be refunded</p>
-                  <p class="white light centertxt">from that amount <sc-tokenbalanceformatter value="{{halfof(hashtagcommission)}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter> will be sent to the hashtag maintainer upon payout.</p> -->
-
+                <template is="dom-if" if="{{!requestdata.seekercanceltx}}">
+                  <p class="white light centertxt">By accepting, you're putting <sc-tokenbalanceformatter value="{{requestdata.amount}}" decimals=3 denomination="SWT"></sc-tokenbalanceformatter> on this deal. At payout, you will be refunded <sc-tokenbalanceformatter value="{{deducthalfcommission(requestdata.amount,hashtagcommission)}}" rounding="false" decimals=3 denomination="SWT"></sc-tokenbalanceformatter>.</p>
                   <div class="confirmbtns">
                     <template is="dom-if" if="{{btntapped}}">
                       <sc-loader small color="white"></sc-loader>
@@ -826,6 +823,11 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                     </template>
                   </div>
                 </template>
+                <!-- seeker is canceling deal -->
+                <template is="dom-if" if="{{requestdata.seekercanceltx}}">
+                  <p class="white light centertxt">The other party is canceling this deal.</p>
+                </template>
+              </template>
             </template>
             <template is="dom-if" if="{{provideraccept}}">
               <template is="dom-if" if="{{_is(requestdata.dealstate,'indeal')}}">
