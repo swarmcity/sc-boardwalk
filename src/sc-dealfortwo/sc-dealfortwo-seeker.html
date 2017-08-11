@@ -964,7 +964,7 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                       <p class="white light centertxt">Cancel deal with {{replydata.provider.username}}.</p>
                       <template is="dom-if" if="{{phoneview}}"><div class="whitespace"></div></template>
                       <div class="confirmbtns">
-                        <paper-icon-button icon="sc-icons:decline" class="white big confirmbtn red shadow" on-tap="toCancelDeal"></paper-icon-button>
+                        <paper-icon-button icon="sc-icons:arrowright" class="white big confirmbtn red shadow" on-tap="toCancelDeal"></paper-icon-button>
                       </div>
                     </div>
                   </div>
@@ -1032,9 +1032,9 @@ This components allows 2 Swarm Citizens to make a deal with eachother, based on 
                 <paper-icon-button on-tap="backFromCancelDeal" icon="sc-icons:decline" noink class="white">back</paper-icon-button>
               </div>
               <div class="approver-inner">
-                <h1 class="light white centertxt">Are you sure you want to cancel your deal 
+                <h1 class="light white centertxt"><span>Are you sure you want to cancel your deal</span>
                 <template is="dom-if" if="{{replydata.provider}}">
-                with <span class="bold">{{replydata.provider.username}}</span>
+                <span>with </span><span class="bold">{{replydata.provider.username}}</span>
                 </template>
                 ?</h1>
                 <div class="fivespace"></div>

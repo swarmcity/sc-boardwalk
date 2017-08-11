@@ -33,7 +33,7 @@
     "name": "default", 
     "js": {"minify": true}, 
     "css": {"minify": false}, 
-    "html": {"minify": true}, 
+    "html": {"minify": false}, 
     "bundle": false, 
     "addServiceWorker": true, 
     "addPushManifest": true, 
