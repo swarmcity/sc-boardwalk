@@ -85,7 +85,7 @@
     <iron-media-query query="(min-width:0px) and (max-width: 540px)" query-matches="{{phoneview}}"></iron-media-query>
 
         <div class="hashtagactivity totalwidth">
-          <p class="bold">Archived deals<span class="bold">1</span></p>
+          <p class="bold">Archived deals<span class="bold"></span></p>
           <div id="" class="completeddeals_toggler" on-tap="showDetails">
             <div class$="triangle {{collapsestate}}">
               <svg id="triangle_icon" x="0px" y="0px" viewBox="0 0 50 50" fill="#B3B3B3">
@@ -98,13 +98,14 @@
             <template is="dom-repeat" items="{{expireddeals}}">
 
             <template is="dom-if" if="{{!_isdone(item)}}">
+              <!-- <pre>{{tostr(item)}}</pre> -->
               <div>DealId: {{item.dealid}}</div>
-              <div><sc-tokenbalanceformatter value="{{item.amount}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter></div>
+              <div>Value: <sc-tokenbalanceformatter value="{{item.dealValue}}" decimals=3  denomination="SWT"></sc-tokenbalanceformatter></div>
               <template is="dom-if" if="{{_canbecanceled(item)}}">
-               <div on-tap="_canceldeal">CANCEL DEAL</div>
+               <div on-tap="_canceldeal" data-args="{{item.dealid}}">[CANCEL DEAL]</div>
               </template>
-                <template is="dom-if" if="{{_canbepaidout(item)}}">
-              PAYOUT DEAL</template>
+               <!--  <template is="dom-if" if="{{_canbepaidout(item)}}"  data-args="{{item.dealid}}">
+              PAYOUT DEAL</template> -->
                 <div></div>
               </template>
             </template>
@@ -141,6 +142,10 @@
       },
 
       attached: function(){
+      },
+
+      tostr: function(o){
+        return JSON.stringify(o,null,2);
       },
 
       _identity: function(){
@@ -180,12 +185,9 @@
       },
 
       _canceldeal: function(e){
-debugger;
-   this.fire('redirect', {
-          target: '/dealfortwoseeker/' + '0x2e17d4c60a2fc3f1d586d2ca9d66b52f80a043c0' + '/' + e.model.item.dealid
+        this.fire('redirect', {
+          target: '/dealfortwoseeker/' + '0x2e17d4c60a2fc3f1d586d2ca9d66b52f80a043c0' + '/' + e.model.item.dealid + '/0'
         });
-
-        //http://localhost:8082/#/dealfortwoseeker/0x2e17d4c60a2fc3f1d586d2ca9d66b52f80a043c0/1d887ade-e388-40a1-a0cd-af094514c862/0
       },
 
       /**

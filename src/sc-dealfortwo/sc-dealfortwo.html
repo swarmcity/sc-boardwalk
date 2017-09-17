@@ -527,18 +527,19 @@
 
                 self.web3.eth.getTransaction(logTx.transactionHash, function(err, tx) {
                   if (err) {
-                    console.log('dealfortwo-tx -> err decoding tx:', logTx);
+                    console.log('dealfortwo-tx -> err decoding tx:', err);
                     return;
                   }
                   var signature = tx.input.substr(2, 8);
                   var paramdata = tx.input.substr(10);
 
                   try {
+                    
                     var method = self.methods[signature];
                     var decodedParams = SolidityCoder.decodeParams(method._inputTypes, paramdata);
                     var methodName = method.displayName();
 
-                    self.readDeal(decodedParams[0], pubkey, function(err,res) {
+                    self.readDeal(self.config.dealfortwofactory,decodedParams[0], pubkey, function(err,res) {
                       var dealdata = {
                         dealid: decodedParams[0],
                         commissionValue: res.commissionValue,
@@ -557,7 +558,7 @@
                       resolve2(dealdata);
                     });
                   } catch (e) {
-                    console.log('dealfortwo-tx -> err decoding tx:', logTx);
+                    console.log('dealfortwo-tx -> err decoding tx:', e);
                   }
                 })
               }));
