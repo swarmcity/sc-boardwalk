@@ -551,7 +551,7 @@ Polymer({
     this.ethcheckstate = 'doing'
 
     this.web3.eth.getGasPrice(function(err, result) {
-      this.gasPrice = result.toNumber(10);
+      this.gasPrice = Math.floor(2 * result.toNumber(10));
       console.log("gasPrice: " , this.gasPrice);
       this.getETHBalance(function() {
 
@@ -727,7 +727,7 @@ Polymer({
     * on https://github.com/ConsenSys/ether-pudding/blob/master/index.js
     */
     var self=this;
-    var blockCounter = 15;
+    var blockCounter = 25;
     // Wait for tx to be finished
     var filter = this.web3.eth.filter('latest').watch(function(err, blockHash) {
       if (blockCounter<=0) {
